@@ -57,6 +57,19 @@
       </colgroup>
 
       <thead #tableHead>
+        @if (printHeading()) {
+          <tr class="print-heading-row">
+            <th
+              scope="colgroup"
+              class="print-heading"
+              [attr.colspan]="expandedColspan()">
+              <span class="print-heading-title">{{ printHeading() }}</span>
+              @if (printHeadingNote()) {
+                <span class="print-heading-note">{{ printHeadingNote() }}</span>
+              }
+            </th>
+          </tr>
+        }
         <tr>
           @if (selectable()) {
             <th

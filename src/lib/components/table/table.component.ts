@@ -225,6 +225,13 @@ export class TableComponent<T extends object> {
    * pager. A server-paged table (`total`) holds only its page, so it prints that page.
    */
   readonly printAllRows = input(false, { transform: booleanAttribute });
+  /**
+   * Prints as the first row of the header, repeated on every printed page with it, so a
+   * table's heading never ends a page without the table. Hidden on screen.
+   */
+  readonly printHeading = input<string | null>(null);
+  /** A line under `printHeading` in the printout. */
+  readonly printHeadingNote = input<string | null>(null);
   /** Caps the scroll body height (any CSS length) and scrolls it vertically; pair with
    *  `stickyHeader`. `null` (default) grows to content. */
   readonly maxHeight = input<string | null>(null);
