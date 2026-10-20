@@ -62,8 +62,9 @@
       ],
       "detect": [
         "dsTooltipPlacement=",
+        "[dsTooltipPlacement]=",
         "[dsTooltipDelay]=",
-        "[dsTooltipArrow]=",
+        "dsTooltipArrow",
         "dsTooltipPinOnClick"
       ],
       "action": "Move each value into `[dsTooltipConfig]` on the same element and remove the old binding: `dsTooltipPlacement=\"right\"` becomes `[dsTooltipConfig]=\"{ placement: 'right' }\"`, `[dsTooltipDelay]` becomes `delay`, `[dsTooltipArrow]` becomes `arrow`, and a bare `dsTooltipPinOnClick` becomes `pinOnClick: true`; several go into one object. Where every tip of the app takes the same value, set it once in `provideDsConfig({ tooltip: { ... } })` instead.",
@@ -124,6 +125,10 @@
       "verify": "Put dsTooltipWhenClipped on a block with -webkit-line-clamp: 2 holding four lines of text, hover it and confirm the tip opens; shorten the text to one line and confirm it does not."
     },
     "`ds-empty-state` takes `titleOverflow`: `'wrap'`, the default, keeps the title wrapping as before; `'clip'` keeps it on one line with an ellipsis and the full title in a tooltip.",
+    {
+      "text": "A printed `ds-pagination` shows only its range label: its page buttons, ellipsis and page-size select are left out of the printout, inside a `ds-table` and on their own.",
+      "verify": "Open the browser's print preview of a page holding a ds-pagination and confirm only its range label is printed."
+    },
     "A printed `ds-table` keeps its column names on every page, keeps each row on one page and leaves its own controls out of the printout: the pager buttons and page-size select, the column filter, resize and expand buttons and the controls it adds to its toolbar. The pager's range label still prints. Nothing to change in consumer code; `printAllRows` opts a client-paged table into printing every row."
   ],
   "deleteList": []

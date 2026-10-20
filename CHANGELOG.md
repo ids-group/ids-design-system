@@ -54,6 +54,9 @@
   `--ds-dropdown-panel-max-width` now applies only under `width="content"`: under the default
   `width="fill"` the panel follows the trigger and the token no longer caps it.
 
+- **A printed `ds-pagination` shows only its range label.** Its page buttons, ellipsis and
+  page-size select are left out of the printout, inside a `ds-table` and on their own.
+
 - **A pinned column, bar or heatmap cell no longer stays brightened.** The highlight follows the
   pointer and keyboard focus only: once a click holds a mark or a category and the pointer moves
   off it, it keeps its pin at its own colour, and the mark under the pointer brightens instead.
