@@ -22,3 +22,15 @@
   caption="Agents, unpaged"
   [data]="rows"
   [columns]="columns" />
+
+<h2>
+  Paged, prints every row
+</h2>
+
+<ds-table
+  sortMode="client"
+  caption="Agents, every row in print"
+  [data]="rows"
+  [columns]="columns"
+  [pageSize]="25"
+  printAllRows />
