@@ -17,6 +17,17 @@ holds an entry; what the release bot commits afterwards needs none.
 
 ## Unreleased
 
+### Cards
+
+- **Toggle Button publishes its card again**, "Toggle Button - On and off", from its own chapter
+  `components/toggle-button`.
+
+### Build
+
+- **`check-manual-surface` fails on a `sections` entry for a component with a chapter of its own.**
+  Such an entry sends the component to a chapter that marks no block for it, so it ships with no
+  card.
+
 ## 0.15.2 — 2026-10-14
 
 ### Build
