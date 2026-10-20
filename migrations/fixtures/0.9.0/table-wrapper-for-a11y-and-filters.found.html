@@ -1,0 +1,9 @@
+<div class="table-shell">
+  <ds-table [data]="rows()" [columns]="columns" />
+  <div
+    class="resize-handle"
+    role="separator"
+    aria-orientation="vertical"
+    tabindex="0"
+    (keydown)="resizeByKey($event)"></div>
+</div>

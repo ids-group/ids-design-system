@@ -1,0 +1,2 @@
+<div class="visually-hidden" aria-live="polite">{{ sortMessage() }}</div>
+<ds-table [data]="rows()" [columns]="columns" (sortChange)="announceSort($event)" />

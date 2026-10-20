@@ -279,6 +279,16 @@ Two things to get right, both learned from the 45 prose entries that nothing act
 
 - **Never a bare token as the `find`.** `--ds-menu-item-radius` is OUR name for the fix; their code
   says `ds-menu-divider { padding: 0 }`. Grep-ability decides whether the entry exists in practice.
+- **A `find` shape must not match code unrelated to the workaround** - `padding`, `ds-table` or
+  `catch` sends the judge through every stylesheet and table page in the app. Code of the row's
+  own feature is a different case and follows the recall rule above: `rescaleOnHide` also hits the
+  `[rescaleOnHide]="false"` the row keeps, and that hit is the judge's to keep, which is cheaper
+  than a spelling the shape misses. `node tools/check.mjs manifest-detect` runs every shape over
+  the unrelated consumer code in `migrations/fixtures/_neutral/` and fails on a hit.
+- **Every narrowed `find` keeps a `.found` fixture of the workaround**,
+  `migrations/fixtures/<version>/<row id>.found.<ext>`, one `<row id>.<variant>.found.<ext>` per
+  further spelling (tab-indented, single-quoted, a plain field instead of a signal), and the same
+  check fails a fixture no shape hits. Shapes are literals: a consumer's grep runs with `-F`.
 - **A sentence in `informational` that tells the consumer to delete something must NAME its row**,
   as `(delete list: <id>)`. Prose is not executed: 0.9.0 shipped five such sentences and four had no
   row behind them. The citation is what a tool can check — a shape test alone goes quiet as soon as

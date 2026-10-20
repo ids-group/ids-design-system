@@ -257,9 +257,7 @@
       "surface": "style",
       "find": [
         ".ds-overlay-pane .autocomplete-list",
-        ".ds-overlay-pane .dropdown-list",
-        "padding",
-        "border-radius"
+        ".ds-overlay-pane .dropdown-list"
       ],
       "why": "The autocomplete panel shipped with `padding: 0` and square rows while ds-select's dropdown had `--space-1` padding and rounded rows, so consumers patched the difference globally. The panel now uses the same shared partial as the other two pickers and matches without help. Only that compensation is dead: the same rule commonly also carries chrome with no DS equivalent - a border colour, a shadow, a row type scale - and that half is still load-bearing.",
       "replaceWith": "Nothing for the padding and the row radius - the padding is --space-1 and the row radius is --ds-radius-inner out of the box, and --ds-dropdown-panel-minw / -maxw bound the panel. Keep any declaration in the same rule that is not one of those two, and retarget it onto the new class names."

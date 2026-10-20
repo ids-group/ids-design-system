@@ -4,6 +4,38 @@ Versioning: **patch** = instruction/prompt fixes; **minor** = new capability (pi
 source, agent); **major** = a change to the workflow's behavior contract. Bump `plugin.json` +
 `marketplace.json` together on every published change.
 
+## 1.16.1 - 2026-10-20
+
+### Fixed
+
+- **`deleteList` `find` shapes are grepped as literals.** The step-12 pre-pass and the step-8
+  delete-list sweep grep with fixed strings (`grep -rlF`), and `ds-delete-judge` escapes regex
+  metacharacters before its Grep or searches with `-F`. A shape such as `[rescaleOnHide]="true"`
+  is a character class as a regex and matches none of the code it names.
+
+## 1.16.0 - 2026-10-19
+
+### Changed
+
+- **Phase A step 12: a whole-chain pre-pass decides which items get per-item agents.** Once per
+  target it runs `apply-mechanical.mjs --dry-run` over every chain manifest, the lint step over the
+  whole range, one `ds-usage-finder` per range of versions and a grep of every `deleteList` row.
+  Every item none of them hit gets a `grep -rlF` of its `old`, `detect` and `searchHints` over the
+  finder's files, with no model. Planners, per-item finders and `ds-recheck` go only to flagged
+  items and versions: a hit (the grep's included), a `code-add`, a non-template
+  `behavior`/`removed-api`, an item naming an earlier flagged item's `new`, or a version with no
+  manifest or a manifest-truth flag. An unflagged item is closed as "no hits, grep re-check
+  empty": that grep is its re-check, and it is still listed, `surface: "none"` items included.
+  Ledger gains `prepass`.
+
+## 1.15.3 - 2026-10-19
+
+### Fixed
+
+- **`drift-scan.mjs` matches a stylesheet class only in code, never in a comment, string or `url()`.**
+  A `//` or `/* */` comment naming `<html>` or `index.html` no longer reports the gone class `html`;
+  template and TypeScript matching is unchanged.
+
 ## 1.15.2 - 2026-10-19
 
 ### Fixed
