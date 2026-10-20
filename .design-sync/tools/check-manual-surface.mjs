@@ -214,7 +214,13 @@ const sectionMap =
     .sections ?? {};
 for (const tag of [...componentTags].sort()) {
   const name = pascalOfTag(tag);
-  const slug = sectionMap[name] ?? `components/${tag.replace(/^ds-/, '')}`;
+  const ownChapter = `components/${tag.replace(/^ds-/, '')}`;
+  const slug = sectionMap[name] ?? ownChapter;
+  if (slug !== ownChapter && sectionSlugs.has(ownChapter)) {
+    errors.push(
+      `✗ config.json maps ${name} to "${slug}", but ${tag} has a chapter of its own, "${ownChapter}" — drop the entry, or no card is built from it`,
+    );
+  }
   if (sectionSlugs.has(slug)) continue;
   errors.push(
     `✗ ${tag} resolves to the ds-docs section "${slug}", which GROUP_PAGES does not register — its card would be empty. Add a section in ds-docs, or point config.json's \`sections\` at the one that documents it`,
