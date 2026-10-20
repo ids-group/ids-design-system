@@ -4,7 +4,7 @@
 // scroller, a `section[data-anchor]`, `h3.block-title` chapters) differ by one pixel column in one
 // block, or by half a pixel of height in the block above it, which moves the one below to a
 // fractional position, or by a token a docs rule reads in a block whose markup names nothing of the
-// library. The check runs over them as prebuilt dists, against private copies of the
+// library, or by a tint a few levels apart on a hairline or across a whole panel. The check runs over them as prebuilt dists, against private copies of the
 // manifest and CHANGELOG, so nothing tracked is read as the subject or written.
 //
 //   node tools/check-render-evidence-selftest.mjs
@@ -17,13 +17,21 @@ import { fileURLToPath } from 'node:url';
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const work = mkdtempSync(join(tmpdir(), 'render-evidence-selftest-'));
 
-const page = (widgetHeight, gadgetWidth, linkToken) => `<!doctype html>
+const page = (
+  widgetHeight,
+  gadgetWidth,
+  linkToken,
+  hairColor = '#1a4fd6',
+  panelColor = '#f8f9fb',
+) => `<!doctype html>
 <html><head><style>
   body { margin: 0; font: 16px sans-serif; }
   main.content { height: 100vh; overflow: auto; }
   .box { display: block; height: 40px; border-radius: 50%; background: #1a4fd6; }
   .plain-link { color: var(--text-link); }
   ${linkToken ? ':root { --text-link: #1a4fd6; }' : ''}
+  .hair { display: block; width: 40px; height: 1px; background: ${hairColor}; }
+  .panel { display: block; width: 400px; height: 200px; background: ${panelColor}; }
 </style></head><body><main class="content">
   <section data-anchor="widget">
     <h2>Widget</h2>
@@ -36,19 +44,27 @@ const page = (widgetHeight, gadgetWidth, linkToken) => `<!doctype html>
     <h3 class="block-title">Link</h3>
     <a class="plain-link">Read the guide</a>
   </section>
+  <section data-anchor="tone">
+    <h3 class="block-title">Hair</h3>
+    <ds-hair class="hair"></ds-hair>
+    <h3 class="block-title">Panel</h3>
+    <ds-panel class="panel"></ds-panel>
+  </section>
 </main></body></html>`;
 
-for (const [name, widgetHeight, gadgetWidth, linkToken] of [
+for (const [name, widgetHeight, gadgetWidth, linkToken, hair, panel] of [
   ['before', 40, 40, true],
   ['token-removed', 40, 40, false],
   ['after', 40, 41, true],
   ['pushed', 40.5, 40, true],
   ['pushed-and-wider', 40.5, 41, true],
+  ['hair-tinted', 40, 40, true, '#1c51d8'],
+  ['panel-tinted', 40, 40, true, '#1a4fd6', '#f5f6f8'],
 ]) {
   mkdirSync(join(work, name));
   writeFileSync(
     join(work, name, 'index.html'),
-    page(widgetHeight, gadgetWidth, linkToken),
+    page(widgetHeight, gadgetWidth, linkToken, hair, panel),
   );
 }
 
@@ -120,9 +136,9 @@ const cases = [
     present: [
       /1 differ/,
       /named\s+changed\s+widget\/same\s+by ds-widget/,
-      /2 moved block\(s\) captured again/,
+      /4 moved block\(s\) captured again/,
     ],
-    absent: [/widget\/moved/, /prose\/link/, /UNNAMED/],
+    absent: [/widget\/moved/, /prose\/link/, /tone\//, /UNNAMED/],
   },
   {
     name: 'FIRES on a block that moved and changed, once captured at the same position',
@@ -132,7 +148,7 @@ const cases = [
     status: 1,
     present: [
       /UNNAMED\s+changed\s+widget\/moved\s+none of: ds-gadget/,
-      /2 moved block\(s\) captured again/,
+      /4 moved block\(s\) captured again/,
     ],
     absent: [],
   },
@@ -180,8 +196,24 @@ const cases = [
       items: [{ id: 'claims-moved', evidence: ['pixels:widget/moved'] }],
     },
     status: 0,
-    present: [/5 \/ 5 block\(s\), 0 differ/, /ok\s+pixels:widget\/moved/],
+    present: [/8 \/ 8 block\(s\), 0 differ/, /ok\s+pixels:widget\/moved/],
     absent: [/UNNAMED/, /BAD/],
+  },
+  {
+    name: 'HOLDS on a hairline two levels apart, as antialiasing differs',
+    after: 'hair-tinted',
+    manifest: { items: [] },
+    status: 0,
+    present: [/0 differ/, /1 block\(s\) differ by antialiasing only/],
+    absent: [/UNNAMED/],
+  },
+  {
+    name: 'FIRES on a whole panel three levels apart, a tint and not antialiasing',
+    after: 'panel-tinted',
+    manifest: { items: [] },
+    status: 1,
+    present: [/UNNAMED\s+changed\s+tone\/panel\s/],
+    absent: [/differ by antialiasing only/],
   },
 ];
 
