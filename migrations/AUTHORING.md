@@ -252,7 +252,7 @@ release rather than pointing at nothing.
 - **Dynamic bindings.** If the changelog moves values to a different attribute, say in `note` that
   `[attr]="expr"` bindings and any method/field/type supplying old values must be rebound/retyped too.
 
-## Default-value changes get their OWN entry, and they carry TWO facts
+## Default-value changes get their OWN entry
 
 A changed default is invisible in a diff, so it hides. Give it a dedicated item (usually `behavior`),
 worded **"was X, now Y, restore via Z"** with the literal restore snippet in the `restore` field —
@@ -260,45 +260,22 @@ worded **"was X, now Y, restore via Z"** with the literal restore snippet in the
 rename entry. (E.g. a button size default moving `l`→`md`, or a hue default moving to a new palette
 family with "point the channel back at `--primary-h/s/l` to keep the old look".)
 
-**The second fact is what the flip made REDUNDANT, and it belongs in `deleteList`, not in the note.**
-A default that moves to what half the consumers were already writing turns their binding into a
-restatement — `[reserveMessage]="false"` against a default of `false`, `sortMode="server"` against a
-default of `'server'`. 0.7.1 put that sentence in the note and three dead bindings survived the
-upgrade; the delete entry is what a finder can run. The linter flags a default-change note with no
-`restore`, and a `deleteList` you can write and did not is the failure it cannot see — so write it.
+## A manifest says what changed and where, never what to delete
 
-## A `deleteList` entry is a find, a why, and a replacement
+New entries carry no `deleteList` row and no sentence promising a deletion. What a change made
+redundant lives in the consumer's code, which the author never sees: the consumer's upgrade agent
+reads the changed surface each item names, looks there for a workaround the change makes
+unnecessary, and decides whether to remove it. So an item names the surface precisely (`old`,
+`detect`, `appliesWhen`) and stops there. The `deleteList` key may be absent or `[]`.
 
-`{ id, surface, find, why, replaceWith }`. The whole value is in `find`: the shape in the CONSUMER's
-code, written the way they wrote it, always an array, even of one shape (`["ds-table tr:hover",
-"::ng-deep ds-table"]`, `["rescaleOnHide"]`). (lint, M030) `why` says what made it unnecessary — a hook that already existed, a default
-that moved, an API that became public. `replaceWith` names the API that replaces it, or the literal
-word "nothing" where the answer is simply to delete.
+A sentence in `action`, `note`, `pitfall` or `informational` that tells the consumer to delete
+something fails unless it cites an existing row as `(delete list: <id>)`; in a new entry, state the
+change instead. (lint, M034)
 
-Two things to get right, both learned from the 45 prose entries that nothing acted on:
-
-- **Never a bare token as the `find`.** `--ds-menu-item-radius` is OUR name for the fix; their code
-  says `ds-menu-divider { padding: 0 }`. Grep-ability decides whether the entry exists in practice.
-- **A `find` shape must not match code unrelated to the workaround** - `padding`, `ds-table` or
-  `catch` sends the judge through every stylesheet and table page in the app. Code of the row's
-  own feature is a different case and follows the recall rule above: `rescaleOnHide` also hits the
-  `[rescaleOnHide]="false"` the row keeps, and that hit is the judge's to keep, which is cheaper
-  than a spelling the shape misses. `node tools/check.mjs manifest-detect` runs every shape over
-  the unrelated consumer code in `migrations/fixtures/_neutral/` and fails on a hit.
-- **Every narrowed `find` keeps a `.found` fixture of the workaround**,
-  `migrations/fixtures/<version>/<row id>.found.<ext>`, one `<row id>.<variant>.found.<ext>` per
-  further spelling (tab-indented, single-quoted, a plain field instead of a signal), and the same
-  check fails a fixture no shape hits. Shapes are literals: a consumer's grep runs with `-F`.
-- **A sentence in `informational` that tells the consumer to delete something must NAME its row**,
-  as `(delete list: <id>)`. Prose is not executed: 0.9.0 shipped five such sentences and four had no
-  row behind them. The citation is what a tool can check — a shape test alone goes quiet as soon as
-  the file holds any unrelated entry. If the thing to delete cannot be given a greppable `find` at
-  all, do not promise the deletion: say what is supported instead. The older spellings — a trailing
-  `(DELETE-LIST)` tag, `DELETE-LIST MATERIAL` mid-sentence — mark the instruction but link nothing, so
-  they now require the citation like any other sentence. (lint, M034)
-- **Say when the workaround is still legitimate.** `[reserveMessage]="false"` is dead under the new
-  default and load-bearing under a `dsReserveMessages` host — the entry that omits that turns a
-  cleanup into a regression.
+The rows in published manifests stay and are still checked: shape and fields (lint, M030-M032,
+M035, M036), every `find` against the unrelated consumer code in `migrations/fixtures/_neutral/`
+and against its `.found` fixtures (`node tools/check.mjs manifest-detect`), and every row reachable
+from its CHANGELOG "What you can now DELETE" table (`node tools/check.mjs delete-tables`).
 
 ## Changes that aren't a clean find/replace
 
@@ -413,8 +390,7 @@ Run `node tools/check.mjs migration-lint` before you call the manifest done — 
 - [ ] `value-remap` map: full-token replacements, only changed values listed, identities map to self.
 - [ ] Pattern/prefix items state coverage AND exclusions in `note`.
 - [ ] Default-value / timing / event-payload changes are their own `behavior` entry, with `restore`
-      (or an explicit `null`) AND a `deleteList` entry for whatever the flip made redundant. (lint,
-      for the `restore` half)
+      (or an explicit `null`). (lint)
 - [ ] Every token or hook whose DEFAULT moved, was deleted or renamed in the boundary is named in
       the manifest; `node tools/token-diff.mjs v<prev> v<version>` lists them, old and new value.
       (`tools/check-token-defaults.mjs`, in `lint` and the preflight)
@@ -433,19 +409,8 @@ Run `node tools/check.mjs migration-lint` before you call the manifest done — 
 - [ ] A directive that gained a template context guard or an `unknown`-defaulting generic has a
       `behavior` item on `surface: template` with the consumer's build error in `detect`.
       (`tools/check-template-context-guard.mjs`, for the guard half, at the cut)
-- [ ] `deleteList` holds every "you can now delete X" — with a greppable `find`, not our token name,
-      and a word on when the workaround is still legitimate. (lint, for the shape)
-- [ ] Every delete instruction cites its row as `(delete list: <id>)`, or does not promise a
-      deletion at all — in an item `note` as well as in `informational`, and whether it is addressed
-      to "you" or to "consumers". (lint, M034)
-- [ ] Every `deleteList` row has a `replaceWith` — the API that replaces it, or the literal word
-      "nothing" — and a kebab id unique in the file, because M034 citations resolve against it.
-      (lint, M035 / M036)
-- [ ] The `deleteList` key is PRESENT, `[]` when the release made nothing redundant. An absent key
-      reads as "nobody looked", which is a different statement. (lint, M037)
-- [ ] Every row is reachable from the CHANGELOG: one "What you can now DELETE" row carries one of
-      the entry's `find` shapes VERBATIM. A row that only paraphrases the shape cannot be searched
-      for, so it does not count. (`node tools/check.mjs delete-tables`, in the PR gate and the preflight)
+- [ ] A new entry writes no `deleteList` row and promises no deletion in any field, addressed to
+      "you" or to "consumers"; it says what changed and where. (lint, M034)
 - [ ] A `value-remap` carries a `verify` like a behavioural item: it changes what a binding MEANS
       with no symbol removed, so a re-check has nothing to grep either. (lint, M022)
 - [ ] A behavioural item on a `typescript` or `config` surface carries `detect` — the shape of the
@@ -530,9 +495,7 @@ consumer upgrading their app has no use for it.
 `migrations/unreleased/README.md` restated the manifest
 in a form nothing reads: an upgrade tool loads `<version>.json`, and the only content the manifest
 did not already carry was the delete-list. Worse, it went stale inside one release — three late
-changes never reached it — and a stale duplicate misleads where no file would merely be silent. Its
-content now lives in the two places that ARE read: the `deleteList` array in `<version>.json`, and a
-"What you can now DELETE" table in that version's CHANGELOG block. The test before writing a sibling
+changes never reached it — and a stale duplicate misleads where no file would merely be silent. The test before writing a sibling
 `migrations/<version>/*.md`: **would a tool or an agent ever open it?** If the answer is "a human
 might", it belongs in the CHANGELOG instead.
 
@@ -547,6 +510,10 @@ acted on by the loop: an
 array of strings has no `find` for a finder to run, so every one of the 45 waited for a human to read
 all 63 informational lines and recognise their own code in a sentence. Twelve local classes and a
 duplicated `visually-hidden` recipe survived the upgrade that way.
+
+**Why new entries carry no row.** A row is the author's guess at code in a repository the author
+has never read. The upgrade agent in the consumer's repository reads that code, so it looks for the
+workaround under each changed surface itself and judges it there (Stas: stop writing guessed rows).
 
 **Where `surface` / `detect` / `verify` / `restore` came from.** mm-broker walked 0.6.0 → 0.10.1 with
 the plugin, and a review afterwards found two items the whole find/apply/recheck loop had passed over
