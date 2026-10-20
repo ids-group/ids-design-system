@@ -512,9 +512,8 @@
       "id": "routerlink-imported-for-extra-inputs",
       "surface": "typescript",
       "find": [
-        "RouterLink } from '@angular/router'",
-        "RouterLink } from \"@angular/router\"",
-        "{ RouterLink,"
+        "RouterLink,",
+        "RouterLink }"
       ],
       "why": "importing it to write `[queryParams]` or `[fragment]` on a `<ds-button>` put a second RouterLink on the host that disagreed with the anchor's about the destination",
       "replaceWith": "the component's own inputs; keep the import where you use `RouterLink` on your own anchors"
