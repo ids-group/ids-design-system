@@ -23,8 +23,9 @@ holds an entry; what the release bot commits afterwards needs none.
   `components/toggle-button`.
 
 - **The time picker docs describe scroll selection.** The design agent reads `TimePicker` as
-  selecting the centred cell when a wheel, touch or scrollbar scroll ends, with the panel left
-  open, and `TimeColumns` as firing `onTimeChange` and not `onPartPicked` for such a scroll.
+  selecting the centred cell as it passes the centre during a wheel, touch or scrollbar scroll,
+  with the panel left open and about one row per wheel notch, and `TimeColumns` as firing
+  `onTimeChange` and not `onPartPicked` for a cell scrolled to the centre.
 
 ### Build
 
