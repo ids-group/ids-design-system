@@ -4,5 +4,5 @@
 Group: Form & input
 
 <!-- inputs:ds-slider -->
-All inputs: `hint: string = ''`, `error: string = ''`, `warning: string = ''`, `reserveMessage: boolean | null = null`, `messageIcon: IconName | false | null = null`, `errors: readonly DsFieldError[] = []`, `invalid: boolean = false`, `touched: boolean = false`, `pending: boolean = false`, `dirty: boolean = false`, `showDirty: boolean | null = null`, `hidden: boolean = false`, `value: SliderValue = 0`, `min: number = 0`, `max: number = 100`, `step: number = 1`, `range: boolean = false`, `disabled: boolean = false`, `ariaLabel: string | null = null`
+All inputs: `hint: string = ''`, `error: string = ''`, `warning: string = ''`, `reserveMessage: boolean | null = null`, `messageIcon: IconName | false | null = null`, `errors: readonly DsFieldError[] = []`, `invalid: boolean = false`, `pending: boolean = false`, `dirty: boolean = false`, `showDirty: boolean | null = null`, `hidden: boolean = false`, `value: SliderValue = 0`, `min: number = 0`, `max: number = 100`, `step: number = 1`, `range: boolean = false`, `disabled: boolean = false`, `ariaLabel: string | null = null`
 <!-- /inputs -->
