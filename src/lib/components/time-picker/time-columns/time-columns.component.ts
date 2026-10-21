@@ -222,9 +222,16 @@ export class TimeColumnsComponent {
     return element.scrollHeight / sets > element.clientHeight + 1;
   }
 
+  protected onScroll(event: Event, column: TimeColumnId, count: number): void {
+    const element = event.target as HTMLElement;
+    this.wrapScroll(element, count);
+    if (this.userScrolledColumns.has(element)) {
+      this.selectCentred(element, column, count);
+    }
+  }
+
   /** Keeps a looping column inside its middle set, so a copy is always beyond either edge. */
-  protected wrapScroll(event: Event, count: number): void {
-    const column = event.target as HTMLElement;
+  private wrapScroll(column: HTMLElement, count: number): void {
     if (this.smoothScrolls.has(column)) {
       return;
     }
@@ -283,8 +290,9 @@ export class TimeColumnsComponent {
     let smallestDistance = Infinity;
     buttons.forEach(({ nativeElement: button }, index) => {
       const buttonCentre = button.offsetTop + button.offsetHeight / 2;
-      const offsets = set > 0 ? [-set, 0, set] : [0];
-      for (const offset of offsets) {
+      const copies = set > 0 ? this.loopCopiesEachSide.length : 0;
+      for (let copy = -copies; copy <= copies; copy++) {
+        const offset = copy * set;
         const distance = Math.abs(buttonCentre + offset - centre);
         if (distance < smallestDistance) {
           smallestDistance = distance;
@@ -583,6 +591,10 @@ export class TimeColumnsComponent {
     const button = buttons[Math.max(index, 0)]?.nativeElement;
     const column = button?.parentElement;
     if (!button || !column) {
+      return;
+    }
+    // The user is scrolling this column and its value follows the centre; scrolling it back would fight the gesture.
+    if (this.userScrolledColumns.has(column)) {
       return;
     }
     const top =
