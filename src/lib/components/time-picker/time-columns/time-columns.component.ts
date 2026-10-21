@@ -154,6 +154,12 @@ export class TimeColumnsComponent {
   private userPicked = false;
   private pickingByScroll = false;
   private readonly userScrolledColumns = new Set<HTMLElement>();
+  // The share of the wheel's scroll distance a column moves: a 100 px notch comes to about one row.
+  private readonly wheelSpeed = 0.35;
+  private readonly wheelScrolls = new Map<
+    HTMLElement,
+    { remainder: number; target: number | null }
+  >();
   private readonly smoothScrolls = new Map<
     HTMLElement,
     { timer: number; top: number }
@@ -222,9 +228,16 @@ export class TimeColumnsComponent {
     return element.scrollHeight / sets > element.clientHeight + 1;
   }
 
+  protected onScroll(event: Event, column: TimeColumnId, count: number): void {
+    const element = event.target as HTMLElement;
+    this.wrapScroll(element, count);
+    if (this.userScrolledColumns.has(element)) {
+      this.selectCentred(element, column, count);
+    }
+  }
+
   /** Keeps a looping column inside its middle set, so a copy is always beyond either edge. */
-  protected wrapScroll(event: Event, count: number): void {
-    const column = event.target as HTMLElement;
+  private wrapScroll(column: HTMLElement, count: number): void {
     if (this.smoothScrolls.has(column)) {
       return;
     }
@@ -246,6 +259,41 @@ export class TimeColumnsComponent {
     this.userScrolledColumns.add(event.currentTarget as HTMLElement);
   }
 
+  protected onWheel(event: WheelEvent): void {
+    const column = event.currentTarget as HTMLElement;
+    const [first, second] = column.children as HTMLCollectionOf<HTMLElement>;
+    if (event.ctrlKey || event.deltaY === 0 || !second) {
+      return;
+    }
+    // Snapping pulls a sub-row scroll back to the row it left, so the deltas add up and the column moves by whole rows.
+    event.preventDefault();
+    this.onUserScroll(event);
+    const rowPitch = second.offsetTop - first.offsetTop;
+    const pixels =
+      event.deltaMode === WheelEvent.DOM_DELTA_LINE
+        ? event.deltaY * rowPitch
+        : event.deltaY;
+    const wheel = this.wheelScrolls.get(column) ?? {
+      remainder: 0,
+      target: null,
+    };
+    wheel.remainder += pixels * this.wheelSpeed;
+    const rows = Math.trunc(wheel.remainder / rowPitch);
+    if (rows !== 0) {
+      wheel.remainder -= rows * rowPitch;
+      wheel.target = (wheel.target ?? column.scrollTop) + rows * rowPitch;
+      this.scrollToWheelTarget(column, wheel.target);
+    }
+    this.wheelScrolls.set(column, wheel);
+  }
+
+  private scrollToWheelTarget(column: HTMLElement, top: number): void {
+    column.scrollTo({
+      top,
+      behavior: this.prefersReducedMotion() ? 'instant' : 'smooth',
+    });
+  }
+
   protected onScrollbarGrab(event: PointerEvent): void {
     if (event.target === event.currentTarget) {
       this.onUserScroll(event);
@@ -264,6 +312,10 @@ export class TimeColumnsComponent {
       return;
     }
     this.releaseSmoothScroll(element);
+    const wheel = this.wheelScrolls.get(element);
+    if (wheel) {
+      wheel.target = null;
+    }
     this.wrapColumn(element, count);
     if (this.userScrolledColumns.delete(element)) {
       this.selectCentred(element, column, count);
@@ -283,8 +335,9 @@ export class TimeColumnsComponent {
     let smallestDistance = Infinity;
     buttons.forEach(({ nativeElement: button }, index) => {
       const buttonCentre = button.offsetTop + button.offsetHeight / 2;
-      const offsets = set > 0 ? [-set, 0, set] : [0];
-      for (const offset of offsets) {
+      const copies = set > 0 ? this.loopCopiesEachSide.length : 0;
+      for (let copy = -copies; copy <= copies; copy++) {
+        const offset = copy * set;
         const distance = Math.abs(buttonCentre + offset - centre);
         if (distance < smallestDistance) {
           smallestDistance = distance;
@@ -331,6 +384,12 @@ export class TimeColumnsComponent {
     const setsOff = Math.round((column.scrollTop - middle) / set);
     if (setsOff !== 0) {
       column.scrollTop -= setsOff * set;
+      // The write cut the wheel animation short; it resumes towards the same row, a whole number of sets nearer.
+      const wheel = this.wheelScrolls.get(column);
+      if (wheel?.target != null) {
+        wheel.target -= setsOff * set;
+        this.scrollToWheelTarget(column, wheel.target);
+      }
     }
   }
 
@@ -583,6 +642,10 @@ export class TimeColumnsComponent {
     const button = buttons[Math.max(index, 0)]?.nativeElement;
     const column = button?.parentElement;
     if (!button || !column) {
+      return;
+    }
+    // The user is scrolling this column and its value follows the centre; scrolling it back would fight the gesture.
+    if (this.userScrolledColumns.has(column)) {
       return;
     }
     const top =

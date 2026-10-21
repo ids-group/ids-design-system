@@ -30,9 +30,10 @@
 
 - **`ds-time-picker` and `ds-time-columns` scroll to a picked value and select by scrolling.** A click or an
   arrow key scrolls the column smoothly to centre the cell (instantly on open, and under
-  `prefers-reduced-motion`). Cells snap to the centre after wheel or touch scrolling. When a wheel,
-  touch or scrollbar scroll ends, the centred enabled cell becomes the value and the time picker
-  emits `valueChange`; the panel stays open. In single mode it closes once both the hour and the
+  `prefers-reduced-motion`). One wheel notch moves a column by about one row, and cells snap to the
+  centre after wheel or touch scrolling. While a wheel, touch or scrollbar scroll runs, the centred
+  enabled cell becomes the value as it passes the centre and the time picker emits `valueChange`
+  each time; the panel stays open. In single mode it closes once both the hour and the
   minute have been picked by click or key (a scroll pick counts toward neither), or on Escape, an
   outside click, or a page scroll. Handle `valueChange` as a value that can change several times
   while the panel is open.

@@ -27,8 +27,8 @@
   role="listbox"
   [class.loops]="hoursLoop()"
   [attr.aria-label]="intl().timePicker.hours"
-  (scroll)="wrapScroll($event, hourCells().length)"
-  (wheel)="onUserScroll($event)"
+  (scroll)="onScroll($event, 'hours', hourCells().length)"
+  (wheel)="onWheel($event)"
   (touchmove)="onUserScroll($event)"
   (pointerdown)="onScrollbarGrab($event)"
   (scrollend)="onScrollEnd($event, 'hours', hourCells().length)">
@@ -67,8 +67,8 @@
   role="listbox"
   [class.loops]="minutesLoop()"
   [attr.aria-label]="intl().timePicker.minutes"
-  (scroll)="wrapScroll($event, minuteCells().length)"
-  (wheel)="onUserScroll($event)"
+  (scroll)="onScroll($event, 'minutes', minuteCells().length)"
+  (wheel)="onWheel($event)"
   (touchmove)="onUserScroll($event)"
   (pointerdown)="onScrollbarGrab($event)"
   (scrollend)="onScrollEnd($event, 'minutes', minuteCells().length)">
