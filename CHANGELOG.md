@@ -42,7 +42,7 @@
 - **`dsTooltipWhenClipped` no longer trips Firefox's "ResizeObserver loop completed with undelivered
   notifications".** The `tabindex` a clipped host takes or loses after a resize is written in the
   next animation frame instead of inside the observer callback. Firefox raised the error for hosts
-  under `content-visibility: auto`, and an app that turns window errors into toasts showed one.
+  under `content-visibility: auto`, and it reached every `error` listener on `window`.
 
 - **`focusBoundControl()` from `@angular/forms/signals` focuses a DS field.** On every DS form
   control, and on `ds-search`, calling `focus()` on the host element now focuses the control's own
