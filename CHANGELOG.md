@@ -16,17 +16,21 @@
   field no longer reveals anything. The unparseable-date error of `ds-date-picker` waits the same
   way. An `error` string, and `[invalid]` with no validation errors behind it, still show at once.
   A signal form without a `[dsSubmitted]` host shows no validation error at all.
+
 - **`touched` is removed from every field.** Errors no longer follow it, so a `[touched]` binding on a
   DS field goes, and `[dsSubmitted]` on its form takes its place. Signal forms stops binding it on
   its own. The input sat on the internal `DsFieldBase`; the internal `DsControlValueAccessor` and
   `DsBooleanControlValueAccessor` drop their `touchedSelf`, and the internal `DsFieldMessageSources`
   its `touched` and `touchedSelf`.
+
 - **`ds-time-picker` and `ds-time-columns` scroll to a picked value and select by scrolling.** A click or an
   arrow key scrolls the column smoothly to centre the cell (instantly on open, and under
   `prefers-reduced-motion`). Cells snap to the centre after wheel or touch scrolling. When a wheel,
   touch or scrollbar scroll ends, the centred enabled cell becomes the value and the time picker
-  emits `valueChange`; the panel stays open, and a click, Enter, Escape or an outside click closes
-  it. Handle `valueChange` as a value that can change several times while the panel is open.
+  emits `valueChange`; the panel stays open. In single mode it closes once both the hour and the
+  minute have been picked by click or key (a scroll pick counts toward neither), or on Escape, an
+  outside click, or a page scroll. Handle `valueChange` as a value that can change several times
+  while the panel is open.
 
 ### Fixed
 

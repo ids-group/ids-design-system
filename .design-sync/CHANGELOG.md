@@ -22,6 +22,10 @@ holds an entry; what the release bot commits afterwards needs none.
 - **Toggle Button publishes its card again**, "Toggle Button - On and off", from its own chapter
   `components/toggle-button`.
 
+- **The time picker docs describe scroll selection.** The design agent reads `TimePicker` as
+  selecting the centred cell when a wheel, touch or scrollbar scroll ends, with the panel left
+  open, and `TimeColumns` as firing `onTimeChange` and not `onPartPicked` for such a scroll.
+
 ### Build
 
 - **`check-manual-surface` fails on a `sections` entry for a component with a chapter of its own.**
