@@ -1,9 +1,4 @@
-import {
-  Component,
-  ViewEncapsulation,
-  resource,
-  signal,
-} from '@angular/core';
+import { Component, ViewEncapsulation, resource, signal } from '@angular/core';
 import {
   FormField,
   email,

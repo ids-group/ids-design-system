@@ -3,7 +3,10 @@ import { IconComponent } from '@ids-group-ltd/ids-design-system/icons';
 import { LoadingOverlayComponent } from '@ids-group-ltd/ids-design-system/components/loading-overlay';
 import { TooltipDirective } from '@ids-group-ltd/ids-design-system/components/tooltip';
 import type { IconName } from '@ids-group-ltd/ids-design-system/core';
-import type { EmptyStateTitleOverflow, EmptyStateVariant } from './empty-state.types';
+import type {
+  EmptyStateTitleOverflow,
+  EmptyStateVariant,
+} from './empty-state.types';
 
 @Component({
   selector: 'ds-empty-state',
