@@ -1,5 +1,14 @@
 ## Unreleased
 
+### Fixed
+
+- **A 12-hour `ds-time-picker` no longer closes before AM/PM is chosen.** Picking the hour and then
+  the minute closed the panel before the AM/PM column was reached, and the time kept the previous
+  AM or PM: from 8:45 PM, picking 9 and 00 gave 9:00 PM. In `'single'` mode on a 12-hour clock the
+  panel now stays open until the hour, the minute and AM/PM have each been picked since it opened,
+  in any order; the 24-hour clock still closes on the hour and the minute. Nothing to change in
+  your code.
+
 ## 0.15.3 — 2026-10-20
 
 ### Added
