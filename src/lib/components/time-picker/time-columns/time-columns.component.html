@@ -28,7 +28,7 @@
   [class.loops]="hoursLoop()"
   [attr.aria-label]="intl().timePicker.hours"
   (scroll)="onScroll($event, 'hours', hourCells().length)"
-  (wheel)="onUserScroll($event)"
+  (wheel)="onWheel($event)"
   (touchmove)="onUserScroll($event)"
   (pointerdown)="onScrollbarGrab($event)"
   (scrollend)="onScrollEnd($event, 'hours', hourCells().length)">
@@ -68,7 +68,7 @@
   [class.loops]="minutesLoop()"
   [attr.aria-label]="intl().timePicker.minutes"
   (scroll)="onScroll($event, 'minutes', minuteCells().length)"
-  (wheel)="onUserScroll($event)"
+  (wheel)="onWheel($event)"
   (touchmove)="onUserScroll($event)"
   (pointerdown)="onScrollbarGrab($event)"
   (scrollend)="onScrollEnd($event, 'minutes', minuteCells().length)">
