@@ -56,6 +56,7 @@ const EXTRA = {
   'manifest-detect:audit': ['tools/check-manifest-detect.mjs', '--audit'],
   'token-defaults:audit': ['tools/check-token-defaults.mjs', '--audit'],
   'heavy-lock:selftest': ['tools/heavy-lock-selftest.mjs'],
+  'tag-cache:selftest': ['tools/tag-cache-selftest.mjs'],
   probes: ['tools/run-probes.mjs'],
   schematics: ['tools/run-schematic-tests.mjs'],
 };
@@ -99,8 +100,12 @@ export const GROUPS = {
   // fails.
   // `plugin-lint-step` is in for the same reason: about 4 s (2026-10-09), and a consumer's upgrade
   // takes its hits as located usages.
+  // `tag-cache:selftest` is in: `changelog-pending` and `token-defaults` read their tag through
+  // that cache, so a cache returning the wrong tree turns both verdicts, and it runs in 1.8 s
+  // (2026-10-22).
   lint: [
     'tools-parse',
+    'tag-cache:selftest',
     'entry-point-imports',
     'lib-package',
     'chart-palette',
@@ -213,6 +218,7 @@ export const GROUPS = {
   // built dist/ds.
   selftests: [
     'heavy-lock:selftest',
+    'tag-cache:selftest',
     'changelog-lint:selftest',
     'migration-lint:selftest',
     'deck-lint:selftest',
