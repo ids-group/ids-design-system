@@ -216,7 +216,7 @@ changelog is also a page on the docs site. So their reader is an external develo
 no access to this repository, our tracker, our decks or our other clients — and every
 consumer reads about the others.
 
-**`node tools/check.mjs --group release` runs once before a release, never on a branch** (it builds the docs twice and installs two apps; `render-evidence --affected` is the branch-sized check for a rendering change).
+**`node tools/check.mjs --group release` runs once before a release, never on a branch**: it is the preflight of the cut. **`--group evidence`** (`upgrade-canary`, `render-evidence`) builds the docs twice and installs two apps, so CI never runs it: run it by hand before a release that touched rendering or the public API; `render-evidence --affected` is the branch-sized check for a rendering change.
 
 **`node tools/check.mjs --affected` is the branch-sized run of the rest:** it runs only the checks the files changed since the merge-base with `dev` (committed, uncommitted and untracked) can move, and prints each path with the checks it chose. A path its table does not name runs the whole `lint` group.
 
