@@ -2,6 +2,11 @@
 
 ### Added
 
+- **`dsTooltipAncestor`: a focusable card opens the clipped values inside it.** Put the attribute
+  on a focusable element that is not a control (a card, a tile with `tabindex="0"`): keyboard focus
+  on it opens the tip of its first clipped `dsTooltipWhenClipped` value, and that value takes no tab
+  stop of its own. Without the attribute such an element opens nothing, as before.
+
 - **`[dsSubmitted]` (`SubmittedDirective`): the form's submit flag for every DS field inside its
   host.** Bind the flag the submit button reads, `<form [dsSubmitted]="submitted()">`, and the fields
   show their validation errors once it is true. Any element can host it, so fields outside a
