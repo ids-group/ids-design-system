@@ -28,7 +28,6 @@ export class DatePickerComponent extends DsControlValueAccessor<Date | DateRange
     protected readonly controlState = this.fieldMessage.controlState;
     private countDigits;
     public readonly dateFormat = input<string | null>(null);
-    private readonly dateInvalid;
     protected dayKey(d: Date): string;
     protected dayLabel(cell: DayCell): string;
     protected readonly daysGrid = computed<DayCell[]>(…);
@@ -66,7 +65,6 @@ export class DatePickerComponent extends DsControlValueAccessor<Date | DateRange
     public readonly label = input<string>('');
     protected readonly labelId = `${this.uid}-label`;
     protected readonly layout = computed<FieldLayout>(…);
-    private readonly localError;
     public readonly locale = input<string | null>(null);
     public readonly maxDate = input<Date | null>(null);
     public readonly maxYear = input<number>(new Date().getFullYear() + 10);
@@ -96,6 +94,7 @@ export class DatePickerComponent extends DsControlValueAccessor<Date | DateRange
     protected readonly panelId = `${this.uid}-panel`;
     private readonly panelTokens;
     protected readonly panelTpl = viewChild.required<TemplateRef<unknown>>(…);
+    private readonly parseErrors;
     protected readonly pendingShown = this.fieldMessage.pending;
     public readonly placeholder = input<string | null>(null);
     public readonly placeholderResolved = computed(…);

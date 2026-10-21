@@ -1,5 +1,6 @@
 import {
   DestroyRef,
+  InjectionToken,
   Injector,
   Signal,
   afterNextRender,
@@ -48,6 +49,12 @@ const NO_ERRORS: readonly DsFieldError[] = [];
 export const DS_FIELD_WARNING_KIND = 'warning';
 
 /**
+ * The submit flag `[dsSubmitted]` provides to the fields inside it: validation errors show only
+ * while it reads `true`.
+ */
+export const DS_SUBMITTED = new InjectionToken<Signal<boolean>>('DS_SUBMITTED');
+
+/**
  * `errors` input transform. Accepts a bare string, a single error, or the array signal forms
  * assigns.
  */
@@ -82,15 +89,13 @@ export interface DsFieldMessageSources {
   warning: Signal<string>;
   error: Signal<string>;
   errors: Signal<readonly DsFieldError[]>;
+  /** Errors the control raises itself (an unparseable date), shown on the same terms as `errors`. */
+  ownErrors?: Signal<readonly DsFieldError[]>;
   invalid: Signal<boolean>;
   /** The control's own disabled state (a disabled control is not announced as invalid). A getter,
    *  not a `Signal`, so a caller can hand it over before its own `isDisabled` is initialised. */
   disabled?: () => boolean;
   success?: Signal<string>;
-  /** The field's own touched state, if it tracks one (CVA blur). */
-  touchedSelf?: Signal<boolean>;
-  /** Bound by signal forms as part of the `FormUiControl` contract. */
-  touched?: Signal<boolean>;
   /** Bound by signal forms; an async validator is running. */
   pending?: Signal<boolean>;
   /** Bound by signal forms; the user changed the value. */
@@ -114,14 +119,14 @@ const EMPTY_MESSAGE: DsFieldMessage = { text: '', state: 'default' };
 
 interface ControlState {
   readonly errors: readonly DsFieldError[];
-  readonly touched: boolean;
+  readonly submitted: boolean;
   readonly pending: boolean;
   readonly dirty: boolean;
 }
 
 const NO_CONTROL: ControlState = {
   errors: NO_ERRORS,
-  touched: false,
+  submitted: false,
   pending: false,
   dirty: false,
 };
@@ -132,15 +137,17 @@ const NO_CONTROL: ControlState = {
  * Precedence, highest first:
  *
  * 1. `error` - an explicit string. Shown immediately: the consumer decided.
- * 2. `errors` - validation errors. Shown once the user has interacted, so a
- *    `required` error does not greet an untouched form.
+ * 2. `errors` - validation errors. Shown once the form is submitted: `[dsSubmitted]` reads
+ *    `true`, or the parent `NgForm` / `FormGroupDirective` was submitted. Never on blur.
  * 3. `warning` - advisory, not blocking.
  * 4. `errors` whose kind is `DS_FIELD_WARNING_KIND` - the same, raised by the form model.
  * 5. `success` - confirmation.
  * 6. `hint` - helper text.
  *
- * Signal forms binds `errors` and `touched` by input name (`FormUiControl`); reactive and
- * template-driven forms expose the same through `NgControl`, read here.
+ * Signal forms binds `errors` and `invalid` by input name (`FormUiControl`); reactive and
+ * template-driven forms expose the same through `NgControl`, read here. `invalid` with errors
+ * behind it waits for the submit like them; `invalid` alone was set by the consumer and paints
+ * immediately.
  *
  * Every rung carries its OWN text; `hint` is never recoloured into another state. `invalid` has
  * no text: it paints the control and sets `aria-invalid`.
@@ -152,19 +159,19 @@ export function resolveFieldMessage(
   sources: DsFieldMessageSources,
 ): DsFieldMessageResolution {
   const config = inject(DS_CONFIG);
+  const submittedFlag = inject(DS_SUBMITTED, { optional: true });
   const controlState = watchNgControl();
 
   const errors = computed(() => {
-    const own = sources.errors();
+    const bound = sources.errors();
+    const fromForm = bound.length ? bound : controlState().errors;
+    const own = sources.ownErrors?.() ?? NO_ERRORS;
 
-    return own.length ? own : controlState().errors;
+    return own.length ? [...own, ...fromForm] : fromForm;
   });
 
-  const interacted = computed(
-    () =>
-      (sources.touched?.() ?? false) ||
-      (sources.touchedSelf?.() ?? false) ||
-      controlState().touched,
+  const revealed = computed(
+    () => (submittedFlag?.() ?? false) || controlState().submitted,
   );
 
   const blocking = computed(() =>
@@ -176,7 +183,7 @@ export function resolveFieldMessage(
 
   const errorText = computed(() => {
     const current = blocking();
-    if (!current.length || !interacted()) {
+    if (!current.length || !revealed()) {
       return '';
     }
 
@@ -185,7 +192,7 @@ export function resolveFieldMessage(
 
   const advisoryText = computed(() => {
     const current = advisory();
-    if (!current.length || !interacted()) {
+    if (!current.length || !revealed()) {
       return '';
     }
 
@@ -198,9 +205,8 @@ export function resolveFieldMessage(
   const invalid = computed(
     () =>
       !(sources.disabled?.() ?? false) &&
-      (sources.invalid() ||
-        sources.error().length > 0 ||
-        (blocking().length > 0 && interacted())),
+      (sources.error().length > 0 ||
+        (blocking().length > 0 ? revealed() : sources.invalid())),
   );
 
   // Relies on message inputs trimming via `trimmedText`; one declared without it breaks this quietly.
@@ -257,7 +263,7 @@ export function resolveFieldMessage(
  * `NgControl` cannot be injected in the constructor (`NG_VALUE_ACCESSOR` points at the field
  * itself: a DI cycle), so it is resolved after first render.
  *
- * `events`, not `statusChanges`: touching a control emits `TouchedChangeEvent`, not a status change.
+ * `events`, not `statusChanges`: editing a control emits `PristineChangeEvent`, not a status change.
  */
 function watchNgControl(): Signal<ControlState> {
   const injector = inject(Injector);
@@ -278,19 +284,26 @@ function watchNgControl(): Signal<ControlState> {
     const sync = (): void =>
       state.set({
         errors: fromValidationErrors(control.errors),
-        touched: control.touched || submitted(),
+        submitted: submitted(),
         pending: control.pending,
         dirty: control.dirty,
       });
+    // `resetForm()` resets the controls (their events fire here) BEFORE it clears `submitted`.
+    const syncNowAndAfterReset = (): void => {
+      sync();
+      queueMicrotask(sync);
+    };
 
     // Signal forms bridges an NgControl whose `control` has no `events` stream. Staying at
-    // NO_CONTROL is deliberate: the component's own inputs carry errors and touched there.
+    // NO_CONTROL is deliberate: the component's own inputs carry errors and invalid there.
     if (typeof control.events?.pipe !== 'function') {
       return;
     }
 
     sync();
-    control.events.pipe(takeUntilDestroyed(destroyRef)).subscribe(sync);
+    control.events
+      .pipe(takeUntilDestroyed(destroyRef))
+      .subscribe(syncNowAndAfterReset);
     const parentSubmit = parentFormGroup?.ngSubmit ?? parentForm?.ngSubmit;
     parentSubmit?.pipe(takeUntilDestroyed(destroyRef)).subscribe(sync);
   });

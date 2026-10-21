@@ -17,6 +17,28 @@ holds an entry; what the release bot commits afterwards needs none.
 
 ## Unreleased
 
+### Cards
+
+- **Toggle Button publishes its card again**, "Toggle Button - On and off", from its own chapter
+  `components/toggle-button`.
+
+- **The time picker docs describe scroll selection.** The design agent reads `TimePicker` as
+  selecting the centred cell as it passes the centre during a wheel, touch or scrollbar scroll,
+  with the panel left open and about one row per wheel notch, and `TimeColumns` as firing
+  `onTimeChange` and not `onPartPicked` for a cell scrolled to the centre.
+
+- **`DatePicker` describes the unparseable-date error as waiting for a submit.** The design agent
+  no longer expects typed text that is not a date to replace the `hint` in a card.
+
+- **`[dsSubmitted]` is recorded as an attribute directive with no element.** A card has no form
+  model to reveal errors for and draws a field's error state through `error`.
+
+### Build
+
+- **`check-manual-surface` fails on a `sections` entry for a component with a chapter of its own.**
+  Such an entry sends the component to a chapter that marks no block for it, so it ships with no
+  card.
+
 ## 0.15.2 — 2026-10-14
 
 ### Build

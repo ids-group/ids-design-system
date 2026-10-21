@@ -1,0 +1,374 @@
+{
+  "version": "unreleased",
+  "items": [
+    {
+      "id": "field-errors-shown-after-submit",
+      "kind": "behavior",
+      "old": "ds-input[errors]",
+      "new": null,
+      "surface": [
+        "template",
+        "typescript"
+      ],
+      "searchHints": [
+        "[formField]",
+        "formControlName",
+        "[formControl]",
+        "ngModel",
+        "markAllAsTouched",
+        "submitted"
+      ],
+      "detect": [
+        "markAllAsTouched()",
+        "submit(this.",
+        "(pressed)=",
+        "(ngSubmit)=",
+        "submitted = signal(",
+        "submitAttempted"
+      ],
+      "action": "Put `[dsSubmitted]=\"submitted()\"` on every element that holds validated DS fields, usually the `<form>`, where `submitted` is the flag the submit handler sets to true at its start and the form reset sets back to false. Where the component has no such flag, add one in its own state idiom (`submitted = signal(false)`) and set it at the start of the submit or (pressed) handler. A reactive or template-driven `<form>` shows its errors without the flag only when its save runs from (ngSubmit) and a `type=\"submit\"` button fires it; a ds-button is `type=\"button\"` by default, so a reactive form saved from (pressed) or (click), markAllAsTouched() included, gets the flag even inside `<form [formGroup]>`. A group of fields meant to show its errors while the user types gets `[dsSubmitted]=\"true\"`.",
+      "appliesWhen": "Every field bound to a form model through signal forms, `[formControl]`, `formControlName` or `ngModel`: input, textarea, select, autocomplete, multi-select, checkbox, radio, radio-group, switch, slider, segmented, date-picker, time-picker, color-picker, otp-input. Also the unparseable-date error of `ds-date-picker`. Not affected: an `error` string, `[invalid]` set with no validation errors behind it, `warning` and `hint`, which show as before.",
+      "pitfall": "A signal form with no `[dsSubmitted]` host shows no validation error at all, before or after a submit, and a reactive form that reveals its errors with markAllAsTouched() from a (pressed) or (click) handler does the same: the submit that fails validation looks like a dead button. A flag set after an awaited call reveals the errors only when that call returns.",
+      "restore": null,
+      "verify": "Every element holding DS fields bound to a form model sits under a `[dsSubmitted]` host or inside a `<form>` submitted through (ngSubmit), and a submit with an empty required field shows that field's error and none shows before it.",
+      "note": "Errors no longer follow `touched`: leaving a field never reveals one. Validation errors, the error paint and `aria-invalid` wait for the flag, and from then on follow the form live."
+    },
+    {
+      "id": "field-touched-input-removed-input",
+      "kind": "removed-api",
+      "old": "ds-input[touched]",
+      "new": null,
+      "surface": [
+        "template"
+      ],
+      "searchHints": [
+        "[touched]",
+        "touched"
+      ],
+      "detect": [
+        "[touched]="
+      ],
+      "action": "Delete every `[touched]` binding on a DS field and put `[dsSubmitted]` on the element that holds the field, bound to the form's submit flag.",
+      "appliesWhen": "`ds-input`. Every DS field listed under field-errors-shown-after-submit lost the same input; signal forms bound `touched` by name and stops doing so with no code of yours involved.",
+      "restore": null,
+      "verify": "No `ds-input` carries a `[touched]` binding."
+    },
+    {
+      "id": "field-touched-input-removed-textarea",
+      "kind": "removed-api",
+      "old": "ds-textarea[touched]",
+      "new": null,
+      "surface": [
+        "template"
+      ],
+      "searchHints": [
+        "[touched]",
+        "touched"
+      ],
+      "detect": [
+        "[touched]="
+      ],
+      "action": "Delete every `[touched]` binding on a DS field and put `[dsSubmitted]` on the element that holds the field, bound to the form's submit flag.",
+      "appliesWhen": "`ds-textarea`. Every DS field listed under field-errors-shown-after-submit lost the same input; signal forms bound `touched` by name and stops doing so with no code of yours involved.",
+      "restore": null,
+      "verify": "No `ds-textarea` carries a `[touched]` binding."
+    },
+    {
+      "id": "field-touched-input-removed-select",
+      "kind": "removed-api",
+      "old": "ds-select[touched]",
+      "new": null,
+      "surface": [
+        "template"
+      ],
+      "searchHints": [
+        "[touched]",
+        "touched"
+      ],
+      "detect": [
+        "[touched]="
+      ],
+      "action": "Delete every `[touched]` binding on a DS field and put `[dsSubmitted]` on the element that holds the field, bound to the form's submit flag.",
+      "appliesWhen": "`ds-select`. Every DS field listed under field-errors-shown-after-submit lost the same input; signal forms bound `touched` by name and stops doing so with no code of yours involved.",
+      "restore": null,
+      "verify": "No `ds-select` carries a `[touched]` binding."
+    },
+    {
+      "id": "field-touched-input-removed-autocomplete",
+      "kind": "removed-api",
+      "old": "ds-autocomplete[touched]",
+      "new": null,
+      "surface": [
+        "template"
+      ],
+      "searchHints": [
+        "[touched]",
+        "touched"
+      ],
+      "detect": [
+        "[touched]="
+      ],
+      "action": "Delete every `[touched]` binding on a DS field and put `[dsSubmitted]` on the element that holds the field, bound to the form's submit flag.",
+      "appliesWhen": "`ds-autocomplete`. Every DS field listed under field-errors-shown-after-submit lost the same input; signal forms bound `touched` by name and stops doing so with no code of yours involved.",
+      "restore": null,
+      "verify": "No `ds-autocomplete` carries a `[touched]` binding."
+    },
+    {
+      "id": "field-touched-input-removed-multi-select",
+      "kind": "removed-api",
+      "old": "ds-multi-select[touched]",
+      "new": null,
+      "surface": [
+        "template"
+      ],
+      "searchHints": [
+        "[touched]",
+        "touched"
+      ],
+      "detect": [
+        "[touched]="
+      ],
+      "action": "Delete every `[touched]` binding on a DS field and put `[dsSubmitted]` on the element that holds the field, bound to the form's submit flag.",
+      "appliesWhen": "`ds-multi-select`. Every DS field listed under field-errors-shown-after-submit lost the same input; signal forms bound `touched` by name and stops doing so with no code of yours involved.",
+      "restore": null,
+      "verify": "No `ds-multi-select` carries a `[touched]` binding."
+    },
+    {
+      "id": "field-touched-input-removed-checkbox",
+      "kind": "removed-api",
+      "old": "ds-checkbox[touched]",
+      "new": null,
+      "surface": [
+        "template"
+      ],
+      "searchHints": [
+        "[touched]",
+        "touched"
+      ],
+      "detect": [
+        "[touched]="
+      ],
+      "action": "Delete every `[touched]` binding on a DS field and put `[dsSubmitted]` on the element that holds the field, bound to the form's submit flag.",
+      "appliesWhen": "`ds-checkbox`. Every DS field listed under field-errors-shown-after-submit lost the same input; signal forms bound `touched` by name and stops doing so with no code of yours involved.",
+      "restore": null,
+      "verify": "No `ds-checkbox` carries a `[touched]` binding."
+    },
+    {
+      "id": "field-touched-input-removed-radio",
+      "kind": "removed-api",
+      "old": "ds-radio[touched]",
+      "new": null,
+      "surface": [
+        "template"
+      ],
+      "searchHints": [
+        "[touched]",
+        "touched"
+      ],
+      "detect": [
+        "[touched]="
+      ],
+      "action": "Delete every `[touched]` binding on a DS field and put `[dsSubmitted]` on the element that holds the field, bound to the form's submit flag.",
+      "appliesWhen": "`ds-radio`. Every DS field listed under field-errors-shown-after-submit lost the same input; signal forms bound `touched` by name and stops doing so with no code of yours involved.",
+      "restore": null,
+      "verify": "No `ds-radio` carries a `[touched]` binding."
+    },
+    {
+      "id": "field-touched-input-removed-radio-group",
+      "kind": "removed-api",
+      "old": "ds-radio-group[touched]",
+      "new": null,
+      "surface": [
+        "template"
+      ],
+      "searchHints": [
+        "[touched]",
+        "touched"
+      ],
+      "detect": [
+        "[touched]="
+      ],
+      "action": "Delete every `[touched]` binding on a DS field and put `[dsSubmitted]` on the element that holds the field, bound to the form's submit flag.",
+      "appliesWhen": "`ds-radio-group`. Every DS field listed under field-errors-shown-after-submit lost the same input; signal forms bound `touched` by name and stops doing so with no code of yours involved.",
+      "restore": null,
+      "verify": "No `ds-radio-group` carries a `[touched]` binding."
+    },
+    {
+      "id": "field-touched-input-removed-switch",
+      "kind": "removed-api",
+      "old": "ds-switch[touched]",
+      "new": null,
+      "surface": [
+        "template"
+      ],
+      "searchHints": [
+        "[touched]",
+        "touched"
+      ],
+      "detect": [
+        "[touched]="
+      ],
+      "action": "Delete every `[touched]` binding on a DS field and put `[dsSubmitted]` on the element that holds the field, bound to the form's submit flag.",
+      "appliesWhen": "`ds-switch`. Every DS field listed under field-errors-shown-after-submit lost the same input; signal forms bound `touched` by name and stops doing so with no code of yours involved.",
+      "restore": null,
+      "verify": "No `ds-switch` carries a `[touched]` binding."
+    },
+    {
+      "id": "field-touched-input-removed-slider",
+      "kind": "removed-api",
+      "old": "ds-slider[touched]",
+      "new": null,
+      "surface": [
+        "template"
+      ],
+      "searchHints": [
+        "[touched]",
+        "touched"
+      ],
+      "detect": [
+        "[touched]="
+      ],
+      "action": "Delete every `[touched]` binding on a DS field and put `[dsSubmitted]` on the element that holds the field, bound to the form's submit flag.",
+      "appliesWhen": "`ds-slider`. Every DS field listed under field-errors-shown-after-submit lost the same input; signal forms bound `touched` by name and stops doing so with no code of yours involved.",
+      "restore": null,
+      "verify": "No `ds-slider` carries a `[touched]` binding."
+    },
+    {
+      "id": "field-touched-input-removed-segmented",
+      "kind": "removed-api",
+      "old": "ds-segmented[touched]",
+      "new": null,
+      "surface": [
+        "template"
+      ],
+      "searchHints": [
+        "[touched]",
+        "touched"
+      ],
+      "detect": [
+        "[touched]="
+      ],
+      "action": "Delete every `[touched]` binding on a DS field and put `[dsSubmitted]` on the element that holds the field, bound to the form's submit flag.",
+      "appliesWhen": "`ds-segmented`. Every DS field listed under field-errors-shown-after-submit lost the same input; signal forms bound `touched` by name and stops doing so with no code of yours involved.",
+      "restore": null,
+      "verify": "No `ds-segmented` carries a `[touched]` binding."
+    },
+    {
+      "id": "field-touched-input-removed-date-picker",
+      "kind": "removed-api",
+      "old": "ds-date-picker[touched]",
+      "new": null,
+      "surface": [
+        "template"
+      ],
+      "searchHints": [
+        "[touched]",
+        "touched"
+      ],
+      "detect": [
+        "[touched]="
+      ],
+      "action": "Delete every `[touched]` binding on a DS field and put `[dsSubmitted]` on the element that holds the field, bound to the form's submit flag.",
+      "appliesWhen": "`ds-date-picker`. Every DS field listed under field-errors-shown-after-submit lost the same input; signal forms bound `touched` by name and stops doing so with no code of yours involved.",
+      "restore": null,
+      "verify": "No `ds-date-picker` carries a `[touched]` binding."
+    },
+    {
+      "id": "field-touched-input-removed-time-picker",
+      "kind": "removed-api",
+      "old": "ds-time-picker[touched]",
+      "new": null,
+      "surface": [
+        "template"
+      ],
+      "searchHints": [
+        "[touched]",
+        "touched"
+      ],
+      "detect": [
+        "[touched]="
+      ],
+      "action": "Delete every `[touched]` binding on a DS field and put `[dsSubmitted]` on the element that holds the field, bound to the form's submit flag.",
+      "appliesWhen": "`ds-time-picker`. Every DS field listed under field-errors-shown-after-submit lost the same input; signal forms bound `touched` by name and stops doing so with no code of yours involved.",
+      "restore": null,
+      "verify": "No `ds-time-picker` carries a `[touched]` binding."
+    },
+    {
+      "id": "field-touched-input-removed-color-picker",
+      "kind": "removed-api",
+      "old": "ds-color-picker[touched]",
+      "new": null,
+      "surface": [
+        "template"
+      ],
+      "searchHints": [
+        "[touched]",
+        "touched"
+      ],
+      "detect": [
+        "[touched]="
+      ],
+      "action": "Delete every `[touched]` binding on a DS field and put `[dsSubmitted]` on the element that holds the field, bound to the form's submit flag.",
+      "appliesWhen": "`ds-color-picker`. Every DS field listed under field-errors-shown-after-submit lost the same input; signal forms bound `touched` by name and stops doing so with no code of yours involved.",
+      "restore": null,
+      "verify": "No `ds-color-picker` carries a `[touched]` binding."
+    },
+    {
+      "id": "field-touched-input-removed-otp-input",
+      "kind": "removed-api",
+      "old": "ds-otp-input[touched]",
+      "new": null,
+      "surface": [
+        "template"
+      ],
+      "searchHints": [
+        "[touched]",
+        "touched"
+      ],
+      "detect": [
+        "[touched]="
+      ],
+      "action": "Delete every `[touched]` binding on a DS field and put `[dsSubmitted]` on the element that holds the field, bound to the form's submit flag.",
+      "appliesWhen": "`ds-otp-input`. Every DS field listed under field-errors-shown-after-submit lost the same input; signal forms bound `touched` by name and stops doing so with no code of yours involved.",
+      "restore": null,
+      "verify": "No `ds-otp-input` carries a `[touched]` binding."
+    },
+    {
+      "id": "time-picker-value-changes-while-scrolling",
+      "kind": "behavior",
+      "old": "ds-time-picker[valueChange]",
+      "new": null,
+      "surface": [
+        "template"
+      ],
+      "searchHints": [
+        "(valueChange)",
+        "[(value)]",
+        "valueChanges"
+      ],
+      "detect": [
+        "(valueChange)=",
+        "[(value)]="
+      ],
+      "action": "Treat a `valueChange` of a `ds-time-picker` as provisional while its panel is open: a wheel, touch or scrollbar scroll over a column emits one for every cell that passes the centre. A handler that saves, requests or navigates on each emission moves that work to the form's submit or debounces it; the same holds for a subscription to the changes of a form control bound to the picker.",
+      "appliesWhen": "A `ds-time-picker` whose `valueChange`, `[(value)]` or bound form control drives a side effect: a save, a request, a navigation, an analytics event. A binding that only stores the value needs nothing.",
+      "pitfall": "A handler that saved on every emission now saves every hour the user scrolls past, not only the one the scroll stops on.",
+      "restore": null,
+      "verify": "Open the time picker, scroll the hour column across several hours with the wheel and confirm the side effect runs for the value kept, not once per hour passed.",
+      "note": "A scroll pick leaves the panel open and counts toward neither the hour nor the minute a single-mode panel waits for before it closes; a click or a key still does."
+    }
+  ],
+  "informational": [
+    {
+      "text": "Angular signal forms focusBoundControl() focuses a DS form control, `ds-search` included: `focus()` on the host element is routed to the control's own input or trigger. A workaround that queried `[aria-invalid=\"true\"]` and focused it by hand can go; it never reached `ds-radio-group` or `ds-segmented`, whose `aria-invalid` sits on the host.",
+      "verify": "Submit an invalid signal form with onInvalid: (field) => field().errorSummary()[0]?.fieldTree().focusBoundControl() and confirm document.activeElement is the first invalid field's input."
+    },
+    "The internal `DsFieldBase` no longer declares `touched`, the internal `DsControlValueAccessor` and `DsBooleanControlValueAccessor` no longer track `touchedSelf`, and the internal `DsFieldMessageSources` no longer takes `touched` or `touchedSelf`: a subclass of a DS field that read them meets a compiler error. The consumer-facing change is the field-touched-input-removed-* items.",
+    "`dsTooltipWhenClipped` writes the `tabindex` of a host clipped or unclipped by a resize in the next animation frame, so Firefox no longer reports \"ResizeObserver loop completed with undelivered notifications\" for hosts under `content-visibility: auto`. A global error handler that filtered that message out for this reason can go.",
+    {
+      "text": "Looping hour and minute columns of `ds-time-picker` render more copies of their cells, so a test that counts the `.opt` cells of a looping column inside its internal `ds-time-columns` element finds more of them.",
+      "verify": "Count the `.opt` cells of a looping hour column of an open time picker: nine sets of its hours."
+    }
+  ],
+  "deleteList": []
+}

@@ -37,6 +37,7 @@
     "[dsRailTrigger]",
     "[dsReserveMessages]",
     "[dsShowDirty]",
+    "[dsSubmitted]",
     "[dsTableColumns]",
     "[dsTableExport]",
     "[dsTableResize]",

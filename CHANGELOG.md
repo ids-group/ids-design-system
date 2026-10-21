@@ -1,5 +1,54 @@
 ## Unreleased
 
+### Added
+
+- **`dsTooltipAncestor`: a focusable card opens the clipped values inside it.** Put the attribute
+  on a focusable element that is not a control (a card, a tile with `tabindex="0"`): keyboard focus
+  on it opens the tip of its first clipped `dsTooltipWhenClipped` value, and that value takes no tab
+  stop of its own. Without the attribute such an element opens nothing, as before.
+
+- **`[dsSubmitted]` (`SubmittedDirective`): the form's submit flag for every DS field inside its
+  host.** Bind the flag the submit button reads, `<form [dsSubmitted]="submitted()">`, and the fields
+  show their validation errors once it is true. Any element can host it, so fields outside a
+  `<form>` take it the same way; `[dsSubmitted]="true"` shows errors from the start. The flag
+  reaches the fields through the `DS_SUBMITTED` injection token.
+
+### Changed
+
+- **Fields show validation errors only after the form is submitted, never on blur.** Validation
+  errors, the error paint and `aria-invalid` wait until a `[dsSubmitted]` host reads true or the
+  parent `NgForm` / `FormGroupDirective` was submitted, and then follow the form live. Leaving a
+  field no longer reveals anything. The unparseable-date error of `ds-date-picker` waits the same
+  way. An `error` string, and `[invalid]` with no validation errors behind it, still show at once.
+  A signal form without a `[dsSubmitted]` host shows no validation error at all.
+
+- **`touched` is removed from every field.** Errors no longer follow it, so a `[touched]` binding on a
+  DS field goes, and `[dsSubmitted]` on its form takes its place. Signal forms stops binding it on
+  its own. The input sat on the internal `DsFieldBase`; the internal `DsControlValueAccessor` and
+  `DsBooleanControlValueAccessor` drop their `touchedSelf`, and the internal `DsFieldMessageSources`
+  its `touched` and `touchedSelf`.
+
+- **`ds-time-picker` scrolls to a picked value and selects by scrolling.** A click or an arrow key
+  scrolls the column smoothly to centre the cell (instantly on open, and under
+  `prefers-reduced-motion`). One wheel notch moves a column by about one row, and cells snap to the
+  centre after wheel or touch scrolling. While a wheel, touch or scrollbar scroll runs, the centred
+  enabled cell becomes the value as it passes the centre and the time picker emits `valueChange`
+  each time; the panel stays open. In single mode it closes once both the hour and the
+  minute have been picked by click or key (a scroll pick counts toward neither), or on Escape, an
+  outside click, or a page scroll. Handle `valueChange` as a value that can change several times
+  while the panel is open.
+
+### Fixed
+
+- **`dsTooltipWhenClipped` no longer trips Firefox's "ResizeObserver loop completed with undelivered
+  notifications".** The `tabindex` a clipped host takes or loses after a resize is written in the
+  next animation frame instead of inside the observer callback. Firefox raised the error for hosts
+  under `content-visibility: auto`, and it reached every `error` listener on `window`.
+
+- **`focusBoundControl()` from `@angular/forms/signals` focuses a DS field.** On every DS form
+  control, and on `ds-search`, calling `focus()` on the host element now focuses the control's own
+  input or trigger; before, signal forms focused the host itself and focus stayed where it was.
+
 ## 0.15.3 — 2026-10-20
 
 ### Added

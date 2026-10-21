@@ -14,20 +14,20 @@ import {
  */
 @Directive()
 export abstract class DsFieldBase extends DsMessageBase {
-  /** Validation errors, shown once the user has interacted. Bound by signal forms;
-   *  reactive and template-driven forms are read through `NgControl`. */
+  /** Validation errors, shown once the form is submitted (`[dsSubmitted]`, or `ngSubmit` of a
+   *  reactive or template-driven form). Bound by signal forms; reactive and template-driven
+   *  forms are read through `NgControl`. */
   readonly errors = input<readonly DsFieldError[], DsFieldErrorsInput>([], {
     transform: normalizeFieldErrors,
   });
-  /** Paints the error state and sets `aria-invalid` WITHOUT a message; use `error` to show text. */
+  /** Paints the error state and sets `aria-invalid` WITHOUT a message; use `error` to show text.
+   *  Signal forms binds it alongside `errors`, and then it waits for the submit like them. */
   readonly invalid = input(false, { transform: booleanAttribute });
-  /** Whether the user has interacted with the field. Bound by signal forms; gates `errors`. */
-  readonly touched = input(false, { transform: booleanAttribute });
 }
 
 /**
  * The form-state inputs of a DS value control: what signal forms binds by name beyond `errors`
- * and `touched`. Reactive and template-driven forms are read through `NgControl` instead.
+ * and `invalid`. Reactive and template-driven forms are read through `NgControl` instead.
  * @internal
  */
 @Directive()

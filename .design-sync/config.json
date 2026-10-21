@@ -48,7 +48,6 @@
     "TimeColumns": "components/time-picker",
     "TimelineItem": "components/timeline",
     "ToastRegion": "components/toast",
-    "ToggleButton": "components/button",
     "TooltipPanel": "components/tooltip",
     "WaterfallChart": "charts/waterfall-chart"
   },
