@@ -15,12 +15,10 @@ export interface TimePickerProps {
   reserveMessage?: boolean | null;
   /** Glyph on the message line, overriding what the state resolves to. Unset follows `DS_CONFIG.field.stateIcons`; `false` removes the glyph here alone. */
   messageIcon?: 'search' | 'plus' | 'minus' | 'check' | 'x' | 'chevronDown' | 'chevronRight' | 'slash' | 'chevronLeft' | 'chevronUp' | 'menu' | 'arrowRight' | 'arrowUp' | 'arrowDown' | 'info' | (string & {}) /* +69 more */ | null;
-  /** Validation errors, shown once the user has interacted. Bound by signal forms; reactive and template-driven forms are read through `NgControl`. */
+  /** Validation errors, shown once the form is submitted (`[dsSubmitted]`, or `ngSubmit` of a reactive or template-driven form). Bound by signal forms; reactive and template-driven forms are read through `NgControl`. */
   errors?: unknown;
-  /** Paints the error state and sets `aria-invalid` WITHOUT a message; use `error` to show text. */
+  /** Paints the error state and sets `aria-invalid` WITHOUT a message; use `error` to show text. Signal forms binds it alongside `errors`, and then it waits for the submit like them. */
   invalid?: boolean;
-  /** Whether the user has interacted with the field. Bound by signal forms; gates `errors`. */
-  touched?: boolean;
   /** Whether an async validator is running. Bound by signal forms; shows a trailing spinner. */
   pending?: boolean;
   /** Whether the user has changed the value. Bound by signal forms; drawn only under `showDirty`. */
@@ -66,6 +64,8 @@ export interface TimePickerProps {
   ariaLabel?: string | null;
   /** Display clock; falls back to `DS_CONFIG.timePicker.format`, then the hour cycle of `DS_CONFIG.locale` / `LOCALE_ID`. */
   format?: ('24h' | '12h') | null;
+  /** Whether the hour and minute columns run on past either end; falls back to `DS_CONFIG.timePicker.loop`, then `'auto'`, which loops a column that holds more values than it shows. */
+  loop?: ('auto' | 'always' | 'never') | null;
   staticPreview?: boolean;
   /** Element content. */
   children?: React.ReactNode;

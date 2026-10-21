@@ -1,106 +1,16 @@
-<!-- @dsCard group="navigation" viewport="1200x595" name="Sidenav Group - expandable groups" subtitle="ds-sidenav-group expandable makes the header a toggle with a caret; the body collapses when expanded=false; icon sets a group icon." --><!doctype html>
+<!-- @dsCard group="navigation" viewport="1200x595" name="Sidenav Group - expandable groups" subtitle="ds-sidenav-group expandable makes the header a toggle with a caret; the body collapses when expanded=false; icon sets a group icon." --><!DOCTYPE html>
 <html data-theme="light"><head><meta charset="utf-8">
   <title>SidenavGroup</title>
   <link rel="stylesheet" href="../../../styles.css">
   <link rel="stylesheet" href="../../../_ds_bundle.css">
-  <style>
-    body{margin:0;background:var(--surface-canvas, #fff);color:var(--text-primary, #161A28)}
-    .ds-page .section > .block-desc:first-of-type{margin-top:var(--space-2)}
-    .ds-page{max-width:var(--col-cap-content);margin-inline:auto;padding:var(--space-12) var(--space-16) var(--space-24)}
-  </style>
-</head><body>
-  <div class="ds-page"><ds-docs-components-sidenav></ds-docs-components-sidenav></div>
-  <script>window.__dsSectionsOnly = true</script>
-  <script src="../../../_ds_bundle.js"></script>
-  <script>
-    (function () {
-      var OWNS = "sidenav-group";
-      var INDEX = 0;
-      var KEY = "sidenav:SidenavGroupComponent";
-      var TABLE = true;
-      var HEAD = "Sidenav Group";
-      var BLOCK = "expandable groups";
-      var REACT = "SidenavGroup";
-      var WHOLE = OWNS === null;
-      var LEDE = WHOLE || (OWNS === '' && true);
-      var KEEP = LEDE ? 'h2, p.lede' : 'h2';
-      var DROP_ALWAYS = '.eyebrow, docs-api-table:not([data-key])' + (LEDE ? '' : ', p.lede');
-      var API = '[data-key]';
-      var host = document.querySelector("ds-docs-components-sidenav");
-      var start = Date.now();
-      (function slice() {
-        var section = host && host.querySelector('.section');
-        if (!section) {
-          if (Date.now() - start < 8000) setTimeout(slice, 50);
-          return;
-        }
-        var HEADER = 'h2, p.lede, .eyebrow, .tagrow, docs-component-meta, ' + API;
-        var filled = function (node) {
-          return !node.matches(HEADER) && (node.childElementCount > 0 || node.textContent.trim() !== '');
-        };
-        if (!Array.prototype.some.call(section.children, filled)) {
-          if (Date.now() - start < 8000) return setTimeout(slice, 50);
-          document.documentElement.setAttribute('data-ds-sliced', '0');
-          document.documentElement.setAttribute('data-ds-kept', '0');
-          return;
-        }
-        var owner = '';
-        var doomed = [];
-        var apis = [];
-        var ordinal = -1;
-        var heading = null;
-        for (var node = section.firstElementChild; node; node = node.nextElementSibling) {
-          if (node.matches(DROP_ALWAYS)) { doomed.push(node); continue; }
-          if (WHOLE) continue;
-          if (node.matches(KEEP)) continue;
-          if (node.matches(API)) { apis.push(node); continue; }
-          var marked = node.getAttribute('data-for');
-          var starts = marked !== null || node.matches('h3.block-title');
-          if (marked !== null) owner = marked;
-          else if (node.matches('h3.block-title')) owner = '';
-          if (starts && owner === OWNS) ordinal += 1;
-          if (owner !== OWNS || ordinal !== INDEX) doomed.push(node);
-          else if (starts && node.matches('h3.block-title')) heading = node;
-        }
-        var mine = KEY === '' ? [] : apis.filter(function (n) { return n.getAttribute('data-key') === KEY; });
-        var keepApi = KEY === '' ? [] : (mine.length ? mine : apis.slice(0, 1));
-        if (!WHOLE) {
-          for (var a = 0; a < apis.length; a++) {
-            if (keepApi.indexOf(apis[a]) < 0) { doomed.push(apis[a]); continue; }
-            if (TABLE) continue;
-            if (apis[a].matches('docs-api-table')) { doomed.push(apis[a]); continue; }
-            var nested = apis[a].querySelector('docs-api-table');
-            if (nested) doomed.push(nested);
-          }
-        }
-        var title = section.querySelector('h2');
-        var label = null;
-        for (var c = 0; title && c < title.childNodes.length; c++) {
-          if (title.childNodes[c].nodeType === 3) { label = title.childNodes[c]; break; }
-        }
-        if (title && label === null) {
-          label = document.createTextNode('');
-          title.insertBefore(label, title.firstChild);
-        }
-        if (label) {
-          var head = HEAD || label.nodeValue.trim();
-          label.nodeValue = BLOCK ? head + ' - ' + BLOCK : head;
-          if (BLOCK && heading) doomed.push(heading);
-        }
-        for (var i = 0; i < doomed.length; i++) doomed[i].remove();
-        var wrapper = KEY === '' ? null : section.querySelector('.api-sub[data-key="' + KEY + '"]');
-        var chip = wrapper ? wrapper.querySelector('docs-component-meta') : null;
-        if (chip && title) title.parentNode.insertBefore(chip, title.nextSibling);
-        if (wrapper && wrapper.firstElementChild === null) wrapper.remove();
-        var named = section.querySelector('docs-component-meta .chip .tag');
-        if (REACT && named) named.textContent = '<' + REACT + ' />';
-        var kept = 0;
-        for (var k = section.firstElementChild; k; k = k.nextElementSibling) {
-          if (filled(k)) kept += 1;
-        }
-        document.documentElement.setAttribute('data-ds-sliced', String(doomed.length));
-        document.documentElement.setAttribute('data-ds-kept', String(kept));
-      })();
-    })();
-  </script>
+  <style>body{margin:0;background:var(--surface-canvas, #fff);color:var(--text-primary, #161A28)}
+.ds-page .section > .block-desc:first-of-type{margin-top:var(--space-2)}
+.ds-page{max-width:var(--col-cap-content);margin-inline:auto;padding:var(--space-12) var(--space-16) var(--space-24)}</style>
+<link rel="stylesheet" href="../../../_ds_cards.css"><style>:where(ds-icon,ds-icon *){box-sizing:border-box}ds-icon{display:inline-flex;align-items:center;justify-content:center;vertical-align:middle;line-height:0}ds-icon>svg.icon{display:block}</style></head><body>
+  <div class="ds-page"><ds-docs-components-sidenav _nghost-c2c=""><docs-section _ngcontent-c2c="" anchor="sidenav" eyebrow="Components" _nghost-c1=""><section _ngcontent-c1="" class="section" id="section-sidenav" data-anchor="sidenav"><h2 _ngcontent-c1="" class="t-h2">Sidenav Group - expandable groups</h2><p _ngcontent-c2c="" class="block-desc t-s"><code _ngcontent-c2c="" class="t-mono-inline"> &lt;ds-sidenav-group expandable&gt; </code> makes the header a toggle with a caret; the body collapses when <code _ngcontent-c2c="" class="t-mono-inline"> expanded=false </code>; <code _ngcontent-c2c="" class="t-mono-inline"> icon </code> sets a group icon. </p><div _ngcontent-c2c="" class="stage is-frame"><ds-sidenav _ngcontent-c2c="" brand="Atlas" _nghost-c1w="" class="sidenav"><div _ngcontent-c1w="" class="brand"><span _ngcontent-c1w="" aria-hidden="true" class="mark"> A </span><span _ngcontent-c1w="" class="brand-name"> Atlas </span></div><ds-sidenav-item _ngcontent-c2c="" icon="home" label="Dashboard" _nghost-c1x=""><button _ngcontent-c1x="" type="button" class="active item" aria-current="page"><ds-icon _ngcontent-c1x="" class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" class="icon" style="--ds-icon-size: 20px;" width="20" height="20" stroke-width="1.75" aria-hidden="true"><path d="m3 11 9-8 9 8"></path><path d="M5 10v10h14V10"></path></svg></ds-icon><span _ngcontent-c1x="" class="item-label"> Dashboard </span><span _ngcontent-c1x="" class="trailing"></span></button></ds-sidenav-item><ds-sidenav-group _ngcontent-c2c="" label="Operations" icon="truck" _nghost-c2d=""><button _ngcontent-c2d="" type="button" class="group-header" aria-expanded="true"><ds-icon _ngcontent-c2d="" class="group-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" class="icon" style="--ds-icon-size: 18px;" width="18" height="18" stroke-width="1.75" aria-hidden="true"><path d="M3 16V6a1 1 0 0 1 1-1h11v11"></path><path d="M15 9h4l2 3v4h-6"></path><circle cx="7.5" cy="17.5" r="2"></circle><circle cx="17.5" cy="17.5" r="2"></circle></svg></ds-icon><span _ngcontent-c2d="" class="group-title"> Operations </span><ds-icon _ngcontent-c2d="" name="chevronDown" class="group-caret open"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" class="icon" style="--ds-icon-size: 14px;" width="14" height="14" stroke-width="1.75" aria-hidden="true"><path d="m6 9 6 6 6-6"></path></svg></ds-icon></button><div _ngcontent-c2d="" class="group-body"><ds-sidenav-item _ngcontent-c2c="" icon="calendar" label="Records" _nghost-c1x=""><button _ngcontent-c1x="" type="button" class="item"><ds-icon _ngcontent-c1x="" class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" class="icon" style="--ds-icon-size: 20px;" width="20" height="20" stroke-width="1.75" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"></rect><path d="M3 10h18M8 3v4M16 3v4"></path></svg></ds-icon><span _ngcontent-c1x="" class="item-label"> Records </span><span _ngcontent-c1x="" class="trailing"></span></button></ds-sidenav-item><ds-sidenav-item _ngcontent-c2c="" icon="package" label="Equipment list" _nghost-c1x=""><button _ngcontent-c1x="" type="button" class="item"><ds-icon _ngcontent-c1x="" class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" class="icon" style="--ds-icon-size: 20px;" width="20" height="20" stroke-width="1.75" aria-hidden="true"><path d="M3 7v10l9 4 9-4V7l-9-4z"></path><path d="m3 7 9 5 9-5M12 12v9"></path></svg></ds-icon><span _ngcontent-c1x="" class="item-label"> Equipment list </span><span _ngcontent-c1x="" class="trailing"></span></button></ds-sidenav-item><ds-sidenav-item _ngcontent-c2c="" icon="map" label="Sites" _nghost-c1x=""><button _ngcontent-c1x="" type="button" class="item"><ds-icon _ngcontent-c1x="" class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" class="icon" style="--ds-icon-size: 20px;" width="20" height="20" stroke-width="1.75" aria-hidden="true"><path d="m9 4-6 3v13l6-3 6 3 6-3V4l-6 3-6-3z"></path><path d="M9 4v13M15 7v13"></path></svg></ds-icon><span _ngcontent-c1x="" class="item-label"> Sites </span><span _ngcontent-c1x="" class="trailing"></span></button></ds-sidenav-item></div></ds-sidenav-group><ds-sidenav-group _ngcontent-c2c="" label="Admin" icon="settings" _nghost-c2d=""><button _ngcontent-c2d="" type="button" class="group-header" aria-expanded="false"><ds-icon _ngcontent-c2d="" class="group-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" class="icon" style="--ds-icon-size: 18px;" width="18" height="18" stroke-width="1.75" aria-hidden="true"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"></path></svg></ds-icon><span _ngcontent-c2d="" class="group-title"> Admin </span><ds-icon _ngcontent-c2d="" name="chevronDown" class="group-caret"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" class="icon" style="--ds-icon-size: 14px;" width="14" height="14" stroke-width="1.75" aria-hidden="true"><path d="m6 9 6 6 6-6"></path></svg></ds-icon></button><div _ngcontent-c2d="" class="group-body hidden" inert=""><ds-sidenav-item _ngcontent-c2c="" icon="users" label="Members" _nghost-c1x=""><button _ngcontent-c1x="" type="button" class="item"><ds-icon _ngcontent-c1x="" class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" class="icon" style="--ds-icon-size: 20px;" width="20" height="20" stroke-width="1.75" aria-hidden="true"><circle cx="9" cy="8" r="4"></circle><path d="M2 21a7 7 0 0 1 14 0"></path><path d="M16 4a4 4 0 0 1 0 8M22 21a6 6 0 0 0-6-6"></path></svg></ds-icon><span _ngcontent-c1x="" class="item-label"> Members </span><span _ngcontent-c1x="" class="trailing"></span></button></ds-sidenav-item><ds-sidenav-item _ngcontent-c2c="" icon="activity" label="Activity" _nghost-c1x=""><button _ngcontent-c1x="" type="button" class="item"><ds-icon _ngcontent-c1x="" class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" class="icon" style="--ds-icon-size: 20px;" width="20" height="20" stroke-width="1.75" aria-hidden="true"><path d="M3 12h4l3-9 4 18 3-9h4"></path></svg></ds-icon><span _ngcontent-c1x="" class="item-label"> Activity </span><span _ngcontent-c1x="" class="trailing"></span></button></ds-sidenav-item></div></ds-sidenav-group></ds-sidenav></div></section></docs-section></ds-docs-components-sidenav></div>
+  
+  
+  
+
+
 </body></html>

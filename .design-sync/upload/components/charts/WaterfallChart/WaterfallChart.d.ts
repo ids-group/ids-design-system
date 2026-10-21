@@ -29,6 +29,8 @@ export interface WaterfallChartProps {
   tooltipLingerMs?: number | null;
   /** Holds the clicked mark and its tooltip until a second click, Escape or a press outside. Unset falls back to `DS_CONFIG.chart.pinOnClick`, then `true`. The click output fires either way. */
   pinOnClick?: boolean | null;
+  /** Whether the hovered or focused column, bar or heatmap cell brightens. Unset falls back to `DS_CONFIG.chart.highlightActive`, then `true`. */
+  highlightActive?: boolean | null;
   /** The bars in reading order; never sorted. */
   data?: unknown;
   /** Prints each bar's own reading above it, with its sign. */

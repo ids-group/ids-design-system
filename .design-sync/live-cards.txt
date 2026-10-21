@@ -46,16 +46,10 @@ components/navigation/Pagination/Pagination - Default.html
 components/navigation/Pagination/Pagination - Layout and size.html
 components/navigation/Pagination/Pagination - Ranges.html
 components/navigation/Pagination/Pagination - States showcase.html
-components/navigation/Sidenav/Sidenav - Collapsed.html
-components/navigation/Sidenav/Sidenav - Custom brand logo.html
-components/navigation/Sidenav/Sidenav - Default.html
 components/navigation/SidenavFooter/Sidenav Footer - The rail footer on its own.html
-components/navigation/SidenavGroup/Sidenav Group - Expandable groups.html
-components/navigation/SidenavItem/Sidenav Item - Item states showcase.html
 components/navigation/Topbar/Topbar - With breadcrumb.html
 components/overlays/BottomSheet/Bottom Sheet - Open sheet.html
 components/overlays/Drawer/Drawer - Open drawer.html
-components/overlays/InfoHint/Info Hint - Info hint.html
 components/overlays/Modal/Modal - Sizes.html
 components/overlays/ModalCard/Modal Card - Eyebrow - context above the title.html
 components/overlays/ModalCard/Modal Card - Status.html
