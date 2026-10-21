@@ -187,10 +187,8 @@ export class TimeColumnsComponent {
       this.periodEntry();
       untracked(() => {
         this.scrollSelectedIntoView();
-        requestAnimationFrame(() => {
-          this.scrollSelectedIntoView();
-          this.userPicked = false;
-        });
+        this.userPicked = false;
+        requestAnimationFrame(() => this.scrollSelectedIntoView());
       });
     });
   }
@@ -574,6 +572,11 @@ export class TimeColumnsComponent {
     }
     const top =
       button.offsetTop - (column.clientHeight - button.offsetHeight) / 2;
+    // Any scrollTop write aborts a running smooth scroll, and at a low frame rate the rAF pass lands mid-animation.
+    const inFlight = this.smoothScrolls.get(column);
+    if (inFlight && Math.abs(inFlight.top - top) <= 1) {
+      return;
+    }
     if (this.userPicked && !this.prefersReducedMotion()) {
       this.scrollSmoothly(column, top, buttons.length);
     } else {
@@ -594,12 +597,14 @@ export class TimeColumnsComponent {
           ? candidate
           : best,
       );
-      column.scrollTop += top - nearest;
+      if (nearest !== top) {
+        column.scrollTop += top - nearest;
+      }
     }
     // Assigning scrollTop while this runs would abort the animation, so wrapScroll stands down until scrollend; the timer covers browsers without it.
     this.releaseSmoothScroll(column);
     this.smoothScrolls.set(column, {
-      timer: window.setTimeout(() => this.releaseSmoothScroll(column), 900),
+      timer: window.setTimeout(() => this.releaseSmoothScroll(column), 2000),
       top,
     });
     column.scrollTo({ top, behavior: 'smooth' });
