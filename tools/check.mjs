@@ -163,13 +163,7 @@ export const GROUPS = {
   // golden at a tag is what the next release's surface diff starts from. `schematics` runs the shipped
   // `ng add` and `check-overrides` on in-memory workspaces; it is out of `lint` because the compile
   // alone takes most of 4.7-5.1 s (three runs, 2026-10-08). Left out: deck-lint, whose subject is
-  // internal decks that never reach the package.
-  // `upgrade-canary` is last because it is the slow one, two library builds and two app builds
-  // (167 to 388 s over four runs, 2026-10-08). It is the only gate that applies the draft to an app and
-  // builds it, so a break no item names, or an item that migrates into a broken build, surfaces at the
-  // cut and not at a consumer's.
-  // `render-evidence` sees a rendering change no token or member diff carries; it builds the docs twice
-  // and screenshots every block, minutes rather than seconds, so it is here and not in `lint`.
+  // internal decks that never reach the package, and the `evidence` group below.
   release: [
     'tools-parse',
     'template-context-guard',
@@ -207,6 +201,11 @@ export const GROUPS = {
     'lib-package',
     'entry-point-imports',
     'schematics',
+  ],
+  // Run by hand or by an agent, never by CI: `upgrade-canary` builds the library and an app twice
+  // (140-388 s) and `render-evidence` builds the docs twice and screenshots every block (290-445 s,
+  // 2026-10-08 to 2026-10-22), too heavy for a release step.
+  evidence: [
     'upgrade-canary:selftest',
     'upgrade-canary',
     'render-evidence:selftest',
