@@ -151,6 +151,7 @@ export class TimeColumnsComponent {
   private readonly hoursOverflow = signal(false);
   private readonly minutesOverflow = signal(false);
   private userPicked = false;
+  private pickingByScroll = false;
   private readonly userScrolledColumns = new Set<HTMLElement>();
   private readonly smoothScrolls = new Map<
     HTMLElement,
@@ -283,7 +284,9 @@ export class TimeColumnsComponent {
     if (target < 0 || this.isSelected(column, target)) {
       return;
     }
+    this.pickingByScroll = true;
     this.selectAt(column, target);
+    this.pickingByScroll = false;
   }
 
   private nearestEnabled(
@@ -467,7 +470,10 @@ export class TimeColumnsComponent {
 
   private emit(hour24: number, minute: number, part: TimeColumnId): void {
     this.timeChange.emit(`${pad2(hour24)}:${pad2(minute)}`);
-    this.partPicked.emit(part);
+    // partPicked closes the single panel once both halves are picked; a scroll only browses.
+    if (!this.pickingByScroll) {
+      this.partPicked.emit(part);
+    }
   }
 
   private entryIndex(
