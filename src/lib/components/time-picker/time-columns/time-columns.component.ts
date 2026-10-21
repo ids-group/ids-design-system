@@ -151,7 +151,10 @@ export class TimeColumnsComponent {
   private readonly hoursOverflow = signal(false);
   private readonly minutesOverflow = signal(false);
   private userPicked = false;
-  private readonly smoothScrollTimers = new Map<HTMLElement, number>();
+  private readonly smoothScrolls = new Map<
+    HTMLElement,
+    { timer: number; top: number }
+  >();
 
   protected readonly hoursLoop = computed(() =>
     this.loops(this.hoursOverflow()),
@@ -219,7 +222,7 @@ export class TimeColumnsComponent {
   /** Keeps a looping column inside its middle set, so a copy is always beyond either edge. */
   protected wrapScroll(event: Event, count: number): void {
     const column = event.target as HTMLElement;
-    if (this.smoothScrollTimers.has(column)) {
+    if (this.smoothScrolls.has(column)) {
       return;
     }
     this.wrapColumn(column, count);
@@ -227,6 +230,10 @@ export class TimeColumnsComponent {
 
   protected onScrollEnd(event: Event, count: number): void {
     const column = event.target as HTMLElement;
+    const smooth = this.smoothScrolls.get(column);
+    if (smooth && Math.abs(column.scrollTop - smooth.top) > 1) {
+      return;
+    }
     this.releaseSmoothScroll(column);
     this.wrapColumn(column, count);
   }
@@ -253,8 +260,8 @@ export class TimeColumnsComponent {
   }
 
   private releaseSmoothScroll(column: HTMLElement): void {
-    window.clearTimeout(this.smoothScrollTimers.get(column));
-    this.smoothScrollTimers.delete(column);
+    window.clearTimeout(this.smoothScrolls.get(column)?.timer);
+    this.smoothScrolls.delete(column);
   }
 
   protected selectHour(cell: Cell<number>): void {
@@ -515,10 +522,10 @@ export class TimeColumnsComponent {
     }
     // Assigning scrollTop while this runs would abort the animation, so wrapScroll stands down until scrollend; the timer covers browsers without it.
     this.releaseSmoothScroll(column);
-    this.smoothScrollTimers.set(
-      column,
-      window.setTimeout(() => this.releaseSmoothScroll(column), 900),
-    );
+    this.smoothScrolls.set(column, {
+      timer: window.setTimeout(() => this.releaseSmoothScroll(column), 900),
+      top,
+    });
     column.scrollTo({ top, behavior: 'smooth' });
   }
 
