@@ -1,0 +1,11 @@
+{
+  "version": "unreleased",
+  "items": [],
+  "informational": [
+    {
+      "text": "Angular signal forms focusBoundControl() focuses a DS form control, `ds-search` included: `focus()` on the host element is routed to the control's own input or trigger. A workaround that queried `[aria-invalid=\"true\"]` and focused it by hand can go; it never reached `ds-radio-group` or `ds-segmented`, whose `aria-invalid` sits on the host.",
+      "verify": "Submit an invalid signal form with onInvalid: (field) => field().errorSummary()[0]?.fieldTree().focusBoundControl() and confirm document.activeElement is the first invalid field's input."
+    }
+  ],
+  "deleteList": []
+}

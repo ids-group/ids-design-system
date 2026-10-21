@@ -104,6 +104,10 @@ export class SearchComponent implements ControlValueAccessor {
   private pushed = this.value();
 
   constructor() {
+    // focusBoundControl() calls focus() on the host; see DsControlValueAccessor.
+    inject<ElementRef<HTMLElement>>(ElementRef).nativeElement.focus = (
+      options?: FocusOptions,
+    ) => this.focus(options);
     effect(() => {
       const incoming = this.value();
       if (incoming !== this.pushed) {

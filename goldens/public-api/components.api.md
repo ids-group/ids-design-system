@@ -124,6 +124,7 @@ export class DsChipTemplateDirective {
 // @internal
 @Directive()
 export abstract class DsControlValueAccessor<T> extends DsFormControlBase implements ControlValueAccessor {
+    public constructor();
     public blur(): void;
     private readonly bridge;
     public focus(options?: FocusOptions): void;
