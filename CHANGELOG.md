@@ -28,8 +28,8 @@
   `DsBooleanControlValueAccessor` drop their `touchedSelf`, and the internal `DsFieldMessageSources`
   its `touched` and `touchedSelf`.
 
-- **`ds-time-picker` and `ds-time-columns` scroll to a picked value and select by scrolling.** A click or an
-  arrow key scrolls the column smoothly to centre the cell (instantly on open, and under
+- **`ds-time-picker` scrolls to a picked value and selects by scrolling.** A click or an arrow key
+  scrolls the column smoothly to centre the cell (instantly on open, and under
   `prefers-reduced-motion`). One wheel notch moves a column by about one row, and cells snap to the
   centre after wheel or touch scrolling. While a wheel, touch or scrollbar scroll runs, the centred
   enabled cell becomes the value as it passes the centre and the time picker emits `valueChange`
