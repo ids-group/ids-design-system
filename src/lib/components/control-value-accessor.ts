@@ -85,13 +85,9 @@ export function valueControlBridge<T>(model: () => ModelSignal<T>): {
   };
 }
 
-/**
- * Routes `focus()` on the host element to the control's own `focus()`. Signal forms takes the
- * `ControlValueAccessor` path for every DS control and `focusBoundControl()` then calls
- * `focus()` on the HOST, which is not focusable.
- * @internal
- */
-export function delegateHostFocus(
+// Signal forms takes the ControlValueAccessor path for every DS control, and
+// focusBoundControl() then calls focus() on the unfocusable HOST.
+function delegateHostFocus(
   host: HTMLElement,
   focus: (options?: FocusOptions) => void,
 ): void {
