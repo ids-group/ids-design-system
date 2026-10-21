@@ -1,5 +1,11 @@
 ## Unreleased
 
+### Fixed
+
+- **`focusBoundControl()` from `@angular/forms/signals` focuses a DS field.** On every DS form
+  control, and on `ds-search`, calling `focus()` on the host element now focuses the control's own
+  input or trigger; before, signal forms focused the host itself and focus stayed where it was.
+
 ## 0.15.3 — 2026-10-20
 
 ### Added

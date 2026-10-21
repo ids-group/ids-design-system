@@ -124,6 +124,7 @@ export class DsChipTemplateDirective {
 // @internal
 @Directive()
 export abstract class DsControlValueAccessor<T> extends DsFormControlBase implements ControlValueAccessor {
+    public constructor();
     public blur(): void;
     private readonly bridge;
     public focus(options?: FocusOptions): void;
@@ -365,6 +366,9 @@ export function createTypeAhead(): DsTypeAhead;
 
 // @internal
 export function decimationTarget(plotWidth: number): number;
+
+// @internal
+export function delegateHostFocus(host: HTMLElement, focus: (options?: FocusOptions) => void): void;
 
 // @internal
 export function describeSeries(words: DsIntl['chart'], label: string, points: readonly SummaryPoint[], format: (value: number) => string = formatValue, tableFollows = true, thresholds: readonly ChartThreshold[] = []): string;
