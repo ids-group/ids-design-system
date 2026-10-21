@@ -2,7 +2,7 @@
 
 ### Changed
 
-- **`ds-time-picker` columns scroll to a picked value and select by scrolling.** A click or an
+- **`ds-time-picker` and `ds-time-columns` scroll to a picked value and select by scrolling.** A click or an
   arrow key scrolls the column smoothly to centre the cell (instantly on open, and under
   `prefers-reduced-motion`). Cells snap to the centre after wheel or touch scrolling. When a wheel,
   touch or scrollbar scroll ends, the centred enabled cell becomes the value and the time picker

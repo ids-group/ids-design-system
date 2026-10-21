@@ -7,7 +7,7 @@
       "verify": "Submit an invalid signal form with onInvalid: (field) => field().errorSummary()[0]?.fieldTree().focusBoundControl() and confirm document.activeElement is the first invalid field's input."
     },
     {
-      "text": "`ds-time-picker` and its columns select the centred cell when a user scroll ends, so `valueChange` can fire while the panel is open; picking by click or Enter still closes the panel. Looping columns render more copies of their cells, so a test that counts `[role=\"option\"]` in a looping hour or minute column finds more of them.",
+      "text": "`ds-time-picker` and `ds-time-columns` select the centred cell when a user scroll ends, so `valueChange` can fire while the panel is open; picking by click or Enter still closes the panel. Looping columns render more copies of their cells, so a test that counts `[role=\"option\"]` in a looping hour or minute column finds more of them.",
       "verify": "Open a time picker, scroll the hour column with the wheel and confirm the trigger shows the centred hour with the panel still open."
     }
   ],
