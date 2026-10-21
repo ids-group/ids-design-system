@@ -151,6 +151,7 @@ export class TimeColumnsComponent {
   private readonly hoursOverflow = signal(false);
   private readonly minutesOverflow = signal(false);
   private userPicked = false;
+  private readonly userScrolledColumns = new Set<HTMLElement>();
   private readonly smoothScrolls = new Map<
     HTMLElement,
     { timer: number; top: number }
@@ -228,14 +229,81 @@ export class TimeColumnsComponent {
     this.wrapColumn(column, count);
   }
 
-  protected onScrollEnd(event: Event, count: number): void {
-    const column = event.target as HTMLElement;
-    const smooth = this.smoothScrolls.get(column);
-    if (smooth && Math.abs(column.scrollTop - smooth.top) > 1) {
+  protected onUserScroll(event: Event): void {
+    this.userScrolledColumns.add(event.currentTarget as HTMLElement);
+  }
+
+  protected onScrollbarGrab(event: PointerEvent): void {
+    if (event.target === event.currentTarget) {
+      this.onUserScroll(event);
+    }
+  }
+
+  protected onScrollEnd(
+    event: Event,
+    column: TimeColumnId,
+    count: number,
+  ): void {
+    const element = event.target as HTMLElement;
+    const smooth = this.smoothScrolls.get(element);
+    const byUser = this.userScrolledColumns.has(element);
+    if (smooth && !byUser && Math.abs(element.scrollTop - smooth.top) > 1) {
       return;
     }
-    this.releaseSmoothScroll(column);
-    this.wrapColumn(column, count);
+    this.releaseSmoothScroll(element);
+    this.wrapColumn(element, count);
+    if (this.userScrolledColumns.delete(element)) {
+      this.selectCentred(element, column, count);
+    }
+  }
+
+  private selectCentred(
+    element: HTMLElement,
+    column: TimeColumnId,
+    count: number,
+  ): void {
+    const cells = this.cellsFor(column);
+    const buttons = this.buttonsFor(column)();
+    const set = this.setHeight(element, count);
+    const centre = element.scrollTop + element.clientHeight / 2;
+    let centred = -1;
+    let smallestDistance = Infinity;
+    buttons.forEach(({ nativeElement: button }, index) => {
+      const buttonCentre = button.offsetTop + button.offsetHeight / 2;
+      const offsets = set > 0 ? [-set, 0, set] : [0];
+      for (const offset of offsets) {
+        const distance = Math.abs(buttonCentre + offset - centre);
+        if (distance < smallestDistance) {
+          smallestDistance = distance;
+          centred = index;
+        }
+      }
+    });
+    const target = this.nearestEnabled(cells, centred);
+    if (target < 0 || this.isSelected(column, target)) {
+      return;
+    }
+    this.selectAt(column, target);
+  }
+
+  private nearestEnabled(
+    cells: readonly { disabled: boolean }[],
+    from: number,
+  ): number {
+    for (let distance = 0; distance <= cells.length / 2; distance++) {
+      for (const index of [from + distance, from - distance]) {
+        const wrapped = (index + cells.length) % cells.length;
+        if (cells[wrapped] && !cells[wrapped].disabled) {
+          return wrapped;
+        }
+      }
+    }
+
+    return -1;
+  }
+
+  private isSelected(column: TimeColumnId, index: number): boolean {
+    return this.cellsFor(column)[index]?.selected ?? false;
   }
 
   private wrapColumn(column: HTMLElement, count: number): void {
@@ -430,7 +498,9 @@ export class TimeColumnsComponent {
     return -1;
   }
 
-  private cellsFor(column: TimeColumnId): readonly { disabled: boolean }[] {
+  private cellsFor(
+    column: TimeColumnId,
+  ): readonly { disabled: boolean; selected: boolean }[] {
     if (column === 'hours') {
       return this.hourCells();
     }
