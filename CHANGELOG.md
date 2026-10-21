@@ -1,5 +1,7 @@
 ## Unreleased
 
+## 1.0.0 — 2026-10-21
+
 ### Added
 
 - **`dsTooltipAncestor`: a focusable card opens the clipped values inside it.** Put the attribute
