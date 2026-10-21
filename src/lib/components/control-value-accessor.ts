@@ -85,6 +85,19 @@ export function valueControlBridge<T>(model: () => ModelSignal<T>): {
   };
 }
 
+/**
+ * Routes `focus()` on the host element to the control's own `focus()`. Signal forms takes the
+ * `ControlValueAccessor` path for every DS control and `focusBoundControl()` then calls
+ * `focus()` on the HOST, which is not focusable.
+ * @internal
+ */
+export function delegateHostFocus(
+  host: HTMLElement,
+  focus: (options?: FocusOptions) => void,
+): void {
+  host.focus = focus;
+}
+
 function focusOwnControl(host: HTMLElement, options?: FocusOptions): void {
   const target =
     host.querySelector<HTMLElement>(VALUE_ELEMENTS) ??
@@ -118,7 +131,14 @@ export abstract class DsControlValueAccessor<T>
   readonly hidden = input(false, { transform: booleanAttribute });
   private readonly hostElement = inject<ElementRef<HTMLElement>>(ElementRef);
 
-  /** Signal forms calls this via `focusBoundControl()`; the default would focus the unfocusable HOST. */
+  constructor() {
+    super();
+    delegateHostFocus(this.hostElement.nativeElement, (options) =>
+      this.focus(options),
+    );
+  }
+
+  /** Focuses the control's own input or trigger; `focusBoundControl()` reaches it through the host. */
   focus(options?: FocusOptions): void {
     focusOwnControl(this.hostElement.nativeElement, options);
   }
@@ -197,6 +217,9 @@ export abstract class DsBooleanControlValueAccessor
 
   constructor() {
     super();
+    delegateHostFocus(this.hostElement.nativeElement, (options) =>
+      this.focus(options),
+    );
     effect(() => {
       const next = this.checked();
       if (!this.hasSynced) {

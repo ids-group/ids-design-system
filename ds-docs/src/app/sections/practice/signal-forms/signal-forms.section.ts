@@ -1,10 +1,6 @@
 import {
   Component,
-  ElementRef,
-  Injector,
   ViewEncapsulation,
-  afterNextRender,
-  inject,
   resource,
   signal,
 } from '@angular/core';
@@ -119,21 +115,12 @@ export class SignalFormsSection {
 </form>`;
 
   protected readonly submitted = signal(false);
-  private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
-  private readonly injector = inject(Injector);
-
   protected sendInvite(): void {
     this.submitted.set(true);
     void submit(this.demoForm, {
       action: async () => undefined,
-      onInvalid: () =>
-        afterNextRender(
-          () =>
-            this.host.nativeElement
-              .querySelector<HTMLElement>('.demo-form [aria-invalid="true"]')
-              ?.focus(),
-          { injector: this.injector },
-        ),
+      onInvalid: (field) =>
+        field().errorSummary()[0]?.fieldTree().focusBoundControl(),
     });
   }
 
@@ -141,8 +128,6 @@ export class SignalFormsSection {
 
 model = signal({ email: '', role: '', terms: false });
 submitted = signal(false);
-host = inject<ElementRef<HTMLElement>>(ElementRef);
-injector = inject(Injector);
 
 loginForm = form(this.model, (path) => {
   required(path.email, { message: 'We need an email' });
@@ -153,11 +138,7 @@ send(): void {
   this.submitted.set(true);
   void submit(this.loginForm, {
     action: async () => save(this.model()),
-    onInvalid: () =>
-      afterNextRender(
-        () => this.host.nativeElement.querySelector<HTMLElement>('[aria-invalid="true"]')?.focus(),
-        { injector: this.injector },
-      ),
+    onInvalid: (field) => field().errorSummary()[0]?.fieldTree().focusBoundControl(),
   });
 }
 

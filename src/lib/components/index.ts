@@ -79,6 +79,7 @@ export { DsChipTemplateDirective } from './chip-template.directive';
 export {
   DsBooleanControlValueAccessor,
   DsControlValueAccessor,
+  delegateHostFocus,
   valueControlBridge,
 } from './control-value-accessor';
 export { DsCreateTemplateDirective } from './create-template.directive';

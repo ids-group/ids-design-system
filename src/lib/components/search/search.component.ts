@@ -20,7 +20,10 @@ import {
   type ControlValueAccessor,
 } from '@angular/forms';
 import { IconComponent } from '@ids-group-ltd/ids-design-system/icons';
-import { valueControlBridge } from '@ids-group-ltd/ids-design-system/components';
+import {
+  delegateHostFocus,
+  valueControlBridge,
+} from '@ids-group-ltd/ids-design-system/components';
 import { FieldClickFocusDirective } from '@ids-group-ltd/ids-design-system/components';
 import { DS_INTL } from '@ids-group-ltd/ids-design-system/core';
 import type { DsSize } from '@ids-group-ltd/ids-design-system/core';
@@ -104,6 +107,10 @@ export class SearchComponent implements ControlValueAccessor {
   private pushed = this.value();
 
   constructor() {
+    delegateHostFocus(
+      inject<ElementRef<HTMLElement>>(ElementRef).nativeElement,
+      (options) => this.focus(options),
+    );
     effect(() => {
       const incoming = this.value();
       if (incoming !== this.pushed) {
