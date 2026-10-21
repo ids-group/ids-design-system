@@ -734,6 +734,7 @@ const FRAMEWORK_NAMES = new Set([
   'ControlValueAccessor',
   'formControl',
   'formControlName',
+  'formGroup',
   'formField',
   'FormUiControl',
   'InputSignal',
