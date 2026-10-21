@@ -218,6 +218,8 @@ consumer reads about the others.
 
 **`node tools/check.mjs --group release` runs once before a release, never on a branch** (it builds the docs twice and installs two apps; `render-evidence --affected` is the branch-sized check for a rendering change).
 
+**`node tools/check.mjs --affected` is the branch-sized run of the rest:** it runs only the checks the files changed since the merge-base with `dev` (committed, uncommitted and untracked) can move, and prints each path with the checks it chose. A path its table does not name runs the whole `lint` group.
+
 **Run the release gates AFTER committing, not before.** `check-template-context-guard` and
 `class-surface` compare `HEAD` against the last tag, so a change still sitting in the working tree
 is invisible to them and they report OK.

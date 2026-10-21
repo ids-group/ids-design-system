@@ -369,6 +369,7 @@ member that moved to a base class (interface members that move get a "check the 
 
 Run `node tools/check.mjs migration-lint` before you call the manifest done — it mechanises the lines marked
 (lint) below, and a release cannot be cut past it. The rest are judgment the linter cannot make.
+`node tools/check.mjs --affected` runs every gate a manifest edit can move, this one among them.
 
 - [ ] `id` is a stable, unique kebab slug. (lint)
 - [ ] `old`/`new`/`searchHints` are exact code strings; element-scoped as `element[attr]` where shared.
