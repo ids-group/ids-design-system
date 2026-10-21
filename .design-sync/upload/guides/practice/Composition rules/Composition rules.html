@@ -6,7 +6,7 @@
   <style>body{margin:0;background:var(--surface-canvas, #fff);color:var(--text-primary, #161A28)}
 .ds-page{max-width:var(--col-cap-content);margin-inline:auto;padding:var(--space-12) var(--space-16) var(--space-24)}</style>
 <link rel="stylesheet" href="../../../_ds_cards.css"></head><body>
-  <div class="ds-page"><ds-docs-practice-rules _nghost-c5h=""><docs-section _ngcontent-c5h="" data-claude-design="" anchor="practice-rules" eyebrow="Practice" _nghost-c1=""><section _ngcontent-c1="" class="section" id="section-practice-rules" data-anchor="practice-rules"><h2 _ngcontent-c1="" class="t-h2">Composition rules</h2><p _ngcontent-c1="" class="lede t-m"><span _ngcontent-c5h="" lede=""> Which spacing goes between what, which type role a piece of text takes, which colour role does which job, and when a transition earns its place. Knowing the tokens is not enough to build a page with them — the tokens are a vocabulary, and these are the rules that decide which word. </span></p><p _ngcontent-c5h="" class="rules-source t-s"> Rendered from <code _ngcontent-c5h="" class="t-mono-inline">design-system.md</code>, the same file shipped in the npm package so a consumer's agents read exactly this. <strong _ngcontent-c5h=""> One source, two renderings </strong> — a second hand-maintained copy would disagree with this one inside a release. </p><div _ngcontent-c5h="" class="rules-body"><h1>Design System — rules and approaches</h1>
+  <div class="ds-page"><ds-docs-practice-rules _nghost-c5i=""><docs-section _ngcontent-c5i="" data-claude-design="" anchor="practice-rules" eyebrow="Practice" _nghost-c1=""><section _ngcontent-c1="" class="section" id="section-practice-rules" data-anchor="practice-rules"><h2 _ngcontent-c1="" class="t-h2">Composition rules</h2><p _ngcontent-c1="" class="lede t-m"><span _ngcontent-c5i="" lede=""> Which spacing goes between what, which type role a piece of text takes, which colour role does which job, and when a transition earns its place. Knowing the tokens is not enough to build a page with them — the tokens are a vocabulary, and these are the rules that decide which word. </span></p><p _ngcontent-c5i="" class="rules-source t-s"> Rendered from <code _ngcontent-c5i="" class="t-mono-inline">design-system.md</code>, the same file shipped in the npm package so a consumer's agents read exactly this. <strong _ngcontent-c5i=""> One source, two renderings </strong> — a second hand-maintained copy would disagree with this one inside a release. </p><div _ngcontent-c5i="" class="rules-body"><h1>Design System — rules and approaches</h1>
 <blockquote>
 <p><strong>This file is the HOW.</strong> Which spacing goes between what, which type role a piece of
 text takes, where a value belongs and where a literal is a bug. For the WHAT — the
@@ -481,7 +481,7 @@ follows.</p>
 <hr>
 <h2>9. Page composition — where things go</h2>
 <p>The grid itself (tiers, spans, the canonical 8+4 / 6+6 / 9+3 splits, the forbidden 7+5, the
-720px prose cap) is specified in <code>docs/agent/foundations/grid.md</code>. This section is the layer
+720px prose cap) is specified in <code>agent/foundations/grid.md</code>. This section is the layer
 above it: which region holds what, and in which order.</p>
 <h3>The page is four regions, and three of them are components</h3>
 <pre><code>ds-app-layout
@@ -544,7 +544,7 @@ most placement questions before they come up:</p>
 <tr>
 <td><strong>Form</strong></td>
 <td>header · one <code>ds-card</code> per section · actions in the last card</td>
-<td>One primary; submit gates on presence, never on validity</td>
+<td>One primary; submit stays enabled until the first error</td>
 </tr>
 <tr>
 <td><strong>Dashboard</strong></td>

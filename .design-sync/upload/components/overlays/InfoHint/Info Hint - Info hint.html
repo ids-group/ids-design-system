@@ -1,106 +1,24 @@
-<!-- @dsCard group="overlays" viewport="1200x647" name="Info Hint - info hint" subtitle="ds-info-hint: an icon button named by ariaLabel; its text shows on hover and focus, pins on click." --><!doctype html>
+<!-- @dsCard group="overlays" viewport="1200x647" name="Info Hint - info hint" subtitle="ds-info-hint: an icon button named by ariaLabel; its text shows on hover and focus, pins on click." --><!DOCTYPE html>
 <html data-theme="light"><head><meta charset="utf-8">
   <title>InfoHint</title>
   <link rel="stylesheet" href="../../../styles.css">
   <link rel="stylesheet" href="../../../_ds_bundle.css">
-  <style>
-    body{margin:0;background:var(--surface-canvas, #fff);color:var(--text-primary, #161A28)}
-    .ds-page .section > .block-desc:first-of-type{margin-top:var(--space-2)}
-    .ds-page{max-width:var(--col-cap-content);margin-inline:auto;padding:var(--space-12) var(--space-16) var(--space-24)}
-  </style>
-</head><body>
-  <div class="ds-page"><ds-docs-components-tooltip></ds-docs-components-tooltip></div>
-  <script>window.__dsSectionsOnly = true</script>
-  <script src="../../../_ds_bundle.js"></script>
-  <script>
-    (function () {
-      var OWNS = "info-hint";
-      var INDEX = 0;
-      var KEY = "info-hint";
-      var TABLE = true;
-      var HEAD = "Info Hint";
-      var BLOCK = "info hint";
-      var REACT = "InfoHint";
-      var WHOLE = OWNS === null;
-      var LEDE = WHOLE || (OWNS === '' && true);
-      var KEEP = LEDE ? 'h2, p.lede' : 'h2';
-      var DROP_ALWAYS = '.eyebrow, docs-api-table:not([data-key])' + (LEDE ? '' : ', p.lede');
-      var API = '[data-key]';
-      var host = document.querySelector("ds-docs-components-tooltip");
-      var start = Date.now();
-      (function slice() {
-        var section = host && host.querySelector('.section');
-        if (!section) {
-          if (Date.now() - start < 8000) setTimeout(slice, 50);
-          return;
-        }
-        var HEADER = 'h2, p.lede, .eyebrow, .tagrow, docs-component-meta, ' + API;
-        var filled = function (node) {
-          return !node.matches(HEADER) && (node.childElementCount > 0 || node.textContent.trim() !== '');
-        };
-        if (!Array.prototype.some.call(section.children, filled)) {
-          if (Date.now() - start < 8000) return setTimeout(slice, 50);
-          document.documentElement.setAttribute('data-ds-sliced', '0');
-          document.documentElement.setAttribute('data-ds-kept', '0');
-          return;
-        }
-        var owner = '';
-        var doomed = [];
-        var apis = [];
-        var ordinal = -1;
-        var heading = null;
-        for (var node = section.firstElementChild; node; node = node.nextElementSibling) {
-          if (node.matches(DROP_ALWAYS)) { doomed.push(node); continue; }
-          if (WHOLE) continue;
-          if (node.matches(KEEP)) continue;
-          if (node.matches(API)) { apis.push(node); continue; }
-          var marked = node.getAttribute('data-for');
-          var starts = marked !== null || node.matches('h3.block-title');
-          if (marked !== null) owner = marked;
-          else if (node.matches('h3.block-title')) owner = '';
-          if (starts && owner === OWNS) ordinal += 1;
-          if (owner !== OWNS || ordinal !== INDEX) doomed.push(node);
-          else if (starts && node.matches('h3.block-title')) heading = node;
-        }
-        var mine = KEY === '' ? [] : apis.filter(function (n) { return n.getAttribute('data-key') === KEY; });
-        var keepApi = KEY === '' ? [] : (mine.length ? mine : apis.slice(0, 1));
-        if (!WHOLE) {
-          for (var a = 0; a < apis.length; a++) {
-            if (keepApi.indexOf(apis[a]) < 0) { doomed.push(apis[a]); continue; }
-            if (TABLE) continue;
-            if (apis[a].matches('docs-api-table')) { doomed.push(apis[a]); continue; }
-            var nested = apis[a].querySelector('docs-api-table');
-            if (nested) doomed.push(nested);
-          }
-        }
-        var title = section.querySelector('h2');
-        var label = null;
-        for (var c = 0; title && c < title.childNodes.length; c++) {
-          if (title.childNodes[c].nodeType === 3) { label = title.childNodes[c]; break; }
-        }
-        if (title && label === null) {
-          label = document.createTextNode('');
-          title.insertBefore(label, title.firstChild);
-        }
-        if (label) {
-          var head = HEAD || label.nodeValue.trim();
-          label.nodeValue = BLOCK ? head + ' - ' + BLOCK : head;
-          if (BLOCK && heading) doomed.push(heading);
-        }
-        for (var i = 0; i < doomed.length; i++) doomed[i].remove();
-        var wrapper = KEY === '' ? null : section.querySelector('.api-sub[data-key="' + KEY + '"]');
-        var chip = wrapper ? wrapper.querySelector('docs-component-meta') : null;
-        if (chip && title) title.parentNode.insertBefore(chip, title.nextSibling);
-        if (wrapper && wrapper.firstElementChild === null) wrapper.remove();
-        var named = section.querySelector('docs-component-meta .chip .tag');
-        if (REACT && named) named.textContent = '<' + REACT + ' />';
-        var kept = 0;
-        for (var k = section.firstElementChild; k; k = k.nextElementSibling) {
-          if (filled(k)) kept += 1;
-        }
-        document.documentElement.setAttribute('data-ds-sliced', String(doomed.length));
-        document.documentElement.setAttribute('data-ds-kept', String(kept));
-      })();
-    })();
-  </script>
+  <style>body{margin:0;background:var(--surface-canvas, #fff);color:var(--text-primary, #161A28)}
+.ds-page .section > .block-desc:first-of-type{margin-top:var(--space-2)}
+.ds-page{max-width:var(--col-cap-content);margin-inline:auto;padding:var(--space-12) var(--space-16) var(--space-24)}</style>
+<link rel="stylesheet" href="../../../_ds_cards.css"><style>.ds-definition-term{--_term-line-color: var(--text-tertiary);--_term-line-color-hover: var(--text-secondary);--_term-color-pressed: var(--text-primary);--_term-bg-pressed: var(--surface-muted);cursor:pointer;text-decoration:underline dotted var(--_term-line-color);text-underline-offset:3px;border-radius:var(--radius-sm);-webkit-box-decoration-break:clone;box-decoration-break:clone;transition:color var(--duration-fast) var(--ease-standard),background-color var(--duration-fast) var(--ease-standard),box-shadow var(--duration-fast) var(--ease-standard),text-decoration-color var(--duration-fast) var(--ease-standard)}.ds-definition-term:where(button){appearance:none;margin:0;padding:0;border:0;background:none;font:inherit;letter-spacing:inherit;text-transform:inherit;text-align:inherit;color:inherit}.ds-definition-term:hover{text-decoration:underline solid var(--_term-line-color-hover)}.ds-definition-term:focus-visible{outline:var(--focus-ring-width) solid var(--focus-ring-color);outline-offset:var(--focus-ring-offset);animation:ds-focus-ring-in var(--duration-fast) var(--ease-standard)}.ds-definition-term:active,.ds-definition-term[data-ds-pressed]{color:var(--_term-color-pressed);background:var(--_term-bg-pressed);box-shadow:0 0 0 2px var(--_term-bg-pressed);text-decoration:underline solid var(--_term-color-pressed)}.ds-definition-term[data-ds-tooltip-pinned]{color:var(--accent-strong);text-decoration:underline solid var(--accent-strong);text-decoration-thickness:2px}.ds-definition-term[data-ds-tooltip-pinned]:hover{color:var(--accent-strong);text-decoration:underline solid var(--accent-strong);text-decoration-thickness:3px}.ds-definition-term[data-ds-tooltip-pinned]:active,.ds-definition-term[data-ds-tooltip-pinned][data-ds-pressed]{color:var(--accent-strong);text-decoration:underline solid var(--accent-strong);text-decoration-thickness:3px;background-color:var(--surface-muted);box-shadow:0 0 0 2px var(--surface-muted)}</style><style>:where(ds-icon,ds-icon *){box-sizing:border-box}ds-icon{display:inline-flex;align-items:center;justify-content:center;vertical-align:middle;line-height:0}ds-icon>svg.icon{display:block}</style></head><body>
+  <div class="ds-page"><ds-docs-components-tooltip _nghost-c3m=""><docs-section _ngcontent-c3m="" anchor="tooltip" eyebrow="Components" _nghost-c1=""><section _ngcontent-c1="" class="section" id="section-tooltip" data-anchor="tooltip"><h2 _ngcontent-c1="" class="t-h2">Info Hint - info hint</h2><p _ngcontent-c3m="" class="block-desc t-s"><code _ngcontent-c3m="" class="t-mono-inline"> &lt;ds-info-hint&gt; </code>: an icon button named by <code _ngcontent-c3m="" class="t-mono-inline">ariaLabel</code>; its <code _ngcontent-c3m="" class="t-mono-inline"> text </code> shows on hover and focus, pins on click. </p><ul _ngcontent-c3m="" class="block-desc t-s"><li _ngcontent-c3m=""><code _ngcontent-c3m="" class="t-mono-inline"> icon="help" </code> (default) - a question mark. </li><li _ngcontent-c3m=""><code _ngcontent-c3m="" class="t-mono-inline"> icon="info" </code> - an "i". </li><li _ngcontent-c3m=""> Any other DS icon name, such as <code _ngcontent-c3m="" class="t-mono-inline"> icon="warn" </code>; colour it with <code _ngcontent-c3m="" class="t-mono-inline"> --ds-info-hint-color </code>. </li><li _ngcontent-c3m=""> Rich content: put it inside the tag, or pass a template to <code _ngcontent-c3m="" class="t-mono-inline"> [content] </code>. Keep it non-interactive; a screen reader reads it as flat text. </li></ul><div _ngcontent-c3m="" class="demo"><span _ngcontent-c3m="" class="t-s info-row"> Conversion rate <ds-info-hint _ngcontent-c3m="" arialabel="About conversion rate" text="Share of contacts who reached the goal step, of all who entered the journey." _nghost-c3o=""><button _ngcontent-c3o="" type="button" class="info-hint" aria-label="About conversion rate"><ds-icon _ngcontent-c3o=""><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" class="icon" style="--ds-icon-size: 14px;" width="14" height="14" stroke-width="1.75" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M9.5 9a2.5 2.5 0 0 1 5 0c0 1.5-2.5 2-2.5 4M12 17v.01"></path></svg></ds-icon></button></ds-info-hint></span><span _ngcontent-c3m="" class="t-s info-row"> Conversion rate <ds-info-hint _ngcontent-c3m="" icon="info" arialabel="About conversion rate, info icon" text="The same hint with the info icon." _nghost-c3o=""><button _ngcontent-c3o="" type="button" class="info-hint" aria-label="About conversion rate, info icon"><ds-icon _ngcontent-c3o=""><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" class="icon" style="--ds-icon-size: 14px;" width="14" height="14" stroke-width="1.75" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M12 8v.01M11 12h1v4h1"></path></svg></ds-icon></button></ds-info-hint></span><span _ngcontent-c3m="" class="t-s info-row"> Published <ds-info-hint _ngcontent-c3m="" arialabel="When each version was published" _nghost-c3o=""><button _ngcontent-c3o="" type="button" class="info-hint" aria-label="When each version was published"><ds-icon _ngcontent-c3o=""><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" class="icon" style="--ds-icon-size: 14px;" width="14" height="14" stroke-width="1.75" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M9.5 9a2.5 2.5 0 0 1 5 0c0 1.5-2.5 2-2.5 4M12 17v.01"></path></svg></ds-icon></button></ds-info-hint></span><span _ngcontent-c3m="" class="t-s info-row"> Published, template <ds-info-hint _ngcontent-c3m="" arialabel="When each version was published, template" _nghost-c3o=""><button _ngcontent-c3o="" type="button" class="info-hint" aria-label="When each version was published, template"><ds-icon _ngcontent-c3o=""><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" class="icon" style="--ds-icon-size: 14px;" width="14" height="14" stroke-width="1.75" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M9.5 9a2.5 2.5 0 0 1 5 0c0 1.5-2.5 2-2.5 4M12 17v.01"></path></svg></ds-icon></button></ds-info-hint></span><span _ngcontent-c3m="" class="t-s info-row"> Removed <ds-info-hint _ngcontent-c3m="" icon="warn" arialabel="Why this row was removed" text="Removed from the source on 29 Sep 2026." class="warning-hint" _nghost-c3o=""><button _ngcontent-c3o="" type="button" class="info-hint" aria-label="Why this row was removed"><ds-icon _ngcontent-c3o=""><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" class="icon" style="--ds-icon-size: 14px;" width="14" height="14" stroke-width="1.75" aria-hidden="true"><path d="M12 3 2 21h20L12 3z"></path><path d="M12 10v4M12 18v.01"></path></svg></ds-icon></button></ds-info-hint></span></div><pre _ngcontent-c3m="" class="t-mono-block">&lt;ds-info-hint ariaLabel="When v4 was published"&gt;
+  &lt;ul&gt;…&lt;/ul&gt;
+&lt;/ds-info-hint&gt;
+
+&lt;ds-info-hint ariaLabel="When v4 was published" [content]="published" /&gt;
+&lt;ng-template #published&gt;&lt;ul&gt;…&lt;/ul&gt;&lt;/ng-template&gt;
+
+&lt;ds-info-hint class="removed" icon="warn" ariaLabel="Why removed" text="…" /&gt;
+.removed { --ds-info-hint-color: var(--warning-text); }</pre></section></docs-section></ds-docs-components-tooltip></div>
+  
+  
+  
+
+
 </body></html>

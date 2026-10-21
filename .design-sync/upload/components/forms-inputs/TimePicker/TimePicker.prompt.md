@@ -7,7 +7,7 @@ Time field — clock-icon trigger button(s) opening a panel of scrollable Hours/
 - `format="12h"` adds the AM/PM column and 12-hour trigger text (default `'24h'`); the stored value stays 24h. `minuteStep={15}` thins the minutes column.
 - Constraints: `minTime`/`maxTime` (`"HH:MM"`, inclusive) and a `disabledTime` predicate grey out unpickable cells; in range mode the end panel's floor is automatically the chosen start, and picking a later start bumps an earlier end.
 - `clearable` shows an inline × on the single-mode trigger when a value is set. `placeholder` (default `"--:--"`) fills empty triggers. Error text goes in `hint` with `invalid`.
-- Keyboard inside the columns: ArrowUp/Down move and select, Home/End jump, ArrowLeft/Right hop between columns, Escape closes.
+- Keyboard inside the columns: ArrowUp/Down move and select, Home/End jump, ArrowLeft/Right hop between columns, Escape closes. Scrolling a column with the wheel, touch or scrollbar selects the centred cell as it passes the centre and leaves the panel open; one wheel notch moves about one row.
 
 ```tsx
 <TimePicker

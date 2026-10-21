@@ -370,7 +370,7 @@ follows.
 ## 9. Page composition — where things go
 
 The grid itself (tiers, spans, the canonical 8+4 / 6+6 / 9+3 splits, the forbidden 7+5, the
-720px prose cap) is specified in `docs/agent/foundations/grid.md`. This section is the layer
+720px prose cap) is specified in `agent/foundations/grid.md`. This section is the layer
 above it: which region holds what, and in which order.
 
 ### The page is four regions, and three of them are components
@@ -431,7 +431,7 @@ most placement questions before they come up:
 | --- | --- | --- |
 | **List + filters** | header · filter-bar · `ds-table` (or a card list) · `ds-pagination` | Filters above the data, pagination below it, both full width |
 | **Record detail** | header with `[meta]` · 8+4 grid — main left, meta sidebar right | The sidebar is metadata, never navigation |
-| **Form** | header · one `ds-card` per section · actions in the last card | One primary; submit gates on presence, never on validity |
+| **Form** | header · one `ds-card` per section · actions in the last card | One primary; submit stays enabled until the first error |
 | **Dashboard** | header · a row of `ds-stat` tiles · charts or tables below | Tiles are one row that wraps, not a grid you hand-place |
 | **Empty / error** | `ds-empty-state` centred in the region that would have held the data | It replaces the region, not the page — header and filters stay |
 
