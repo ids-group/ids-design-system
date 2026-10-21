@@ -27,6 +27,12 @@ holds an entry; what the release bot commits afterwards needs none.
   with the panel left open and about one row per wheel notch, and `TimeColumns` as firing
   `onTimeChange` and not `onPartPicked` for a cell scrolled to the centre.
 
+- **`DatePicker` describes the unparseable-date error as waiting for a submit.** The design agent
+  no longer expects typed text that is not a date to replace the `hint` in a card.
+
+- **`[dsSubmitted]` is recorded as an attribute directive with no element.** A card has no form
+  model to reveal errors for and draws a field's error state through `error`.
+
 ### Build
 
 - **`check-manual-surface` fails on a `sections` entry for a component with a chapter of its own.**
