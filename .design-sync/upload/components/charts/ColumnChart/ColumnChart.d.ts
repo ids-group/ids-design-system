@@ -29,6 +29,8 @@ export interface ColumnChartProps {
   tooltipLingerMs?: number | null;
   /** Holds the clicked mark and its tooltip until a second click, Escape or a press outside. Unset falls back to `DS_CONFIG.chart.pinOnClick`, then `true`. The click output fires either way. */
   pinOnClick?: boolean | null;
+  /** Whether the hovered or focused column, bar or heatmap cell brightens. Unset falls back to `DS_CONFIG.chart.highlightActive`, then `true`. */
+  highlightActive?: boolean | null;
   /** One column per point, drawn in the order given, or one NAMED SERIES per entry, where every category carries a column from each. The two forms are told apart by their shape. */
   data?: unknown;
   /** How several series share one category's band. `'none'` (default) and `'grouped'` sit side by side; `'stacked'` piles them; `'normalized'` piles then divides by the category's total. */

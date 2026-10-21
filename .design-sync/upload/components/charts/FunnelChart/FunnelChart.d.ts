@@ -29,6 +29,8 @@ export interface FunnelChartProps {
   tooltipLingerMs?: number | null;
   /** Holds the clicked mark and its tooltip until a second click, Escape or a press outside. Unset falls back to `DS_CONFIG.chart.pinOnClick`, then `true`. The click output fires either way. */
   pinOnClick?: boolean | null;
+  /** Whether the hovered or focused column, bar or heatmap cell brightens. Unset falls back to `DS_CONFIG.chart.highlightActive`, then `true`. */
+  highlightActive?: boolean | null;
   /** Drawn in the order given; stages are never sorted, since their order is the meaning. */
   data?: unknown;
   /** What the silhouette encodes. `'area'` (default) makes each stage's area proportional to its value. `'width'` reads widths straight off the values, which collapses the tail of a steep funnel. `'taper'` encodes nothing: the shape is fixed. */

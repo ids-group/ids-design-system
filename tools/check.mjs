@@ -15,8 +15,12 @@
 //   node tools/check.mjs --group lint --keep-going    # run a set, reporting every failure at the end
 // The release group runs once before a release, never on a branch.
 //   node tools/check.mjs --group release --list       # print a set's members without running them
+//   node tools/check.mjs --affected [<base>]          # only the checks the changed files can move
+// `--affected` reads the files changed since the merge-base with <base> (default `dev`), committed,
+// uncommitted and untracked, maps each through AFFECTED and prints every path -> check it chose. A
+// path no row names runs the whole lint group.
 import { readdirSync, existsSync } from 'node:fs';
-import { spawnSync } from 'node:child_process';
+import { execFileSync, spawnSync } from 'node:child_process';
 import { join, dirname } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import { acquireHeavyLock } from './heavy-lock.mjs';
@@ -61,7 +65,7 @@ const EXTRA = {
   schematics: ['tools/run-schematic-tests.mjs'],
 };
 
-// Checks that take one machine-wide slot (tools/heavy-lock.mjs), so parallel worktrees queue for
+// Checks that take a machine-wide slot (tools/heavy-lock.mjs), so parallel worktrees queue for
 // them instead of running them side by side. Peak memory, measured 2026-10-08: manifest-compile up to
 // 1085 MB in its own process plus the Angular compiler; upgrade-canary and render-evidence build the
 // library and an app or the docs twice. Every other check stayed under 350 MB.
@@ -164,13 +168,7 @@ export const GROUPS = {
   // golden at a tag is what the next release's surface diff starts from. `schematics` runs the shipped
   // `ng add` and `check-overrides` on in-memory workspaces; it is out of `lint` because the compile
   // alone takes most of 4.7-5.1 s (three runs, 2026-10-08). Left out: deck-lint, whose subject is
-  // internal decks that never reach the package.
-  // `upgrade-canary` is last because it is the slow one, two library builds and two app builds
-  // (167 to 388 s over four runs, 2026-10-08). It is the only gate that applies the draft to an app and
-  // builds it, so a break no item names, or an item that migrates into a broken build, surfaces at the
-  // cut and not at a consumer's.
-  // `render-evidence` sees a rendering change no token or member diff carries; it builds the docs twice
-  // and screenshots every block, minutes rather than seconds, so it is here and not in `lint`.
+  // internal decks that never reach the package, and the `evidence` group below.
   release: [
     'tools-parse',
     'template-context-guard',
@@ -208,6 +206,11 @@ export const GROUPS = {
     'lib-package',
     'entry-point-imports',
     'schematics',
+  ],
+  // Run by hand or by an agent, never by CI: `upgrade-canary` builds the library and an app twice
+  // (140-388 s) and `render-evidence` builds the docs twice and screenshots every block (290-445 s,
+  // 2026-10-08 to 2026-10-22), too heavy for a release step.
+  evidence: [
     'upgrade-canary:selftest',
     'upgrade-canary',
     'render-evidence:selftest',
@@ -271,16 +274,119 @@ export const run = (name) => {
   const release = HEAVY.has(name)
     ? acquireHeavyLock(`check ${name}`)
     : () => {};
+  let status = 1;
   try {
-    return (
+    status =
       spawnSync(process.execPath, [join(ROOT, script), ...rest], {
         cwd: ROOT,
         stdio: 'inherit',
-      }).status ?? 1
-    );
+      }).status ?? 1;
+
+    return status;
   } finally {
-    release();
+    release(status);
   }
+};
+
+const MANIFEST_CHECKS = [
+  'migration-lint',
+  'manifest-truth',
+  'manifest-claims',
+  'manifest-compile',
+  'manifest-detect',
+  'delete-tables',
+  'manifest-coverage',
+  'token-deprecations',
+  'api-deprecations',
+];
+// Checks in `lint` whose subject is a file outside the library, so a change under src/lib cannot
+// move them. `docs-attrs` and `doc-tokens` stay: they compare docs against the library's inputs and
+// tokens.
+const OUTSIDE_LIBRARY = new Set([
+  'docs-nav-order',
+  'design-sync-log',
+  'agent-catalogue',
+  'deck-lint',
+]);
+
+// First matching row wins. A pattern ending in `/` matches everything under it, any other pattern
+// that one path. A file under tools/ that no row names maps to the checks it is the script of, with
+// their selftests.
+export const AFFECTED = [
+  ['tools/check.mjs', GROUPS.lint],
+  ['migrations/', MANIFEST_CHECKS],
+  [
+    'CHANGELOG.md',
+    [
+      'changelog-lint',
+      'changelog-pending',
+      'manifest-coverage',
+      'delete-tables',
+    ],
+  ],
+  [
+    'src/lib/',
+    [
+      ...GROUPS.lint.filter((name) => !OUTSIDE_LIBRARY.has(name)),
+      'public-api-golden',
+      'token-defaults',
+      'changelog-pending',
+    ],
+  ],
+  ['components.md', ['doc-tokens', 'agent-catalogue']],
+  ['agent/', ['agent-catalogue']],
+  ['ds-docs/', ['docs-attrs', 'docs-nav-order']],
+  ['.design-sync/', ['design-sync-log', 'manual-surface']],
+  ['decks/', ['deck-lint']],
+  ['plugins/', ['plugin-apply', 'plugin-lint-step']],
+  ['tools/probes/', ['probes']],
+];
+
+const checksOfTool = (path) => {
+  const stem = path.replace(/(-selftest)?\.mjs$/, '');
+  const scripts = new Set([`${stem}.mjs`, `${stem}-selftest.mjs`]);
+
+  return [...checks]
+    .filter(
+      ([name, [script]]) => scripts.has(script) && !name.endsWith(':audit'),
+    )
+    .map(([name]) => name);
+};
+
+// Each changed path with the checks it maps to, and their union in run order: the release group's
+// order first, because it puts each selftest before its lint.
+export const affectedChecks = (paths) => {
+  const reasons = paths.map((path) => {
+    const row = AFFECTED.find(([pattern]) =>
+      pattern.endsWith('/') ? path.startsWith(pattern) : path === pattern,
+    );
+    if (row) return { path, names: row[1], unmapped: false };
+    const ofTool = path.startsWith('tools/') ? checksOfTool(path) : [];
+
+    return ofTool.length > 0
+      ? { path, names: ofTool, unmapped: false }
+      : { path, names: GROUPS.lint, unmapped: true };
+  });
+  const chosen = new Set(reasons.flatMap(({ names }) => names));
+  const order = new Set([...GROUPS.release, ...GROUPS.lint, ...checks.keys()]);
+
+  return { reasons, names: [...order].filter((name) => chosen.has(name)) };
+};
+
+const git = (...args) =>
+  execFileSync('git', args, { cwd: ROOT, encoding: 'utf8' })
+    .split('\n')
+    .filter(Boolean);
+
+const changedSince = (base) => {
+  const [mergeBase] = git('merge-base', 'HEAD', base);
+
+  return [
+    ...new Set([
+      ...git('diff', '--name-only', '--no-renames', mergeBase),
+      ...git('ls-files', '--others', '--exclude-standard'),
+    ]),
+  ].sort();
 };
 
 const main = () => {
@@ -288,11 +394,47 @@ const main = () => {
   const keepGoing = argv.includes('--keep-going');
   const groupIndex = argv.indexOf('--group');
   const groupName = groupIndex === -1 ? null : argv[groupIndex + 1];
+  const affectedIndex = argv.indexOf('--affected');
+  const afterAffected = argv[affectedIndex + 1];
+  const affectedBase =
+    affectedIndex !== -1 && afterAffected && !afterAffected.startsWith('--')
+      ? afterAffected
+      : 'dev';
   const positional = argv.filter(
     (argument, index) =>
       !argument.startsWith('--') &&
-      (groupIndex === -1 || index !== groupIndex + 1),
+      (groupIndex === -1 || index !== groupIndex + 1) &&
+      (affectedIndex === -1 || index !== affectedIndex + 1),
   );
+
+  if (affectedIndex !== -1) {
+    if (positional.length > 0 || groupName) {
+      console.error(
+        'check: --affected chooses the checks itself; drop the names and --group.',
+      );
+
+      return 1;
+    }
+    const paths = changedSince(affectedBase);
+    if (paths.length === 0) {
+      console.log(
+        `check: nothing changed since the merge-base with ${affectedBase}.`,
+      );
+
+      return 0;
+    }
+    const { reasons, names } = affectedChecks(paths);
+    console.log(`check: --affected, merge-base with ${affectedBase}`);
+    for (const { path, names: mapped, unmapped } of reasons) {
+      console.log(
+        `  ${path} -> ${unmapped ? 'the lint group (unmapped)' : mapped === GROUPS.lint ? 'the lint group' : mapped.join(', ')}`,
+      );
+    }
+    console.log(`\ncheck: ${names.length} check(s): ${names.join(', ')}\n`);
+    if (argv.includes('--list')) return 0;
+
+    return runAll(names, keepGoing);
+  }
 
   if (positional.length === 0 && !groupName) {
     console.log(
@@ -322,6 +464,10 @@ const main = () => {
     return 0;
   }
 
+  return runAll(names, keepGoing);
+};
+
+const runAll = (names, keepGoing) => {
   const failed = [];
   for (const name of names) {
     if (run(name) !== 0) {

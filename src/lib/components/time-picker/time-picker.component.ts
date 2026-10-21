@@ -188,7 +188,7 @@ export class TimePickerComponent
   protected readonly uid = `ds-timepicker-${++nextId}`;
   protected readonly labelId = `${this.uid}-label`;
   protected readonly openSegment = signal<Segment | null>(null);
-  // Columns visited since this opening; single mode has no Done button and closes once both halves are chosen. Reset on open.
+  // Columns visited since this opening; single mode has no Done button and closes once every column is chosen, AM/PM included on a 12-hour clock. Reset on open.
   private readonly pickedParts = signal<ReadonlySet<TimeColumnId>>(new Set());
   private overlayRef: OverlayRef | null = null;
 
@@ -428,7 +428,13 @@ export class TimePickerComponent
   protected onPartPicked(part: TimeColumnId): void {
     const seen = new Set(this.pickedParts()).add(part);
     this.pickedParts.set(seen);
-    if (this.mode() === 'single' && seen.has('hours') && seen.has('minutes')) {
+    const periodChosen = this.resolvedFormat() === '24h' || seen.has('period');
+    if (
+      this.mode() === 'single' &&
+      seen.has('hours') &&
+      seen.has('minutes') &&
+      periodChosen
+    ) {
       this.close('select');
     }
   }

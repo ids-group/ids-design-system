@@ -1,4 +1,4 @@
-# Toggle Button - toggle
+# Toggle button - on and off
 
 [pressed] holds the on/off state, exposed as aria-pressed.
 

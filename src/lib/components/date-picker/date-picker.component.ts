@@ -294,7 +294,9 @@ export class DatePickerComponent
         ? this.formatSpec().mask
         : rangeMask(this.formatSpec());
 
-    return [{ kind: 'date', message: this.intl().datePicker.invalidDate(mask) }];
+    return [
+      { kind: 'date', message: this.intl().datePicker.invalidDate(mask) },
+    ];
   });
   private readonly fieldMessage = resolveFieldMessage({
     pending: this.pending,

@@ -542,7 +542,7 @@ export class TimeColumnsComponent {
 
   private emit(hour24: number, minute: number, part: TimeColumnId): void {
     this.timeChange.emit(`${pad2(hour24)}:${pad2(minute)}`);
-    // partPicked closes the single panel once both halves are picked; a scroll only browses.
+    // partPicked closes the single panel once every column is picked; a scroll only browses.
     if (!this.pickingByScroll) {
       this.partPicked.emit(part);
     }

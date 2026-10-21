@@ -19,6 +19,12 @@ export interface TableProps {
   loading?: boolean | 'skeleton' | 'overlay';
   /** Keeps the header row pinned while the body scrolls. */
   stickyHeader?: boolean;
+  /** Prints every row of a client-paged table instead of the page on screen, without the pager. A server-paged table (`total`) holds only its page, so it prints that page. */
+  printAllRows?: boolean;
+  /** Prints as the first row of the header, repeated on every printed page with it, so a table's heading never ends a page without the table. Hidden on screen. */
+  printHeading?: string | null;
+  /** A line under `printHeading` in the printout. */
+  printHeadingNote?: string | null;
   /** Caps the scroll body height (any CSS length) and scrolls it vertically; pair with `stickyHeader`. `null` (default) grows to content. */
   maxHeight?: string | null;
   /** `'compact'` tightens cell padding. */
@@ -91,7 +97,7 @@ export interface TableProps {
   columnFilterOptions?: unknown;
   /** Where the sticky horizontal scrollbar rests, as a CSS length. Unset, the table cancels its scroll container's bottom padding. Falls back to `DS_CONFIG.table.stickyScrollbarOffset`; `--ds-table-sticky-scrollbar-offset` wins over both. */
   stickyScrollbarOffset?: string | null;
-  /** `'fixed'`: a column is as wide as its `width`, else its `kind`, else an equal share of what the others leave, whatever its cells hold. `'auto'`, deprecated: the 0.15.0 widths, which follow the cell content and ignore `kind`. Unset falls back to `DS_CONFIG.table.layout`, then `'fixed'`. */
+  /** `'auto'`, the default: the 0.15.0 widths, which follow the cell content and ignore `kind`. `'fixed'`: a column is as wide as its `width`, else its `kind`, else an equal share of what the others leave, whatever its cells hold. Unset falls back to `DS_CONFIG.table.layout`, then `'auto'`. */
   layoutMode?: 'fixed' | 'auto' | null;
   /** Pin the first data column (and the select column) on horizontal scroll. */
   stickyFirstColumn?: boolean;
