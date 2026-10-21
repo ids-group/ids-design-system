@@ -1,19 +1,23 @@
-<!-- A looping column renders its cells three times: the copies either side are what scrolls into
-     view past either end, and `wrapScroll` moves the column back by one set before they run out. -->
+<!-- A looping column renders `loopCopiesEachSide` copies of its cells either side of the real ones: they
+     are what scrolls into view past either end, and the column moves back by whole sets once a scroll ends.
+     Enough copies that a continuous wheel gesture never reaches the edge, where wrapping mid-gesture cuts
+     the wheel animation. -->
 <ng-template
   #loopCopy
   let-cells
   let-pick="pick">
-  @for (cell of cells; track cell.value) {
-    <!-- Not a button: a copy is never focused or announced, the real option is. -->
-    <span
-      class="opt"
-      aria-hidden="true"
-      [class.is-selected]="cell.selected"
-      [class.is-disabled]="cell.disabled"
-      (click)="pick(cell)">
-      {{ cell.label }}
-    </span>
+  @for (copy of loopCopiesEachSide; track copy) {
+    @for (cell of cells; track cell.value) {
+      <!-- Not a button: a copy is never focused or announced, the real option is. -->
+      <span
+        class="opt"
+        aria-hidden="true"
+        [class.is-selected]="cell.selected"
+        [class.is-disabled]="cell.disabled"
+        (click)="pick(cell)">
+        {{ cell.label }}
+      </span>
+    }
   }
 </ng-template>
 
@@ -23,7 +27,11 @@
   role="listbox"
   [class.loops]="hoursLoop()"
   [attr.aria-label]="intl().timePicker.hours"
-  (scroll)="wrapScroll($event, hourCells().length)">
+  (scroll)="wrapScroll($event, hourCells().length)"
+  (wheel)="onUserScroll($event)"
+  (touchmove)="onUserScroll($event)"
+  (pointerdown)="onScrollbarGrab($event)"
+  (scrollend)="onScrollEnd($event, 'hours', hourCells().length)">
   @if (hoursLoop()) {
     <ng-container
       [ngTemplateOutlet]="loopCopy"
@@ -59,7 +67,11 @@
   role="listbox"
   [class.loops]="minutesLoop()"
   [attr.aria-label]="intl().timePicker.minutes"
-  (scroll)="wrapScroll($event, minuteCells().length)">
+  (scroll)="wrapScroll($event, minuteCells().length)"
+  (wheel)="onUserScroll($event)"
+  (touchmove)="onUserScroll($event)"
+  (pointerdown)="onScrollbarGrab($event)"
+  (scrollend)="onScrollEnd($event, 'minutes', minuteCells().length)">
   @if (minutesLoop()) {
     <ng-container
       [ngTemplateOutlet]="loopCopy"

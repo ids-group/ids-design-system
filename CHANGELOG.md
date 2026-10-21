@@ -21,6 +21,12 @@
   its own. The input sat on the internal `DsFieldBase`; the internal `DsControlValueAccessor` and
   `DsBooleanControlValueAccessor` drop their `touchedSelf`, and the internal `DsFieldMessageSources`
   its `touched` and `touchedSelf`.
+- **`ds-time-picker` and `ds-time-columns` scroll to a picked value and select by scrolling.** A click or an
+  arrow key scrolls the column smoothly to centre the cell (instantly on open, and under
+  `prefers-reduced-motion`). Cells snap to the centre after wheel or touch scrolling. When a wheel,
+  touch or scrollbar scroll ends, the centred enabled cell becomes the value and the time picker
+  emits `valueChange`; the panel stays open, and a click, Enter, Escape or an outside click closes
+  it. Handle `valueChange` as a value that can change several times while the panel is open.
 
 ### Fixed
 

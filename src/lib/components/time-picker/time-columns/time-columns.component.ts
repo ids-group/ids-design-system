@@ -150,6 +150,14 @@ export class TimeColumnsComponent {
   // One set of values taller than the column, measured after render; AM/PM is two rows and never loops.
   private readonly hoursOverflow = signal(false);
   private readonly minutesOverflow = signal(false);
+  protected readonly loopCopiesEachSide = [0, 1, 2, 3];
+  private userPicked = false;
+  private pickingByScroll = false;
+  private readonly userScrolledColumns = new Set<HTMLElement>();
+  private readonly smoothScrolls = new Map<
+    HTMLElement,
+    { timer: number; top: number }
+  >();
 
   protected readonly hoursLoop = computed(() =>
     this.loops(this.hoursOverflow()),
@@ -180,6 +188,7 @@ export class TimeColumnsComponent {
       this.periodEntry();
       untracked(() => {
         this.scrollSelectedIntoView();
+        this.userPicked = false;
         requestAnimationFrame(() => this.scrollSelectedIntoView());
       });
     });
@@ -206,7 +215,9 @@ export class TimeColumnsComponent {
     if (!element) {
       return false;
     }
-    const sets = element.classList.contains('loops') ? 3 : 1;
+    const sets = element.classList.contains('loops')
+      ? this.loopCopiesEachSide.length * 2 + 1
+      : 1;
 
     return element.scrollHeight / sets > element.clientHeight + 1;
   }
@@ -214,22 +225,134 @@ export class TimeColumnsComponent {
   /** Keeps a looping column inside its middle set, so a copy is always beyond either edge. */
   protected wrapScroll(event: Event, count: number): void {
     const column = event.target as HTMLElement;
-    const [first, second] = column.children as HTMLCollectionOf<HTMLElement>;
-    if (!column.classList.contains('loops') || !second) {
+    if (this.smoothScrolls.has(column)) {
       return;
     }
-    const set = (second.offsetTop - first.offsetTop) * count;
-    if (column.scrollTop < set * 0.5) {
-      column.scrollTop += set;
-    } else if (column.scrollTop > set * 1.5) {
-      column.scrollTop -= set;
+    // A scrollTop write mid-gesture cancels the browser's wheel animation and re-runs snapping, so scrollend wraps; here only a column about to run out of copies.
+    const set = this.setHeight(column, count);
+    const lastTop = column.scrollHeight - column.clientHeight;
+    if (set === 0) {
+      return;
     }
+    if (
+      column.scrollTop < set * 0.25 ||
+      column.scrollTop > lastTop - set * 0.25
+    ) {
+      this.wrapColumn(column, count);
+    }
+  }
+
+  protected onUserScroll(event: Event): void {
+    this.userScrolledColumns.add(event.currentTarget as HTMLElement);
+  }
+
+  protected onScrollbarGrab(event: PointerEvent): void {
+    if (event.target === event.currentTarget) {
+      this.onUserScroll(event);
+    }
+  }
+
+  protected onScrollEnd(
+    event: Event,
+    column: TimeColumnId,
+    count: number,
+  ): void {
+    const element = event.target as HTMLElement;
+    const smooth = this.smoothScrolls.get(element);
+    const byUser = this.userScrolledColumns.has(element);
+    if (smooth && !byUser && Math.abs(element.scrollTop - smooth.top) > 1) {
+      return;
+    }
+    this.releaseSmoothScroll(element);
+    this.wrapColumn(element, count);
+    if (this.userScrolledColumns.delete(element)) {
+      this.selectCentred(element, column, count);
+    }
+  }
+
+  private selectCentred(
+    element: HTMLElement,
+    column: TimeColumnId,
+    count: number,
+  ): void {
+    const cells = this.cellsFor(column);
+    const buttons = this.buttonsFor(column)();
+    const set = this.setHeight(element, count);
+    const centre = element.scrollTop + element.clientHeight / 2;
+    let centred = -1;
+    let smallestDistance = Infinity;
+    buttons.forEach(({ nativeElement: button }, index) => {
+      const buttonCentre = button.offsetTop + button.offsetHeight / 2;
+      const offsets = set > 0 ? [-set, 0, set] : [0];
+      for (const offset of offsets) {
+        const distance = Math.abs(buttonCentre + offset - centre);
+        if (distance < smallestDistance) {
+          smallestDistance = distance;
+          centred = index;
+        }
+      }
+    });
+    const target = this.nearestEnabled(cells, centred);
+    if (target < 0 || this.isSelected(column, target)) {
+      return;
+    }
+    this.pickingByScroll = true;
+    this.selectAt(column, target);
+    this.pickingByScroll = false;
+  }
+
+  private nearestEnabled(
+    cells: readonly { disabled: boolean }[],
+    from: number,
+  ): number {
+    for (let distance = 0; distance <= cells.length / 2; distance++) {
+      for (const index of [from + distance, from - distance]) {
+        const wrapped = (index + cells.length) % cells.length;
+        if (cells[wrapped] && !cells[wrapped].disabled) {
+          return wrapped;
+        }
+      }
+    }
+
+    return -1;
+  }
+
+  private isSelected(column: TimeColumnId, index: number): boolean {
+    return this.cellsFor(column)[index]?.selected ?? false;
+  }
+
+  private wrapColumn(column: HTMLElement, count: number): void {
+    const set = this.setHeight(column, count);
+    if (set === 0) {
+      return;
+    }
+    // Whole sets back to the middle of the scroll range in one write, so the scrollend that write raises finds nothing left to wrap.
+    const middle = (column.scrollHeight - column.clientHeight) / 2;
+    const setsOff = Math.round((column.scrollTop - middle) / set);
+    if (setsOff !== 0) {
+      column.scrollTop -= setsOff * set;
+    }
+  }
+
+  private setHeight(column: HTMLElement, count: number): number {
+    const [first, second] = column.children as HTMLCollectionOf<HTMLElement>;
+    if (!column.classList.contains('loops') || !second) {
+      return 0;
+    }
+
+    return (second.offsetTop - first.offsetTop) * count;
+  }
+
+  private releaseSmoothScroll(column: HTMLElement): void {
+    window.clearTimeout(this.smoothScrolls.get(column)?.timer);
+    this.smoothScrolls.delete(column);
   }
 
   protected selectHour(cell: Cell<number>): void {
     if (cell.disabled) {
       return;
     }
+    this.markUserPick();
     const hour24 = this.toH24(cell.value);
     const parsed = this.parsedValue();
     this.emit(
@@ -243,6 +366,7 @@ export class TimeColumnsComponent {
     if (cell.disabled) {
       return;
     }
+    this.markUserPick();
     this.emit(this.baseHour(), cell.value, 'minutes');
   }
 
@@ -250,6 +374,7 @@ export class TimeColumnsComponent {
     if (cell.disabled) {
       return;
     }
+    this.markUserPick();
     const parsed = this.parsedValue();
     const hour12 = parsed
       ? to12h(parsed.h).h
@@ -300,7 +425,9 @@ export class TimeColumnsComponent {
     }
     event.preventDefault();
     this.selectAt(column, target);
-    this.buttonsFor(column)()[target]?.nativeElement.focus();
+    this.buttonsFor(column)()[target]?.nativeElement.focus({
+      preventScroll: true,
+    });
   }
 
   focusSelected(): void {
@@ -356,7 +483,10 @@ export class TimeColumnsComponent {
 
   private emit(hour24: number, minute: number, part: TimeColumnId): void {
     this.timeChange.emit(`${pad2(hour24)}:${pad2(minute)}`);
-    this.partPicked.emit(part);
+    // partPicked closes the single panel once both halves are picked; a scroll only browses.
+    if (!this.pickingByScroll) {
+      this.partPicked.emit(part);
+    }
   }
 
   private entryIndex(
@@ -387,7 +517,9 @@ export class TimeColumnsComponent {
     return -1;
   }
 
-  private cellsFor(column: TimeColumnId): readonly { disabled: boolean }[] {
+  private cellsFor(
+    column: TimeColumnId,
+  ): readonly { disabled: boolean; selected: boolean }[] {
     if (column === 'hours') {
       return this.hourCells();
     }
@@ -438,6 +570,11 @@ export class TimeColumnsComponent {
     this.buttonsFor(column)()[Math.max(entry, 0)]?.nativeElement.focus();
   }
 
+  private markUserPick(): void {
+    this.userPicked = true;
+    window.setTimeout(() => (this.userPicked = false), 500);
+  }
+
   private scrollColumn(
     buttons: readonly ElementRef<HTMLButtonElement>[],
     index: number,
@@ -445,9 +582,50 @@ export class TimeColumnsComponent {
     // The column alone: scrollIntoView would also scroll the page under the overlay.
     const button = buttons[Math.max(index, 0)]?.nativeElement;
     const column = button?.parentElement;
-    if (button && column) {
-      column.scrollTop =
-        button.offsetTop - (column.clientHeight - button.offsetHeight) / 2;
+    if (!button || !column) {
+      return;
     }
+    const top =
+      button.offsetTop - (column.clientHeight - button.offsetHeight) / 2;
+    // Any scrollTop write aborts a running smooth scroll, and at a low frame rate the rAF pass lands mid-animation.
+    const inFlight = this.smoothScrolls.get(column);
+    if (inFlight && Math.abs(inFlight.top - top) <= 1) {
+      return;
+    }
+    if (this.userPicked && !this.prefersReducedMotion()) {
+      this.scrollSmoothly(column, top, buttons.length);
+    } else {
+      column.scrollTop = top;
+    }
+  }
+
+  private scrollSmoothly(
+    column: HTMLElement,
+    top: number,
+    count: number,
+  ): void {
+    const set = this.setHeight(column, count);
+    if (set > 0) {
+      const nearest = [top - set, top, top + set].reduce((best, candidate) =>
+        Math.abs(candidate - column.scrollTop) <
+        Math.abs(best - column.scrollTop)
+          ? candidate
+          : best,
+      );
+      if (nearest !== top) {
+        column.scrollTop += top - nearest;
+      }
+    }
+    // Assigning scrollTop while this runs would abort the animation, so wrapScroll stands down until scrollend; the timer covers browsers without it.
+    this.releaseSmoothScroll(column);
+    this.smoothScrolls.set(column, {
+      timer: window.setTimeout(() => this.releaseSmoothScroll(column), 2000),
+      top,
+    });
+    column.scrollTo({ top, behavior: 'smooth' });
+  }
+
+  private prefersReducedMotion(): boolean {
+    return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   }
 }
