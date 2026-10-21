@@ -184,13 +184,13 @@ express.
 ## 2. Attribute directives — no element to register
 
 A directive has no tag, so `@angular/elements` has nothing to define and it is
-absent from the generated surface entirely. Twenty-four of them:
+absent from the generated surface entirely. Twenty-five of them:
 
 `[dsBrandName]` · `[dsCellTemplate]` · `[dsChartPlaced]` · `[dsChartTooltip]` · `[dsChipTemplate]` ·
 `[dsCreateTemplate]` · `[dsDefinitionTerm]` · `[dsEmptyTemplate]` · `[dsFieldClickFocus]` ·
 `[dsGroupLabelTemplate]` · `[dsModalConfirm]` · `[dsOptionTemplate]` · `[dsPanelFooterTemplate]` ·
 `[dsPanelHeaderTemplate]` · `[dsPickerTrigger]` · `[dsProjectionDropped]` · `[dsRailTrigger]` ·
-`[dsReserveMessages]` · `[dsShowDirty]` · `[dsTableColumns]` · `[dsTableExport]` ·
+`[dsReserveMessages]` · `[dsShowDirty]` · `[dsSubmitted]` · `[dsTableColumns]` · `[dsTableExport]` ·
 `[dsTableResize]` · `[dsTooltip]` · `[dsTooltipWhenClipped]`
 
 `[dsModalConfirm]` wires a projected action to `ds-modal`'s `confirmed` output: behaviour with nothing to draw, so a static card loses nothing by its absence and the confirm button renders as the plain button it sits on.
@@ -250,6 +250,11 @@ same as `provideDsConfig({ field: { reserveMessage: true } })` and
 `provideDsConfig({ field: { showDirty: true } })` for that subtree. Each has a per-field input that
 reaches the element unchanged (`reserveMessage`, `showDirty`), so a card sets it on the field and
 loses nothing.
+
+`[dsSubmitted]` carries a form's submit flag to every field inside its host: while it reads true,
+the fields show their validation errors. A card binds no form model, so it has no validation
+errors to reveal; it draws a field's error state through the `error` input, which shows at once
+and reaches the element unchanged, and loses nothing.
 
 **`dsTableColumns`, `dsTableExport` and `dsTableResize` are the table's opt-in features** (2026-09-05), and they are a
 different case from the template-slot markers above: they carry real behaviour, not a marker. They

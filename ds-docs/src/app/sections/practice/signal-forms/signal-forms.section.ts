@@ -1,13 +1,4 @@
-import {
-  Component,
-  ElementRef,
-  Injector,
-  ViewEncapsulation,
-  afterNextRender,
-  inject,
-  resource,
-  signal,
-} from '@angular/core';
+import { Component, ViewEncapsulation, resource, signal } from '@angular/core';
 import {
   FormField,
   email,
@@ -25,6 +16,7 @@ import { CheckboxComponent } from 'ds/checkbox';
 import { InputComponent } from 'ds/input';
 import { SelectComponent } from 'ds/select';
 import { ShowDirtyDirective } from 'ds/show-dirty';
+import { SubmittedDirective } from 'ds/submitted';
 import { DocsSectionComponent } from '../../../shared/docs-section.component';
 
 interface Account {
@@ -75,6 +67,7 @@ interface ContractRow {
     CheckboxComponent,
     ButtonComponent,
     ShowDirtyDirective,
+    SubmittedDirective,
   ],
   encapsulation: ViewEncapsulation.Emulated,
   templateUrl: './signal-forms.section.html',
@@ -119,21 +112,12 @@ export class SignalFormsSection {
 </form>`;
 
   protected readonly submitted = signal(false);
-  private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
-  private readonly injector = inject(Injector);
-
   protected sendInvite(): void {
     this.submitted.set(true);
     void submit(this.demoForm, {
       action: async () => undefined,
-      onInvalid: () =>
-        afterNextRender(
-          () =>
-            this.host.nativeElement
-              .querySelector<HTMLElement>('.demo-form [aria-invalid="true"]')
-              ?.focus(),
-          { injector: this.injector },
-        ),
+      onInvalid: (field) =>
+        field().errorSummary()[0]?.fieldTree().focusBoundControl(),
     });
   }
 
@@ -141,8 +125,6 @@ export class SignalFormsSection {
 
 model = signal({ email: '', role: '', terms: false });
 submitted = signal(false);
-host = inject<ElementRef<HTMLElement>>(ElementRef);
-injector = inject(Injector);
 
 loginForm = form(this.model, (path) => {
   required(path.email, { message: 'We need an email' });
@@ -153,11 +135,7 @@ send(): void {
   this.submitted.set(true);
   void submit(this.loginForm, {
     action: async () => save(this.model()),
-    onInvalid: () =>
-      afterNextRender(
-        () => this.host.nativeElement.querySelector<HTMLElement>('[aria-invalid="true"]')?.focus(),
-        { injector: this.injector },
-      ),
+    onInvalid: (field) => field().errorSummary()[0]?.fieldTree().focusBoundControl(),
   });
 }
 
@@ -166,15 +144,17 @@ clear(): void {
   this.submitted.set(false);
 }`;
 
-  protected readonly templateSnippet = `<ds-input label="Email" [formField]="loginForm.email" />
-<ds-select label="Role" [options]="roles" [formField]="loginForm.role" />
-<ds-checkbox label="I agree" [formField]="loginForm.terms" />
-<ds-button
-  [disabled]="submitted() && loginForm().invalid()"
-  [loading]="loginForm().submitting()"
-  (pressed)="send()">
-  Send
-</ds-button>`;
+  protected readonly templateSnippet = `<form [dsSubmitted]="submitted()">
+  <ds-input label="Email" [formField]="loginForm.email" />
+  <ds-select label="Role" [options]="roles" [formField]="loginForm.role" />
+  <ds-checkbox label="I agree" [formField]="loginForm.terms" />
+  <ds-button
+    [disabled]="submitted() && loginForm().invalid()"
+    [loading]="loginForm().submitting()"
+    (pressed)="send()">
+    Send
+  </ds-button>
+</form>`;
 
   protected readonly messagesSnippet = `provideDsConfig({
   field: {
@@ -212,14 +192,14 @@ clear(): void {
       note: 'Drives the required marker beside the label and the native attribute.',
     },
     {
-      member: 'errors / touched',
+      member: 'errors',
       state: 'yes',
-      note: 'Errors show once the field is touched, so a required error does not greet an untouched form. Give the validator a message or map the kind — see below.',
+      note: 'Shown once [dsSubmitted] reads true, never on blur: touched is not read. Give the validator a message or map the kind — see below.',
     },
     {
       member: 'invalid',
       state: 'yes',
-      note: 'Applies the error styling and sets aria-invalid.',
+      note: 'Applies the error styling and sets aria-invalid, on the same terms as errors.',
     },
     {
       member: 'min / max / minLength / maxLength / pattern',

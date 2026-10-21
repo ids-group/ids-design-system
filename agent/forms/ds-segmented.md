@@ -4,5 +4,5 @@
 Group: Form & input
 
 <!-- inputs:ds-segmented -->
-All inputs: `hint: string = ''`, `error: string = ''`, `warning: string = ''`, `reserveMessage: boolean | null = null`, `messageIcon: IconName | false | null = null`, `errors: readonly DsFieldError[] = []`, `invalid: boolean = false`, `touched: boolean = false`, `pending: boolean = false`, `dirty: boolean = false`, `showDirty: boolean | null = null`, `hidden: boolean = false`, `options: readonly SegmentedOption[] = []`, `value: string = ''`, `ariaLabel: string | null = null`, `label: string = ''`, `disabled: boolean = false`, `joined: boolean = false`
+All inputs: `hint: string = ''`, `error: string = ''`, `warning: string = ''`, `reserveMessage: boolean | null = null`, `messageIcon: IconName | false | null = null`, `errors: readonly DsFieldError[] = []`, `invalid: boolean = false`, `pending: boolean = false`, `dirty: boolean = false`, `showDirty: boolean | null = null`, `hidden: boolean = false`, `options: readonly SegmentedOption[] = []`, `value: string = ''`, `ariaLabel: string | null = null`, `label: string = ''`, `disabled: boolean = false`, `joined: boolean = false`
 <!-- /inputs -->

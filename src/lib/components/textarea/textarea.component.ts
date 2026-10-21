@@ -200,8 +200,6 @@ export class TextareaComponent extends DsControlValueAccessor<string> {
     errors: this.errors,
     invalid: computed(() => this.invalid() || this.overLimitBy() > 0),
     success: this.success,
-    touchedSelf: this.touchedSelf,
-    touched: this.touched,
   });
   protected readonly message = this.fieldMessage.message;
   protected readonly pendingShown = this.fieldMessage.pending;

@@ -67,7 +67,6 @@ export class RadioComponent extends DsFieldBase {
     error: this.error,
     errors: this.errors,
     invalid: this.invalid,
-    touched: this.touched,
   });
   protected readonly message = this.fieldMessage.message;
   protected readonly resolvedAriaLabel = computed(() =>

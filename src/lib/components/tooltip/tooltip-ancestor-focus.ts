@@ -19,7 +19,8 @@ const WIDGET_ROLES = [
 ]
   .map((role) => `[role="${role}"]`)
   .join(', ');
-const INTERACTIVE = `${NATIVELY_FOCUSABLE}, tr:not([role]), ${WIDGET_ROLES}`;
+// Any other tab stop (a scroll region, a panel) opens nothing unless it opts in with dsTooltipAncestor.
+const INTERACTIVE = `${NATIVELY_FOCUSABLE}, tr:not([role]), ${WIDGET_ROLES}, [dsTooltipAncestor]`;
 // A widget role owns its focus (a listbox moves it by `aria-activedescendant`), and a hidden subtree must hold no tab stop.
 const REACHED_OR_HIDDEN = `${NATIVELY_FOCUSABLE}, tr[tabindex]:not([role]), ${WIDGET_ROLES}, [aria-hidden="true"], [inert]`;
 
@@ -104,6 +105,7 @@ interface TabStopSync {
 const tabStopSyncs = new Map<Node, TabStopSync>();
 let resizes: ResizeObserver | null = null;
 let mutations: MutationObserver | null = null;
+let resizedNextFrame: Set<Node> | null = null;
 
 function syncOf(node: Node | null): TabStopSync | undefined {
   for (let current = node; current; current = current.parentElement) {
@@ -123,6 +125,20 @@ function syncAll(targets: Node[]): void {
   );
   const decided = syncs.map((sync) => [sync, sync.isNeeded()] as const);
   decided.forEach(([sync, needed]) => sync.apply(needed));
+}
+
+// A tabindex written inside the ResizeObserver callback makes Firefox report "ResizeObserver loop
+// completed with undelivered notifications" for hosts under `content-visibility: auto`.
+function syncResizedNextFrame(targets: Node[]): void {
+  if (!resizedNextFrame) {
+    resizedNextFrame = new Set();
+    requestAnimationFrame(() => {
+      const resized = [...(resizedNextFrame ?? [])];
+      resizedNextFrame = null;
+      syncAll(resized);
+    });
+  }
+  targets.forEach((target) => resizedNextFrame?.add(target));
 }
 
 /**
@@ -158,7 +174,7 @@ export function tabStopWhileClipped(
   };
   const sync = () => apply(isNeeded());
   resizes ??= new ResizeObserver((entries) =>
-    syncAll(entries.map((entry) => entry.target)),
+    syncResizedNextFrame(entries.map((entry) => entry.target)),
   );
   mutations ??= new MutationObserver((records) =>
     syncAll(records.map((record) => record.target)),

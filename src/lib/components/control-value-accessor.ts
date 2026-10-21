@@ -31,7 +31,6 @@ const TRIGGER_ELEMENTS = `button${NOT_ROVED}, [tabindex="0"]${NOT_ROVED}`;
  */
 export function valueControlBridge<T>(model: () => ModelSignal<T>): {
   readonly formDisabled: WritableSignal<boolean>;
-  readonly touchedSelf: WritableSignal<boolean>;
   markTouched(): void;
   writeValue(next: T): void;
   registerOnChange(fn: (next: T) => void): void;
@@ -39,7 +38,6 @@ export function valueControlBridge<T>(model: () => ModelSignal<T>): {
   setDisabledState(isDisabled: boolean): void;
 } {
   const formDisabled = signal(false);
-  const touchedSelf = signal(false);
   let onChange: (next: T) => void = () => {};
   let onTouched: () => void = () => {};
   // Stops the effect echoing a form-driven write back as a user change.
@@ -63,11 +61,7 @@ export function valueControlBridge<T>(model: () => ModelSignal<T>): {
 
   return {
     formDisabled,
-    touchedSelf,
-    markTouched: () => {
-      touchedSelf.set(true);
-      onTouched();
-    },
+    markTouched: () => onTouched(),
     writeValue: (next: T) => {
       hasSynced = true;
       synced = next;
@@ -83,6 +77,15 @@ export function valueControlBridge<T>(model: () => ModelSignal<T>): {
       formDisabled.set(isDisabled);
     },
   };
+}
+
+// Signal forms takes the ControlValueAccessor path for every DS control, and
+// focusBoundControl() then calls focus() on the unfocusable HOST.
+function delegateHostFocus(
+  host: HTMLElement,
+  focus: (options?: FocusOptions) => void,
+): void {
+  host.focus = focus;
 }
 
 function focusOwnControl(host: HTMLElement, options?: FocusOptions): void {
@@ -118,7 +121,14 @@ export abstract class DsControlValueAccessor<T>
   readonly hidden = input(false, { transform: booleanAttribute });
   private readonly hostElement = inject<ElementRef<HTMLElement>>(ElementRef);
 
-  /** Signal forms calls this via `focusBoundControl()`; the default would focus the unfocusable HOST. */
+  constructor() {
+    super();
+    delegateHostFocus(this.hostElement.nativeElement, (options) =>
+      this.focus(options),
+    );
+  }
+
+  /** Focuses the control's own input or trigger; `focusBoundControl()` reaches it through the host. */
   focus(options?: FocusOptions): void {
     focusOwnControl(this.hostElement.nativeElement, options);
   }
@@ -131,10 +141,6 @@ export abstract class DsControlValueAccessor<T>
   private readonly bridge = valueControlBridge<T>(() => this.value);
 
   protected readonly formDisabled = this.bridge.formDisabled;
-
-  // Separate from the control's `touched`, which only exists once `NgControl`
-  // resolves: too late to gate the first blur.
-  protected readonly touchedSelf = this.bridge.touchedSelf;
 
   protected markTouched(): void {
     this.bridge.markTouched();
@@ -187,7 +193,6 @@ export abstract class DsBooleanControlValueAccessor
   }
 
   protected readonly formDisabled = signal(false);
-  protected readonly touchedSelf = signal(false);
 
   private onChange: (value: boolean) => void = () => {};
   private onTouched: () => void = () => {};
@@ -197,6 +202,9 @@ export abstract class DsBooleanControlValueAccessor
 
   constructor() {
     super();
+    delegateHostFocus(this.hostElement.nativeElement, (options) =>
+      this.focus(options),
+    );
     effect(() => {
       const next = this.checked();
       if (!this.hasSynced) {
@@ -214,7 +222,6 @@ export abstract class DsBooleanControlValueAccessor
   }
 
   protected markTouched(): void {
-    this.touchedSelf.set(true);
     this.onTouched();
   }
 

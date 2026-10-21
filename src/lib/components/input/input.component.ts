@@ -213,8 +213,6 @@ export class InputComponent extends DsControlValueAccessor<string> {
     errors: this.errors,
     invalid: this.invalid,
     success: this.success,
-    touchedSelf: this.touchedSelf,
-    touched: this.touched,
   });
   protected readonly message = this.fieldMessage.message;
   protected readonly pendingShown = this.fieldMessage.pending;
