@@ -86,6 +86,13 @@
     },
     {
       "element": "ds-input",
+      "name": "touched",
+      "replacement": null,
+      "since": "the next release",
+      "itemId": "unreleased#field-touched-input-removed"
+    },
+    {
+      "element": "ds-input",
       "name": "withAddon",
       "replacement": null,
       "since": "0.7.0",
@@ -772,6 +779,13 @@
       "replacement": null,
       "since": "0.10.0",
       "itemId": "0.10.0#input-floating-removed"
+    },
+    {
+      "owner": "InputComponent",
+      "name": "touched",
+      "replacement": null,
+      "since": "the next release",
+      "itemId": "unreleased#field-touched-input-removed"
     },
     {
       "owner": "InputComponent",

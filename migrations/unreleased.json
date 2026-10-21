@@ -1,13 +1,68 @@
 {
   "version": "unreleased",
-  "items": [],
+  "items": [
+    {
+      "id": "field-errors-shown-after-submit",
+      "kind": "behavior",
+      "old": "ds-input[errors]",
+      "new": null,
+      "surface": [
+        "template",
+        "typescript"
+      ],
+      "searchHints": [
+        "[formField]",
+        "formControlName",
+        "[formControl]",
+        "ngModel",
+        "markAllAsTouched",
+        "submitted"
+      ],
+      "detect": [
+        "markAllAsTouched()",
+        "submit(this.",
+        "(pressed)=",
+        "(ngSubmit)=",
+        "submitted = signal(",
+        "submitAttempted"
+      ],
+      "action": "Put `[dsSubmitted]=\"submitted()\"` on every element that holds validated DS fields, usually the `<form>`, where `submitted` is the flag the submit handler sets to true at its start and the form reset sets back to false. Where the component has no such flag, add one in its own state idiom (`submitted = signal(false)`) and set it at the start of the submit or (pressed) handler. A reactive or template-driven `<form>` shows its errors without the flag only when its save runs from (ngSubmit) and a `type=\"submit\"` button fires it; a ds-button is `type=\"button\"` by default, so a reactive form saved from (pressed) or (click), markAllAsTouched() included, gets the flag even inside `<form [formGroup]>`. A group of fields meant to show its errors while the user types gets `[dsSubmitted]=\"true\"`.",
+      "appliesWhen": "Every field bound to a form model through signal forms, `[formControl]`, `formControlName` or `ngModel`: input, textarea, select, autocomplete, multi-select, checkbox, radio, radio-group, switch, slider, segmented, date-picker, time-picker, color-picker, otp-input. Also the unparseable-date error of `ds-date-picker`. Not affected: an `error` string, `[invalid]` set with no validation errors behind it, `warning` and `hint`, which show as before.",
+      "pitfall": "A signal form with no `[dsSubmitted]` host shows no validation error at all, before or after a submit, and a reactive form that reveals its errors with markAllAsTouched() from a (pressed) or (click) handler does the same: the submit that fails validation looks like a dead button. A flag set after an awaited call reveals the errors only when that call returns.",
+      "restore": null,
+      "verify": "Every element holding DS fields bound to a form model sits under a `[dsSubmitted]` host or inside a `<form>` submitted through (ngSubmit), and a submit with an empty required field shows that field's error and none shows before it.",
+      "note": "Errors no longer follow `touched`: leaving a field never reveals one. Validation errors, the error paint and `aria-invalid` wait for the flag, and from then on follow the form live."
+    },
+    {
+      "id": "field-touched-input-removed",
+      "kind": "removed-api",
+      "old": "ds-input[touched]",
+      "new": null,
+      "surface": [
+        "template"
+      ],
+      "searchHints": [
+        "[touched]",
+        "touched"
+      ],
+      "detect": [
+        "[touched]="
+      ],
+      "action": "Delete every `[touched]` binding on a DS field and put `[dsSubmitted]` on the element that holds the field, bound to the form's submit flag.",
+      "appliesWhen": "Every DS field listed under field-errors-shown-after-submit. Signal forms bound `touched` by name and stops doing so with no code of yours involved.",
+      "restore": null,
+      "verify": "No DS field carries a `[touched]` binding."
+    }
+  ],
   "informational": [
     {
       "text": "Angular signal forms focusBoundControl() focuses a DS form control, `ds-search` included: `focus()` on the host element is routed to the control's own input or trigger. A workaround that queried `[aria-invalid=\"true\"]` and focused it by hand can go; it never reached `ds-radio-group` or `ds-segmented`, whose `aria-invalid` sits on the host.",
       "verify": "Submit an invalid signal form with onInvalid: (field) => field().errorSummary()[0]?.fieldTree().focusBoundControl() and confirm document.activeElement is the first invalid field's input."
     },
+    "The internal `DsFieldBase` no longer declares `touched`, the internal `DsControlValueAccessor` and `DsBooleanControlValueAccessor` no longer track `touchedSelf`, and the internal `DsFieldMessageSources` no longer takes `touched` or `touchedSelf`: a subclass of a DS field that read them meets a compiler error. The consumer-facing change is field-touched-input-removed.",
+    "`dsTooltipWhenClipped` writes the `tabindex` of a host clipped or unclipped by a resize in the next animation frame, so Firefox no longer reports \"ResizeObserver loop completed with undelivered notifications\" for hosts under `content-visibility: auto`. A global error handler that filtered that message out for this reason can go.",
     {
-      "text": "`ds-time-picker` and `ds-time-columns` select the centred cell when a user scroll ends, so `valueChange` can fire while the panel is open; picking by click or Enter still closes the panel. Looping columns render more copies of their cells, so a test that counts `[role=\"option\"]` in a looping hour or minute column finds more of them.",
+      "text": "`ds-time-picker` and `ds-time-columns` select the centred cell when a user scroll ends, so `valueChange` can fire while the panel is open; picking by click or Enter still closes the panel. Looping columns render more copies of their cells, so a test that counts the `.opt` cells of a looping hour or minute column finds more of them.",
       "verify": "Open a time picker, scroll the hour column with the wheel and confirm the trigger shows the centred hour with the panel still open."
     }
   ],

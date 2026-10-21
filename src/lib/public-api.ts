@@ -4,6 +4,7 @@
 // Shared component contracts
 export {
   DS_FIELD_WARNING_KIND,
+  DS_SUBMITTED,
   DsChipTemplateDirective,
   DsCreateTemplateDirective,
   DsEmptyTemplateDirective,
@@ -328,6 +329,7 @@ export type {
   StepperLabelPosition,
   StepperOrientation,
 } from '@ids-group-ltd/ids-design-system/components/stepper';
+export { SubmittedDirective } from '@ids-group-ltd/ids-design-system/components/submitted';
 export { SwitchComponent } from '@ids-group-ltd/ids-design-system/components/switch';
 export {
   CellTemplateDirective,

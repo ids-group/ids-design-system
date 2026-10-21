@@ -67,6 +67,8 @@ export interface ChartWithTooltipTrigger {
 
 export const DS_FIELD_WARNING_KIND = 'warning';
 
+export const DS_SUBMITTED = new InjectionToken<Signal<boolean>>('DS_SUBMITTED');
+
 export type DsAriaCurrent = 'page' | 'step' | 'location' | 'date' | 'time' | true;
 
 // @internal
@@ -87,7 +89,6 @@ export abstract class DsBooleanControlValueAccessor extends DsFormControlBase im
     public registerOnTouched(fn: () => void): void;
     public setDisabledState(isDisabled: boolean): void;
     private synced;
-    protected readonly touchedSelf = signal(…);
     public writeValue(value: boolean): void;
 }
 
@@ -135,7 +136,6 @@ export abstract class DsControlValueAccessor<T> extends DsFormControlBase implem
     public registerOnChange(fn: (value: T) => void): void;
     public registerOnTouched(fn: () => void): void;
     public setDisabledState(isDisabled: boolean): void;
-    protected readonly touchedSelf = this.bridge.touchedSelf;
     public abstract readonly value: ModelSignal<T>;
     public writeValue(value: T): void;
 }
@@ -157,7 +157,6 @@ export class DsEmptyTemplateDirective {
 export abstract class DsFieldBase extends DsMessageBase {
     public readonly errors = input<readonly DsFieldError[], DsFieldErrorsInput>([], { transform: normalizeFieldErrors });
     public readonly invalid = input(false, { transform: booleanAttribute });
-    public readonly touched = input(false, { transform: booleanAttribute });
 }
 
 export interface DsFieldError {
@@ -542,7 +541,7 @@ export function trimmedText(value: string | null | undefined): string;
 export function tweenMarks(element: Element, from: readonly number[], to: readonly number[], apply: (values: readonly number[]) => void, timing: ChartMotionTiming = 'mark', onDone: () => void = () => undefined): () => void;
 
 // @internal
-export function valueControlBridge<T>(model: () => ModelSignal<T>): { readonly formDisabled: WritableSignal<boolean>; readonly touchedSelf: WritableSignal<boolean>; markTouched(): void; writeValue(next: T): void; registerOnChange(fn: (next: T) => void): void; registerOnTouched(fn: () => void): void; setDisabledState(isDisabled: boolean): void; };
+export function valueControlBridge<T>(model: () => ModelSignal<T>): { readonly formDisabled: WritableSignal<boolean>; markTouched(): void; writeValue(next: T): void; registerOnChange(fn: (next: T) => void): void; registerOnTouched(fn: () => void): void; setDisabledState(isDisabled: boolean): void; };
 
 // @internal
 export function watchElementWidth(element: Element, width: WritableSignal<number>): () => void;

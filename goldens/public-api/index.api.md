@@ -98,6 +98,7 @@ export { DS_FIELD_WARNING_KIND } from '@ids-group-ltd/ids-design-system/componen
 export { DS_ICON_REGISTRY } from '@ids-group-ltd/ids-design-system/icons'; // const
 export { DS_INTL } from '@ids-group-ltd/ids-design-system/core'; // const
 export { DS_INTL_DEFAULTS } from '@ids-group-ltd/ids-design-system/core'; // const
+export { DS_SUBMITTED } from '@ids-group-ltd/ids-design-system/components'; // const
 export { DS_TOAST_POSITION_DEFAULT } from '@ids-group-ltd/ids-design-system/components/toast'; // const
 export { DatePickerComponent } from '@ids-group-ltd/ids-design-system/components/date-picker'; // component
 export { DatePickerMode } from '@ids-group-ltd/ids-design-system/components/date-picker'; // type
@@ -276,6 +277,7 @@ export { StatusDotComponent } from '@ids-group-ltd/ids-design-system/components/
 export { StepperComponent } from '@ids-group-ltd/ids-design-system/components/stepper'; // component
 export { StepperLabelPosition } from '@ids-group-ltd/ids-design-system/components/stepper'; // type
 export { StepperOrientation } from '@ids-group-ltd/ids-design-system/components/stepper'; // type
+export { SubmittedDirective } from '@ids-group-ltd/ids-design-system/components/submitted'; // directive
 export { SwitchComponent } from '@ids-group-ltd/ids-design-system/components/switch'; // component
 export { TabComponent } from '@ids-group-ltd/ids-design-system/components/tabs'; // component
 export { TableCellEditEvent } from '@ids-group-ltd/ids-design-system/components/table'; // interface
