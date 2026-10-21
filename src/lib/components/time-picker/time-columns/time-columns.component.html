@@ -1,19 +1,22 @@
-<!-- A looping column renders its cells three times: the copies either side are what scrolls into
-     view past either end, and `wrapScroll` moves the column back by one set before they run out. -->
+<!-- A looping column renders its cells five times: the two copies either side are what scrolls into
+     view past either end, and the column moves back by one set once a scroll ends. Two copies, not one,
+     so a long wheel gesture rarely reaches the edge, where wrapping mid-gesture cuts the wheel animation. -->
 <ng-template
   #loopCopy
   let-cells
   let-pick="pick">
-  @for (cell of cells; track cell.value) {
-    <!-- Not a button: a copy is never focused or announced, the real option is. -->
-    <span
-      class="opt"
-      aria-hidden="true"
-      [class.is-selected]="cell.selected"
-      [class.is-disabled]="cell.disabled"
-      (click)="pick(cell)">
-      {{ cell.label }}
-    </span>
+  @for (copy of [0, 1]; track copy) {
+    @for (cell of cells; track cell.value) {
+      <!-- Not a button: a copy is never focused or announced, the real option is. -->
+      <span
+        class="opt"
+        aria-hidden="true"
+        [class.is-selected]="cell.selected"
+        [class.is-disabled]="cell.disabled"
+        (click)="pick(cell)">
+        {{ cell.label }}
+      </span>
+    }
   }
 </ng-template>
 

@@ -214,7 +214,7 @@ export class TimeColumnsComponent {
     if (!element) {
       return false;
     }
-    const sets = element.classList.contains('loops') ? 3 : 1;
+    const sets = element.classList.contains('loops') ? 5 : 1;
 
     return element.scrollHeight / sets > element.clientHeight + 1;
   }
@@ -231,10 +231,11 @@ export class TimeColumnsComponent {
     if (set === 0) {
       return;
     }
-    if (column.scrollTop < set * 0.25) {
-      column.scrollTop += set;
-    } else if (column.scrollTop > lastTop - set * 0.25) {
-      column.scrollTop -= set;
+    if (
+      column.scrollTop < set * 0.25 ||
+      column.scrollTop > lastTop - set * 0.25
+    ) {
+      this.wrapColumn(column, count);
     }
   }
 
@@ -322,12 +323,11 @@ export class TimeColumnsComponent {
     if (set === 0) {
       return;
     }
-    // Centred on the scroll range, so the position a wrapScroll wrap leaves is inside the band and scrollend does not wrap it again.
+    // Whole sets back to the middle of the scroll range in one write, so the scrollend that write raises finds nothing left to wrap.
     const middle = (column.scrollHeight - column.clientHeight) / 2;
-    if (column.scrollTop < middle - set / 2) {
-      column.scrollTop += set;
-    } else if (column.scrollTop > middle + set / 2) {
-      column.scrollTop -= set;
+    const setsOff = Math.round((column.scrollTop - middle) / set);
+    if (setsOff !== 0) {
+      column.scrollTop -= setsOff * set;
     }
   }
 
