@@ -225,7 +225,17 @@ export class TimeColumnsComponent {
     if (this.smoothScrolls.has(column)) {
       return;
     }
-    this.wrapColumn(column, count);
+    // A scrollTop write mid-gesture cancels the browser's wheel animation and re-runs snapping, so scrollend wraps; here only a column about to run out of copies.
+    const set = this.setHeight(column, count);
+    const lastTop = column.scrollHeight - column.clientHeight;
+    if (set === 0) {
+      return;
+    }
+    if (column.scrollTop < set * 0.25) {
+      column.scrollTop += set;
+    } else if (column.scrollTop > lastTop - set * 0.25) {
+      column.scrollTop -= set;
+    }
   }
 
   protected onUserScroll(event: Event): void {
