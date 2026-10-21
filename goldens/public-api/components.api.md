@@ -368,9 +368,6 @@ export function createTypeAhead(): DsTypeAhead;
 export function decimationTarget(plotWidth: number): number;
 
 // @internal
-export function delegateHostFocus(host: HTMLElement, focus: (options?: FocusOptions) => void): void;
-
-// @internal
 export function describeSeries(words: DsIntl['chart'], label: string, points: readonly SummaryPoint[], format: (value: number) => string = formatValue, tableFollows = true, thresholds: readonly ChartThreshold[] = []): string;
 
 // @internal
