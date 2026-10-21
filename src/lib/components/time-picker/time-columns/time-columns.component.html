@@ -1,11 +1,12 @@
-<!-- A looping column renders its cells five times: the two copies either side are what scrolls into
-     view past either end, and the column moves back by one set once a scroll ends. Two copies, not one,
-     so a long wheel gesture rarely reaches the edge, where wrapping mid-gesture cuts the wheel animation. -->
+<!-- A looping column renders `loopCopiesEachSide` copies of its cells either side of the real ones: they
+     are what scrolls into view past either end, and the column moves back by whole sets once a scroll ends.
+     Enough copies that a continuous wheel gesture never reaches the edge, where wrapping mid-gesture cuts
+     the wheel animation. -->
 <ng-template
   #loopCopy
   let-cells
   let-pick="pick">
-  @for (copy of [0, 1]; track copy) {
+  @for (copy of loopCopiesEachSide; track copy) {
     @for (cell of cells; track cell.value) {
       <!-- Not a button: a copy is never focused or announced, the real option is. -->
       <span

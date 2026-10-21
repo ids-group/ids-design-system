@@ -150,6 +150,7 @@ export class TimeColumnsComponent {
   // One set of values taller than the column, measured after render; AM/PM is two rows and never loops.
   private readonly hoursOverflow = signal(false);
   private readonly minutesOverflow = signal(false);
+  protected readonly loopCopiesEachSide = [0, 1, 2, 3];
   private userPicked = false;
   private pickingByScroll = false;
   private readonly userScrolledColumns = new Set<HTMLElement>();
@@ -214,7 +215,9 @@ export class TimeColumnsComponent {
     if (!element) {
       return false;
     }
-    const sets = element.classList.contains('loops') ? 5 : 1;
+    const sets = element.classList.contains('loops')
+      ? this.loopCopiesEachSide.length * 2 + 1
+      : 1;
 
     return element.scrollHeight / sets > element.clientHeight + 1;
   }
