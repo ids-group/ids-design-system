@@ -19,7 +19,8 @@ const WIDGET_ROLES = [
 ]
   .map((role) => `[role="${role}"]`)
   .join(', ');
-const INTERACTIVE = `${NATIVELY_FOCUSABLE}, tr:not([role]), ${WIDGET_ROLES}`;
+// Any other tab stop (a scroll region, a panel) opens nothing unless it opts in with dsTooltipAncestor.
+const INTERACTIVE = `${NATIVELY_FOCUSABLE}, tr:not([role]), ${WIDGET_ROLES}, [dsTooltipAncestor]`;
 // A widget role owns its focus (a listbox moves it by `aria-activedescendant`), and a hidden subtree must hold no tab stop.
 const REACHED_OR_HIDDEN = `${NATIVELY_FOCUSABLE}, tr[tabindex]:not([role]), ${WIDGET_ROLES}, [aria-hidden="true"], [inert]`;
 
