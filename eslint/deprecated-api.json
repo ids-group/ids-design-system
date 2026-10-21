@@ -32,8 +32,8 @@
       "element": "ds-autocomplete",
       "name": "touched",
       "replacement": null,
-      "since": "the next release",
-      "itemId": "unreleased#field-touched-input-removed-autocomplete"
+      "since": "1.0.0",
+      "itemId": "1.0.0#field-touched-input-removed-autocomplete"
     },
     {
       "element": "ds-badge",
@@ -53,15 +53,15 @@
       "element": "ds-checkbox",
       "name": "touched",
       "replacement": null,
-      "since": "the next release",
-      "itemId": "unreleased#field-touched-input-removed-checkbox"
+      "since": "1.0.0",
+      "itemId": "1.0.0#field-touched-input-removed-checkbox"
     },
     {
       "element": "ds-color-picker",
       "name": "touched",
       "replacement": null,
-      "since": "the next release",
-      "itemId": "unreleased#field-touched-input-removed-color-picker"
+      "since": "1.0.0",
+      "itemId": "1.0.0#field-touched-input-removed-color-picker"
     },
     {
       "element": "ds-date-picker",
@@ -74,8 +74,8 @@
       "element": "ds-date-picker",
       "name": "touched",
       "replacement": null,
-      "since": "the next release",
-      "itemId": "unreleased#field-touched-input-removed-date-picker"
+      "since": "1.0.0",
+      "itemId": "1.0.0#field-touched-input-removed-date-picker"
     },
     {
       "element": "ds-donut-chart",
@@ -116,8 +116,8 @@
       "element": "ds-input",
       "name": "touched",
       "replacement": null,
-      "since": "the next release",
-      "itemId": "unreleased#field-touched-input-removed-input"
+      "since": "1.0.0",
+      "itemId": "1.0.0#field-touched-input-removed-input"
     },
     {
       "element": "ds-input",
@@ -165,15 +165,15 @@
       "element": "ds-multi-select",
       "name": "touched",
       "replacement": null,
-      "since": "the next release",
-      "itemId": "unreleased#field-touched-input-removed-multi-select"
+      "since": "1.0.0",
+      "itemId": "1.0.0#field-touched-input-removed-multi-select"
     },
     {
       "element": "ds-otp-input",
       "name": "touched",
       "replacement": null,
-      "since": "the next release",
-      "itemId": "unreleased#field-touched-input-removed-otp-input"
+      "since": "1.0.0",
+      "itemId": "1.0.0#field-touched-input-removed-otp-input"
     },
     {
       "element": "ds-pie-chart",
@@ -186,43 +186,43 @@
       "element": "ds-radio-group",
       "name": "touched",
       "replacement": null,
-      "since": "the next release",
-      "itemId": "unreleased#field-touched-input-removed-radio-group"
+      "since": "1.0.0",
+      "itemId": "1.0.0#field-touched-input-removed-radio-group"
     },
     {
       "element": "ds-radio",
       "name": "touched",
       "replacement": null,
-      "since": "the next release",
-      "itemId": "unreleased#field-touched-input-removed-radio"
+      "since": "1.0.0",
+      "itemId": "1.0.0#field-touched-input-removed-radio"
     },
     {
       "element": "ds-segmented",
       "name": "touched",
       "replacement": null,
-      "since": "the next release",
-      "itemId": "unreleased#field-touched-input-removed-segmented"
+      "since": "1.0.0",
+      "itemId": "1.0.0#field-touched-input-removed-segmented"
     },
     {
       "element": "ds-select",
       "name": "touched",
       "replacement": null,
-      "since": "the next release",
-      "itemId": "unreleased#field-touched-input-removed-select"
+      "since": "1.0.0",
+      "itemId": "1.0.0#field-touched-input-removed-select"
     },
     {
       "element": "ds-slider",
       "name": "touched",
       "replacement": null,
-      "since": "the next release",
-      "itemId": "unreleased#field-touched-input-removed-slider"
+      "since": "1.0.0",
+      "itemId": "1.0.0#field-touched-input-removed-slider"
     },
     {
       "element": "ds-switch",
       "name": "touched",
       "replacement": null,
-      "since": "the next release",
-      "itemId": "unreleased#field-touched-input-removed-switch"
+      "since": "1.0.0",
+      "itemId": "1.0.0#field-touched-input-removed-switch"
     },
     {
       "element": "ds-table",
@@ -249,15 +249,15 @@
       "element": "ds-textarea",
       "name": "touched",
       "replacement": null,
-      "since": "the next release",
-      "itemId": "unreleased#field-touched-input-removed-textarea"
+      "since": "1.0.0",
+      "itemId": "1.0.0#field-touched-input-removed-textarea"
     },
     {
       "element": "ds-time-picker",
       "name": "touched",
       "replacement": null,
-      "since": "the next release",
-      "itemId": "unreleased#field-touched-input-removed-time-picker"
+      "since": "1.0.0",
+      "itemId": "1.0.0#field-touched-input-removed-time-picker"
     },
     {
       "element": "ds-toast",
@@ -833,8 +833,8 @@
       "owner": "AutocompleteComponent",
       "name": "touched",
       "replacement": null,
-      "since": "the next release",
-      "itemId": "unreleased#field-touched-input-removed-autocomplete"
+      "since": "1.0.0",
+      "itemId": "1.0.0#field-touched-input-removed-autocomplete"
     },
     {
       "owner": "BannerComponent",
@@ -868,15 +868,15 @@
       "owner": "CheckboxComponent",
       "name": "touched",
       "replacement": null,
-      "since": "the next release",
-      "itemId": "unreleased#field-touched-input-removed-checkbox"
+      "since": "1.0.0",
+      "itemId": "1.0.0#field-touched-input-removed-checkbox"
     },
     {
       "owner": "ColorPickerComponent",
       "name": "touched",
       "replacement": null,
-      "since": "the next release",
-      "itemId": "unreleased#field-touched-input-removed-color-picker"
+      "since": "1.0.0",
+      "itemId": "1.0.0#field-touched-input-removed-color-picker"
     },
     {
       "owner": "DatePickerComponent",
@@ -889,8 +889,8 @@
       "owner": "DatePickerComponent",
       "name": "touched",
       "replacement": null,
-      "since": "the next release",
-      "itemId": "unreleased#field-touched-input-removed-date-picker"
+      "since": "1.0.0",
+      "itemId": "1.0.0#field-touched-input-removed-date-picker"
     },
     {
       "owner": "DropzoneComponent",
@@ -910,8 +910,8 @@
       "owner": "InputComponent",
       "name": "touched",
       "replacement": null,
-      "since": "the next release",
-      "itemId": "unreleased#field-touched-input-removed-input"
+      "since": "1.0.0",
+      "itemId": "1.0.0#field-touched-input-removed-input"
     },
     {
       "owner": "InputComponent",
@@ -952,15 +952,15 @@
       "owner": "MultiSelectComponent",
       "name": "touched",
       "replacement": null,
-      "since": "the next release",
-      "itemId": "unreleased#field-touched-input-removed-multi-select"
+      "since": "1.0.0",
+      "itemId": "1.0.0#field-touched-input-removed-multi-select"
     },
     {
       "owner": "OtpInputComponent",
       "name": "touched",
       "replacement": null,
-      "since": "the next release",
-      "itemId": "unreleased#field-touched-input-removed-otp-input"
+      "since": "1.0.0",
+      "itemId": "1.0.0#field-touched-input-removed-otp-input"
     },
     {
       "owner": "PaginationComponent",
@@ -973,36 +973,36 @@
       "owner": "RadioComponent",
       "name": "touched",
       "replacement": null,
-      "since": "the next release",
-      "itemId": "unreleased#field-touched-input-removed-radio"
+      "since": "1.0.0",
+      "itemId": "1.0.0#field-touched-input-removed-radio"
     },
     {
       "owner": "RadioGroupComponent",
       "name": "touched",
       "replacement": null,
-      "since": "the next release",
-      "itemId": "unreleased#field-touched-input-removed-radio-group"
+      "since": "1.0.0",
+      "itemId": "1.0.0#field-touched-input-removed-radio-group"
     },
     {
       "owner": "SegmentedComponent",
       "name": "touched",
       "replacement": null,
-      "since": "the next release",
-      "itemId": "unreleased#field-touched-input-removed-segmented"
+      "since": "1.0.0",
+      "itemId": "1.0.0#field-touched-input-removed-segmented"
     },
     {
       "owner": "SelectComponent",
       "name": "touched",
       "replacement": null,
-      "since": "the next release",
-      "itemId": "unreleased#field-touched-input-removed-select"
+      "since": "1.0.0",
+      "itemId": "1.0.0#field-touched-input-removed-select"
     },
     {
       "owner": "SliderComponent",
       "name": "touched",
       "replacement": null,
-      "since": "the next release",
-      "itemId": "unreleased#field-touched-input-removed-slider"
+      "since": "1.0.0",
+      "itemId": "1.0.0#field-touched-input-removed-slider"
     },
     {
       "owner": "SplitButtonComponent",
@@ -1022,8 +1022,8 @@
       "owner": "SwitchComponent",
       "name": "touched",
       "replacement": null,
-      "since": "the next release",
-      "itemId": "unreleased#field-touched-input-removed-switch"
+      "since": "1.0.0",
+      "itemId": "1.0.0#field-touched-input-removed-switch"
     },
     {
       "owner": "TableColumn",
@@ -1078,22 +1078,22 @@
       "owner": "TextareaComponent",
       "name": "touched",
       "replacement": null,
-      "since": "the next release",
-      "itemId": "unreleased#field-touched-input-removed-textarea"
+      "since": "1.0.0",
+      "itemId": "1.0.0#field-touched-input-removed-textarea"
     },
     {
       "owner": "TimePickerComponent",
       "name": "touched",
       "replacement": null,
-      "since": "the next release",
-      "itemId": "unreleased#field-touched-input-removed-time-picker"
+      "since": "1.0.0",
+      "itemId": "1.0.0#field-touched-input-removed-time-picker"
     },
     {
       "owner": "TimePickerComponent",
       "name": "valueChange",
       "replacement": null,
-      "since": "the next release",
-      "itemId": "unreleased#time-picker-value-changes-while-scrolling"
+      "since": "1.0.0",
+      "itemId": "1.0.0#time-picker-value-changes-while-scrolling"
     },
     {
       "owner": "ToastComponent",
