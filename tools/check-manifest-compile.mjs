@@ -28,11 +28,12 @@
 // manifest, a fixture that is not `.ts`, and an entry of `migrations/unreleased.json` naming a TS
 // or compile-time NG code that its fixture does not assert.
 //
-//   node tools/check-manifest-compile.mjs            # every fixture, plus the unreleased draft
-//   node tools/check-manifest-compile.mjs --audit    # the same, then every published entry whose
+//   node tools/check-manifest-compile.mjs            # what can have moved since the last release
+//   node tools/check-manifest-compile.mjs --all      # every fixture
+//   node tools/check-manifest-compile.mjs --audit    # every fixture, then every published entry whose
 //                                                    # TS/NG-code claim no fixture asserts; exits 0
 import { NgtscProgram } from '@angular/compiler-cli';
-import { execFileSync } from 'node:child_process';
+import { execFileSync, spawn } from 'node:child_process';
 import {
   existsSync,
   mkdirSync,
@@ -52,6 +53,7 @@ const MIGRATIONS = resolve(
 );
 const FIXTURES = join(MIGRATIONS, 'fixtures');
 const AUDIT = process.argv.includes('--audit');
+const ALL = AUDIT || process.argv.includes('--all');
 const PACKAGE = '@ids-group-ltd/ids-design-system';
 const WORKING_TREE = 'the working tree';
 const VERSION_FOLDER = /^(\d+\.\d+\.\d+(?:-[0-9A-Za-z.]+)?|unreleased)$/;
@@ -60,6 +62,7 @@ const DIRECTIVE =
   /^\s*(?:\/\/\s*@ts-expect-error\b(.*)|<!--\s*expect:(.*?)-->\s*)$/;
 const DIRECTIVE_BODY = /^\s+(before|after|both)((?:\s+(?:TS|NG)\d{4})+)\s*$/;
 const SUPPRESSION = /@ts-(ignore|nocheck)\b/;
+const AUGMENTATION = /\bdeclare\s+(global\b|module\s+['"])/;
 // NG0xxx are runtime errors; compile-time Angular codes start at NG1000.
 const CLAIMED_CODE = /\b(?:TS\d{4}|NG[1-9]\d{3})\b/g;
 const TEMPLATE_FIXTURE = '.component.ts';
@@ -75,7 +78,15 @@ const COMPILER_OPTIONS = {
   target: ts.ScriptTarget.ES2022,
   module: ts.ModuleKind.Preserve,
   moduleResolution: ts.ModuleResolutionKind.Bundler,
+  // Every fixture of a tag is a root of one program, so each must be its own module: a fixture
+  // with no import or export would otherwise declare into a global scope the others share.
+  moduleDetection: ts.ModuleDetectionKind.Force,
 };
+
+// What node_modules and the TypeScript lib parse to is the same at every tag, so one parse serves
+// every program. Extracted trees sit under node_modules/.cache and are never shared.
+const sharedSourceFiles = new Map();
+const SHAREABLE = /[\\/]node_modules[\\/](?!\.cache[\\/])/;
 
 const tags = releaseTags(ROOT);
 const problems = [];
@@ -90,6 +101,10 @@ function parseFixture(path) {
     if (SUPPRESSION.test(line))
       errors.push(
         `line ${index + 1}: @ts-${SUPPRESSION.exec(line)[1]} hides the diagnostics this check reads`,
+      );
+    if (AUGMENTATION.test(line))
+      errors.push(
+        `line ${index + 1}: \`declare ${AUGMENTATION.exec(line)[1].trim()}\` reaches every fixture compiled at the same tag; keep a fixture's declarations local`,
       );
     const directive = DIRECTIVE.exec(line);
     if (directive) {
@@ -172,6 +187,15 @@ function compile(treeRoot, label, fixtures, angular) {
   const readFile = host.readFile.bind(host);
   host.readFile = (file) =>
     texts.get(resolve(file).toLowerCase()) ?? readFile(file);
+  const getSourceFile = host.getSourceFile.bind(host);
+  host.getSourceFile = (file, languageVersion, ...rest) => {
+    if (!SHAREABLE.test(file))
+      return getSourceFile(file, languageVersion, ...rest);
+    const key = `${file}|${JSON.stringify(languageVersion)}`;
+    if (!sharedSourceFiles.has(key))
+      sharedSourceFiles.set(key, getSourceFile(file, languageVersion, ...rest));
+    return sharedSourceFiles.get(key);
+  };
   const rootNames = fixtures.map((fixture) => fixture.path);
   const angularProgram = angular && new NgtscProgram(rootNames, options, host);
   const program = angularProgram
@@ -318,7 +342,7 @@ function collectFixtures() {
 
 // Every tag's src is extracted under node_modules/.cache, not the OS temp dir: the library sources
 // import @angular/* and friends, and resolution walks up from the importing file to find them.
-function runFixtures(fixtures) {
+async function runFixtures(fixtures) {
   const scratch = join(ROOT, 'node_modules', '.cache');
   mkdirSync(scratch, { recursive: true });
   const trees = mkdtempSync(join(scratch, 'manifest-compile-'));
@@ -327,6 +351,7 @@ function runFixtures(fixtures) {
     cleanUp();
     process.exit(130);
   });
+  let next = null;
   try {
     const bySide = new Map();
     for (const fixture of fixtures)
@@ -339,29 +364,32 @@ function runFixtures(fixtures) {
         bySide.set(label, group);
       }
     const mismatches = new Map(fixtures.map((fixture) => [fixture, []]));
-    for (const [label, entries] of bySide) {
-      let treeRoot = ROOT;
-      if (label !== WORKING_TREE) {
-        treeRoot = join(trees, label);
-        mkdirSync(treeRoot);
-        const archive = execFileSync(
-          'git',
-          [
-            '-C',
-            ROOT,
-            'archive',
-            '--format=tar',
-            label,
-            'src',
-            'tsconfig.json',
-          ],
-          { maxBuffer: 1 << 30 },
-        );
-        execFileSync('tar', ['-x', '-f', '-'], {
-          cwd: treeRoot,
-          input: archive,
-        });
-      }
+    // A shell pipe streams the archive between git and tar without this process, so the next
+    // tag extracts while the current one compiles synchronously.
+    const extract = (label) => {
+      if (label === WORKING_TREE) return Promise.resolve(ROOT);
+      const treeRoot = join(trees, label);
+      mkdirSync(treeRoot);
+      const child = spawn(
+        `git -C "${ROOT}" archive --format=tar ${label} src tsconfig.json | tar -x -f -`,
+        { cwd: treeRoot, shell: true, stdio: ['ignore', 'ignore', 'inherit'] },
+      );
+      const done = new Promise((resolveTree, reject) =>
+        child.on('exit', (code) =>
+          code === 0
+            ? resolveTree(treeRoot)
+            : reject(new Error(`extracting ${label} exited with ${code}`)),
+        ),
+      );
+      done.catch(() => {});
+      return done;
+    };
+    const labels = [...bySide.keys()];
+    next = labels.length ? extract(labels[0]) : null;
+    for (const [index, label] of labels.entries()) {
+      const entries = bySide.get(label);
+      const treeRoot = await next;
+      next = index + 1 < labels.length ? extract(labels[index + 1]) : null;
       const unique = [...new Set(entries.map((entry) => entry.fixture))];
       const plain = unique.filter((fixture) => !fixture.template);
       const templated = unique.filter((fixture) => fixture.template);
@@ -384,6 +412,7 @@ function runFixtures(fixtures) {
       problems.push(...found.map((line) => `${fixture.name}: ${line}`));
     }
   } finally {
+    await next?.catch(() => {});
     cleanUp();
   }
 }
@@ -424,7 +453,69 @@ function uncovered(version, fixtures) {
 }
 
 const fixtures = collectFixtures();
-runFixtures(fixtures);
+
+// A published fixture compiled against two immutable tags gives the same verdict on every run, so
+// the gate compiles only what can have moved since the last release: the draft's fixtures, a
+// fixture or manifest edited since that tag, and every fixture when this checker or the resolved
+// compiler (TypeScript, the Angular compiler) changed. Any other dependency bump leaves verdicts
+// alone. A migrations folder other than the repository's (the selftest) runs all.
+const CHECKER = 'tools/check-manifest-compile.mjs';
+const COMPILER_IN_LOCK =
+  /"(typescript|@angular\/compiler(?:-cli)?)@(\d[^"]*)"/g;
+const compilerVersions = (lockText) =>
+  [
+    ...new Set(
+      [...lockText.matchAll(COMPILER_IN_LOCK)].map((match) => match[0]),
+    ),
+  ]
+    .sort()
+    .join(' ');
+function changedSinceLastRelease() {
+  const last = process.env.DS_COMPILE_SINCE || tags.at(-1);
+  if (ALL || !last || MIGRATIONS !== resolve(ROOT, 'migrations')) return null;
+  const lines = (args) =>
+    execFileSync('git', ['-C', ROOT, ...args], { encoding: 'utf8' })
+      .split('\n')
+      .filter(Boolean);
+  let lockThen;
+  try {
+    lockThen = execFileSync('git', ['-C', ROOT, 'show', `${last}:bun.lock`], {
+      encoding: 'utf8',
+      maxBuffer: 1 << 28,
+      stdio: ['ignore', 'pipe', 'ignore'],
+    });
+  } catch {
+    return null;
+  }
+  const lockNow = readFileSync(join(ROOT, 'bun.lock'), 'utf8');
+  const compilerThen = compilerVersions(lockThen);
+  if (!compilerThen || compilerThen !== compilerVersions(lockNow)) return null;
+  const changed = new Set([
+    ...lines(['diff', '--name-only', last, '--', 'migrations', CHECKER]),
+    ...lines([
+      'ls-files',
+      '--others',
+      '--exclude-standard',
+      '--',
+      'migrations',
+    ]),
+  ]);
+  return changed.has(CHECKER) ? null : changed;
+}
+const changed = changedSinceLastRelease();
+const selected = changed
+  ? fixtures.filter(
+      (fixture) =>
+        fixture.version === 'unreleased' ||
+        changed.has(`migrations/${fixture.name}`) ||
+        changed.has(`migrations/${fixture.version}.json`),
+    )
+  : fixtures;
+if (selected.length < fixtures.length)
+  console.log(
+    `check-manifest-compile: ${selected.length} of ${fixtures.length} fixture(s) can have moved since ${process.env.DS_COMPILE_SINCE || tags.at(-1)}; --all compiles every one`,
+  );
+await runFixtures(selected);
 
 const draftGaps = uncovered('unreleased', fixtures);
 problems.push(
@@ -435,7 +526,7 @@ problems.push(
 );
 
 console.log(
-  `check-manifest-compile: ${fixtures.length} fixture(s) compiled at both ends of their boundary`,
+  `check-manifest-compile: ${selected.length} fixture(s) compiled at both ends of their boundary`,
 );
 for (const line of results) console.log(`  ${line}`);
 

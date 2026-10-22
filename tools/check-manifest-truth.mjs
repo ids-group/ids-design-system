@@ -25,6 +25,7 @@ import { readdirSync, readFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import { previousBoundary, releaseTags } from './release-tags.mjs';
+import { cachedAtTag } from './tag-cache.mjs';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const ONLY = process.argv
@@ -53,13 +54,23 @@ const tags = (() => {
   return releaseTags(ROOT);
 })();
 
-// One `git cat-file --batch` per tag, not one `git show` per file: a tag's surface is ~400 files
-// and the per-spawn cost dominates everything else. Nothing is written to disk.
+// A tag's files come from the disk cache when it holds them (tools/tag-cache.mjs); `keep` is part
+// of the key by its source, since two callers filter the same tree differently.
 export function readTreeAt(
   tag,
   pathspecs = ['src/lib'],
   keep = (path) => /\.(ts|scss|html)$/.test(path) && !path.endsWith('.spec.ts'),
 ) {
+  return cachedAtTag(
+    tag,
+    [readTreeFromGit.toString(), pathspecs, keep.toString()],
+    () => readTreeFromGit(tag, pathspecs, keep),
+  );
+}
+
+// One `git cat-file --batch` per tag, not one `git show` per file: a tag's surface is ~400 files
+// and the per-spawn cost dominates everything else.
+function readTreeFromGit(tag, pathspecs, keep) {
   let paths;
   try {
     paths = git(['ls-tree', '-r', '--name-only', tag, '--', ...pathspecs])
@@ -106,13 +117,16 @@ export function readTreeAt(
 const DECL =
   /^export\s+(?:default\s+)?(?:declare\s+)?(?:abstract\s+)?(?:class|interface|type|const|function|enum)\s+([A-Za-z_][A-Za-z0-9_]*)/gm;
 
+// Keyed on this whole file, since `buildSurface` leans on module-level patterns as well.
+const SURFACE_PARSER = readFileSync(fileURLToPath(import.meta.url), 'utf8');
 const surfaceCache = new Map();
 export function surfaceAt(tag) {
   if (surfaceCache.has(tag)) return surfaceCache.get(tag);
-  const files = readTreeAt(tag);
-  if (!files) return null;
-  const surface = buildSurface(files);
-  surfaceCache.set(tag, surface);
+  const surface = cachedAtTag(tag, ['surface', SURFACE_PARSER], () => {
+    const files = readTreeAt(tag);
+    return files ? buildSurface(files) : null;
+  });
+  if (surface) surfaceCache.set(tag, surface);
   return surface;
 }
 
@@ -734,6 +748,10 @@ const FRAMEWORK_NAMES = new Set([
   'ControlValueAccessor',
   'formControl',
   'formControlName',
+  'formGroup',
+  'FormGroup',
+  'FormGroupDirective',
+  'resetForm',
   'formField',
   'FormUiControl',
   'InputSignal',

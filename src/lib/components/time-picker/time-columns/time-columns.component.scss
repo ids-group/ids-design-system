@@ -29,6 +29,7 @@
   min-width: var(--ds-time-picker-column-width, 3rem);
   max-height: var(--ds-time-picker-column-height, 13.5rem);
   overflow-y: auto;
+  scroll-snap-type: y mandatory;
   scrollbar-width: thin;
   padding-inline: var(--space-0-5);
 
@@ -50,6 +51,7 @@
 
 .opt {
   flex: none;
+  scroll-snap-align: center;
   appearance: none;
   border: 0;
   cursor: pointer;

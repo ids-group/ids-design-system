@@ -6,6 +6,8 @@ import { check, finish } from './probe-check.mjs';
 const resizeCallbacks = [];
 const observed = new Set();
 const mutationCallbacks = [];
+const frames = [];
+globalThis.requestAnimationFrame = (callback) => frames.push(callback);
 globalThis.ResizeObserver = class {
   constructor(callback) {
     resizeCallbacks.push(callback);
@@ -141,8 +143,13 @@ class FakeElement {
 
 const el = (tag, attributes, children) =>
   new FakeElement(tag, attributes, children);
-const resize = (element) =>
+const observeResize = (element) =>
   resizeCallbacks.forEach((callback) => callback([{ target: element }]));
+const nextFrame = () => frames.splice(0).forEach((callback) => callback(0));
+const resize = (element) => {
+  observeResize(element);
+  nextFrame();
+};
 const mutateInside = (element) =>
   mutationCallbacks.forEach((callback) => callback([{ target: element }]));
 
@@ -169,7 +176,13 @@ function setUp(hostAttributes = {}, wrap = (host) => el('div', {}, [host])) {
     host.getAttribute('tabindex'),
     null,
   );
-  resize(host);
+  observeResize(host);
+  check(
+    'the observer callback writes nothing until the next frame',
+    host.getAttribute('tabindex'),
+    null,
+  );
+  nextFrame();
   check(
     'a clipped host in a clickable row becomes a tab stop',
     host.getAttribute('tabindex'),
@@ -354,6 +367,7 @@ for (const [name, wrap] of [
   resizeCallbacks.forEach((callback) =>
     callback(hosts.map(({ host }) => ({ target: host }))),
   );
+  nextFrame();
   check(
     'one resize batch reads every host before writing any tabindex',
     order.join(' '),

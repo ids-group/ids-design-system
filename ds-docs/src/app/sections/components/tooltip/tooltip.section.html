@@ -890,6 +890,20 @@
 
       <tr>
         <td>
+          Inside a focusable element marked
+          <code class="t-mono-inline">
+            dsTooltipAncestor
+          </code>
+          (a card, a tile)
+        </td>
+
+        <td>
+          Same as inside a control; the value takes no tab stop of its own.
+        </td>
+      </tr>
+
+      <tr>
+        <td>
           Neither
         </td>
 
@@ -912,7 +926,11 @@
 
     <li>
       Focus on a container (tab panel, scroll region) opens nothing, so a value
-      inside one takes its own tab stop.
+      inside one takes its own tab stop. A focusable card that should open its
+      clipped title instead carries
+      <code class="t-mono-inline">
+        dsTooltipAncestor
+      </code>.
     </li>
   </ul>
 
@@ -968,6 +986,19 @@
         class="clip-line t-xs"
         dsTooltipWhenClipped>
         Template: renewal_notice_commercial_v3_final_approved
+      </span>
+    </div>
+  </div>
+
+  <div class="demo">
+    <div
+      class="clip-row"
+      tabindex="0"
+      dsTooltipAncestor>
+      <span
+        class="clip-line t-s"
+        dsTooltipWhenClipped>
+        Offline sync stress card with a title too long for the card
       </span>
     </div>
   </div>

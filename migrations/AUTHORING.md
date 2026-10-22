@@ -369,6 +369,7 @@ member that moved to a base class (interface members that move get a "check the 
 
 Run `node tools/check.mjs migration-lint` before you call the manifest done — it mechanises the lines marked
 (lint) below, and a release cannot be cut past it. The rest are judgment the linter cannot make.
+`node tools/check.mjs --affected` runs every gate a manifest edit can move, this one among them.
 
 - [ ] `id` is a stable, unique kebab slug. (lint)
 - [ ] `old`/`new`/`searchHints` are exact code strings; element-scoped as `element[attr]` where shared.
@@ -426,8 +427,8 @@ Run `node tools/check.mjs migration-lint` before you call the manifest done — 
       manifest-claims`, in the lint and release gates)
 - [ ] Every docs block whose pixels changed across the boundary has a `ds-*` element, class or
       token it renders named in the manifest or the CHANGELOG block, and a `pixels:<block id>`
-      evidence names a block that did not change. (`node tools/check.mjs render-evidence`, at the
-      cut)
+      evidence names a block that did not change. (`node tools/check.mjs render-evidence`, by hand
+      before a release that touched rendering; CI does not run it)
 - [ ] An `informational` entry whose change is to rendering alone carries `verify`; an object entry
       has a non-empty `text` and `verify` and no other key. (lint, M046 for the shape)
 - [ ] `old` resolves at the PREVIOUS tag, is gone at this one for a rename or a removal, and `new`
@@ -468,7 +469,7 @@ Run `node tools/check.mjs migration-lint` before you call the manifest done — 
       `strictTemplates` once the draft is applied to it; each error is printed beside the item
       that edited or names its line, or as covered by none. Keep `canary/` on the last release:
       a cut whose draft rewrites it carries the rewritten canary. (`node tools/check.mjs
-      upgrade-canary`, at the cut)
+      upgrade-canary`, by hand before a release; CI does not run it)
 - [ ] A published record that described something which never worked is resolved by one question —
       does anything the consumer DOES change? Yes → an item with an `action` here, in the library's
       voice. No → nothing, and a quiet correction to the old file if it still misleads. Never a line
