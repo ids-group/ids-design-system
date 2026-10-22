@@ -25,6 +25,7 @@ import {
   afterTwoFrames,
   bandScale,
   elementWidth,
+  fontsLoaded,
   labelInterval,
   nextRovingIndex,
   rotationWouldFit,
@@ -309,6 +310,7 @@ export class ChartComponent extends DsChartBase implements ChartScales {
     afterRenderEffect({
       read: () => {
         this.labelTexts();
+        fontsLoaded();
         this.measuredLabelWidth.set(this.widestLabel('.axis-label.is-primary'));
         this.measuredSecondaryLabelWidth.set(
           this.widestLabel('.axis-label.is-secondary'),

@@ -17,6 +17,7 @@ export {
 } from './charts-format';
 export {
   elementWidth,
+  fontsLoaded,
   readOnHostResize,
   watchElementWidth,
 } from './charts-measure';
