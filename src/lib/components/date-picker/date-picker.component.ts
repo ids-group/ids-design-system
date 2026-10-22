@@ -47,7 +47,6 @@ import {
 import {
   resolveFieldMessage,
   trimmedText,
-  type DsFieldError,
 } from '@ids-group-ltd/ids-design-system/components';
 import {
   DS_CONFIG,
@@ -284,20 +283,27 @@ export class DatePickerComponent
   protected readonly hintId = computed(() =>
     this.message().text || this.changedShown() ? `${this.uid}-hint` : null,
   );
-  // An unparseable date is the picker's OWN error: it waits for the submit like a form error.
-  private readonly parseErrors = computed<readonly DsFieldError[]>(() => {
-    if (!this.typedInvalid() && !this.rangeInvalid()) {
-      return [];
+  // An unparseable date is the picker's OWN error: it enters the ladder at the error rung rather than replacing the hint.
+  // An explicit `error` still wins.
+  private readonly localError = computed(() => {
+    const explicit = this.error().trim();
+    if (explicit) {
+      return explicit;
     }
-    const mask =
-      this.mode() === 'single'
-        ? this.formatSpec().mask
-        : rangeMask(this.formatSpec());
+    if (this.typedInvalid() || this.rangeInvalid()) {
+      const mask =
+        this.mode() === 'single'
+          ? this.formatSpec().mask
+          : rangeMask(this.formatSpec());
 
-    return [
-      { kind: 'date', message: this.intl().datePicker.invalidDate(mask) },
-    ];
+      return this.intl().datePicker.invalidDate(mask);
+    }
+
+    return '';
   });
+  private readonly dateInvalid = computed(
+    () => this.invalid() || this.typedInvalid() || this.rangeInvalid(),
+  );
   private readonly fieldMessage = resolveFieldMessage({
     pending: this.pending,
     dirty: this.dirty,
@@ -305,11 +311,12 @@ export class DatePickerComponent
     disabled: () => this.isDisabled(),
     hint: this.hint,
     warning: this.warning,
-    error: this.error,
+    error: this.localError,
     errors: this.errors,
-    ownErrors: this.parseErrors,
-    invalid: this.invalid,
+    invalid: this.dateInvalid,
     success: this.success,
+    touchedSelf: this.touchedSelf,
+    touched: this.touched,
   });
   protected readonly message = this.fieldMessage.message;
   protected readonly pendingShown = this.fieldMessage.pending;

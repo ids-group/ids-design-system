@@ -4,5 +4,5 @@
 Group: Form & input
 
 <!-- inputs:ds-radio-group -->
-All inputs: `hint: string = ''`, `error: string = ''`, `warning: string = ''`, `reserveMessage: boolean | null = null`, `messageIcon: IconName | false | null = null`, `errors: readonly DsFieldError[] = []`, `invalid: boolean = false`, `pending: boolean = false`, `dirty: boolean = false`, `showDirty: boolean | null = null`, `hidden: boolean = false`, `value: unknown = null`, `name: string | null = null`, `disabled: boolean = false`, `ariaLabel: string | null = null`, `label: string = ''`
+All inputs: `hint: string = ''`, `error: string = ''`, `warning: string = ''`, `reserveMessage: boolean | null = null`, `messageIcon: IconName | false | null = null`, `errors: readonly DsFieldError[] = []`, `invalid: boolean = false`, `touched: boolean = false`, `pending: boolean = false`, `dirty: boolean = false`, `showDirty: boolean | null = null`, `hidden: boolean = false`, `value: unknown = null`, `name: string | null = null`, `disabled: boolean = false`, `ariaLabel: string | null = null`, `label: string = ''`
 <!-- /inputs -->

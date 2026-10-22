@@ -388,7 +388,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "[]",
         "required": false,
-        "description": "Validation errors, shown once the form is submitted (`[dsSubmitted]`, or `ngSubmit` of a reactive or template-driven form). Bound by signal forms; reactive and template-driven forms are read through `NgControl`."
+        "description": "Validation errors, shown once the user has interacted. Bound by signal forms; reactive and template-driven forms are read through `NgControl`."
       },
       {
         "name": "invalid",
@@ -397,7 +397,16 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "Paints the error state and sets `aria-invalid` WITHOUT a message; use `error` to show text. Signal forms binds it alongside `errors`, and then it waits for the submit like them."
+        "description": "Paints the error state and sets `aria-invalid` WITHOUT a message; use `error` to show text."
+      },
+      {
+        "name": "touched",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Whether the user has interacted with the field. Bound by signal forms; gates `errors`."
       },
       {
         "name": "pending",
@@ -2882,7 +2891,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "[]",
         "required": false,
-        "description": "Validation errors, shown once the form is submitted (`[dsSubmitted]`, or `ngSubmit` of a reactive or template-driven form). Bound by signal forms; reactive and template-driven forms are read through `NgControl`."
+        "description": "Validation errors, shown once the user has interacted. Bound by signal forms; reactive and template-driven forms are read through `NgControl`."
       },
       {
         "name": "invalid",
@@ -2891,7 +2900,16 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "Paints the error state and sets `aria-invalid` WITHOUT a message; use `error` to show text. Signal forms binds it alongside `errors`, and then it waits for the submit like them."
+        "description": "Paints the error state and sets `aria-invalid` WITHOUT a message; use `error` to show text."
+      },
+      {
+        "name": "touched",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Whether the user has interacted with the field. Bound by signal forms; gates `errors`."
       },
       {
         "name": "pending",
@@ -3093,7 +3111,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "[]",
         "required": false,
-        "description": "Validation errors, shown once the form is submitted (`[dsSubmitted]`, or `ngSubmit` of a reactive or template-driven form). Bound by signal forms; reactive and template-driven forms are read through `NgControl`."
+        "description": "Validation errors, shown once the user has interacted. Bound by signal forms; reactive and template-driven forms are read through `NgControl`."
       },
       {
         "name": "invalid",
@@ -3102,7 +3120,16 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "Paints the error state and sets `aria-invalid` WITHOUT a message; use `error` to show text. Signal forms binds it alongside `errors`, and then it waits for the submit like them."
+        "description": "Paints the error state and sets `aria-invalid` WITHOUT a message; use `error` to show text."
+      },
+      {
+        "name": "touched",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Whether the user has interacted with the field. Bound by signal forms; gates `errors`."
       },
       {
         "name": "pending",
@@ -3606,7 +3633,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "[]",
         "required": false,
-        "description": "Validation errors, shown once the form is submitted (`[dsSubmitted]`, or `ngSubmit` of a reactive or template-driven form). Bound by signal forms; reactive and template-driven forms are read through `NgControl`."
+        "description": "Validation errors, shown once the user has interacted. Bound by signal forms; reactive and template-driven forms are read through `NgControl`."
       },
       {
         "name": "invalid",
@@ -3615,7 +3642,16 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "Paints the error state and sets `aria-invalid` WITHOUT a message; use `error` to show text. Signal forms binds it alongside `errors`, and then it waits for the submit like them."
+        "description": "Paints the error state and sets `aria-invalid` WITHOUT a message; use `error` to show text."
+      },
+      {
+        "name": "touched",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Whether the user has interacted with the field. Bound by signal forms; gates `errors`."
       },
       {
         "name": "pending",
@@ -5171,7 +5207,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "[]",
         "required": false,
-        "description": "Validation errors, shown once the form is submitted (`[dsSubmitted]`, or `ngSubmit` of a reactive or template-driven form). Bound by signal forms; reactive and template-driven forms are read through `NgControl`."
+        "description": "Validation errors, shown once the user has interacted. Bound by signal forms; reactive and template-driven forms are read through `NgControl`."
       },
       {
         "name": "invalid",
@@ -5180,7 +5216,16 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "Paints the error state and sets `aria-invalid` WITHOUT a message; use `error` to show text. Signal forms binds it alongside `errors`, and then it waits for the submit like them."
+        "description": "Paints the error state and sets `aria-invalid` WITHOUT a message; use `error` to show text."
+      },
+      {
+        "name": "touched",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Whether the user has interacted with the field. Bound by signal forms; gates `errors`."
       },
       {
         "name": "pending",
@@ -6657,7 +6702,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "[]",
         "required": false,
-        "description": "Validation errors, shown once the form is submitted (`[dsSubmitted]`, or `ngSubmit` of a reactive or template-driven form). Bound by signal forms; reactive and template-driven forms are read through `NgControl`."
+        "description": "Validation errors, shown once the user has interacted. Bound by signal forms; reactive and template-driven forms are read through `NgControl`."
       },
       {
         "name": "invalid",
@@ -6666,7 +6711,16 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "Paints the error state and sets `aria-invalid` WITHOUT a message; use `error` to show text. Signal forms binds it alongside `errors`, and then it waits for the submit like them."
+        "description": "Paints the error state and sets `aria-invalid` WITHOUT a message; use `error` to show text."
+      },
+      {
+        "name": "touched",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Whether the user has interacted with the field. Bound by signal forms; gates `errors`."
       },
       {
         "name": "pending",
@@ -7119,7 +7173,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "[]",
         "required": false,
-        "description": "Validation errors, shown once the form is submitted (`[dsSubmitted]`, or `ngSubmit` of a reactive or template-driven form). Bound by signal forms; reactive and template-driven forms are read through `NgControl`."
+        "description": "Validation errors, shown once the user has interacted. Bound by signal forms; reactive and template-driven forms are read through `NgControl`."
       },
       {
         "name": "invalid",
@@ -7128,7 +7182,16 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "Paints the error state and sets `aria-invalid` WITHOUT a message; use `error` to show text. Signal forms binds it alongside `errors`, and then it waits for the submit like them."
+        "description": "Paints the error state and sets `aria-invalid` WITHOUT a message; use `error` to show text."
+      },
+      {
+        "name": "touched",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Whether the user has interacted with the field. Bound by signal forms; gates `errors`."
       },
       {
         "name": "pending",
@@ -7972,7 +8035,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "[]",
         "required": false,
-        "description": "Validation errors, shown once the form is submitted (`[dsSubmitted]`, or `ngSubmit` of a reactive or template-driven form). Bound by signal forms; reactive and template-driven forms are read through `NgControl`."
+        "description": "Validation errors, shown once the user has interacted. Bound by signal forms; reactive and template-driven forms are read through `NgControl`."
       },
       {
         "name": "invalid",
@@ -7981,7 +8044,16 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "Paints the error state and sets `aria-invalid` WITHOUT a message; use `error` to show text. Signal forms binds it alongside `errors`, and then it waits for the submit like them."
+        "description": "Paints the error state and sets `aria-invalid` WITHOUT a message; use `error` to show text."
+      },
+      {
+        "name": "touched",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Whether the user has interacted with the field. Bound by signal forms; gates `errors`."
       },
       {
         "name": "checked",
@@ -8143,7 +8215,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "[]",
         "required": false,
-        "description": "Validation errors, shown once the form is submitted (`[dsSubmitted]`, or `ngSubmit` of a reactive or template-driven form). Bound by signal forms; reactive and template-driven forms are read through `NgControl`."
+        "description": "Validation errors, shown once the user has interacted. Bound by signal forms; reactive and template-driven forms are read through `NgControl`."
       },
       {
         "name": "invalid",
@@ -8152,7 +8224,16 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "Paints the error state and sets `aria-invalid` WITHOUT a message; use `error` to show text. Signal forms binds it alongside `errors`, and then it waits for the submit like them."
+        "description": "Paints the error state and sets `aria-invalid` WITHOUT a message; use `error` to show text."
+      },
+      {
+        "name": "touched",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Whether the user has interacted with the field. Bound by signal forms; gates `errors`."
       },
       {
         "name": "pending",
@@ -8686,7 +8767,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "[]",
         "required": false,
-        "description": "Validation errors, shown once the form is submitted (`[dsSubmitted]`, or `ngSubmit` of a reactive or template-driven form). Bound by signal forms; reactive and template-driven forms are read through `NgControl`."
+        "description": "Validation errors, shown once the user has interacted. Bound by signal forms; reactive and template-driven forms are read through `NgControl`."
       },
       {
         "name": "invalid",
@@ -8695,7 +8776,16 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "Paints the error state and sets `aria-invalid` WITHOUT a message; use `error` to show text. Signal forms binds it alongside `errors`, and then it waits for the submit like them."
+        "description": "Paints the error state and sets `aria-invalid` WITHOUT a message; use `error` to show text."
+      },
+      {
+        "name": "touched",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Whether the user has interacted with the field. Bound by signal forms; gates `errors`."
       },
       {
         "name": "pending",
@@ -8853,7 +8943,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "[]",
         "required": false,
-        "description": "Validation errors, shown once the form is submitted (`[dsSubmitted]`, or `ngSubmit` of a reactive or template-driven form). Bound by signal forms; reactive and template-driven forms are read through `NgControl`."
+        "description": "Validation errors, shown once the user has interacted. Bound by signal forms; reactive and template-driven forms are read through `NgControl`."
       },
       {
         "name": "invalid",
@@ -8862,7 +8952,16 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "Paints the error state and sets `aria-invalid` WITHOUT a message; use `error` to show text. Signal forms binds it alongside `errors`, and then it waits for the submit like them."
+        "description": "Paints the error state and sets `aria-invalid` WITHOUT a message; use `error` to show text."
+      },
+      {
+        "name": "touched",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Whether the user has interacted with the field. Bound by signal forms; gates `errors`."
       },
       {
         "name": "pending",
@@ -9617,7 +9716,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "[]",
         "required": false,
-        "description": "Validation errors, shown once the form is submitted (`[dsSubmitted]`, or `ngSubmit` of a reactive or template-driven form). Bound by signal forms; reactive and template-driven forms are read through `NgControl`."
+        "description": "Validation errors, shown once the user has interacted. Bound by signal forms; reactive and template-driven forms are read through `NgControl`."
       },
       {
         "name": "invalid",
@@ -9626,7 +9725,16 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "Paints the error state and sets `aria-invalid` WITHOUT a message; use `error` to show text. Signal forms binds it alongside `errors`, and then it waits for the submit like them."
+        "description": "Paints the error state and sets `aria-invalid` WITHOUT a message; use `error` to show text."
+      },
+      {
+        "name": "touched",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Whether the user has interacted with the field. Bound by signal forms; gates `errors`."
       },
       {
         "name": "pending",
@@ -10148,29 +10256,6 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       }
     ]
   },
-  "submitted": {
-    "key": "submitted",
-    "selector": "[dsSubmitted]",
-    "isElement": false,
-    "className": "SubmittedDirective",
-    "status": "stable",
-    "importName": "SubmittedDirective",
-    "importPath": "@ids-group-ltd/ids-design-system",
-    "entryPoint": "@ids-group-ltd/ids-design-system/components/submitted",
-    "summary": null,
-    "inputs": [
-      {
-        "name": "dsSubmitted",
-        "kind": "input-required",
-        "type": "boolean",
-        "union": null,
-        "default": null,
-        "required": true,
-        "description": ""
-      }
-    ],
-    "outputs": []
-  },
   "switch": {
     "key": "switch",
     "selector": "ds-switch",
@@ -10234,7 +10319,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "[]",
         "required": false,
-        "description": "Validation errors, shown once the form is submitted (`[dsSubmitted]`, or `ngSubmit` of a reactive or template-driven form). Bound by signal forms; reactive and template-driven forms are read through `NgControl`."
+        "description": "Validation errors, shown once the user has interacted. Bound by signal forms; reactive and template-driven forms are read through `NgControl`."
       },
       {
         "name": "invalid",
@@ -10243,7 +10328,16 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "Paints the error state and sets `aria-invalid` WITHOUT a message; use `error` to show text. Signal forms binds it alongside `errors`, and then it waits for the submit like them."
+        "description": "Paints the error state and sets `aria-invalid` WITHOUT a message; use `error` to show text."
+      },
+      {
+        "name": "touched",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Whether the user has interacted with the field. Bound by signal forms; gates `errors`."
       },
       {
         "name": "pending",
@@ -11487,7 +11581,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "[]",
         "required": false,
-        "description": "Validation errors, shown once the form is submitted (`[dsSubmitted]`, or `ngSubmit` of a reactive or template-driven form). Bound by signal forms; reactive and template-driven forms are read through `NgControl`."
+        "description": "Validation errors, shown once the user has interacted. Bound by signal forms; reactive and template-driven forms are read through `NgControl`."
       },
       {
         "name": "invalid",
@@ -11496,7 +11590,16 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "Paints the error state and sets `aria-invalid` WITHOUT a message; use `error` to show text. Signal forms binds it alongside `errors`, and then it waits for the submit like them."
+        "description": "Paints the error state and sets `aria-invalid` WITHOUT a message; use `error` to show text."
+      },
+      {
+        "name": "touched",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Whether the user has interacted with the field. Bound by signal forms; gates `errors`."
       },
       {
         "name": "pending",
@@ -11810,7 +11913,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "[]",
         "required": false,
-        "description": "Validation errors, shown once the form is submitted (`[dsSubmitted]`, or `ngSubmit` of a reactive or template-driven form). Bound by signal forms; reactive and template-driven forms are read through `NgControl`."
+        "description": "Validation errors, shown once the user has interacted. Bound by signal forms; reactive and template-driven forms are read through `NgControl`."
       },
       {
         "name": "invalid",
@@ -11819,7 +11922,16 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "Paints the error state and sets `aria-invalid` WITHOUT a message; use `error` to show text. Signal forms binds it alongside `errors`, and then it waits for the submit like them."
+        "description": "Paints the error state and sets `aria-invalid` WITHOUT a message; use `error` to show text."
+      },
+      {
+        "name": "touched",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Whether the user has interacted with the field. Bound by signal forms; gates `errors`."
       },
       {
         "name": "pending",

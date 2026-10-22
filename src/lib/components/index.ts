@@ -102,7 +102,6 @@ export { FieldClickFocusDirective } from './field-click-focus.directive';
 export { focusRescue, moveFocusOutOf } from './focus-rescue';
 export {
   DS_FIELD_WARNING_KIND,
-  DS_SUBMITTED,
   resolveFieldMessage,
   trimmedText,
 } from './field-errors';
