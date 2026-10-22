@@ -83,11 +83,16 @@ const REPORTER = `
 <script>
   (function () {
     var t0 = Date.now();
+    // Asked of the OTHER scripts: this one names the slicer's marker too, and a frozen card has no
+    // slicer, so a match on the whole document waits out the 20 s below on every frozen card.
+    var reporter = document.currentScript;
+    var needsSlice = Array.prototype.some.call(document.scripts, function (script) {
+      return script !== reporter && script.textContent.indexOf('var OWNS =') >= 0;
+    });
     (function settle() {
       var page = document.querySelector('.ds-page');
       var rendered = page && page.firstElementChild && page.firstElementChild.firstElementChild;
       var slices = document.documentElement.hasAttribute('data-ds-sliced');
-      var needsSlice = document.documentElement.innerHTML.indexOf('var OWNS =') >= 0;
       if ((!rendered || (needsSlice && !slices)) && Date.now() - t0 < 20000) {
         return setTimeout(settle, 50);
       }
