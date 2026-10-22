@@ -23,10 +23,21 @@ definitions:
         files:
           - bun.lock
       path: ~/.bun/install/cache
+    # Chromium and its fonts for the card renders, about 310 MB of packages fetched on every run.
+    apk-chromium:
+      path: ~/.cache/apk
     # Paired with `cli.cache.environment: "all"` in angular.json: the default there is "local",
     # which switches Angular's build cache off whenever CI=true. Without that half this entry
     # caches a directory nothing writes.
     angular:
+      key:
+        files:
+          - bun.lock
+          - angular.json
+      path: .angular/cache
+    # Its own entry, because a cache is saved only while its key has none: the docs build saves
+    # `angular` first, so the bundle step's ds-elements build never reached it.
+    angular-elements:
       key:
         files:
           - bun.lock
@@ -201,7 +212,8 @@ pipelines:
               - npm
               - bun-bin
               - bun-cache
-              - angular
+              - angular-elements
+              - apk-chromium
             artifacts:
               - .design-sync/elements/dist/**
             script:
