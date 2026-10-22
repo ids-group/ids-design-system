@@ -424,6 +424,7 @@ Each has somebody behind it. Nothing here is speculative work.
 
 ## Asked by Stas
 
+- [ ] **[P2] When a single `ds-time-picker` panel closes after a pick (ME-559, Stas 2026-10-22).** Dev closes a 12-hour panel once hour, minute and AM/PM are picked (A). Options in the deck: A as on dev, B no auto-close on a pick (closes on outside click or Escape), C a Done button in single mode. Prototype branches `ecm-feat/time-picker-close-b` and `ecm-feat/time-picker-close-c`.
 - [ ] **[P3] A single select with a search box (Stas, 2026-10-14, from mm-ecm ME-530).** The ECM Audit & History «Event type» filter (69 options) got search on ECM's own `app-field-select` (button trigger, filter row in the panel, groups) instead of `ds-autocomplete`. Stas: leave an ask in the DS for such a component or feature. Options: A `searchable` on `ds-select`, B new component, C a select-only mode on `ds-autocomplete`, D nothing.
   **Today:** `ds-select` has no input (`select.component.html:24`, only `createTypeAhead`); `ds-multi-select` has the filter row, `searchable` (boolean or option-count threshold, default `DS_CONFIG.picker.searchable`), `filterWith`, `filterChange` (`multi-select.component.html:173`, `.ts:150-174`); `ds-autocomplete` types into the trigger itself (`autocomplete.component.html:83`). Same product question as the «create what I typed» item under Component feature gaps.
 
