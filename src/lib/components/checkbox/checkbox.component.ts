@@ -78,6 +78,8 @@ export class CheckboxComponent extends DsBooleanControlValueAccessor {
     error: this.error,
     errors: this.errors,
     invalid: this.invalid,
+    touchedSelf: this.touchedSelf,
+    touched: this.touched,
   });
   protected readonly message = this.fieldMessage.message;
   protected readonly pendingShown = this.fieldMessage.pending;

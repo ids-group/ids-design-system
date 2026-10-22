@@ -10,7 +10,6 @@ import { provideDsConfig } from 'ds/core';
 import { IconComponent } from 'ds/icons';
 import { InputComponent } from 'ds/input';
 import { ReserveMessagesDirective } from 'ds/reserve-messages';
-import { SubmittedDirective } from 'ds/submitted';
 import { DocsSectionComponent } from '../../../shared/docs-section.component';
 
 const TAKEN_HANDLES = ['admin', 'root', 'support'];
@@ -43,7 +42,6 @@ function shoutyName(control: {
   imports: [
     DocsSectionComponent,
     IconComponent,
-    SubmittedDirective,
     InputComponent,
     ReactiveFormsModule,
     ReserveMessagesDirective,

@@ -1,0 +1,36 @@
+{
+  "version": "unreleased",
+  "items": [
+    {
+      "id": "submitted-directive-removed",
+      "kind": "removed-api",
+      "old": "SubmittedDirective",
+      "new": null,
+      "surface": [
+        "template",
+        "typescript"
+      ],
+      "searchHints": [
+        "dsSubmitted",
+        "SubmittedDirective",
+        "DS_SUBMITTED"
+      ],
+      "detect": [
+        "[dsSubmitted]",
+        "SubmittedDirective",
+        "DS_SUBMITTED"
+      ],
+      "action": "Delete every `[dsSubmitted]` binding, remove `SubmittedDirective` from component `imports`, and remove any `DS_SUBMITTED` provider. Validation errors show once a field is touched, with no flag.",
+      "appliesWhen": "Code written against 1.0.0 that uses `[dsSubmitted]`, `SubmittedDirective` or `DS_SUBMITTED`. Code upgrading from 0.15 has none of them.",
+      "restore": null,
+      "verify": "No `dsSubmitted`, `SubmittedDirective` or `DS_SUBMITTED` remains, and an invalid field shows its error after it is left."
+    }
+  ],
+  "informational": [
+    {
+      "text": "Validation errors of a DS field bound to a form model - `ds-input` and every other DS field - show once the field is touched, and the unparseable-date error of `ds-date-picker` shows on blur. `[touched]` is an input of every DS field.",
+      "verify": "Open a form with a required `ds-input` bound to a form control, leave it empty and blur it: the validation message shows under it and the input has aria-invalid=\"true\"; before the blur it shows none."
+    }
+  ],
+  "deleteList": []
+}

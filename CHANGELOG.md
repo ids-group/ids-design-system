@@ -1,5 +1,22 @@
 ## Unreleased
 
+### Changed
+
+- **Validation errors show once a field is touched; `[dsSubmitted]` and `DS_SUBMITTED` are
+  removed.** A field bound to a form model reveals its validation errors once it is touched, and
+  the unparseable-date error of `ds-date-picker` shows on blur. `[touched]` is an input of every DS
+  field. Remove any `[dsSubmitted]` binding, `SubmittedDirective` import and `DS_SUBMITTED`
+  provider.
+
+### Fixed
+
+- **A 12-hour `ds-time-picker` no longer closes before AM/PM is chosen.** Picking the hour and then
+  the minute closed the panel before the AM/PM column was reached, and the time kept the previous
+  AM or PM: from 8:45 PM, picking 9 and 00 gave 9:00 PM. In `'single'` mode on a 12-hour clock the
+  panel now stays open until the hour, the minute and AM/PM have each been picked since it opened,
+  in any order; the 24-hour clock still closes on the hour and the minute. Nothing to change in
+  your code.
+
 ## 1.0.0 — 2026-10-21
 
 ### Added
@@ -9,26 +26,7 @@
   on it opens the tip of its first clipped `dsTooltipWhenClipped` value, and that value takes no tab
   stop of its own. Without the attribute such an element opens nothing, as before.
 
-- **`[dsSubmitted]` (`SubmittedDirective`): the form's submit flag for every DS field inside its
-  host.** Bind the flag the submit button reads, `<form [dsSubmitted]="submitted()">`, and the fields
-  show their validation errors once it is true. Any element can host it, so fields outside a
-  `<form>` take it the same way; `[dsSubmitted]="true"` shows errors from the start. The flag
-  reaches the fields through the `DS_SUBMITTED` injection token.
-
 ### Changed
-
-- **Fields show validation errors only after the form is submitted, never on blur.** Validation
-  errors, the error paint and `aria-invalid` wait until a `[dsSubmitted]` host reads true or the
-  parent `NgForm` / `FormGroupDirective` was submitted, and then follow the form live. Leaving a
-  field no longer reveals anything. The unparseable-date error of `ds-date-picker` waits the same
-  way. An `error` string, and `[invalid]` with no validation errors behind it, still show at once.
-  A signal form without a `[dsSubmitted]` host shows no validation error at all.
-
-- **`touched` is removed from every field.** Errors no longer follow it, so a `[touched]` binding on a
-  DS field goes, and `[dsSubmitted]` on its form takes its place. Signal forms stops binding it on
-  its own. The input sat on the internal `DsFieldBase`; the internal `DsControlValueAccessor` and
-  `DsBooleanControlValueAccessor` drop their `touchedSelf`, and the internal `DsFieldMessageSources`
-  its `touched` and `touchedSelf`.
 
 - **`ds-time-picker` scrolls to a picked value and selects by scrolling.** A click or an arrow key
   scrolls the column smoothly to centre the cell (instantly on open, and under
@@ -92,10 +90,13 @@
 - **`ds-table` lays columns out as 0.15.0 did by default: `layout` and `DsConfig.table.layout`
   default to `'auto'`, where they defaulted to `'fixed'`.** Each column follows its cell content,
   `kind` has no effect, and a numeric `width`, `width: 'content'`, `minWidth` and `truncate` size
-  the column as on 0.15.0. `'auto'` stays deprecated: a binding or config key that sets it changes
-  nothing now, and a development build warns once per page while one does. To keep the 0.15.1
-  widths: `provideDsConfig({ table: { layout: 'fixed' } })`, or `layout="fixed"` on one table. A
-  table with `virtualScroll` keeps `table-layout: fixed` either way.
+  the column as on 0.15.0. The widths change for an app coming from 0.15.1 or 0.15.2 that sets no
+  `layout`; an app coming from 0.15.0 or earlier keeps the widths it had. `'auto'` stays deprecated
+  and will be removed, in a release not yet set, leaving `'fixed'` as the one layout: a binding or
+  config key that sets `'auto'` changes nothing now, and a development build warns once per page
+  while one does. To keep the 0.15.1 widths: `provideDsConfig({ table: { layout: 'fixed' } })`, or
+  `layout="fixed"` on one table. A table with `virtualScroll` keeps `table-layout: fixed` either
+  way.
 
 - **A `dsTooltipWhenClipped` tip (`TooltipDirective`) also opens on text cut by lines.** A block
   under `line-clamp`, or any host whose text overflows its height under `overflow: hidden` or

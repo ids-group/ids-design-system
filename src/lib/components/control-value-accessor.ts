@@ -31,6 +31,7 @@ const TRIGGER_ELEMENTS = `button${NOT_ROVED}, [tabindex="0"]${NOT_ROVED}`;
  */
 export function valueControlBridge<T>(model: () => ModelSignal<T>): {
   readonly formDisabled: WritableSignal<boolean>;
+  readonly touchedSelf: WritableSignal<boolean>;
   markTouched(): void;
   writeValue(next: T): void;
   registerOnChange(fn: (next: T) => void): void;
@@ -38,6 +39,7 @@ export function valueControlBridge<T>(model: () => ModelSignal<T>): {
   setDisabledState(isDisabled: boolean): void;
 } {
   const formDisabled = signal(false);
+  const touchedSelf = signal(false);
   let onChange: (next: T) => void = () => {};
   let onTouched: () => void = () => {};
   // Stops the effect echoing a form-driven write back as a user change.
@@ -61,7 +63,11 @@ export function valueControlBridge<T>(model: () => ModelSignal<T>): {
 
   return {
     formDisabled,
-    markTouched: () => onTouched(),
+    touchedSelf,
+    markTouched: () => {
+      touchedSelf.set(true);
+      onTouched();
+    },
     writeValue: (next: T) => {
       hasSynced = true;
       synced = next;
@@ -142,6 +148,10 @@ export abstract class DsControlValueAccessor<T>
 
   protected readonly formDisabled = this.bridge.formDisabled;
 
+  // Separate from the control's `touched`, which only exists once `NgControl`
+  // resolves: too late to gate the first blur.
+  protected readonly touchedSelf = this.bridge.touchedSelf;
+
   protected markTouched(): void {
     this.bridge.markTouched();
   }
@@ -193,6 +203,7 @@ export abstract class DsBooleanControlValueAccessor
   }
 
   protected readonly formDisabled = signal(false);
+  protected readonly touchedSelf = signal(false);
 
   private onChange: (value: boolean) => void = () => {};
   private onTouched: () => void = () => {};
@@ -222,6 +233,7 @@ export abstract class DsBooleanControlValueAccessor
   }
 
   protected markTouched(): void {
+    this.touchedSelf.set(true);
     this.onTouched();
   }
 

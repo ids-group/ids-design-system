@@ -424,6 +424,7 @@ Each has somebody behind it. Nothing here is speculative work.
 
 ## Asked by Stas
 
+- [ ] **[P3] Parked: a Done button closes a single `ds-time-picker` panel (Stas, 2026-10-22: «вариант с кнопкой done запиши в todo»).** Dev closes a 12-hour panel once hour, minute and AM/PM are picked, and Stas picked that rule for ME-559. The parked alternative: no auto-close on a pick, a Done button in single mode as in range mode (as Ant Design, Element Plus and Material Design 3 confirm a time). Prototype on branch `ecm-feat/time-picker-close-c` (702d00e16).
 - [ ] **[P3] A single select with a search box (Stas, 2026-10-14, from mm-ecm ME-530).** The ECM Audit & History «Event type» filter (69 options) got search on ECM's own `app-field-select` (button trigger, filter row in the panel, groups) instead of `ds-autocomplete`. Stas: leave an ask in the DS for such a component or feature. Options: A `searchable` on `ds-select`, B new component, C a select-only mode on `ds-autocomplete`, D nothing.
   **Today:** `ds-select` has no input (`select.component.html:24`, only `createTypeAhead`); `ds-multi-select` has the filter row, `searchable` (boolean or option-count threshold, default `DS_CONFIG.picker.searchable`), `filterWith`, `filterChange` (`multi-select.component.html:173`, `.ts:150-174`); `ds-autocomplete` types into the trigger itself (`autocomplete.component.html:83`). Same product question as the «create what I typed» item under Component feature gaps.
 

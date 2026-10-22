@@ -17,6 +17,12 @@ holds an entry; what the release bot commits afterwards needs none.
 
 ## Unreleased
 
+### Cards
+
+- **`[dsSubmitted]` is gone from the manual surface.** The design agent no longer offers the
+  directive, and reads `DatePicker` as showing its invalid-date error in place of the `hint` while
+  the typed text is invalid.
+
 ## 1.0.0 — 2026-10-21
 
 ### Cards
@@ -28,12 +34,6 @@ holds an entry; what the release bot commits afterwards needs none.
   selecting the centred cell as it passes the centre during a wheel, touch or scrollbar scroll,
   with the panel left open and about one row per wheel notch, and `TimeColumns` as firing
   `onTimeChange` and not `onPartPicked` for a cell scrolled to the centre.
-
-- **`DatePicker` describes the unparseable-date error as waiting for a submit.** The design agent
-  no longer expects typed text that is not a date to replace the `hint` in a card.
-
-- **`[dsSubmitted]` is recorded as an attribute directive with no element.** A card has no form
-  model to reveal errors for and draws a field's error state through `error`.
 
 ### Build
 

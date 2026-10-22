@@ -663,9 +663,7 @@
 
     <dd>
       A bound <code class="t-mono-inline">error</code> at once; control errors
-      once the form is submitted:
-      <code class="t-mono-inline">[dsSubmitted]</code> reads true, or
-      <code class="t-mono-inline">ngSubmit</code> fired. Never on blur.
+      after the first blur.
     </dd>
 
     <dt>
@@ -709,7 +707,7 @@
         errors
       </code> and
       <code class="t-mono-inline">
-        invalid
+        touched
       </code> itself.
     </dd>
   </dl>
@@ -725,13 +723,9 @@
       errorMessages
     </code>. Leave the first empty,
     type "admin" in the second; the third warns on capitals.
-    <code class="t-mono-inline">[dsSubmitted]="true"</code> shows the errors
-    before any submit.
   </p>
 
-  <div
-    class="grid-2"
-    [dsSubmitted]="true">
+  <div class="grid-2">
     <ds-input
       label="Workspace name"
       hint="Shown until a validator has something to say"
