@@ -10,10 +10,10 @@ cd "$(dirname "$0")/../.."
 
 setup_bun
 
-# Twelve phases, three of which take minutes on their own. Without a heading and a running clock the
+# Ten phases, three of which take minutes on their own. Without a heading and a running clock the
 # whole step reads as one silent twenty-minute hang, and there is no way to tell a slow build from a
 # wedged one.
-STEPS=12
+STEPS=10
 STEP=0
 STARTED=$(date +%s)
 step() {
@@ -70,29 +70,10 @@ fi
 export CHROME_BIN
 [ -n "$CHROME_BIN" ] || { echo "chromium is not available, so the cards cannot be frozen"; exit 1; }
 
-# A card's height is measured from the RENDERED page, so the cards have to exist before it can run —
-# the first build above is what it measures. The marker carrying the number is written by
-# build-upload, which is why the measurement sits between two builds rather than after the last one.
-step "Measuring the card heights"
-node .design-sync/tools/measure-cards.mjs
-
-# The second build exists only to stamp NEW numbers into the markers. Heights are stable release to
-# release, so on most runs it rebuilds 410 cards to write what they already say. Same guarded form as
-# the tree comparison below: git reports on stdout and complains on stderr, so an unchecked capture
-# would read a failure as "nothing moved" and skip a build that was needed.
-if ! MOVED=$(git status --porcelain .design-sync/viewports.json); then
-  echo "git status failed, so the heights could not be compared — rebuilding rather than guessing"
-  MOVED="unknown"
-fi
-
-if [ -n "$MOVED" ]; then
-  step "Stamping the new heights into the cards"
-  bun run build:upload
-else
-  step "Heights unchanged, so the cards already carry them"
-fi
-
-step "Freezing the cards"
+# One render per card yields both its height and its frozen DOM. The height lands in the card's
+# `@dsCard viewport` marker, which build-upload writes, so when a height moved snapshot-cards rebuilds
+# the tree before it writes the frozen cards over it.
+step "Measuring and freezing the cards"
 node .design-sync/tools/snapshot-cards.mjs
 node .design-sync/tools/check-frozen.mjs
 
@@ -131,7 +112,7 @@ unsized=$(find .design-sync/upload/components .design-sync/upload/guides -name '
   echo "$unsized card(s) carry no viewport in their @dsCard marker:"
   find .design-sync/upload/components .design-sync/upload/guides -name '*.html' -exec grep -L 'viewport="' {} +
   echo ""
-  echo "measure-cards.mjs ran above, so this means it skipped them."
+  echo "snapshot-cards.mjs measured above, so this means it skipped them."
   exit 1
 }
 echo "Every card carries a measured viewport"

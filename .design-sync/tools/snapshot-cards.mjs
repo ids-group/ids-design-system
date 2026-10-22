@@ -1,5 +1,9 @@
 #!/usr/bin/env node
-// Freezes every card that does not need to be live into static HTML, then minifies the result.
+// Measures every card's rendered height into `viewports.json`, then freezes every card that does
+// not need to be live into static HTML and minifies the result. One render serves both: when the
+// heights moved it rebuilds the upload tree to stamp them into the `@dsCard` markers, and writes the
+// frozen DOM over the rebuilt cards. The marker is a comment ahead of `<!doctype`, outside the DOM
+// a card renders, so the render of the unstamped card is the render of the stamped one.
 //
 // A card is a whole document that boots its own Angular application over the 2.12 MB bundle, and
 // the pane shows a grid of them. The snapshot renders identically because no colour is baked in:
@@ -8,20 +12,23 @@
 // What is lost is BEHAVIOUR. Two kinds of card keep it: the chapters in `live-chapters.txt` and
 // every card owning a panel (see PANEL_OWNERS). What a run kept is recorded in `live-cards.txt`.
 //
-//   node .design-sync/tools/snapshot-cards.mjs      # after build-cards has stamped the heights
+//   node .design-sync/tools/snapshot-cards.mjs      # after build-upload
 //
 // Run it LAST. It rewrites card files in place, and any later build-cards run replaces them with
 // live cards again.
+import { execFileSync } from 'node:child_process';
 import { createServer } from 'node:http';
 import { existsSync, readFileSync, statSync, writeFileSync } from 'node:fs';
 import { dirname, extname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { launchBrowser } from './lib/browser.mjs';
+import { writeHeights } from './lib/heights.mjs';
 import { WHEN_SETTLED, readWhen } from './lib/settle.mjs';
 
 const here = dirname(fileURLToPath(import.meta.url));
 const syncDir = resolve(here, '..');
 const OUT = join(syncDir, 'upload');
+const VIEWPORTS = join(syncDir, 'viewports.json');
 const SHARED_CSS = '_ds_cards.css';
 const PORT = 4579;
 const WIDTH = 1200;
@@ -88,15 +95,24 @@ const cards = JSON.parse(
 // A run collapsed to ONE space renders identically: that is what the browser does with it anyway.
 // `String.raw`, or `\n` and `\s` in the regexps below reach the page as a newline and an `s`, and
 // the whole script is a SyntaxError.
+// The height is taken in the same settled moment and BEFORE the tidy pass, through a page global
+// rather than an attribute, so the frozen DOM carries no trace of it.
 const TIDY = String.raw`
 <script>
   (function () {
     var t0 = Date.now();
     (function ready() {
-      if (!document.documentElement.hasAttribute('data-ds-sliced') && Date.now() - t0 < 20000) {
+      var page = document.querySelector('.ds-page');
+      var rendered = page && page.firstElementChild && page.firstElementChild.firstElementChild;
+      var slices = document.documentElement.hasAttribute('data-ds-sliced');
+      if ((!rendered || !slices) && Date.now() - t0 < 20000) {
         return setTimeout(ready, 25);
       }
-      whenSettled(tidy);
+      var kept = document.documentElement.getAttribute('data-ds-kept');
+      whenSettled(function () {
+        window.dsMeasured = { height: page ? page.offsetHeight : 0, kept: kept };
+        tidy();
+      });
     })();
     ${WHEN_SETTLED}
     function tidy() {
@@ -152,23 +168,28 @@ const server = createServer((request, response) => {
 // which is a page-side SyntaxError that returns an empty card for every single one of them.
 const DUMP = readWhen(
   "document.documentElement.hasAttribute('data-ds-tidied')",
-  'document.documentElement.outerHTML',
+  'Object.assign({ html: document.documentElement.outerHTML }, window.dsMeasured)',
 );
 
 const render = async (path) => {
-  const html = await browser.render(
-    `http://127.0.0.1:${PORT}/${path.split('/').map(encodeURIComponent).join('/')}`,
-    DUMP,
-  );
+  const { html, height, kept } =
+    (await browser.render(
+      `http://127.0.0.1:${PORT}/${path.split('/').map(encodeURIComponent).join('/')}`,
+      DUMP,
+    )) || {};
 
-  // The trailing newline matters as much as the doctype: `--dump-dom` printed one, every frozen
-  // card in git ends with it, and dropping it rewrites all 280 of them on the next release for a
-  // single byte each.
-  return html
-    ? `<!DOCTYPE html>
+  return {
+    // The trailing newline matters as much as the doctype: `--dump-dom` printed one, every frozen
+    // card in git ends with it, and dropping it rewrites all 280 of them on the next release for a
+    // single byte each.
+    dom: html
+      ? `<!DOCTYPE html>
 ${html}
 `
-    : '';
+      : '',
+    height: height ?? 0,
+    kept: kept === null ? null : Number(kept ?? 0),
+  };
 };
 
 server.listen(PORT);
@@ -181,6 +202,9 @@ const browser = await launchBrowser({
 const kept = [];
 const failed = [];
 const snapshots = new Map();
+const heights = {};
+const blank = [];
+// A live chapter's card is rendered for its height only.
 const queue = cards.filter((path) => {
   const chapter = chapterOf(readFileSync(join(OUT, path), 'utf8'));
   if (chapter && live.has(chapter)) {
@@ -191,6 +215,7 @@ const queue = cards.filter((path) => {
 
   return true;
 });
+const frozen = new Set(queue);
 
 // Running this twice without a build-cards between corrupts the tree: the second pass renders a
 // card that is already static, re-prepends the marker and dumps the result, and some cards came
@@ -214,19 +239,29 @@ if (alreadyFrozen.length) {
 // NOTHING for the whole render — twice mistaken here for a hang. Off a TTY it prints lines instead.
 const report = (count) => {
   if (process.stderr.isTTY) {
-    process.stderr.write(`  rendered ${count}/${queue.length}        \r`);
+    process.stderr.write(`  rendered ${count}/${cards.length}        \r`);
 
     return;
   }
-  if (count % 20 === 0 || count === queue.length)
-    console.error(`  rendered ${count}/${queue.length}`);
+  if (count % 20 === 0 || count === cards.length)
+    console.error(`  rendered ${count}/${cards.length}`);
 };
 
 let next = 0;
+let finished = 0;
 async function lane() {
-  while (next < queue.length) {
-    const path = queue[next++];
-    const dom = await render(path);
+  while (next < cards.length) {
+    const path = cards[next++];
+    const { dom, height, kept: survived } = await render(path);
+    // Keyed by the card FILE, which is what build-cards reads back.
+    const name = path
+      .split('/')
+      .pop()
+      .replace(/\.html$/, '');
+    heights[name] = height;
+    if (survived === 0) blank.push(name);
+    report((finished += 1));
+    if (!frozen.has(path)) continue;
     // `data-ds-tidied` is the last thing set, after the card's own script has finished slicing.
     // Without it the page was caught mid-boot and the snapshot would freeze a half-built section.
     // Matched on the root element: the injected script's own source names the attribute too.
@@ -235,7 +270,6 @@ async function lane() {
       continue;
     }
     snapshots.set(path, dom);
-    report(snapshots.size + failed.length);
   }
 }
 
@@ -253,6 +287,16 @@ if (failed.length) {
   );
   for (const path of failed.slice(0, 10)) console.error(`    ${path}`);
   process.exit(1);
+}
+
+// The rebuild wipes `upload/`, so nothing below is written until it has run.
+if (writeHeights(VIEWPORTS, WIDTH, heights, blank)) {
+  console.error('Heights moved, so the cards are rebuilt to carry them');
+  execFileSync(process.execPath, [join(here, 'build-upload.mjs')], {
+    stdio: 'inherit',
+  });
+} else {
+  console.error('Heights unchanged, so the cards already carry them');
 }
 
 // Angular inlines a component's styles into every document that renders it. Mostly the blocks are
