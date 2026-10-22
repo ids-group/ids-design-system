@@ -32,7 +32,7 @@
 //   node tools/check-manifest-compile.mjs --audit    # the same, then every published entry whose
 //                                                    # TS/NG-code claim no fixture asserts; exits 0
 import { NgtscProgram } from '@angular/compiler-cli';
-import { execFileSync } from 'node:child_process';
+import { spawn } from 'node:child_process';
 import {
   existsSync,
   mkdirSync,
@@ -340,7 +340,7 @@ function collectFixtures() {
 
 // Every tag's src is extracted under node_modules/.cache, not the OS temp dir: the library sources
 // import @angular/* and friends, and resolution walks up from the importing file to find them.
-function runFixtures(fixtures) {
+async function runFixtures(fixtures) {
   const scratch = join(ROOT, 'node_modules', '.cache');
   mkdirSync(scratch, { recursive: true });
   const trees = mkdtempSync(join(scratch, 'manifest-compile-'));
@@ -349,6 +349,7 @@ function runFixtures(fixtures) {
     cleanUp();
     process.exit(130);
   });
+  let next = null;
   try {
     const bySide = new Map();
     for (const fixture of fixtures)
@@ -361,29 +362,32 @@ function runFixtures(fixtures) {
         bySide.set(label, group);
       }
     const mismatches = new Map(fixtures.map((fixture) => [fixture, []]));
-    for (const [label, entries] of bySide) {
-      let treeRoot = ROOT;
-      if (label !== WORKING_TREE) {
-        treeRoot = join(trees, label);
-        mkdirSync(treeRoot);
-        const archive = execFileSync(
-          'git',
-          [
-            '-C',
-            ROOT,
-            'archive',
-            '--format=tar',
-            label,
-            'src',
-            'tsconfig.json',
-          ],
-          { maxBuffer: 1 << 30 },
-        );
-        execFileSync('tar', ['-x', '-f', '-'], {
-          cwd: treeRoot,
-          input: archive,
-        });
-      }
+    // A shell pipe streams the archive between git and tar without this process, so the next
+    // tag extracts while the current one compiles synchronously.
+    const extract = (label) => {
+      if (label === WORKING_TREE) return Promise.resolve(ROOT);
+      const treeRoot = join(trees, label);
+      mkdirSync(treeRoot);
+      const child = spawn(
+        `git -C "${ROOT}" archive --format=tar ${label} src tsconfig.json | tar -x -f -`,
+        { cwd: treeRoot, shell: true, stdio: ['ignore', 'ignore', 'inherit'] },
+      );
+      const done = new Promise((resolveTree, reject) =>
+        child.on('exit', (code) =>
+          code === 0
+            ? resolveTree(treeRoot)
+            : reject(new Error(`extracting ${label} exited with ${code}`)),
+        ),
+      );
+      done.catch(() => {});
+      return done;
+    };
+    const labels = [...bySide.keys()];
+    next = labels.length ? extract(labels[0]) : null;
+    for (const [index, label] of labels.entries()) {
+      const entries = bySide.get(label);
+      const treeRoot = await next;
+      next = index + 1 < labels.length ? extract(labels[index + 1]) : null;
       const unique = [...new Set(entries.map((entry) => entry.fixture))];
       const plain = unique.filter((fixture) => !fixture.template);
       const templated = unique.filter((fixture) => fixture.template);
@@ -406,6 +410,7 @@ function runFixtures(fixtures) {
       problems.push(...found.map((line) => `${fixture.name}: ${line}`));
     }
   } finally {
+    await next?.catch(() => {});
     cleanUp();
   }
 }
@@ -446,7 +451,7 @@ function uncovered(version, fixtures) {
 }
 
 const fixtures = collectFixtures();
-runFixtures(fixtures);
+await runFixtures(fixtures);
 
 const draftGaps = uncovered('unreleased', fixtures);
 problems.push(
