@@ -24,6 +24,7 @@ const PUBLISHED = [
   'description',
   'license',
   'homepage',
+  'repository',
   'keywords',
   'publishConfig',
   'exports',
