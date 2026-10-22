@@ -45,6 +45,10 @@ definitions:
           - eslint-rules/**
           - stylelint/**
       path: .cache
+    # Parsed release-tag trees (tools/tag-cache.mjs). An entry is keyed by the tag's tree sha and the
+    # parser's source, so a stale entry is never read; no key file is needed.
+    tag-surfaces:
+      path: node_modules/.cache/ds-tag-surfaces
     dist-ds:
       key:
         files:
@@ -94,6 +98,7 @@ pipelines:
             - angular
             - dist-ds
             - lint
+            - tag-surfaces
           script:
             - sh infrastructure/scripts/ci-pr.sh
 
@@ -106,6 +111,7 @@ pipelines:
           caches:
             - bun-bin
             - bun-cache
+            - tag-surfaces
           script:
             - sh infrastructure/scripts/cut-release.sh patch
     release-minor:
@@ -114,6 +120,7 @@ pipelines:
           caches:
             - bun-bin
             - bun-cache
+            - tag-surfaces
           script:
             - sh infrastructure/scripts/cut-release.sh minor
     release-major:
@@ -122,6 +129,7 @@ pipelines:
           caches:
             - bun-bin
             - bun-cache
+            - tag-surfaces
           script:
             - sh infrastructure/scripts/cut-release.sh major
     release-beta:
@@ -130,6 +138,7 @@ pipelines:
           caches:
             - bun-bin
             - bun-cache
+            - tag-surfaces
           script:
             - sh infrastructure/scripts/cut-release.sh beta
 
@@ -201,3 +210,7 @@ pipelines:
           name: Sync dev with main
           script:
             - sh infrastructure/scripts/sync-dev.sh
+      - step:
+          name: Mirror to GitHub
+          script:
+            - sh infrastructure/scripts/mirror-github.sh

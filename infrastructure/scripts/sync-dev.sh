@@ -1,5 +1,5 @@
 #!/bin/sh
-# Last step of after-release: carry main into dev, once, after every step that writes to main.
+# Step of after-release: carry main into dev, once, after every step that writes to main.
 #
 # A separate step rather than a tail inside build-design-sync.sh, so a merge conflict is its own
 # red step instead of a failure buried in a build log.
