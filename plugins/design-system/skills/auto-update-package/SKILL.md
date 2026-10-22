@@ -43,6 +43,10 @@ Dispatch subagents by name via the Task tool. Don't do a subagent's job inline â
 exception: a trivial, already-verified micro-edit (a couple of one-line fixes you have personally
 diffed and confirmed) may be done directly; bulk finding/applying always goes through the agents,
 and the step-7 re-check covers inline edits the same as agent edits.
+**A named agent not registered in this session** (the Task tool rejects its name): dispatch a
+general-purpose subagent instead, its prompt the body of `<plugin-root>/agents/<name>.md` (as for
+the drift scan in Phase B step 5) followed by the usual dispatch. With no Task tool at all, do the
+agent's work inline by that same file. Either way, say so once in the report.
 
 ## Model tiering (dispatch these subagents)
 
