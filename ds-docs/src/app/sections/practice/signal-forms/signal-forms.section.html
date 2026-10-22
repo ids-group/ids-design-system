@@ -34,9 +34,7 @@
 
   <pre class="t-mono-block">{{ templateSnippet }}</pre>
 
-  <div
-    class="demo-form"
-    [dsSubmitted]="submitted()">
+  <div class="demo-form">
     <ds-input
       label="Email"
       [formField]="demoForm.email" />
@@ -65,14 +63,10 @@
 
   <ul class="rules">
     <li>
-      No error before the first submit, not on blur, not while typing; after it the
-      message shows, the border turns and
+      Once a field is touched, the message shows, the border turns and
       <code class="t-mono-inline">
         aria-invalid
-      </code> flips, live until the form is reset.
-      <code class="t-mono-inline">
-        [dsSubmitted]
-      </code> carries the flag the button reads
+      </code> flips
     </li>
 
     <li>
@@ -142,8 +136,7 @@
   <div class="state-demo">
     <div
       class="demo-form"
-      data-demo="pending"
-      [dsSubmitted]="true">
+      data-demo="pending">
       <ds-input
         label="Company"
         [formField]="pendingForm.company" />
