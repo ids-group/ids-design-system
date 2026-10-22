@@ -1,5 +1,12 @@
 ## Unreleased
 
+### Changed
+
+- **Fields show validation errors once the user has interacted with them, as in 0.15.** A field
+  bound to a form model reveals its validation errors once it is touched, and the unparseable-date
+  error of `ds-date-picker` shows on blur. `[touched]` is an input of every DS field again.
+  `[dsSubmitted]` (`SubmittedDirective`) and the `DS_SUBMITTED` token are removed.
+
 ### Fixed
 
 - **A 12-hour `ds-time-picker` no longer closes before AM/PM is chosen.** Picking the hour and then
