@@ -208,15 +208,18 @@ try {
     {
       cwd: ROOT,
       encoding: 'utf8',
-      env: { ...process.env, DS_MIGRATIONS_DIR: '' },
+      // Since HEAD nothing committed moved, so the repository's fixtures are read and none is
+      // compiled: the case proves which folder was read without a full compile of every tag.
+      env: { ...process.env, DS_MIGRATIONS_DIR: '', DS_COMPILE_SINCE: 'HEAD' },
     },
   );
   console.log('READS migrations/ when DS_MIGRATIONS_DIR is empty');
-  expect(
-    'compiles the repository fixtures',
-    !/\b0 fixture\(s\) compiled/.test(emptyDirectory.stdout) &&
-      /\d+ fixture\(s\) compiled/.test(emptyDirectory.stdout),
-  );
+  // An uncommitted edit of the checker itself makes the run compile everything instead.
+  const read =
+    /of (\d+) fixture\(s\) can have moved since HEAD/.exec(
+      emptyDirectory.stdout,
+    ) ?? /(\d+) fixture\(s\) compiled/.exec(emptyDirectory.stdout);
+  expect('reads the repository fixtures', Boolean(read) && Number(read[1]) > 0);
 
   const cache = join(ROOT, 'node_modules', '.cache');
   expect(
