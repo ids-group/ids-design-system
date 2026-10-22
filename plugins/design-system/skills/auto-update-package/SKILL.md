@@ -341,6 +341,11 @@ while the wave runs. Collect the whole wave before Phase B.
    counts against a version and is reported once in Phase C. A baseline that does not build at all
    is reported to the user before Phase B; per-version "green" then means "no error beyond the
    baseline".
+   **Spec ahead of the lock:** when the dependency spec in `package.json` does not admit `current`,
+   a frozen install (`npm ci`) refuses the lockfile. Install the locked version for the baseline:
+   npm `npm install --no-save @ids-group-ltd/ids-design-system@<current>`; bun, yarn or pnpm: set
+   the spec to `current` exactly and run the mutating install (step 4 rewrites the spec anyway).
+   Say so in the report.
    **Dead-override baseline, same moment:** run `npx ng g @ids-group-ltd/ids-design-system:check-overrides`
    in each target (read-only) and store every line it prints in the ledger's `overridesBaseline`.
    - `current` older than 0.14.1 (no schematic): skip; store `null` and the reason.
