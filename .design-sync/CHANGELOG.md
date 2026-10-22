@@ -17,6 +17,20 @@ holds an entry; what the release bot commits afterwards needs none.
 
 ## Unreleased
 
+### Cards
+
+- **Every chart card freezes at its measured width.** A chart card froze at the 640px fallback in
+  some runs and at its real width in others; it is now the real width every run, with the axis
+  gutter sized for Mulish. The frozen cards also lose the template indentation the tidy pass was
+  always meant to collapse.
+
+### Build
+
+- **`snapshot-cards` and `measure-cards` read a card once it has settled.** Both run on the real
+  clock with one window per lane, and wait for the web fonts, then for 150 ms and 3 frames without
+  a DOM change. The injected tidy script parses, and a card counts as settled only when its root
+  carries `data-ds-tidied`. Two freezes in a row are byte-identical.
+
 ## 1.0.1 — 2026-10-22
 
 ### Cards
