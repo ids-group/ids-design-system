@@ -31,6 +31,7 @@ import type {
 import type {
   ButtonAlign,
   ButtonColor,
+  ButtonLoadingMode,
   ButtonVariant,
   ButtonType,
 } from './button.types';
@@ -163,6 +164,11 @@ export class ButtonComponent extends DsMessageBase {
    *  focusable so focus stays on it while the work runs. Button-only; ignored on an anchor with a
    *  dev warning. */
   readonly loading = input(false, { transform: booleanAttribute });
+  /** Where the `loading` spinner draws. `'icon'` puts it in the leading icon's box (the trailing
+   *  icon's when there is no leading one) and keeps the label visible; `'replace'` hides the
+   *  contents behind one spinner centred on the button; `'auto'` is `'icon'` when `icon` is set,
+   *  else `'replace'`. Neither moves the label or resizes the button. */
+  readonly loadingMode = input<ButtonLoadingMode>('auto');
   /** Fills the container: the host becomes block-level and 100% wide. */
   readonly fullWidth = input(false, { transform: booleanAttribute });
   /** Accessible name, forwarded as `aria-label`. For an icon-only or non-descriptive label. */
@@ -216,10 +222,28 @@ export class ButtonComponent extends DsMessageBase {
       variant === 'solid' ? '' : `variant-${variant}`,
       this.sizeResolved(),
       this.loading() ? 'loading' : '',
+      this.loading() && !this.loadingIconSlot() ? 'loading-replace' : '',
     ];
 
     return parts.filter(Boolean).join(' ');
   });
+
+  protected readonly loadingIconSlot = computed<'leading' | 'trailing' | null>(
+    () => {
+      const mode = this.loadingMode();
+      if (!this.loading() || mode === 'replace') {
+        return null;
+      }
+      if (this.icon()) {
+        return 'leading';
+      }
+      if (mode === 'icon' && this.trailingIcon()) {
+        return 'trailing';
+      }
+
+      return null;
+    },
+  );
 
   protected readonly softDisabled = computed(
     () => this.disabled() && this.disabledReason().length > 0,

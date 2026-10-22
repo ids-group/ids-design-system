@@ -67,13 +67,17 @@
 <ng-template #content>
   <span class="button-main">
     @if (icon(); as name) {
-      <ds-icon [name]="name" />
+      <ds-icon
+        [name]="name"
+        [class.loading-spinner]="loadingIconSlot() === 'leading'" />
     }
 
     <ng-content></ng-content>
 
     @if (trailingIcon(); as name) {
-      <ds-icon [name]="name" />
+      <ds-icon
+        [name]="name"
+        [class.loading-spinner]="loadingIconSlot() === 'trailing'" />
     }
   </span>
 

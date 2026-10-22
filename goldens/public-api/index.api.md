@@ -48,6 +48,7 @@ export { ButtonAlign } from '@ids-group-ltd/ids-design-system/components/button'
 export { ButtonColor } from '@ids-group-ltd/ids-design-system/components/button'; // type
 export { ButtonComponent } from '@ids-group-ltd/ids-design-system/components/button'; // component
 export { ButtonGroupComponent } from '@ids-group-ltd/ids-design-system/components/button-group'; // component
+export { ButtonLoadingMode } from '@ids-group-ltd/ids-design-system/components/button'; // type
 export { ButtonType } from '@ids-group-ltd/ids-design-system/components/button'; // type
 export { ButtonVariant } from '@ids-group-ltd/ids-design-system/components/button'; // type
 export { CHART_DEFAULT_VALUE_SPACE } from '@ids-group-ltd/ids-design-system/components/chart'; // const
