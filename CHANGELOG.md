@@ -2,10 +2,11 @@
 
 ### Changed
 
-- **Fields show validation errors once the user has interacted with them, as in 0.15.** A field
-  bound to a form model reveals its validation errors once it is touched, and the unparseable-date
-  error of `ds-date-picker` shows on blur. `[touched]` is an input of every DS field again.
-  `[dsSubmitted]` (`SubmittedDirective`) and the `DS_SUBMITTED` token are removed.
+- **Validation errors show once a field is touched; `[dsSubmitted]` and `DS_SUBMITTED` are
+  removed.** A field bound to a form model reveals its validation errors once it is touched, and
+  the unparseable-date error of `ds-date-picker` shows on blur. `[touched]` is an input of every DS
+  field. Remove any `[dsSubmitted]` binding, `SubmittedDirective` import and `DS_SUBMITTED`
+  provider.
 
 ### Fixed
 
@@ -25,26 +26,7 @@
   on it opens the tip of its first clipped `dsTooltipWhenClipped` value, and that value takes no tab
   stop of its own. Without the attribute such an element opens nothing, as before.
 
-- **`[dsSubmitted]` (`SubmittedDirective`): the form's submit flag for every DS field inside its
-  host.** Bind the flag the submit button reads, `<form [dsSubmitted]="submitted()">`, and the fields
-  show their validation errors once it is true. Any element can host it, so fields outside a
-  `<form>` take it the same way; `[dsSubmitted]="true"` shows errors from the start. The flag
-  reaches the fields through the `DS_SUBMITTED` injection token.
-
 ### Changed
-
-- **Fields show validation errors only after the form is submitted, never on blur.** Validation
-  errors, the error paint and `aria-invalid` wait until a `[dsSubmitted]` host reads true or the
-  parent `NgForm` / `FormGroupDirective` was submitted, and then follow the form live. Leaving a
-  field no longer reveals anything. The unparseable-date error of `ds-date-picker` waits the same
-  way. An `error` string, and `[invalid]` with no validation errors behind it, still show at once.
-  A signal form without a `[dsSubmitted]` host shows no validation error at all.
-
-- **`touched` is removed from every field.** Errors no longer follow it, so a `[touched]` binding on a
-  DS field goes, and `[dsSubmitted]` on its form takes its place. Signal forms stops binding it on
-  its own. The input sat on the internal `DsFieldBase`; the internal `DsControlValueAccessor` and
-  `DsBooleanControlValueAccessor` drop their `touchedSelf`, and the internal `DsFieldMessageSources`
-  its `touched` and `touchedSelf`.
 
 - **`ds-time-picker` scrolls to a picked value and selects by scrolling.** A click or an arrow key
   scrolls the column smoothly to centre the cell (instantly on open, and under
