@@ -60,6 +60,7 @@ const DIRECTIVE =
   /^\s*(?:\/\/\s*@ts-expect-error\b(.*)|<!--\s*expect:(.*?)-->\s*)$/;
 const DIRECTIVE_BODY = /^\s+(before|after|both)((?:\s+(?:TS|NG)\d{4})+)\s*$/;
 const SUPPRESSION = /@ts-(ignore|nocheck)\b/;
+const AUGMENTATION = /\bdeclare\s+(global\b|module\s+['"])/;
 // NG0xxx are runtime errors; compile-time Angular codes start at NG1000.
 const CLAIMED_CODE = /\b(?:TS\d{4}|NG[1-9]\d{3})\b/g;
 const TEMPLATE_FIXTURE = '.component.ts';
@@ -75,6 +76,9 @@ const COMPILER_OPTIONS = {
   target: ts.ScriptTarget.ES2022,
   module: ts.ModuleKind.Preserve,
   moduleResolution: ts.ModuleResolutionKind.Bundler,
+  // Every fixture of a tag is a root of one program, so each must be its own module: a fixture
+  // with no import or export would otherwise declare into a global scope the others share.
+  moduleDetection: ts.ModuleDetectionKind.Force,
 };
 
 const tags = releaseTags(ROOT);
@@ -90,6 +94,10 @@ function parseFixture(path) {
     if (SUPPRESSION.test(line))
       errors.push(
         `line ${index + 1}: @ts-${SUPPRESSION.exec(line)[1]} hides the diagnostics this check reads`,
+      );
+    if (AUGMENTATION.test(line))
+      errors.push(
+        `line ${index + 1}: \`declare ${AUGMENTATION.exec(line)[1].trim()}\` reaches every fixture compiled at the same tag; keep a fixture's declarations local`,
       );
     const directive = DIRECTIVE.exec(line);
     if (directive) {

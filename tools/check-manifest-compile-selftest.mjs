@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 // Does the compile check still FIRE on a wrong code, a missing error, an unknown item, an .html
-// fixture, a wrong NG code in a component template, a malformed directive and an unbacked draft
-// claim - and stay green on fixtures that hold, at a tag pair and at the last tag against the
-// working tree?
+// fixture, a wrong NG code in a component template, a malformed directive, a global declaration
+// and an unbacked draft claim - and stay green on fixtures that hold, at a tag pair and at the
+// last tag against the working tree, with import-less fixtures sharing a tag?
 //
 // Nothing tracked is written: each case builds its own migrations directory under
 // node_modules/.cache, where a component fixture's `@angular/core` import resolves, and points the
@@ -107,6 +107,10 @@ try {
   const good = run('good', {
     'fixtures/0.10.0/avatar-tint-chroma-to-saturation.ts': AVATAR,
     'fixtures/0.13.4/accordion-multi-is-multiple.component.ts': ACCORDION,
+    // No import or export: still a module of its own, so the two share no global scope.
+    'fixtures/0.10.0/control-size-input-becomes-nullable.ts':
+      'const shared = 1;\n',
+    'fixtures/0.10.0/exported-class-members-grew.ts': 'const shared = 2;\n',
     'unreleased.json': draft(
       'An inline `chroma` fails with TS2353.',
       claimsOutsideItems,
@@ -120,8 +124,8 @@ try {
   );
   expect('exits 0', good.status === 0);
   expect(
-    'compiles all five fixtures',
-    /5 fixture\(s\) compiled/.test(good.output),
+    'compiles all seven fixtures',
+    /7 fixture\(s\) compiled/.test(good.output),
   );
   expect(
     'a component template under strictTemplates',
@@ -137,6 +141,8 @@ try {
     'fixtures/0.10.0/control-size-input-becomes-nullable.ts':
       '// @ts-expect-error TS2353\nexport const value = 1;\n',
     'fixtures/0.10.0/no-such-item.ts': 'export {};\n',
+    'fixtures/0.10.0/exported-class-members-grew.ts':
+      'declare global {\n  interface Window {\n    leaked: true;\n  }\n}\nexport {};\n',
     'fixtures/0.10.0/table-column-width-type-widened-for-readers.html':
       '<ds-table />\n',
     'fixtures/0.13.4/accordion-multi-is-multiple.component.ts':
@@ -159,6 +165,12 @@ try {
   expect(
     'a directive without a side',
     bad.output.includes('write `// @ts-expect-error before|after|both'),
+  );
+  expect(
+    'a global declaration that reaches the other fixtures of its tag',
+    bad.output.includes(
+      'line 1: `declare global` reaches every fixture compiled at the same tag',
+    ),
   );
   expect(
     'an id the manifest does not have',
