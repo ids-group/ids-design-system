@@ -81,6 +81,11 @@ const COMPILER_OPTIONS = {
   moduleDetection: ts.ModuleDetectionKind.Force,
 };
 
+// What node_modules and the TypeScript lib parse to is the same at every tag, so one parse serves
+// every program. Extracted trees sit under node_modules/.cache and are never shared.
+const sharedSourceFiles = new Map();
+const SHAREABLE = /[\\/]node_modules[\\/](?!\.cache[\\/])/;
+
 const tags = releaseTags(ROOT);
 const problems = [];
 const results = [];
@@ -180,6 +185,15 @@ function compile(treeRoot, label, fixtures, angular) {
   const readFile = host.readFile.bind(host);
   host.readFile = (file) =>
     texts.get(resolve(file).toLowerCase()) ?? readFile(file);
+  const getSourceFile = host.getSourceFile.bind(host);
+  host.getSourceFile = (file, languageVersion, ...rest) => {
+    if (!SHAREABLE.test(file))
+      return getSourceFile(file, languageVersion, ...rest);
+    const key = `${file}|${JSON.stringify(languageVersion)}`;
+    if (!sharedSourceFiles.has(key))
+      sharedSourceFiles.set(key, getSourceFile(file, languageVersion, ...rest));
+    return sharedSourceFiles.get(key);
+  };
   const rootNames = fixtures.map((fixture) => fixture.path);
   const angularProgram = angular && new NgtscProgram(rootNames, options, host);
   const program = angularProgram
