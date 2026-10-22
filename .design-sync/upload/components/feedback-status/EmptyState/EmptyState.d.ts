@@ -11,6 +11,8 @@ export interface EmptyStateProps {
   icon?: 'search' | 'plus' | 'minus' | 'check' | 'x' | 'chevronDown' | 'chevronRight' | 'slash' | 'chevronLeft' | 'chevronUp' | 'menu' | 'arrowRight' | 'arrowUp' | 'arrowDown' | 'info' | (string & {}) /* +69 more */ | null;
   /** Optional heading below the icon. */
   title?: string;
+  /** `'wrap'` breaks a long title over lines; `'clip'` keeps one line, ends it with an ellipsis and shows the full title in a tooltip. */
+  titleOverflow?: ('wrap' | 'clip');
   /** Optional supporting text below the title. */
   body?: string;
   /** Content for the `[actions]` slot. */

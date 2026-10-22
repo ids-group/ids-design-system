@@ -17,6 +17,8 @@ holds an entry; what the release bot commits afterwards needs none.
 
 ## Unreleased
 
+## 1.0.0 — 2026-10-21
+
 ### Cards
 
 - **Toggle Button publishes its card again**, "Toggle Button - On and off", from its own chapter

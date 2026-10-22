@@ -206,9 +206,7 @@ export function resolveFieldMessage(
     () =>
       !(sources.disabled?.() ?? false) &&
       (sources.error().length > 0 ||
-        (blocking().length > 0
-          ? revealed()
-          : sources.invalid())),
+        (blocking().length > 0 ? revealed() : sources.invalid())),
   );
 
   // Relies on message inputs trimming via `trimmedText`; one declared without it breaks this quietly.

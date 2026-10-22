@@ -1,5 +1,5 @@
 {
-  "version": "unreleased",
+  "version": "1.0.0",
   "items": [
     {
       "id": "field-errors-shown-after-submit",
@@ -366,7 +366,7 @@
     "The internal `DsFieldBase` no longer declares `touched`, the internal `DsControlValueAccessor` and `DsBooleanControlValueAccessor` no longer track `touchedSelf`, and the internal `DsFieldMessageSources` no longer takes `touched` or `touchedSelf`: a subclass of a DS field that read them meets a compiler error. The consumer-facing change is the field-touched-input-removed-* items.",
     "`dsTooltipWhenClipped` writes the `tabindex` of a host clipped or unclipped by a resize in the next animation frame, so Firefox no longer reports \"ResizeObserver loop completed with undelivered notifications\" for hosts under `content-visibility: auto`. A global error handler that filtered that message out for this reason can go.",
     {
-      "text": "Looping hour and minute columns of `ds-time-picker` render more copies of their cells, so a test that counts the `.opt` cells of a looping column finds more of them.",
+      "text": "Looping hour and minute columns of `ds-time-picker` render more copies of their cells, so a test that counts the `.opt` cells of a looping column inside its internal `ds-time-columns` element finds more of them.",
       "verify": "Count the `.opt` cells of a looping hour column of an open time picker: nine sets of its hours."
     }
   ],

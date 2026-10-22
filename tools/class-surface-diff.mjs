@@ -17,6 +17,7 @@
  */
 import { execFileSync } from 'node:child_process';
 import { pathToFileURL } from 'node:url';
+import { readTreeAt } from './check-manifest-truth.mjs';
 
 function git(args) {
   return execFileSync('git', args, {
@@ -25,7 +26,22 @@ function git(args) {
   });
 }
 
+// One tree read per ref, cached on disk for a tag, instead of one `git show` per changed file: a
+// boundary changes hundreds of files, and `changelog-pending --audit` diffs every boundary. A path
+// the read does not hold, a deleted file or one outside its filter, still goes to `git show`.
+const trees = new Map();
 function show(ref, path) {
+  if (!trees.has(ref))
+    trees.set(
+      ref,
+      new Map(
+        (readTreeAt(ref) ?? []).map(({ path: file, text }) => [file, text]),
+      ),
+    );
+  return trees.get(ref).get(path) ?? showFromGit(ref, path);
+}
+
+function showFromGit(ref, path) {
   try {
     // stdio pipe on stderr: a genuinely new file has no path at `ref`, and git says so on stderr
     // rather than exiting quietly. A moved one is resolved before this, through `renamedFrom`.

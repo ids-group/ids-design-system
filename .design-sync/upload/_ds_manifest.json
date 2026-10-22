@@ -419,32 +419,11 @@
       "subtitle": "Two refusals, treated differently, plus the room the second needs."
     },
     {
-      "path": "components/actions/ToggleButton/Toggle Button - Toggle.html",
-      "group": "actions",
-      "viewport": "1200x263",
-      "name": "Toggle Button - toggle",
-      "subtitle": "[pressed] holds the on/off state, exposed as aria-pressed."
-    },
-    {
       "path": "components/actions/Button/Button - Link-styled action.html",
       "group": "actions",
       "viewport": "1200x251",
       "name": "Buttons - link-styled action",
       "subtitle": "Global .link on a button, preferred over variant='text'."
-    },
-    {
-      "path": "components/actions/Segmented/Segmented - Segmented control.html",
-      "group": "actions",
-      "viewport": "1200x639",
-      "name": "Segmented & button group - segmented control",
-      "subtitle": "Options take optional icon and disabled."
-    },
-    {
-      "path": "components/actions/ButtonGroup/Button Group - Button group.html",
-      "group": "actions",
-      "viewport": "1200x332",
-      "name": "Button Group - button group",
-      "subtitle": "A role='group' wrapper named by ariaLabel, fusing projected ds-button s into one row."
     },
     {
       "path": "components/actions/IconButton/Icon Button - Color x variant.html",
@@ -475,6 +454,13 @@
       "subtitle": "[selected] renders the pressed state and sets aria-pressed, 'false' when off; an icon button with no [selected] is no toggle and has none."
     },
     {
+      "path": "components/actions/ToggleButton/Toggle Button - On and off.html",
+      "group": "actions",
+      "viewport": "1200x305",
+      "name": "Toggle button - on and off",
+      "subtitle": "[pressed] holds the on/off state, exposed as aria-pressed."
+    },
+    {
       "path": "components/actions/SplitButton/Split Button - Primary variant.html",
       "group": "actions",
       "viewport": "1200x431",
@@ -487,6 +473,20 @@
       "viewport": "1200x313",
       "name": "Split button - outline variant",
       "subtitle": "Use beside a primary action."
+    },
+    {
+      "path": "components/actions/Segmented/Segmented - Segmented control.html",
+      "group": "actions",
+      "viewport": "1200x639",
+      "name": "Segmented & button group - segmented control",
+      "subtitle": "Options take optional icon and disabled."
+    },
+    {
+      "path": "components/actions/ButtonGroup/Button Group - Button group.html",
+      "group": "actions",
+      "viewport": "1200x332",
+      "name": "Button Group - button group",
+      "subtitle": "A role='group' wrapper named by ariaLabel, fusing projected ds-button s into one row."
     },
     {
       "path": "components/actions/Link/Link - States.html",
@@ -675,7 +675,7 @@
     {
       "path": "components/forms-inputs/PasswordRules/Password Rules - Live checklist.html",
       "group": "forms-inputs",
-      "viewport": "1200x697",
+      "viewport": "1200x700",
       "name": "Password rules - live checklist",
       "subtitle": "Each rule's test mirrors your server; the component owns only glyph, colours and type scale."
     },
@@ -794,8 +794,9 @@
     {
       "path": "components/forms-inputs/TimePicker/Time Picker - Open wheels.html",
       "group": "forms-inputs",
-      "viewport": "1200x523",
-      "name": "Time picker - open wheels"
+      "viewport": "1200x623",
+      "name": "Time picker - open wheels",
+      "subtitle": "loop runs the hour and minute columns on past either end: 'auto' (default) a column that holds more values than it shows, 'always' or 'never'; app-wide in…"
     },
     {
       "path": "components/forms-inputs/TimePicker/Time Picker - Range.html",
@@ -1228,7 +1229,7 @@
     {
       "path": "components/data-display/Table/Table - Row actions - kebab menu.html",
       "group": "data-display",
-      "viewport": "1200x700",
+      "viewport": "1200x687",
       "name": "Table - row actions · kebab menu",
       "subtitle": "[rowActions] adds a trailing kebab column; (rowActionSelected) reports action, row."
     },
@@ -2060,7 +2061,7 @@
     {
       "path": "guides/patterns/Form layout/Form layout - Validation & messages.html",
       "group": "patterns",
-      "viewport": "1200x497",
+      "viewport": "1200x681",
       "name": "Form layout - validation & messages"
     },
     {
@@ -9598,10 +9599,17 @@
     },
     {
       "name": "--_dropdown-panel-max-width",
-      "value": "var(--ds-dropdown-panel-max-width, none)",
+      "value": "none",
       "kind": "spacing",
       "definedIn": "_ds_bundle.css",
       "scope": ".ds-dropdown-panel"
+    },
+    {
+      "name": "--_dropdown-panel-max-width",
+      "value": "var(--ds-dropdown-panel-max-width, none)",
+      "kind": "spacing",
+      "definedIn": "_ds_bundle.css",
+      "scope": ".ds-dropdown-panel.ds-dropdown-panel-content-width"
     },
     {
       "name": "--_check-mark-enter-duration",

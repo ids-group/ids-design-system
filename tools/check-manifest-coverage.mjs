@@ -32,6 +32,7 @@ import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import { dirname, join, relative } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import { surfaceAt } from './check-manifest-truth.mjs';
+import { cachedAtTag } from './tag-cache.mjs';
 import { previousBoundary, releaseTags } from './release-tags.mjs';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
@@ -307,7 +308,14 @@ function tokensAt(tag) {
   // is the noisy direction rather than the silent one, which is the right way round for a gate.
   if (!tag) return new Set();
   if (tokenCache.has(tag)) return tokenCache.get(tag);
-  const found = new Set();
+  const found =
+    cachedAtTag(tag, [grepTokens.toString()], () => grepTokens(tag)) ??
+    new Set();
+  tokenCache.set(tag, found);
+  return found;
+}
+
+function grepTokens(tag) {
   try {
     const out = execFileSync(
       'git',
@@ -324,14 +332,16 @@ function tokensAt(tag) {
       ],
       { encoding: 'utf8', maxBuffer: 1 << 28 },
     );
+    const found = new Set();
     for (const match of out.matchAll(/--[a-z][a-z0-9-]*/g))
       if (!match[0].endsWith('-')) found.add(match[0]);
+    return found;
   } catch {
     // `git grep` exits 1 when it matches nothing, which for a real tag means the tree is not
-    // there to read; an empty set then makes every token read as introduced, as above.
+    // there to read; an empty set then makes every token read as introduced, as above. Returning
+    // null keeps that answer out of the disk cache.
+    return null;
   }
-  tokenCache.set(tag, found);
-  return found;
 }
 
 function manifestFor(version) {

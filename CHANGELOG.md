@@ -1,5 +1,16 @@
 ## Unreleased
 
+### Fixed
+
+- **A 12-hour `ds-time-picker` no longer closes before AM/PM is chosen.** Picking the hour and then
+  the minute closed the panel before the AM/PM column was reached, and the time kept the previous
+  AM or PM: from 8:45 PM, picking 9 and 00 gave 9:00 PM. In `'single'` mode on a 12-hour clock the
+  panel now stays open until the hour, the minute and AM/PM have each been picked since it opened,
+  in any order; the 24-hour clock still closes on the hour and the minute. Nothing to change in
+  your code.
+
+## 1.0.0 — 2026-10-21
+
 ### Added
 
 - **`dsTooltipAncestor`: a focusable card opens the clipped values inside it.** Put the attribute
@@ -28,8 +39,8 @@
   `DsBooleanControlValueAccessor` drop their `touchedSelf`, and the internal `DsFieldMessageSources`
   its `touched` and `touchedSelf`.
 
-- **`ds-time-picker` and `ds-time-columns` scroll to a picked value and select by scrolling.** A click or an
-  arrow key scrolls the column smoothly to centre the cell (instantly on open, and under
+- **`ds-time-picker` scrolls to a picked value and selects by scrolling.** A click or an arrow key
+  scrolls the column smoothly to centre the cell (instantly on open, and under
   `prefers-reduced-motion`). One wheel notch moves a column by about one row, and cells snap to the
   centre after wheel or touch scrolling. While a wheel, touch or scrollbar scroll runs, the centred
   enabled cell becomes the value as it passes the centre and the time picker emits `valueChange`
