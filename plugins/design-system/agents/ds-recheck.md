@@ -80,6 +80,10 @@ variant="outline"`): an occurrence standing inside the full replacement is migra
   `action`/`note` describes NO consumer action (purely visual/informational), return `migrated: true` with
   `note: "no consumer action required"`. Always set `confidence` (high/medium/low) — the orchestrator
   escalates low-confidence and failed items.
+  When the `action` concerns a binding's VALUE (`[disabled]`, `[hidden]`, `[readonly]`), resolve
+  each bound expression through the component's computeds and methods in its `.ts` before judging:
+  `[disabled]="!canSubmit()"` is true while loading when `canSubmit` reads the loading flag. A
+  template grep that sees no flag in the binding is not evidence.
 - **`verify` is the assertion you must test, and its absence of a symbol proves nothing.** When the
   item carries a `verify` sentence, that sentence IS the check: search the surface it names and judge
   it directly (_"every place that turns (sortChange) into a query gates on the direction, not the

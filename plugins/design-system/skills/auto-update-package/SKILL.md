@@ -43,6 +43,10 @@ Dispatch subagents by name via the Task tool. Don't do a subagent's job inline �
 exception: a trivial, already-verified micro-edit (a couple of one-line fixes you have personally
 diffed and confirmed) may be done directly; bulk finding/applying always goes through the agents,
 and the step-7 re-check covers inline edits the same as agent edits.
+**A named agent not registered in this session** (the Task tool rejects its name): dispatch a
+general-purpose subagent instead, its prompt the body of `<plugin-root>/agents/<name>.md` (as for
+the drift scan in Phase B step 5) followed by the usual dispatch. With no Task tool at all, do the
+agent's work inline by that same file. Either way, say so once in the report.
 
 ## Model tiering (dispatch these subagents)
 
@@ -247,6 +251,12 @@ while the wave runs. Collect the whole wave before Phase B.
 3. **Installed version.** Read the EXACT locked version of the dependency from the lockfile (not
    the `package.json` range). Record as `current`. If the install is a git/tarball/`file:`/`link:`
    (no plain semver) → report it and ask how to proceed; do not guess.
+   **Spec ahead of the lock (hand-migrated):** when the `package.json` spec is a published stable
+   above `current`, the code may already be migrated to it, and the per-version loop would set the
+   spec back. Ask (AskUserQuestion): the per-version loop, or **one step** to the spec version. One
+   step plans and pre-passes the whole chain as usual (steps 10-12), then runs Phase B once with
+   V = the spec version: every chain item in one pass, each with its own version's trees, the lint
+   range `current` to V, one bump and install, the whole-chain re-check, one commit.
 4. **Package manager** from the lockfile: `bun.lock`→bun, `package-lock.json`→npm,
    `yarn.lock`→yarn, `pnpm-lock.yaml`→pnpm.
 5. **Verify command, PER TARGET,** from each target's `package.json` scripts: prefer a
@@ -341,6 +351,11 @@ while the wave runs. Collect the whole wave before Phase B.
    counts against a version and is reported once in Phase C. A baseline that does not build at all
    is reported to the user before Phase B; per-version "green" then means "no error beyond the
    baseline".
+   **Spec ahead of the lock:** when the dependency spec in `package.json` does not admit `current`,
+   a frozen install (`npm ci`) refuses the lockfile. Install the locked version for the baseline:
+   npm `npm install --no-save @ids-group-ltd/ids-design-system@<current>`; bun, yarn or pnpm: set
+   the spec to `current` exactly and run the mutating install (step 4 rewrites the spec anyway).
+   Say so in the report.
    **Dead-override baseline, same moment:** run `npx ng g @ids-group-ltd/ids-design-system:check-overrides`
    in each target (read-only) and store every line it prints in the ledger's `overridesBaseline`.
    - `current` older than 0.14.1 (no schematic): skip; store `null` and the reason.
@@ -380,6 +395,11 @@ while the wave runs. Collect the whole wave before Phase B.
     the first bump (step 4) that installs a version shipping `eslint/index.mjs`: from that step's
     re-check on. Until a copy is reachable, the lint step is skipped, with a note per skipped step
     in the ledger and the report. Record the source in the ledger's `lint`.
+    **Nothing to lint for the chain:** when no entry of the copy's `eslint/deprecated-api.json` or
+    `stylelint/deprecated-tokens.json` has a `since` inside the chain's range (`current` exclusive,
+    the last chain version inclusive), as for a chain of `behavior` items only, the lint step can
+    find nothing. Skip it for the whole run without asking, the tools dir included, and record and
+    report the reason once.
     The step runs `node <plugin-root>/scripts/lint-step.mjs <target root> <source root> <lint copy> --from <F> --to <V> --tools <tools dir>`
     (`<plugin-root>` as for the drift scan in Phase B step 5; `<F>` is the chain version before V,
     or `current` for the first step). It resolves eslint, stylelint, `typescript-eslint` or
