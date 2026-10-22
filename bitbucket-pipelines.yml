@@ -210,3 +210,7 @@ pipelines:
           name: Sync dev with main
           script:
             - sh infrastructure/scripts/sync-dev.sh
+      - step:
+          name: Mirror to GitHub
+          script:
+            - sh infrastructure/scripts/mirror-github.sh
