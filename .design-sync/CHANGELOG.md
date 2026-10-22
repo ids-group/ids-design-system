@@ -30,6 +30,10 @@ holds an entry; what the release bot commits afterwards needs none.
   clock with one window per lane, and wait for the web fonts, then for 150 ms and 3 frames without
   a DOM change. The injected tidy script parses, and a card counts as settled only when its root
   carries `data-ds-tidied`. Two freezes in a row are byte-identical.
+- **`build-design-sync.sh` renders each card once.** `snapshot-cards` takes the card's height in the
+  same render it freezes, writes `viewports.json`, and reruns `build-upload` to stamp the markers
+  when a height moved. `viewports.json` and the upload tree are byte-identical to the separate
+  `measure-cards` pass; `measure-cards` stays for measuring a frozen tree.
 
 ## 1.0.1 — 2026-10-22
 

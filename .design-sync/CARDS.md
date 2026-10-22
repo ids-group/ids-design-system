@@ -95,7 +95,7 @@ Charts & dataviz carry 7.
 ## After changing a mark
 
 1. `node .design-sync/tools/build-cards.mjs`, then the rest of the chain in
-   `infrastructure/scripts/build-design-sync.sh` (`measure-cards`, `snapshot-cards`, the gates).
+   `infrastructure/scripts/build-design-sync.sh` (`snapshot-cards`, the gates).
 2. A card you withdrew is still on the project until its owner deletes it: add its `.html` and
    `.prompt.md` paths to `.design-sync/obsolete.txt`. A path the build still produces fails the
    build, so a card you publish again comes out of that file.
