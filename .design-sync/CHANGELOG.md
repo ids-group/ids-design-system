@@ -17,6 +17,12 @@ holds an entry; what the release bot commits afterwards needs none.
 
 ## Unreleased
 
+### Cards
+
+- **`[dsSubmitted]` is gone from the manual surface.** The design agent no longer offers the
+  directive, and reads `DatePicker` as showing its invalid-date error in place of the `hint` while
+  the typed text is invalid.
+
 ## 1.0.0 — 2026-10-21
 
 ### Cards
