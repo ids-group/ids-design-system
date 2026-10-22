@@ -2,14 +2,15 @@
 //
 // Both card tools used to spawn `chrome --dump-dom` once per card. That is 410 browser launches
 // plus 410 cold boots of the 2.12 MB bundle, and the launches were most of the wall clock — the
-// render itself is fast. Here the browser starts once and each card is a TAB: the isolation that
-// made lanes safe is still there (a hung page closes with its target and cannot reach another),
-// but nothing pays for a process start.
+// render itself is fast. Here the browser starts once and each lane is a WINDOW: the isolation that
+// made lanes safe is still there (a page that fails closes with its window and cannot reach
+// another), but nothing pays for a process start.
 //
-// The clock is the real one, and each tab is its own window. Virtual time ran timers far ahead of
-// rendering and froze it at the budget, and a background tab gets no frames at all, so whether a
-// ResizeObserver or IntersectionObserver had delivered by the read was a race between lanes. The
-// read is the caller's Promise instead: it resolves when the page says it has settled.
+// The clock is the real one, and each lane is its own window rather than a tab. Virtual time ran
+// timers far ahead of rendering and froze it at the budget, and a background tab gets no frames at
+// all, so whether a ResizeObserver or IntersectionObserver had delivered by the read was a race
+// between lanes. The read is the caller's Promise instead: it resolves when the page says it has
+// settled.
 import { spawn, spawnSync } from 'node:child_process';
 import { mkdtempSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
@@ -207,30 +208,41 @@ export async function launchBrowser({
       }, timeout).unref?.();
     });
 
+  // A window per lane, navigated card to card. A window per card is a fresh renderer per card, and
+  // five of them starting at once contend for the CPU: 48 s against 13 s for 60 cards, measured
+  // 2026-10-22. A window that failed is closed rather than reused.
+  const idle = [];
+  const openWindow = async () => {
+    const { targetId } = await send('Target.createTarget', {
+      url: 'about:blank',
+      newWindow: true,
+    });
+    const { sessionId } = await send('Target.attachToTarget', {
+      targetId,
+      flatten: true,
+    });
+    await send('Page.enable', {}, sessionId);
+
+    return { targetId, sessionId };
+  };
+
   return {
-    /** Opens a window on `url`, evaluates `expression` once the page has loaded and closes it. A
-     *  Promise it returns is awaited, so the page decides when it is ready to be read. */
+    /** Navigates a window to `url` and evaluates `expression` once its DOM is parsed. A Promise it
+     *  returns is awaited, so the page decides when it is ready to be read. */
     async render(url, expression, { timeout = 60000 } = {}) {
       // Inside the try with everything else: opening the tab used to throw past the caller, which
       // rejected its lane and tore the browser down under the four still rendering — losing the
       // whole run and the tool's own report of what failed.
-      let targetId = null;
-      let sessionId = null;
+      let target = null;
+      let reusable = false;
       try {
-        ({ targetId } = await send('Target.createTarget', {
-          url: 'about:blank',
-          newWindow: true,
-        }));
-        ({ sessionId } = await send('Target.attachToTarget', {
-          targetId,
-          flatten: true,
-        }));
-        await send('Page.enable', {}, sessionId);
+        target = idle.pop() ?? (await openWindow());
+        const { sessionId } = target;
         // The catch is on the WAITER, not on the await below: if navigating rejects first, control
         // leaves before `await loaded`, and its own timeout then rejects a promise nobody is
         // holding — an unhandled rejection, which Node turns into a dead process a minute later,
         // in the middle of an otherwise fine run.
-        const loaded = once('Page.loadEventFired', sessionId, timeout);
+        const loaded = once('Page.domContentEventFired', sessionId, timeout);
         loaded.catch(() => {});
         await send('Page.navigate', { url }, sessionId);
         await loaded;
@@ -253,6 +265,7 @@ export async function launchBrowser({
 
           return '';
         }
+        reusable = true;
 
         return result.value ?? '';
       } catch (error) {
@@ -263,8 +276,12 @@ export async function launchBrowser({
 
         return '';
       } finally {
-        if (targetId) {
-          await send('Target.closeTarget', { targetId }).catch(() => {});
+        if (target && reusable) {
+          idle.push(target);
+        } else if (target) {
+          await send('Target.closeTarget', {
+            targetId: target.targetId,
+          }).catch(() => {});
         }
       }
     },

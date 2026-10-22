@@ -229,11 +229,12 @@ comments — 219 KB of the same three blocks. Tree 20 MB → 9.0 MB.
   froze Table three different ways in three runs, and a quiet window alone can pass
   before a ResizeObserver or IntersectionObserver has delivered, since both deliver
   only in a frame.
-- **Real clock, one window per card.** A virtual clock ran timers far ahead of the
+- **Real clock, one window per lane.** A virtual clock ran timers far ahead of the
   frames and froze rendering when its budget ran out, and a background tab gets no
   frames at all, so whether a chart had measured itself by the read was a race
-  between lanes. Each card is its own window, and the tool reads it when the page
-  says it has settled.
+  between lanes. Each lane is its own window, navigated card to card, and the tool
+  reads a card when the page says it has settled. A window per card is a fresh
+  renderer per card: 48 s against 13 s for 60 cards (measured 2026-10-22).
 
 ### The gates that keep CI from thawing it
 
