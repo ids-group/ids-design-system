@@ -194,8 +194,8 @@
         "message": "<AuthLayout> doesn't accept that prop. Declared props: brand, logoLetter, tagline, cardElevation, cardPadding, landmark, brandContent, brandName, authSupport, children."
       },
       {
-        "selector": "JSXOpeningElement[name.name='Autocomplete'] > JSXAttribute > JSXIdentifier[name!=/^(?:hint|error|warning|reserveMessage|messageIcon|errors|invalid|pending|dirty|showDirty|hidden|options|value|multiple|showChevron|maxVisibleChips|size|width|valueOverflow|placeholder|disabled|success|allowCreate|label|compareWith|name|panelClass|readOnly|readonlyBinding|clearable|searchPlaceholder|filterWith|onFilterChange|loading|onOpened|onClosed|scrollActiveIntoView|required|optional|ariaLabel|onCreate|onValueChange|prefix|suffix|children|key|ref|className|style)$/]",
-        "message": "<Autocomplete> doesn't accept that prop. Declared props: hint, error, warning, reserveMessage, messageIcon, errors, invalid, pending, dirty, showDirty, hidden, options, value, multiple, showChevron, maxVisibleChips, size, width, valueOverflow, placeholder, disabled, success, allowCreate, label, compareWith, name, panelClass, readOnly, readonlyBinding, clearable, searchPlaceholder, filterWith, onFilterChange, loading, onOpened, onClosed, scrollActiveIntoView, required, optional, ariaLabel, onCreate, onValueChange, prefix, suffix, children."
+        "selector": "JSXOpeningElement[name.name='Autocomplete'] > JSXAttribute > JSXIdentifier[name!=/^(?:hint|error|warning|reserveMessage|messageIcon|errors|invalid|touched|pending|dirty|showDirty|hidden|options|value|multiple|showChevron|maxVisibleChips|size|width|valueOverflow|placeholder|disabled|success|allowCreate|label|compareWith|name|panelClass|readOnly|readonlyBinding|clearable|searchPlaceholder|filterWith|onFilterChange|loading|onOpened|onClosed|scrollActiveIntoView|required|optional|ariaLabel|onCreate|onValueChange|prefix|suffix|children|key|ref|className|style)$/]",
+        "message": "<Autocomplete> doesn't accept that prop. Declared props: hint, error, warning, reserveMessage, messageIcon, errors, invalid, touched, pending, dirty, showDirty, hidden, options, value, multiple, showChevron, maxVisibleChips, size, width, valueOverflow, placeholder, disabled, success, allowCreate, label, compareWith, name, panelClass, readOnly, readonlyBinding, clearable, searchPlaceholder, filterWith, onFilterChange, loading, onOpened, onClosed, scrollActiveIntoView, required, optional, ariaLabel, onCreate, onValueChange, prefix, suffix, children."
       },
       {
         "selector": "JSXOpeningElement[name.name='Avatar'] > JSXAttribute > JSXIdentifier[name!=/^(?:size|initials|name|initialsRule|imageUrl|ariaLabel|tint|status|fallbackIcon|seed|avoidHues|children|key|ref|className|style)$/]",
@@ -254,12 +254,12 @@
         "message": "<ChartTooltipPanel> doesn't accept that prop. Declared props: context, template, swatches, children."
       },
       {
-        "selector": "JSXOpeningElement[name.name='Checkbox'] > JSXAttribute > JSXIdentifier[name!=/^(?:hint|error|warning|reserveMessage|messageIcon|errors|invalid|pending|dirty|showDirty|hidden|checked|indeterminate|disabled|name|inputId|size|required|label|ariaLabel|onCheckedChange|children|key|ref|className|style)$/]",
-        "message": "<Checkbox> doesn't accept that prop. Declared props: hint, error, warning, reserveMessage, messageIcon, errors, invalid, pending, dirty, showDirty, hidden, checked, indeterminate, disabled, name, inputId, size, required, label, ariaLabel, onCheckedChange, children."
+        "selector": "JSXOpeningElement[name.name='Checkbox'] > JSXAttribute > JSXIdentifier[name!=/^(?:hint|error|warning|reserveMessage|messageIcon|errors|invalid|touched|pending|dirty|showDirty|hidden|checked|indeterminate|disabled|name|inputId|size|required|label|ariaLabel|onCheckedChange|children|key|ref|className|style)$/]",
+        "message": "<Checkbox> doesn't accept that prop. Declared props: hint, error, warning, reserveMessage, messageIcon, errors, invalid, touched, pending, dirty, showDirty, hidden, checked, indeterminate, disabled, name, inputId, size, required, label, ariaLabel, onCheckedChange, children."
       },
       {
-        "selector": "JSXOpeningElement[name.name='ColorPicker'] > JSXAttribute > JSXIdentifier[name!=/^(?:hint|error|warning|reserveMessage|messageIcon|errors|invalid|pending|dirty|showDirty|hidden|value|presets|panelClass|disabled|ariaLabel|success|staticPreview|onValueChange|children|key|ref|className|style)$/]",
-        "message": "<ColorPicker> doesn't accept that prop. Declared props: hint, error, warning, reserveMessage, messageIcon, errors, invalid, pending, dirty, showDirty, hidden, value, presets, panelClass, disabled, ariaLabel, success, staticPreview, onValueChange, children."
+        "selector": "JSXOpeningElement[name.name='ColorPicker'] > JSXAttribute > JSXIdentifier[name!=/^(?:hint|error|warning|reserveMessage|messageIcon|errors|invalid|touched|pending|dirty|showDirty|hidden|value|presets|panelClass|disabled|ariaLabel|success|staticPreview|onValueChange|children|key|ref|className|style)$/]",
+        "message": "<ColorPicker> doesn't accept that prop. Declared props: hint, error, warning, reserveMessage, messageIcon, errors, invalid, touched, pending, dirty, showDirty, hidden, value, presets, panelClass, disabled, ariaLabel, success, staticPreview, onValueChange, children."
       },
       {
         "selector": "JSXOpeningElement[name.name='ColumnChart'] > JSXAttribute > JSXIdentifier[name!=/^(?:frame|caption|summary|loading|error|emptyText|errorText|valueFormat|interactive|tooltipSwatches|tooltipLingerMs|pinOnClick|highlightActive|data|stack|thresholds|showValues|skeletonCount|tickCount|dataTable|partOfWhole|onPointClicked|dimOthers|staggerMs|tooltip|hiddenSeries|rescaleOnHide|legendFilters|legendMode|selectRange|showAxisReadout|tooltipAnchor|onHiddenSeriesChange|children|key|ref|className|style)$/]",
@@ -270,8 +270,8 @@
         "message": "<Container> doesn't accept that prop. Declared props: size, children."
       },
       {
-        "selector": "JSXOpeningElement[name.name='DatePicker'] > JSXAttribute > JSXIdentifier[name!=/^(?:hint|error|warning|reserveMessage|messageIcon|errors|invalid|pending|dirty|showDirty|hidden|mode|size|fullWidth|value|placeholder|label|required|optional|panelClass|disabled|success|ariaLabel|minYear|maxYear|minDate|maxDate|disabledDate|presets|locale|dateFormat|firstDayOfWeek|defaultDate|allowInput|staticPreview|onValueChange|children|key|ref|className|style)$/]",
-        "message": "<DatePicker> doesn't accept that prop. Declared props: hint, error, warning, reserveMessage, messageIcon, errors, invalid, pending, dirty, showDirty, hidden, mode, size, fullWidth, value, placeholder, label, required, optional, panelClass, disabled, success, ariaLabel, minYear, maxYear, minDate, maxDate, disabledDate, presets, locale, dateFormat, firstDayOfWeek, defaultDate, allowInput, staticPreview, onValueChange, children."
+        "selector": "JSXOpeningElement[name.name='DatePicker'] > JSXAttribute > JSXIdentifier[name!=/^(?:hint|error|warning|reserveMessage|messageIcon|errors|invalid|touched|pending|dirty|showDirty|hidden|mode|size|fullWidth|value|placeholder|label|required|optional|panelClass|disabled|success|ariaLabel|minYear|maxYear|minDate|maxDate|disabledDate|presets|locale|dateFormat|firstDayOfWeek|defaultDate|allowInput|staticPreview|onValueChange|children|key|ref|className|style)$/]",
+        "message": "<DatePicker> doesn't accept that prop. Declared props: hint, error, warning, reserveMessage, messageIcon, errors, invalid, touched, pending, dirty, showDirty, hidden, mode, size, fullWidth, value, placeholder, label, required, optional, panelClass, disabled, success, ariaLabel, minYear, maxYear, minDate, maxDate, disabledDate, presets, locale, dateFormat, firstDayOfWeek, defaultDate, allowInput, staticPreview, onValueChange, children."
       },
       {
         "selector": "JSXOpeningElement[name.name='DescriptionItem'] > JSXAttribute > JSXIdentifier[name!=/^(?:term|copyValue|children|key|ref|className|style)$/]",
@@ -330,8 +330,8 @@
         "message": "<Inline> doesn't accept that prop. Declared props: gap, align, justify, wrap, children."
       },
       {
-        "selector": "JSXOpeningElement[name.name='Input'] > JSXAttribute > JSXIdentifier[name!=/^(?:hint|error|warning|reserveMessage|messageIcon|errors|invalid|pending|dirty|showDirty|hidden|value|type|size|label|placeholder|disabled|readOnly|readonlyBinding|success|loading|required|optional|name|min|max|step|autocomplete|autofocus|ariaLabel|ariaDescribedBy|maxLength|minLength|pattern|enterKeyHint|inputMode|onBlurred|clearable|passwordToggle|passwordVisible|onValueChange|onPasswordVisibleChange|prefix|suffix|children|key|ref|className|style)$/]",
-        "message": "<Input> doesn't accept that prop. Declared props: hint, error, warning, reserveMessage, messageIcon, errors, invalid, pending, dirty, showDirty, hidden, value, type, size, label, placeholder, disabled, readOnly, readonlyBinding, success, loading, required, optional, name, min, max, step, autocomplete, autofocus, ariaLabel, ariaDescribedBy, maxLength, minLength, pattern, enterKeyHint, inputMode, onBlurred, clearable, passwordToggle, passwordVisible, onValueChange, onPasswordVisibleChange, prefix, suffix, children."
+        "selector": "JSXOpeningElement[name.name='Input'] > JSXAttribute > JSXIdentifier[name!=/^(?:hint|error|warning|reserveMessage|messageIcon|errors|invalid|touched|pending|dirty|showDirty|hidden|value|type|size|label|placeholder|disabled|readOnly|readonlyBinding|success|loading|required|optional|name|min|max|step|autocomplete|autofocus|ariaLabel|ariaDescribedBy|maxLength|minLength|pattern|enterKeyHint|inputMode|onBlurred|clearable|passwordToggle|passwordVisible|onValueChange|onPasswordVisibleChange|prefix|suffix|children|key|ref|className|style)$/]",
+        "message": "<Input> doesn't accept that prop. Declared props: hint, error, warning, reserveMessage, messageIcon, errors, invalid, touched, pending, dirty, showDirty, hidden, value, type, size, label, placeholder, disabled, readOnly, readonlyBinding, success, loading, required, optional, name, min, max, step, autocomplete, autofocus, ariaLabel, ariaDescribedBy, maxLength, minLength, pattern, enterKeyHint, inputMode, onBlurred, clearable, passwordToggle, passwordVisible, onValueChange, onPasswordVisibleChange, prefix, suffix, children."
       },
       {
         "selector": "JSXOpeningElement[name.name='LineChart'] > JSXAttribute > JSXIdentifier[name!=/^(?:frame|caption|summary|loading|error|emptyText|errorText|valueFormat|interactive|tooltipSwatches|tooltipLingerMs|pinOnClick|highlightActive|categories|series|yAxisMode|showMarkers|outline|annotations|onPointClicked|dimOthers|gaps|curve|stack|yAxisLabel|secondaryAxisLabel|tickCount|dataTable|max|maxSecondary|hiddenSeries|rescaleOnHide|legendFilters|legendMode|noVisibleSeriesText|patterns|selectRange|showAxisReadout|showChange|staggerMs|tooltip|tooltipAnchor|onHiddenSeriesChange|children|key|ref|className|style)$/]",
@@ -374,16 +374,16 @@
         "message": "<ModalConfirm> doesn't accept that prop. Declared props: children."
       },
       {
-        "selector": "JSXOpeningElement[name.name='MultiSelect'] > JSXAttribute > JSXIdentifier[name!=/^(?:hint|error|warning|reserveMessage|messageIcon|errors|invalid|pending|dirty|showDirty|hidden|value|options|placeholder|searchPlaceholder|searchable|name|panelClass|readOnly|readonlyBinding|clearable|filterWith|onFilterChange|loading|onOpened|onClosed|scrollActiveIntoView|maxVisibleChips|disabled|success|ariaLabel|width|size|triggerDisplay|label|required|optional|selectAll|onValueChange|children|key|ref|className|style)$/]",
-        "message": "<MultiSelect> doesn't accept that prop. Declared props: hint, error, warning, reserveMessage, messageIcon, errors, invalid, pending, dirty, showDirty, hidden, value, options, placeholder, searchPlaceholder, searchable, name, panelClass, readOnly, readonlyBinding, clearable, filterWith, onFilterChange, loading, onOpened, onClosed, scrollActiveIntoView, maxVisibleChips, disabled, success, ariaLabel, width, size, triggerDisplay, label, required, optional, selectAll, onValueChange, children."
+        "selector": "JSXOpeningElement[name.name='MultiSelect'] > JSXAttribute > JSXIdentifier[name!=/^(?:hint|error|warning|reserveMessage|messageIcon|errors|invalid|touched|pending|dirty|showDirty|hidden|value|options|placeholder|searchPlaceholder|searchable|name|panelClass|readOnly|readonlyBinding|clearable|filterWith|onFilterChange|loading|onOpened|onClosed|scrollActiveIntoView|maxVisibleChips|disabled|success|ariaLabel|width|size|triggerDisplay|label|required|optional|selectAll|onValueChange|children|key|ref|className|style)$/]",
+        "message": "<MultiSelect> doesn't accept that prop. Declared props: hint, error, warning, reserveMessage, messageIcon, errors, invalid, touched, pending, dirty, showDirty, hidden, value, options, placeholder, searchPlaceholder, searchable, name, panelClass, readOnly, readonlyBinding, clearable, filterWith, onFilterChange, loading, onOpened, onClosed, scrollActiveIntoView, maxVisibleChips, disabled, success, ariaLabel, width, size, triggerDisplay, label, required, optional, selectAll, onValueChange, children."
       },
       {
         "selector": "JSXOpeningElement[name.name='NumberStepper'] > JSXAttribute > JSXIdentifier[name!=/^(?:value|min|max|step|size|disabled|ariaLabel|onValueChange|children|key|ref|className|style)$/]",
         "message": "<NumberStepper> doesn't accept that prop. Declared props: value, min, max, step, size, disabled, ariaLabel, onValueChange, children."
       },
       {
-        "selector": "JSXOpeningElement[name.name='OtpInput'] > JSXAttribute > JSXIdentifier[name!=/^(?:hint|error|warning|reserveMessage|messageIcon|errors|invalid|pending|dirty|showDirty|hidden|value|length|mode|mask|disabled|success|ariaLabel|onCompleted|onValueChange|children|key|ref|className|style)$/]",
-        "message": "<OtpInput> doesn't accept that prop. Declared props: hint, error, warning, reserveMessage, messageIcon, errors, invalid, pending, dirty, showDirty, hidden, value, length, mode, mask, disabled, success, ariaLabel, onCompleted, onValueChange, children."
+        "selector": "JSXOpeningElement[name.name='OtpInput'] > JSXAttribute > JSXIdentifier[name!=/^(?:hint|error|warning|reserveMessage|messageIcon|errors|invalid|touched|pending|dirty|showDirty|hidden|value|length|mode|mask|disabled|success|ariaLabel|onCompleted|onValueChange|children|key|ref|className|style)$/]",
+        "message": "<OtpInput> doesn't accept that prop. Declared props: hint, error, warning, reserveMessage, messageIcon, errors, invalid, touched, pending, dirty, showDirty, hidden, value, length, mode, mask, disabled, success, ariaLabel, onCompleted, onValueChange, children."
       },
       {
         "selector": "JSXOpeningElement[name.name='PageFooter'] > JSXAttribute > JSXIdentifier[name!=/^(?:variant|brand|nav|actions|children|key|ref|className|style)$/]",
@@ -410,12 +410,12 @@
         "message": "<Popover> doesn't accept that prop. Declared props: align, placement, arrow, panelRole, panelLabel, staticPreview, children."
       },
       {
-        "selector": "JSXOpeningElement[name.name='Radio'] > JSXAttribute > JSXIdentifier[name!=/^(?:hint|error|warning|reserveMessage|messageIcon|errors|invalid|checked|deselectable|disabled|name|value|inputId|size|required|label|ariaLabel|onCheckedChange|children|key|ref|className|style)$/]",
-        "message": "<Radio> doesn't accept that prop. Declared props: hint, error, warning, reserveMessage, messageIcon, errors, invalid, checked, deselectable, disabled, name, value, inputId, size, required, label, ariaLabel, onCheckedChange, children."
+        "selector": "JSXOpeningElement[name.name='Radio'] > JSXAttribute > JSXIdentifier[name!=/^(?:hint|error|warning|reserveMessage|messageIcon|errors|invalid|touched|checked|deselectable|disabled|name|value|inputId|size|required|label|ariaLabel|onCheckedChange|children|key|ref|className|style)$/]",
+        "message": "<Radio> doesn't accept that prop. Declared props: hint, error, warning, reserveMessage, messageIcon, errors, invalid, touched, checked, deselectable, disabled, name, value, inputId, size, required, label, ariaLabel, onCheckedChange, children."
       },
       {
-        "selector": "JSXOpeningElement[name.name='RadioGroup'] > JSXAttribute > JSXIdentifier[name!=/^(?:hint|error|warning|reserveMessage|messageIcon|errors|invalid|pending|dirty|showDirty|hidden|value|name|disabled|ariaLabel|label|onValueChange|children|key|ref|className|style)$/]",
-        "message": "<RadioGroup> doesn't accept that prop. Declared props: hint, error, warning, reserveMessage, messageIcon, errors, invalid, pending, dirty, showDirty, hidden, value, name, disabled, ariaLabel, label, onValueChange, children."
+        "selector": "JSXOpeningElement[name.name='RadioGroup'] > JSXAttribute > JSXIdentifier[name!=/^(?:hint|error|warning|reserveMessage|messageIcon|errors|invalid|touched|pending|dirty|showDirty|hidden|value|name|disabled|ariaLabel|label|onValueChange|children|key|ref|className|style)$/]",
+        "message": "<RadioGroup> doesn't accept that prop. Declared props: hint, error, warning, reserveMessage, messageIcon, errors, invalid, touched, pending, dirty, showDirty, hidden, value, name, disabled, ariaLabel, label, onValueChange, children."
       },
       {
         "selector": "JSXOpeningElement[name.name='ScatterChart'] > JSXAttribute > JSXIdentifier[name!=/^(?:frame|caption|summary|loading|error|emptyText|errorText|valueFormat|interactive|tooltipSwatches|tooltipLingerMs|pinOnClick|highlightActive|data|xLabel|yLabel|decimator|tickCount|dataTable|tooltip|dimOthers|showNearestPoint|nearestRadius|staggerMs|onPointClicked|children|key|ref|className|style)$/]",
@@ -426,12 +426,12 @@
         "message": "<Search> doesn't accept that prop. Declared props: hidden, value, placeholder, shortcut, showIcon, clearable, ariaLabel, disabled, size, onSubmitted, debounce, onValueChange, children."
       },
       {
-        "selector": "JSXOpeningElement[name.name='Segmented'] > JSXAttribute > JSXIdentifier[name!=/^(?:hint|error|warning|reserveMessage|messageIcon|errors|invalid|pending|dirty|showDirty|hidden|options|value|ariaLabel|label|disabled|joined|onValueChange|children|key|ref|className|style)$/]",
-        "message": "<Segmented> doesn't accept that prop. Declared props: hint, error, warning, reserveMessage, messageIcon, errors, invalid, pending, dirty, showDirty, hidden, options, value, ariaLabel, label, disabled, joined, onValueChange, children."
+        "selector": "JSXOpeningElement[name.name='Segmented'] > JSXAttribute > JSXIdentifier[name!=/^(?:hint|error|warning|reserveMessage|messageIcon|errors|invalid|touched|pending|dirty|showDirty|hidden|options|value|ariaLabel|label|disabled|joined|onValueChange|children|key|ref|className|style)$/]",
+        "message": "<Segmented> doesn't accept that prop. Declared props: hint, error, warning, reserveMessage, messageIcon, errors, invalid, touched, pending, dirty, showDirty, hidden, options, value, ariaLabel, label, disabled, joined, onValueChange, children."
       },
       {
-        "selector": "JSXOpeningElement[name.name='Select'] > JSXAttribute > JSXIdentifier[name!=/^(?:hint|error|warning|reserveMessage|messageIcon|errors|invalid|pending|dirty|showDirty|hidden|value|options|width|placeholder|size|label|disabled|loading|onOpened|onClosed|scrollActiveIntoView|panelClass|readOnly|readonlyBinding|success|required|optional|name|ariaLabel|clearable|staticPreview|onValueChange|children|key|ref|className|style)$/]",
-        "message": "<Select> doesn't accept that prop. Declared props: hint, error, warning, reserveMessage, messageIcon, errors, invalid, pending, dirty, showDirty, hidden, value, options, width, placeholder, size, label, disabled, loading, onOpened, onClosed, scrollActiveIntoView, panelClass, readOnly, readonlyBinding, success, required, optional, name, ariaLabel, clearable, staticPreview, onValueChange, children."
+        "selector": "JSXOpeningElement[name.name='Select'] > JSXAttribute > JSXIdentifier[name!=/^(?:hint|error|warning|reserveMessage|messageIcon|errors|invalid|touched|pending|dirty|showDirty|hidden|value|options|width|placeholder|size|label|disabled|loading|onOpened|onClosed|scrollActiveIntoView|panelClass|readOnly|readonlyBinding|success|required|optional|name|ariaLabel|clearable|staticPreview|onValueChange|children|key|ref|className|style)$/]",
+        "message": "<Select> doesn't accept that prop. Declared props: hint, error, warning, reserveMessage, messageIcon, errors, invalid, touched, pending, dirty, showDirty, hidden, value, options, width, placeholder, size, label, disabled, loading, onOpened, onClosed, scrollActiveIntoView, panelClass, readOnly, readonlyBinding, success, required, optional, name, ariaLabel, clearable, staticPreview, onValueChange, children."
       },
       {
         "selector": "JSXOpeningElement[name.name='Sidenav'] > JSXAttribute > JSXIdentifier[name!=/^(?:collapsed|rail|brand|logoLetter|brandRoute|brandLinkLabel|brandContent|brandName|children|key|ref|className|style)$/]",
@@ -454,8 +454,8 @@
         "message": "<Skeleton> doesn't accept that prop. Declared props: width, height, circle, inline, shimmer, children."
       },
       {
-        "selector": "JSXOpeningElement[name.name='Slider'] > JSXAttribute > JSXIdentifier[name!=/^(?:hint|error|warning|reserveMessage|messageIcon|errors|invalid|pending|dirty|showDirty|hidden|value|min|max|step|range|disabled|ariaLabel|onValueChange|children|key|ref|className|style)$/]",
-        "message": "<Slider> doesn't accept that prop. Declared props: hint, error, warning, reserveMessage, messageIcon, errors, invalid, pending, dirty, showDirty, hidden, value, min, max, step, range, disabled, ariaLabel, onValueChange, children."
+        "selector": "JSXOpeningElement[name.name='Slider'] > JSXAttribute > JSXIdentifier[name!=/^(?:hint|error|warning|reserveMessage|messageIcon|errors|invalid|touched|pending|dirty|showDirty|hidden|value|min|max|step|range|disabled|ariaLabel|onValueChange|children|key|ref|className|style)$/]",
+        "message": "<Slider> doesn't accept that prop. Declared props: hint, error, warning, reserveMessage, messageIcon, errors, invalid, touched, pending, dirty, showDirty, hidden, value, min, max, step, range, disabled, ariaLabel, onValueChange, children."
       },
       {
         "selector": "JSXOpeningElement[name.name='Sparkline'] > JSXAttribute > JSXIdentifier[name!=/^(?:area|data|categories|label|scale|tooltip|valueFormat|children|key|ref|className|style)$/]",
@@ -486,8 +486,8 @@
         "message": "<Stepper> doesn't accept that prop. Declared props: steps, current, labelPosition, orientation, clickable, errorSteps, onStepClicked, children."
       },
       {
-        "selector": "JSXOpeningElement[name.name='Switch'] > JSXAttribute > JSXIdentifier[name!=/^(?:hint|error|warning|reserveMessage|messageIcon|errors|invalid|pending|dirty|showDirty|hidden|checked|disabled|name|variant|inputId|size|required|label|ariaLabel|controlled|onCheckedRequested|onCheckedChange|children|key|ref|className|style)$/]",
-        "message": "<Switch> doesn't accept that prop. Declared props: hint, error, warning, reserveMessage, messageIcon, errors, invalid, pending, dirty, showDirty, hidden, checked, disabled, name, variant, inputId, size, required, label, ariaLabel, controlled, onCheckedRequested, onCheckedChange, children."
+        "selector": "JSXOpeningElement[name.name='Switch'] > JSXAttribute > JSXIdentifier[name!=/^(?:hint|error|warning|reserveMessage|messageIcon|errors|invalid|touched|pending|dirty|showDirty|hidden|checked|disabled|name|variant|inputId|size|required|label|ariaLabel|controlled|onCheckedRequested|onCheckedChange|children|key|ref|className|style)$/]",
+        "message": "<Switch> doesn't accept that prop. Declared props: hint, error, warning, reserveMessage, messageIcon, errors, invalid, touched, pending, dirty, showDirty, hidden, checked, disabled, name, variant, inputId, size, required, label, ariaLabel, controlled, onCheckedRequested, onCheckedChange, children."
       },
       {
         "selector": "JSXOpeningElement[name.name='Tab'] > JSXAttribute > JSXIdentifier[name!=/^(?:label|icon|count|disabled|value|children|key|ref|className|style)$/]",
@@ -506,8 +506,8 @@
         "message": "<Tag> doesn't accept that prop. Declared props: variant, closable, interactive, selected, closeLabel, onClosed, onToggled, children."
       },
       {
-        "selector": "JSXOpeningElement[name.name='Textarea'] > JSXAttribute > JSXIdentifier[name!=/^(?:hint|error|warning|reserveMessage|messageIcon|errors|invalid|pending|dirty|showDirty|hidden|value|size|label|placeholder|disabled|readOnly|readonlyBinding|success|required|optional|rows|name|autosize|minRows|maxRows|resize|ariaLabel|maxLength|maxLengthMode|countTrimmed|minLength|pattern|onValueChange|children|key|ref|className|style)$/]",
-        "message": "<Textarea> doesn't accept that prop. Declared props: hint, error, warning, reserveMessage, messageIcon, errors, invalid, pending, dirty, showDirty, hidden, value, size, label, placeholder, disabled, readOnly, readonlyBinding, success, required, optional, rows, name, autosize, minRows, maxRows, resize, ariaLabel, maxLength, maxLengthMode, countTrimmed, minLength, pattern, onValueChange, children."
+        "selector": "JSXOpeningElement[name.name='Textarea'] > JSXAttribute > JSXIdentifier[name!=/^(?:hint|error|warning|reserveMessage|messageIcon|errors|invalid|touched|pending|dirty|showDirty|hidden|value|size|label|placeholder|disabled|readOnly|readonlyBinding|success|required|optional|rows|name|autosize|minRows|maxRows|resize|ariaLabel|maxLength|maxLengthMode|countTrimmed|minLength|pattern|onValueChange|children|key|ref|className|style)$/]",
+        "message": "<Textarea> doesn't accept that prop. Declared props: hint, error, warning, reserveMessage, messageIcon, errors, invalid, touched, pending, dirty, showDirty, hidden, value, size, label, placeholder, disabled, readOnly, readonlyBinding, success, required, optional, rows, name, autosize, minRows, maxRows, resize, ariaLabel, maxLength, maxLengthMode, countTrimmed, minLength, pattern, onValueChange, children."
       },
       {
         "selector": "JSXOpeningElement[name.name='TimeColumns'] > JSXAttribute > JSXIdentifier[name!=/^(?:value|format|minuteStep|minTime|maxTime|disabledTime|loop|onTimeChange|onPartPicked|children|key|ref|className|style)$/]",
@@ -522,8 +522,8 @@
         "message": "<TimelineItem> doesn't accept that prop. Declared props: heading, time, icon, tone, children."
       },
       {
-        "selector": "JSXOpeningElement[name.name='TimePicker'] > JSXAttribute > JSXIdentifier[name!=/^(?:hint|error|warning|reserveMessage|messageIcon|errors|invalid|pending|dirty|showDirty|hidden|value|mode|minuteStep|minTime|maxTime|disabledTime|size|fullWidth|label|required|optional|panelClass|disabled|success|placeholder|clearable|ariaLabel|format|loop|staticPreview|onValueChange|children|key|ref|className|style)$/]",
-        "message": "<TimePicker> doesn't accept that prop. Declared props: hint, error, warning, reserveMessage, messageIcon, errors, invalid, pending, dirty, showDirty, hidden, value, mode, minuteStep, minTime, maxTime, disabledTime, size, fullWidth, label, required, optional, panelClass, disabled, success, placeholder, clearable, ariaLabel, format, loop, staticPreview, onValueChange, children."
+        "selector": "JSXOpeningElement[name.name='TimePicker'] > JSXAttribute > JSXIdentifier[name!=/^(?:hint|error|warning|reserveMessage|messageIcon|errors|invalid|touched|pending|dirty|showDirty|hidden|value|mode|minuteStep|minTime|maxTime|disabledTime|size|fullWidth|label|required|optional|panelClass|disabled|success|placeholder|clearable|ariaLabel|format|loop|staticPreview|onValueChange|children|key|ref|className|style)$/]",
+        "message": "<TimePicker> doesn't accept that prop. Declared props: hint, error, warning, reserveMessage, messageIcon, errors, invalid, touched, pending, dirty, showDirty, hidden, value, mode, minuteStep, minTime, maxTime, disabledTime, size, fullWidth, label, required, optional, panelClass, disabled, success, placeholder, clearable, ariaLabel, format, loop, staticPreview, onValueChange, children."
       },
       {
         "selector": "JSXOpeningElement[name.name='Toast'] > JSXAttribute > JSXIdentifier[name!=/^(?:variant|title|body|dismissible|icon|action|onClosed|actions|children|key|ref|className|style)$/]",
