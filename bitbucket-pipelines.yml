@@ -211,6 +211,15 @@ pipelines:
           script:
             - sh infrastructure/scripts/sync-dev.sh
       - step:
-          name: Mirror to GitHub
+          name: Start GitHub mirror
+          script:
+            - sh infrastructure/scripts/trigger-pipeline.sh mirror-github main
+
+    # Needs GITHUB_MIRROR_TOKEN (fine-grained, contents:write on ids-group/ids-design-system) and
+    # RELEASE_TOKEN. A gitleaks finding fails the step before anything reaches GitHub.
+    mirror-github:
+      - step:
+          name: Scan for secrets + mirror to GitHub
+          image: zricethezav/gitleaks:v8.28.0
           script:
             - sh infrastructure/scripts/mirror-github.sh
