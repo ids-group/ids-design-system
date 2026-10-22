@@ -9,6 +9,7 @@ export class AvatarComponent {
     public readonly avoidHues = input<readonly (readonly [ number, number ])[]>([]);
     private readonly config;
     public readonly fallbackIcon = input<IconName | null>(null);
+    protected readonly imageFailed = linkedSignal(…);
     public readonly imageUrl = input<string | null>(null);
     public readonly initials = input<string>('');
     public readonly initialsRule = input<((name: string) => string) | null>(null);

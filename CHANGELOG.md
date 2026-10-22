@@ -1,5 +1,12 @@
 ## Unreleased
 
+### Fixed
+
+- **`ds-avatar` falls back to its initials when the image fails to load.** An `imageUrl` that
+  answered with an error (an expired signed URL, a deleted object) drew the browser's broken-image
+  icon over the tint. The avatar now shows `initials`, or `fallbackIcon`, until `imageUrl` changes.
+  Nothing to change in your code.
+
 ## 1.0.1 — 2026-10-22
 
 ### Changed
