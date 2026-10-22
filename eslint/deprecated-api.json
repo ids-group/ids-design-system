@@ -691,8 +691,8 @@
       "name": "SubmittedDirective",
       "replacement": null,
       "renamed": false,
-      "since": "the next release",
-      "itemId": "unreleased#submitted-directive-removed"
+      "since": "1.0.1",
+      "itemId": "1.0.1#submitted-directive-removed"
     },
     {
       "name": "SwitchSize",
