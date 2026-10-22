@@ -1749,6 +1749,19 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Busy state: blocks `pressed` and sets `aria-busy` and `aria-disabled`, keeping the button focusable so focus stays on it while the work runs. Button-only; ignored on an anchor with a dev warning."
       },
       {
+        "name": "loadingMode",
+        "kind": "input",
+        "type": "ButtonLoadingMode",
+        "union": [
+          "auto",
+          "icon",
+          "replace"
+        ],
+        "default": "'auto'",
+        "required": false,
+        "description": "Where the `loading` spinner draws. `'icon'` puts it in the leading icon's box (the trailing icon's when there is no leading one) and keeps the label visible; `'replace'` hides the contents behind one spinner centred on the button; `'auto'` is `'icon'` when `icon` is set, else `'replace'`. Neither moves the label or resizes the button."
+      },
+      {
         "name": "fullWidth",
         "kind": "input",
         "type": "boolean",

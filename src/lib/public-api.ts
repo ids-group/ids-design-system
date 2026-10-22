@@ -87,6 +87,7 @@ export { ButtonComponent } from '@ids-group-ltd/ids-design-system/components/but
 export type {
   ButtonAlign,
   ButtonColor,
+  ButtonLoadingMode,
   ButtonType,
   ButtonVariant,
 } from '@ids-group-ltd/ids-design-system/components/button';

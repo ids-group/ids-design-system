@@ -1,5 +1,15 @@
 ## Unreleased
 
+### Changed
+
+- **A loading `ds-button` with an `icon` keeps its label and spins in the icon's place.** The
+  spinner takes the leading icon's box and the label stays visible; a button without an icon still
+  hides its contents behind one centred spinner. The new `loadingMode` input (`ButtonLoadingMode`:
+  `'auto' | 'icon' | 'replace'`, default `'auto'`) picks the behaviour: `'icon'` also uses the
+  trailing icon when there is no leading one, and `'replace'` keeps the centred spinner on every
+  button. Neither mode changes the button's size or moves its label. To keep the centred spinner on
+  a button with an icon, bind `loadingMode="replace"`.
+
 ### Fixed
 
 - **`ds-chart` and `ds-column-chart` size the value-axis gutter for the web font.** The tick labels
