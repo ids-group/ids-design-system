@@ -115,8 +115,8 @@
         "layout: 'auto'",
         "<ds-table"
       ],
-      "action": "None, unless the app's tables must keep the 0.15.1 widths: set `provideDsConfig({ table: { layout: 'fixed' } })`, or `layout=\"fixed\"` on one `ds-table`. Delete `layout: 'auto'` from `provideDsConfig` and `layout=\"auto\"` from every `ds-table`: both are the default now.",
-      "appliesWhen": "Every `ds-table` without its own `layout`, in an app whose `DsConfig.table.layout` is unset. Under `'auto'` each column follows its cell content as on 0.15.0: `kind` has no effect, and a numeric `width`, `width: 'content'`, `minWidth` and `truncate` size the column as on 0.15.0. A table with `virtualScroll` keeps `table-layout: fixed`. An app that already set `'auto'` sees no change.",
+      "action": "None, unless the app's tables must keep the 0.15.1 widths: set `provideDsConfig({ table: { layout: 'fixed' } })`, or `layout=\"fixed\"` on one `ds-table`.",
+      "appliesWhen": "Every `ds-table` without its own `layout`, in an app whose `DsConfig.table.layout` is unset, coming from 0.15.1 or 0.15.2; an app coming from 0.15.0 or earlier keeps the widths it had. Under `'auto'` each column follows its cell content as on 0.15.0: `kind` has no effect, and a numeric `width`, `width: 'content'`, `minWidth` and `truncate` size the column as on 0.15.0. A table with `virtualScroll` keeps `table-layout: fixed`. An app that already set `'auto'` sees no change.",
       "pitfall": "A `kind` or `minWidth` added for 0.15.1 does nothing under `'auto'`, so a table tuned for `'fixed'` changes width without a build error; check it with the app's real rows. `'auto'` is still deprecated, and a development build warns once per page while a binding or config key sets it.",
       "restore": "provideDsConfig({ table: { layout: 'fixed' } })",
       "verify": "Without a `layout` anywhere, each `ds-table` shows the column widths it had on 0.15.0, and the console shows no `layout=\"auto\"` deprecation warning.",
@@ -153,7 +153,7 @@
       "verify": "Open a ds-time-picker, scroll the hour column past its last hour and confirm the first hour follows, then reopen it and confirm the selected hour sits in the middle of the column."
     },
     {
-      "text": "`styles/ds` rings a focusable element the library does not render without giving it `--focus-ring-radius`: the ring follows the element's own `border-radius`, so an element of the app that declares none is no longer rounded while focused. A `border-radius: 0` added only to undo that rounding can go.",
+      "text": "`styles/ds` rings a focusable element the library does not render without giving it `--focus-ring-radius`: the ring follows the element's own `border-radius`, so an element of the app that declares none is no longer rounded while focused.",
       "verify": "Tab to a square element of the app that sets no border-radius and confirm it keeps square corners while focused, then tab to a ds-button and confirm its ring is still rounded."
     },
     {
@@ -169,7 +169,17 @@
       "text": "A printed `ds-pagination` shows only its range label: its page buttons, ellipsis and page-size select are left out of the printout, inside a `ds-table` and on their own.",
       "verify": "Open the browser's print preview of a page holding a ds-pagination and confirm only its range label is printed."
     },
-    "A printed `ds-table` keeps its column names on every page, keeps each row on one page and leaves its own controls out of the printout: the pager buttons and page-size select, the column filter, resize and expand buttons and the controls it adds to its toolbar. The pager's range label still prints. Nothing to change in consumer code; `printAllRows` opts a client-paged table into printing every row."
+    "A printed `ds-table` keeps its column names on every page, keeps each row on one page and leaves its own controls out of the printout: the pager buttons and page-size select, the column filter, resize and expand buttons and the controls it adds to its toolbar. The pager's range label still prints. Nothing to change in consumer code; `printAllRows` opts a client-paged table into printing every row.",
+    {
+      "text": "`ds-table` takes `printHeading` and `printHeadingNote`: in print the table opens its header with a row holding the heading and the line under it, repeated with the header on every page. Both are hidden on screen; unset, the table prints as before.",
+      "verify": "Set printHeading and printHeadingNote on a ds-table of two printed pages, open the print preview and confirm both lines print above the column names on each page and do not show on screen."
+    },
+    "Every chart takes `highlightActive`, and `DsConfig.chart.highlightActive` sets it app-wide: `false` keeps the hovered or focused column, bar or heatmap cell at its own colour; unset falls back to the config, then `true`, which brightens it as before. An input on the element wins over the config.",
+    {
+      "text": "A column, bar or heatmap cell held by a click keeps its pin at its own colour once the pointer moves off it, and the mark under the pointer brightens instead; with nothing held, the hovered or focused mark brightens as before.",
+      "verify": "Click a bar of a ds-bar-chart to hold it, move the pointer to another bar and confirm the held bar is at its own colour and the hovered one brightens."
+    },
+    "Showing and hiding a tooltip, a chart tooltip, a modal, a confirm, a toast, a spinner, a skeleton or a loading overlay inserts and removes no stylesheet: the first instance keeps its sheet in the document for the life of the app."
   ],
   "deleteList": []
 }
