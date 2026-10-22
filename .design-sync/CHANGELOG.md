@@ -21,8 +21,8 @@ holds an entry; what the release bot commits afterwards needs none.
 
 - **Every chart card freezes at its measured width.** A chart card froze at the 640px fallback in
   some runs and at its real width in others; it is now the real width every run, with the axis
-  gutter sized for Mulish. The frozen cards also lose the template indentation the tidy pass was
-  always meant to collapse.
+  gutter sized for Mulish. The frozen cards also carry no template indentation: the tidy pass
+  collapses it.
 
 ### Build
 
