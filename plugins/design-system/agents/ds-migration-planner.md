@@ -199,10 +199,10 @@ Return ONLY a fenced ```json block:
 "pitfall": "<how it still breaks>", "note": "<the why>",
 "surface": "template | typescript | style | config | none (or an array)",
 "detect": [], "verify": "<positive assertion>", "restore": "<snippet | null>",
-"supersedes": ["<version>#<id>"] } ],
+"supersedes": ["<version>#<id>"], "evidence": [] } ],
 "deleteList": [ { "id", "surface", "find": [], "why", "replaceWith" } ],
 "informational": [ "<one-line summary of each Added/Fixed group>" |
-                    { "text": "...", "verify": "<one concrete eyeball check>" } ],
+                    { "text": "...", "verify": "<one concrete eyeball check>", "evidence": [] } ],
 "feedback": []
 }
 
@@ -216,7 +216,10 @@ cannot see earlier plans, so never fabricate the reference; omit the field when 
 no `supersededBy` — the link never points forward. `informational` is consumed directly by the orchestrator for
 the final report (no other subagent reads it), and `deleteList` drives its own pass. When a shipped
 manifest is passed in, forward each `informational` entry verbatim, object shape included — never
-flatten it back to its `text` alone. A shipped bare string stays a bare string: a `verify` it lacks
+flatten it back to its `text` alone. `evidence` (on an item or an object `informational` entry) is
+OPTIONAL and comes only from a shipped manifest: the DS repo's proof of a claim in the entry's text
+(`command:...`, `pixels:...`). Pass it through verbatim; never emit it from prose, and its absence
+means nothing. A shipped bare string stays a bare string: a `verify` it lacks
 is not an enrichment (the same rule as `pitfall` and `appliesWhen`) - report it in `feedback`, so
 the DS repo adds the check to its own file. No preamble, no prose outside the JSON block.
 
