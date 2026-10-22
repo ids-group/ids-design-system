@@ -209,8 +209,8 @@ export async function launchBrowser({
     });
 
   // A window per lane, navigated card to card. A window per card is a fresh renderer per card, and
-  // five of them starting at once contend for the CPU: 48 s against 13 s for 60 cards, measured
-  // 2026-10-22. A window that failed is closed rather than reused.
+  // five of them starting at once contend for the CPU. A window that failed is closed rather than
+  // reused.
   const idle = [];
   const openWindow = async () => {
     const { targetId } = await send('Target.createTarget', {
