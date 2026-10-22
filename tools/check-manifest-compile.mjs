@@ -456,14 +456,20 @@ const fixtures = collectFixtures();
 
 // A published fixture compiled against two immutable tags gives the same verdict on every run, so
 // the gate compiles only what can have moved since the last release: the draft's fixtures, a
-// fixture or manifest edited since that tag, and every fixture when this checker, the compiler or
-// the lockfile changed. A migrations folder other than the repository's (the selftest) runs all.
-const TOOL_INPUTS = [
-  'tools/check-manifest-compile.mjs',
-  'package.json',
-  'package-lock.json',
-  'bun.lock',
-];
+// fixture or manifest edited since that tag, and every fixture when this checker or the resolved
+// compiler (TypeScript, the Angular compiler) changed. Any other dependency bump leaves verdicts
+// alone. A migrations folder other than the repository's (the selftest) runs all.
+const CHECKER = 'tools/check-manifest-compile.mjs';
+const COMPILER_IN_LOCK =
+  /"(typescript|@angular\/compiler(?:-cli)?)@(\d[^"]*)"/g;
+const compilerVersions = (lockText) =>
+  [
+    ...new Set(
+      [...lockText.matchAll(COMPILER_IN_LOCK)].map((match) => match[0]),
+    ),
+  ]
+    .sort()
+    .join(' ');
 function changedSinceLastRelease() {
   const last = process.env.DS_COMPILE_SINCE || tags.at(-1);
   if (ALL || !last || MIGRATIONS !== resolve(ROOT, 'migrations')) return null;
@@ -471,8 +477,21 @@ function changedSinceLastRelease() {
     execFileSync('git', ['-C', ROOT, ...args], { encoding: 'utf8' })
       .split('\n')
       .filter(Boolean);
+  let lockThen;
+  try {
+    lockThen = execFileSync('git', ['-C', ROOT, 'show', `${last}:bun.lock`], {
+      encoding: 'utf8',
+      maxBuffer: 1 << 28,
+      stdio: ['ignore', 'pipe', 'ignore'],
+    });
+  } catch {
+    return null;
+  }
+  const lockNow = readFileSync(join(ROOT, 'bun.lock'), 'utf8');
+  const compilerThen = compilerVersions(lockThen);
+  if (!compilerThen || compilerThen !== compilerVersions(lockNow)) return null;
   const changed = new Set([
-    ...lines(['diff', '--name-only', last, '--', 'migrations', ...TOOL_INPUTS]),
+    ...lines(['diff', '--name-only', last, '--', 'migrations', CHECKER]),
     ...lines([
       'ls-files',
       '--others',
@@ -481,7 +500,7 @@ function changedSinceLastRelease() {
       'migrations',
     ]),
   ]);
-  return TOOL_INPUTS.some((path) => changed.has(path)) ? null : changed;
+  return changed.has(CHECKER) ? null : changed;
 }
 const changed = changedSinceLastRelease();
 const selected = changed
