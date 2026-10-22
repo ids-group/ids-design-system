@@ -380,6 +380,11 @@ while the wave runs. Collect the whole wave before Phase B.
     the first bump (step 4) that installs a version shipping `eslint/index.mjs`: from that step's
     re-check on. Until a copy is reachable, the lint step is skipped, with a note per skipped step
     in the ledger and the report. Record the source in the ledger's `lint`.
+    **Nothing to lint for the chain:** when no entry of the copy's `eslint/deprecated-api.json` or
+    `stylelint/deprecated-tokens.json` has a `since` inside the chain's range (`current` exclusive,
+    the last chain version inclusive), as for a chain of `behavior` items only, the lint step can
+    find nothing. Skip it for the whole run without asking, the tools dir included, and record and
+    report the reason once.
     The step runs `node <plugin-root>/scripts/lint-step.mjs <target root> <source root> <lint copy> --from <F> --to <V> --tools <tools dir>`
     (`<plugin-root>` as for the drift scan in Phase B step 5; `<F>` is the chain version before V,
     or `current` for the first step). It resolves eslint, stylelint, `typescript-eslint` or
