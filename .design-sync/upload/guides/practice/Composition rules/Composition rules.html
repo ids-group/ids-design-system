@@ -395,6 +395,29 @@ library enforces it rather than asking you to: <code>errors</code> is gated on <
 error cannot greet an untouched form and a half-typed address is not yet wrong. An explicit
 <code>error</code> string is the deliberate exception — binding it says the consumer has already decided,
 so it shows immediately.</p>
+<h3>Submitting a form: the button stays enabled until the first error</h3>
+<p>The library does not decide when a form is submitted; the app does, with one flag of its own.</p>
+<ul>
+<li><strong>Before the first submit attempt the user is right.</strong> The submit button is enabled and no
+error shows. A simple required field carries <code>required</code> (the asterisk) and nothing more; a rule
+the user cannot guess - a format, a length, a range, an order between two dates - goes in <code>hint</code>
+up front.</li>
+<li><strong>The submit handler sets <code>submitted</code> first, then validates the whole form.</strong> When it fails,
+every invalid field shows its error at once, focus moves to the first invalid field in DOM order,
+and nothing is sent.</li>
+<li><strong>From then on the form is live</strong>: <code>[disabled]="submitted() &amp;&amp; invalid()"</code>, so fixing a field
+clears its error and re-enables the button at once. Reset <code>submitted</code> when the form is opened or
+reset for new data.</li>
+<li><strong>In flight, <code>[loading]</code> alone.</strong> A loading <code>ds-button</code> blocks presses and keeps focus; never put
+the loading flag in <code>[disabled]</code>.</li>
+<li><strong>Drive the message with an <code>error</code> string computed from the flag</strong>:
+<code>nameError = computed(() =&gt; submitted() &amp;&amp; !name().trim() ? 'Enter a name.' : '')</code>. A form
+model's own errors follow <code>touched</code> (above) and so appear on blur; pass the text as <code>error</code> when
+the form must stay silent until the submit.</li>
+<li><strong>A button tied to one picker is not a form submit.</strong> Choose an item, then "Add" / "Link" /
+"Move": that button stays disabled until something is chosen, and so does a button waiting on a
+state no field can fix.</li>
+</ul>
 <hr>
 <h2>7. Overriding a component</h2>
 <p>Set the component's own <code>--ds-*</code> token <strong>on the host element</strong>, scoped as narrowly as the

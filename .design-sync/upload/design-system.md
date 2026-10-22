@@ -291,6 +291,30 @@ error cannot greet an untouched form and a half-typed address is not yet wrong. 
 `error` string is the deliberate exception — binding it says the consumer has already decided,
 so it shows immediately.
 
+### Submitting a form: the button stays enabled until the first error
+
+The library does not decide when a form is submitted; the app does, with one flag of its own.
+
+- **Before the first submit attempt the user is right.** The submit button is enabled and no
+  error shows. A simple required field carries `required` (the asterisk) and nothing more; a rule
+  the user cannot guess - a format, a length, a range, an order between two dates - goes in `hint`
+  up front.
+- **The submit handler sets `submitted` first, then validates the whole form.** When it fails,
+  every invalid field shows its error at once, focus moves to the first invalid field in DOM order,
+  and nothing is sent.
+- **From then on the form is live**: `[disabled]="submitted() && invalid()"`, so fixing a field
+  clears its error and re-enables the button at once. Reset `submitted` when the form is opened or
+  reset for new data.
+- **In flight, `[loading]` alone.** A loading `ds-button` blocks presses and keeps focus; never put
+  the loading flag in `[disabled]`.
+- **Drive the message with an `error` string computed from the flag**:
+  `nameError = computed(() => submitted() && !name().trim() ? 'Enter a name.' : '')`. A form
+  model's own errors follow `touched` (above) and so appear on blur; pass the text as `error` when
+  the form must stay silent until the submit.
+- **A button tied to one picker is not a form submit.** Choose an item, then "Add" / "Link" /
+  "Move": that button stays disabled until something is chosen, and so does a button waiting on a
+  state no field can fix.
+
 ---
 
 ## 7. Overriding a component
