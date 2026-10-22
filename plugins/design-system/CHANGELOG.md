@@ -4,6 +4,27 @@ Versioning: **patch** = instruction/prompt fixes; **minor** = new capability (pi
 source, agent); **major** = a change to the workflow's behavior contract. Bump `plugin.json` +
 `marketplace.json` together on every published change.
 
+## 1.19.0 - 2026-10-22
+
+### Added
+
+- **Phase A step 3: one step to a spec ahead of the lock.** When `package.json` already names a
+  published stable above the locked version (a hand-migrated consumer), the run offers a single
+  step to it: whole-chain plan and pre-pass, one bump, the whole-chain re-check, one commit.
+
+### Fixed
+
+- **Phase A step 9 installs the locked version for the baseline when the spec is ahead of it**
+  (`npm install --no-save <pkg>@<current>`, or the exact spec and a mutating install elsewhere).
+- **The lint step is skipped without asking when its data has no entry in the chain's range**,
+  the tools-dir download included.
+- **A named agent the session does not register** runs as a general-purpose subagent with its
+  agent file as the prompt, or inline without a Task tool.
+- **`ds-recheck` resolves a bound value** (`[disabled]="!canSubmit()"`) through the component's
+  computeds and methods before judging a behavioral item.
+- **`ds-migration-planner` passes a manifest's optional `evidence` through verbatim** on items and
+  object `informational` entries.
+
 ## 1.18.0 - 2026-10-20
 
 ### Changed
