@@ -93,5 +93,6 @@ worth auto-firing on our cadence.
 
 `bun-bin` / `bun-cache` (installs), `angular` (`.angular/cache`, speeds up
 `ng build`), `angular-elements` (the same directory for the design-sync bundle step,
-whose `ds-elements` build never reaches `angular`), and `dist-ds` (`dist/ds` keyed on library
+whose `ds-elements` build never reaches `angular`), `apk-chromium` (the chromium
+packages `build-design-sync.sh` installs), and `dist-ds` (`dist/ds` keyed on library
 sources, lets a docs-only change reuse the built library).

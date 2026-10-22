@@ -61,7 +61,10 @@ command -v git > /dev/null || { echo "git is not available, so the upload tree c
 step "Making a browser available"
 CHROME_BIN="${CHROME_BIN:-$(command -v chromium-browser || command -v chromium || true)}"
 if [ -z "$CHROME_BIN" ]; then
-  apk add --no-cache chromium nss freetype harfbuzz ttf-freefont > /dev/null
+  # The packages come from the pipeline's apk cache; --update-cache keeps a stale index in it from
+  # pinning an older chromium than a fresh install would get.
+  mkdir -p "$HOME/.cache/apk"
+  apk add --update-cache --cache-dir "$HOME/.cache/apk" chromium nss freetype harfbuzz ttf-freefont > /dev/null
   CHROME_BIN="$(command -v chromium-browser || command -v chromium || true)"
 fi
 export CHROME_BIN
