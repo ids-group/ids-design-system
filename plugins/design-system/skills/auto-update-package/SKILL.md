@@ -247,6 +247,12 @@ while the wave runs. Collect the whole wave before Phase B.
 3. **Installed version.** Read the EXACT locked version of the dependency from the lockfile (not
    the `package.json` range). Record as `current`. If the install is a git/tarball/`file:`/`link:`
    (no plain semver) → report it and ask how to proceed; do not guess.
+   **Spec ahead of the lock (hand-migrated):** when the `package.json` spec is a published stable
+   above `current`, the code may already be migrated to it, and the per-version loop would set the
+   spec back. Ask (AskUserQuestion): the per-version loop, or **one step** to the spec version. One
+   step plans and pre-passes the whole chain as usual (steps 10-12), then runs Phase B once with
+   V = the spec version: every chain item in one pass, each with its own version's trees, the lint
+   range `current` to V, one bump and install, the whole-chain re-check, one commit.
 4. **Package manager** from the lockfile: `bun.lock`→bun, `package-lock.json`→npm,
    `yarn.lock`→yarn, `pnpm-lock.yaml`→pnpm.
 5. **Verify command, PER TARGET,** from each target's `package.json` scripts: prefer a
