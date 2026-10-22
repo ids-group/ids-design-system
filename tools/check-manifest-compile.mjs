@@ -28,11 +28,12 @@
 // manifest, a fixture that is not `.ts`, and an entry of `migrations/unreleased.json` naming a TS
 // or compile-time NG code that its fixture does not assert.
 //
-//   node tools/check-manifest-compile.mjs            # every fixture, plus the unreleased draft
-//   node tools/check-manifest-compile.mjs --audit    # the same, then every published entry whose
+//   node tools/check-manifest-compile.mjs            # what can have moved since the last release
+//   node tools/check-manifest-compile.mjs --all      # every fixture
+//   node tools/check-manifest-compile.mjs --audit    # every fixture, then every published entry whose
 //                                                    # TS/NG-code claim no fixture asserts; exits 0
 import { NgtscProgram } from '@angular/compiler-cli';
-import { spawn } from 'node:child_process';
+import { execFileSync, spawn } from 'node:child_process';
 import {
   existsSync,
   mkdirSync,
@@ -52,6 +53,7 @@ const MIGRATIONS = resolve(
 );
 const FIXTURES = join(MIGRATIONS, 'fixtures');
 const AUDIT = process.argv.includes('--audit');
+const ALL = AUDIT || process.argv.includes('--all');
 const PACKAGE = '@ids-group-ltd/ids-design-system';
 const WORKING_TREE = 'the working tree';
 const VERSION_FOLDER = /^(\d+\.\d+\.\d+(?:-[0-9A-Za-z.]+)?|unreleased)$/;
@@ -451,7 +453,50 @@ function uncovered(version, fixtures) {
 }
 
 const fixtures = collectFixtures();
-await runFixtures(fixtures);
+
+// A published fixture compiled against two immutable tags gives the same verdict on every run, so
+// the gate compiles only what can have moved since the last release: the draft's fixtures, a
+// fixture or manifest edited since that tag, and every fixture when this checker, the compiler or
+// the lockfile changed. A migrations folder other than the repository's (the selftest) runs all.
+const TOOL_INPUTS = [
+  'tools/check-manifest-compile.mjs',
+  'package.json',
+  'package-lock.json',
+  'bun.lock',
+];
+function changedSinceLastRelease() {
+  const last = process.env.DS_COMPILE_SINCE || tags.at(-1);
+  if (ALL || !last || MIGRATIONS !== resolve(ROOT, 'migrations')) return null;
+  const lines = (args) =>
+    execFileSync('git', ['-C', ROOT, ...args], { encoding: 'utf8' })
+      .split('\n')
+      .filter(Boolean);
+  const changed = new Set([
+    ...lines(['diff', '--name-only', last, '--', 'migrations', ...TOOL_INPUTS]),
+    ...lines([
+      'ls-files',
+      '--others',
+      '--exclude-standard',
+      '--',
+      'migrations',
+    ]),
+  ]);
+  return TOOL_INPUTS.some((path) => changed.has(path)) ? null : changed;
+}
+const changed = changedSinceLastRelease();
+const selected = changed
+  ? fixtures.filter(
+      (fixture) =>
+        fixture.version === 'unreleased' ||
+        changed.has(`migrations/${fixture.name}`) ||
+        changed.has(`migrations/${fixture.version}.json`),
+    )
+  : fixtures;
+if (selected.length < fixtures.length)
+  console.log(
+    `check-manifest-compile: ${selected.length} of ${fixtures.length} fixture(s) can have moved since ${process.env.DS_COMPILE_SINCE || tags.at(-1)}; --all compiles every one`,
+  );
+await runFixtures(selected);
 
 const draftGaps = uncovered('unreleased', fixtures);
 problems.push(
@@ -462,7 +507,7 @@ problems.push(
 );
 
 console.log(
-  `check-manifest-compile: ${fixtures.length} fixture(s) compiled at both ends of their boundary`,
+  `check-manifest-compile: ${selected.length} fixture(s) compiled at both ends of their boundary`,
 );
 for (const line of results) console.log(`  ${line}`);
 
