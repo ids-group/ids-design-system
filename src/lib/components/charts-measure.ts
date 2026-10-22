@@ -62,6 +62,23 @@ export function readOnHostResize<T>(
   return value.asReadonly();
 }
 
+const fontsReady = signal(false);
+let fontsWatched = false;
+
+/** `true` once the page's web fonts have loaded, for an effect that measures rendered text: reading
+ *  it re-runs the measure taken against the fallback face. The wait starts on the first call, so
+ *  call it in the browser, after the text it measures has rendered.
+ *
+ *  @internal */
+export function fontsLoaded(): boolean {
+  if (!fontsWatched) {
+    fontsWatched = true;
+    void document.fonts?.ready.then(() => fontsReady.set(true));
+  }
+
+  return fontsReady();
+}
+
 const widths = new WeakMap<Element, WritableSignal<number>>();
 let observer: ResizeObserver | null = null;
 

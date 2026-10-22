@@ -1,5 +1,13 @@
 ## Unreleased
 
+### Fixed
+
+- **`ds-chart` and `ds-column-chart` size the value-axis gutter for the web font.** The tick labels
+  were measured once, when they first rendered, so on a page whose web font arrived after the chart
+  the gutter kept the width of the fallback face, and a label wider in the real face could be
+  clipped. The labels are measured again once the page's fonts have loaded. Nothing to change in
+  your code.
+
 ## 1.0.1 — 2026-10-22
 
 ### Changed

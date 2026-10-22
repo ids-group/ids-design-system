@@ -222,9 +222,19 @@ comments — 219 KB of the same three blocks. Tree 20 MB → 9.0 MB.
   `git status` empty.
 - **A built section is not a settled one.** Components that measure write their
   result later — Table's sticky scrollbar pins `.scroll-wrap` to a computed height —
-  so the tidy pass waits for `document.fonts.ready` and then for the DOM to stop
-  changing (a MutationObserver with a 150 ms quiet window, 5 s cap). Counting frames
-  instead froze that one card three different ways in three runs.
+  and a chart draws at a fallback width until its ResizeObserver reports — so the
+  tidy pass and the height probe share one wait (`tools/lib/settle.mjs`):
+  `document.fonts.ready`, then a DOM that has not changed for 150 ms AND for 3
+  frames, 300 frames at most. Neither half alone is enough: counting frames alone
+  froze Table three different ways in three runs, and a quiet window alone can pass
+  before a ResizeObserver or IntersectionObserver has delivered, since both deliver
+  only in a frame.
+- **Real clock, one window per lane.** A virtual clock ran timers far ahead of the
+  frames and froze rendering when its budget ran out, and a background tab gets no
+  frames at all, so whether a chart had measured itself by the read was a race
+  between lanes. Each lane is its own window, navigated card to card, and the tool
+  reads a card when the page says it has settled. A window per card is a fresh
+  renderer per card: 48 s against 13 s for 60 cards (measured 2026-10-22).
 
 ### The gates that keep CI from thawing it
 

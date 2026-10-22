@@ -11,7 +11,7 @@
 //
 // One browser per card, deliberately. Eight cards as iframes in one page was the first attempt and
 // Chrome returned an empty DOM: each card pulls the whole 2 MB bundle and runs its own Angular
-// application, and virtual time does not advance while those are in flight.
+// application.
 //
 //   node .design-sync/tools/measure-cards.mjs
 //
@@ -23,6 +23,7 @@ import { existsSync, readFileSync, statSync, writeFileSync } from 'node:fs';
 import { dirname, extname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { launchBrowser } from './lib/browser.mjs';
+import { WHEN_SETTLED, readWhen } from './lib/settle.mjs';
 
 const here = dirname(fileURLToPath(import.meta.url));
 const syncDir = resolve(here, '..');
@@ -82,24 +83,28 @@ const REPORTER = `
 <script>
   (function () {
     var t0 = Date.now();
+    // Asked of the OTHER scripts: this one names the slicer's marker too, and a frozen card has no
+    // slicer, so a match on the whole document waits out the 20 s below on every frozen card.
+    var reporter = document.currentScript;
+    var needsSlice = Array.prototype.some.call(document.scripts, function (script) {
+      return script !== reporter && script.textContent.indexOf('var OWNS =') >= 0;
+    });
     (function settle() {
       var page = document.querySelector('.ds-page');
       var rendered = page && page.firstElementChild && page.firstElementChild.firstElementChild;
       var slices = document.documentElement.hasAttribute('data-ds-sliced');
-      var needsSlice = document.documentElement.innerHTML.indexOf('var OWNS =') >= 0;
       if ((!rendered || (needsSlice && !slices)) && Date.now() - t0 < 20000) {
         return setTimeout(settle, 50);
       }
       var kept = document.documentElement.getAttribute('data-ds-kept');
       // Web fonts land AFTER the section renders, and Mulish is taller than the fallback: measuring
       // on sight came out 20px short on twenty-two cards, which then declared a viewport the pane
-      // had to scroll. Found by measuring a card twice, before and after fonts.ready.
-      document.fonts.ready.then(function () {
-        setTimeout(function () {
-          document.title = 'H=' + (page ? page.offsetHeight : 0) + ';K=' + (kept === null ? '-' : kept);
-        }, 50);
+      // had to scroll.
+      whenSettled(function () {
+        document.title = 'H=' + (page ? page.offsetHeight : 0) + ';K=' + (kept === null ? '-' : kept);
       });
     })();
+    ${WHEN_SETTLED}
   })();
 </script>
 `;
@@ -143,11 +148,13 @@ const heights = {};
 const LANES = Number(process.env.SNAPSHOT_LANES) || 5;
 
 // The probe writes its numbers into the title, which is one small string to read back rather than
-// a whole DOM. Read after the virtual clock stops, so it must not wait for anything.
+// a whole DOM.
+const READ = readWhen("document.title.indexOf('H=') === 0", 'document.title');
+
 async function measure(card) {
   const title = await browser.render(
     `http://127.0.0.1:${PORT}${card.url}`,
-    'document.title',
+    READ,
   );
   const reported = title.match(/^H=(\d+);K=(\d+|-)$/);
 

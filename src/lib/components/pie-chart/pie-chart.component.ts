@@ -24,6 +24,7 @@ import { NgTemplateOutlet } from '@angular/common';
 import {
   CHART_SERIES_COLORS,
   chartTiming,
+  fontsLoaded,
   describeSeries,
   formatWholePercent,
   largestRemainder,
@@ -76,17 +77,8 @@ const SLICE_HOVER_SHIFT = 3;
 // The value keeps a margin from the inner edge of the ring.
 const CENTER_VALUE_HOLE_SHARE = 0.9;
 
-// One canvas and one font-load wait for every pie chart on the page.
+// One canvas for every pie chart on the page.
 let measureContext: CanvasRenderingContext2D | null | undefined;
-const fontsLoaded = signal(false);
-let fontsWatched = false;
-
-function watchFontsOnce(): void {
-  if (!fontsWatched) {
-    fontsWatched = true;
-    void document.fonts?.ready.then(() => fontsLoaded.set(true));
-  }
-}
 
 @Component({
   selector: 'ds-pie-chart',
@@ -587,13 +579,12 @@ export class PieChartComponent
     const full = this.shownCenterValue();
     const compact = this.compactCenterValue();
     const hole = this.hole();
-    fontsLoaded();
     if (!value || !this.fitsInside() || ringWidth === 0) {
       this.centerFit.set(null);
 
       return;
     }
-    watchFontsOnce();
+    fontsLoaded();
     this.centerFit.set(
       untracked(() => this.fitCenter(value, ringWidth, full, compact, hole)),
     );

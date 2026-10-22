@@ -410,6 +410,9 @@ export function focusMark(scope: Element | null, index: number, within = ''): vo
 export function focusRescue(): (target: () => HTMLElement | null | undefined) => void;
 
 // @internal
+export function fontsLoaded(): boolean;
+
+// @internal
 export function formatPercent(value: number, total: number, locale: string): string;
 
 // @internal
