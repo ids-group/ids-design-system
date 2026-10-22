@@ -1,6 +1,6 @@
 {
   "name": "@ids-group-ltd/ids-design-system",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "The IDS Design System as custom elements with generated React wrappers — built for claude.ai/design by design-sync. Nothing here is hand-written: gen.mjs reads the components' AST and emits both the registrations and the wrappers.",
   "private": true,
   "type": "module",

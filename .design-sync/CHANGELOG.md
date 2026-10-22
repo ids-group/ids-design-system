@@ -17,6 +17,8 @@ holds an entry; what the release bot commits afterwards needs none.
 
 ## Unreleased
 
+## 1.0.1 — 2026-10-22
+
 ### Cards
 
 - **`[dsSubmitted]` is gone from the manual surface.** The design agent no longer offers the

@@ -1,5 +1,7 @@
 ## Unreleased
 
+## 1.0.1 — 2026-10-22
+
 ### Changed
 
 - **Validation errors show once a field is touched; `[dsSubmitted]` and `DS_SUBMITTED` are
