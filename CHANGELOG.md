@@ -1,5 +1,13 @@
 ## Unreleased
 
+### Fixed
+
+- **Dark theme shadows are dark.** `--shadow-1` to `--shadow-4` (and every `--shadow-*` and
+  `--ds-elevation-*` alias built on them) rendered as a light glow around cards, popovers, tooltips,
+  toasts, modals and drawers. Under `data-theme="dark"` they are now near-black at 30% to 60% alpha,
+  and `--shadow-4` (modal, drawer) adds a 1px light hairline at 8% alpha as the surface edge.
+  `--shadow-tint-l` is `3%` in the dark theme. Nothing to change in your code.
+
 ## 1.0.1 — 2026-10-22
 
 ### Changed

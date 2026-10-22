@@ -1,0 +1,11 @@
+{
+  "version": "unreleased",
+  "items": [],
+  "informational": [
+    {
+      "text": "Under `data-theme=\"dark\"`, `--shadow-1` to `--shadow-4` and every `--shadow-*` and `--ds-elevation-*` alias built on them are near-black at 30% to 60% alpha instead of a light glow, `--shadow-4` adds a 1px light hairline at 8% alpha, and `--shadow-tint-l` is `3%`.",
+      "verify": "In the dark theme open a modal and a popover and read their computed box-shadow: every layer is a dark rgba, and the modal's first layer is `0 0 0 1px` at 0.08 alpha."
+    }
+  ],
+  "deleteList": []
+}

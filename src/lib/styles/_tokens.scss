@@ -59,7 +59,7 @@
   --focus-ring-radius:    var(--ds-radius-inner);
 
   /* Composed from a channel-split tint so a theme can re-colour them (-h/-s are theme-independent, -l comes
-     from each theme's palette). Constant alphas make the same values read as glows over dark surfaces. */
+     from each theme's palette). The dark theme redeclares all four with its own alphas. */
   --shadow-1: 0 1px 2px  hsl(var(--shadow-tint-h) var(--shadow-tint-s) var(--shadow-tint-l) / 6%),
               0 1px 3px  hsl(var(--shadow-tint-h) var(--shadow-tint-s) var(--shadow-tint-l) / 8%);
   --shadow-2: 0 4px 8px  hsl(var(--shadow-tint-h) var(--shadow-tint-s) var(--shadow-tint-l) / 6%),
