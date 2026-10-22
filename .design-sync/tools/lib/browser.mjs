@@ -6,10 +6,10 @@
 // made lanes safe is still there (a hung page closes with its target and cannot reach another),
 // but nothing pays for a process start.
 //
-// `--virtual-time-budget` is a process-level flag and cannot come with it, but CDP has the same
-// thing per target: `Emulation.setVirtualTimePolicy`. It is not an optimisation, it is required —
-// the page scripts wait on `setTimeout` chains of up to 20s, and on a real clock a run that took
-// three minutes took twenty-five instead.
+// The clock is the real one, and each tab is its own window. Virtual time ran timers far ahead of
+// rendering and froze it at the budget, and a background tab gets no frames at all, so whether a
+// ResizeObserver or IntersectionObserver had delivered by the read was a race between lanes. The
+// read is the caller's Promise instead: it resolves when the page says it has settled.
 import { spawn, spawnSync } from 'node:child_process';
 import { mkdtempSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
@@ -208,10 +208,9 @@ export async function launchBrowser({
     });
 
   return {
-    /** Opens a tab on `url`, runs its scripts under a virtual clock until `budget` virtual ms have
-     *  passed, then evaluates `expression` and closes the tab. `expression` is read AFTER time has
-     *  stopped, so it must be synchronous — a Promise on a paused clock never settles. */
-    async render(url, expression, { timeout = 60000, budget = 25000 } = {}) {
+    /** Opens a window on `url`, evaluates `expression` once the page has loaded and closes it. A
+     *  Promise it returns is awaited, so the page decides when it is ready to be read. */
+    async render(url, expression, { timeout = 60000 } = {}) {
       // Inside the try with everything else: opening the tab used to throw past the caller, which
       // rejected its lane and tore the browser down under the four still rendering — losing the
       // whole run and the tool's own report of what failed.
@@ -220,44 +219,27 @@ export async function launchBrowser({
       try {
         ({ targetId } = await send('Target.createTarget', {
           url: 'about:blank',
+          newWindow: true,
         }));
         ({ sessionId } = await send('Target.attachToTarget', {
           targetId,
           flatten: true,
         }));
         await send('Page.enable', {}, sessionId);
-        // Paused BEFORE the navigation so the page's first frame already runs on the virtual clock;
-        // granting the budget after it is what starts time moving.
-        await send(
-          'Emulation.setVirtualTimePolicy',
-          { policy: 'pause' },
-          sessionId,
-        );
-        // The catch is on the WAITER, not on the await below: if navigating or granting the budget
-        // rejects first, control leaves before `await expired`, and its own timeout then rejects a
-        // promise nobody is holding — an unhandled rejection, which Node turns into a dead process
-        // a minute later, in the middle of an otherwise fine run.
-        const expired = once(
-          'Emulation.virtualTimeBudgetExpired',
-          sessionId,
-          timeout,
-        );
-        expired.catch(() => {});
+        // The catch is on the WAITER, not on the await below: if navigating rejects first, control
+        // leaves before `await loaded`, and its own timeout then rejects a promise nobody is
+        // holding — an unhandled rejection, which Node turns into a dead process a minute later,
+        // in the middle of an otherwise fine run.
+        const loaded = once('Page.loadEventFired', sessionId, timeout);
+        loaded.catch(() => {});
         await send('Page.navigate', { url }, sessionId);
-        await send(
-          'Emulation.setVirtualTimePolicy',
-          {
-            policy: 'pauseIfNetworkFetchesPending',
-            budget,
-          },
-          sessionId,
-        );
-        await expired;
+        await loaded;
         const { result, exceptionDetails } = await send(
           'Runtime.evaluate',
           {
             expression,
             returnByValue: true,
+            awaitPromise: true,
           },
           sessionId,
         );

@@ -17,6 +17,7 @@ import { existsSync, readFileSync, statSync, writeFileSync } from 'node:fs';
 import { dirname, extname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { launchBrowser } from './lib/browser.mjs';
+import { WHEN_SETTLED, readWhen } from './lib/settle.mjs';
 
 const here = dirname(fileURLToPath(import.meta.url));
 const syncDir = resolve(here, '..');
@@ -85,7 +86,9 @@ const cards = JSON.parse(
 // type specimen, `pre-wrap` on the breadcrumb separator and the token tiles, `pre-line` in the token
 // reference - so it is collapsed HERE, in the page, where the computed style says which is which.
 // A run collapsed to ONE space renders identically: that is what the browser does with it anyway.
-const TIDY = `
+// `String.raw`, or `\n` and `\s` in the regexps below reach the page as a newline and an `s`, and
+// the whole script is a SyntaxError.
+const TIDY = String.raw`
 <script>
   (function () {
     var t0 = Date.now();
@@ -93,29 +96,9 @@ const TIDY = `
       if (!document.documentElement.hasAttribute('data-ds-sliced') && Date.now() - t0 < 20000) {
         return setTimeout(ready, 25);
       }
-      // Built is not settled: a component that MEASURES writes its result later - Table's sticky
-      // scrollbar pins '.scroll-wrap' to a computed height. Fonts first, because a measure taken
-      // against the fallback face is the wrong number.
-      return document.fonts.ready.then(function () {
-        var quiet = null;
-        var observer = new MutationObserver(function () {
-          clearTimeout(quiet);
-          quiet = setTimeout(done, 150);
-        });
-        observer.observe(document.body, { subtree: true, childList: true, attributes: true, characterData: true });
-        quiet = setTimeout(done, 150);
-        var hardStop = setTimeout(done, 5000);
-        var finished = false;
-        function done() {
-          if (finished) return;
-          finished = true;
-          clearTimeout(quiet);
-          clearTimeout(hardStop);
-          observer.disconnect();
-          tidy();
-        }
-      });
+      whenSettled(tidy);
     })();
+    ${WHEN_SETTLED}
     function tidy() {
       var walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
       var pending = [];
@@ -162,13 +145,15 @@ const server = createServer((request, response) => {
   return response.end(readFileSync(file));
 });
 
-// Read after the virtual clock has stopped, so it cannot wait for anything — the tidied attribute
-// is either there or the card did not settle, and the caller treats the latter as a failure.
-// The doctype is prepended HERE rather than in the page: `--dump-dom` printed one and
+// Waits for the tidied attribute; a dump without it did not settle, and the caller treats that as
+// a failure. The doctype is prepended HERE rather than in the page: `--dump-dom` printed one and
 // `outerHTML` does not, and building the string in the page needs an escaped newline that the
 // template literal around it silently turns into a real one — an unterminated string literal,
 // which is a page-side SyntaxError that returns an empty card for every single one of them.
-const DUMP = 'document.documentElement.outerHTML';
+const DUMP = readWhen(
+  "document.documentElement.hasAttribute('data-ds-tidied')",
+  'document.documentElement.outerHTML',
+);
 
 const render = async (path) => {
   const html = await browser.render(
@@ -244,7 +229,8 @@ async function lane() {
     const dom = await render(path);
     // `data-ds-tidied` is the last thing set, after the card's own script has finished slicing.
     // Without it the page was caught mid-boot and the snapshot would freeze a half-built section.
-    if (!dom.includes('data-ds-tidied')) {
+    // Matched on the root element: the injected script's own source names the attribute too.
+    if (!/^<!DOCTYPE html>\s*<html[^>]*\sdata-ds-tidied="/.test(dom)) {
       failed.push(path);
       continue;
     }
