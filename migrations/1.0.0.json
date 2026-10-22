@@ -16,7 +16,8 @@
         "[formControl]",
         "ngModel",
         "markAllAsTouched",
-        "submitted"
+        "submitted",
+        "<ds-date-picker"
       ],
       "detect": [
         "markAllAsTouched()",
@@ -24,13 +25,14 @@
         "(pressed)=",
         "(ngSubmit)=",
         "submitted = signal(",
-        "submitAttempted"
+        "submitAttempted",
+        "<ds-date-picker"
       ],
-      "action": "Put `[dsSubmitted]=\"submitted()\"` on every element that holds validated DS fields, usually the `<form>`, where `submitted` is the flag the submit handler sets to true at its start and the form reset sets back to false. Where the component has no such flag, add one in its own state idiom (`submitted = signal(false)`) and set it at the start of the submit or (pressed) handler. A reactive or template-driven `<form>` shows its errors without the flag only when its save runs from (ngSubmit) and a `type=\"submit\"` button fires it; a ds-button is `type=\"button\"` by default, so a reactive form saved from (pressed) or (click), markAllAsTouched() included, gets the flag even inside `<form [formGroup]>`. A group of fields meant to show its errors while the user types gets `[dsSubmitted]=\"true\"`.",
+      "action": "Put `[dsSubmitted]=\"submitted()\"` on every element that holds validated DS fields, usually the `<form>`, where `submitted` is the flag the submit handler sets to true at its start and the form reset sets back to false. Where the component has no such flag, add one in its own state idiom (`submitted = signal(false)`) and set it at the start of the submit or (pressed) handler. A reactive or template-driven `<form>` shows its errors without the flag only when its save runs from (ngSubmit) and a `type=\"submit\"` button fires it; a ds-button is `type=\"button\"` by default, so a reactive form saved from (pressed) or (click), markAllAsTouched() included, gets the flag even inside `<form [formGroup]>`. A group of fields meant to show its errors while the user types gets `[dsSubmitted]=\"true\"`. A `ds-date-picker` with no form model, bound by `[value]` and `(valueChange)`, shows its unparseable-date error only under a `[dsSubmitted]` host as well: inside a form saved by a button it takes that form's flag, and a picker whose value applies at once, such as a filter, gets `[dsSubmitted]=\"true\"`.",
       "appliesWhen": "Every field bound to a form model through signal forms, `[formControl]`, `formControlName` or `ngModel`: input, textarea, select, autocomplete, multi-select, checkbox, radio, radio-group, switch, slider, segmented, date-picker, time-picker, color-picker, otp-input. Also the unparseable-date error of `ds-date-picker`. Not affected: an `error` string, `[invalid]` set with no validation errors behind it, `warning` and `hint`, which show as before.",
-      "pitfall": "A signal form with no `[dsSubmitted]` host shows no validation error at all, before or after a submit, and a reactive form that reveals its errors with markAllAsTouched() from a (pressed) or (click) handler does the same: the submit that fails validation looks like a dead button. A flag set after an awaited call reveals the errors only when that call returns.",
+      "pitfall": "A signal form with no `[dsSubmitted]` host shows no validation error at all, before or after a submit, and a reactive form that reveals its errors with markAllAsTouched() from a (pressed) or (click) handler does the same: the submit that fails validation looks like a dead button. A flag set after an awaited call reveals the errors only when that call returns. After a native submit, `FormGroupDirective.submitted` stays true through `FormGroup.reset()`: a form reset that way and opened again shows its errors at once, so reset it with `resetForm()`.",
       "restore": null,
-      "verify": "Every element holding DS fields bound to a form model sits under a `[dsSubmitted]` host or inside a `<form>` submitted through (ngSubmit), and a submit with an empty required field shows that field's error and none shows before it.",
+      "verify": "Every element holding DS fields bound to a form model sits under a `[dsSubmitted]` host or inside a `<form>` submitted through (ngSubmit), and a submit with an empty required field shows that field's error and none shows before it. Every `ds-date-picker` is bound to a form model, sits under a `[dsSubmitted]` host, or sits inside a `<form>` submitted through (ngSubmit).",
       "note": "Errors no longer follow `touched`: leaving a field never reveals one. Validation errors, the error paint and `aria-invalid` wait for the flag, and from then on follow the form live."
     },
     {
