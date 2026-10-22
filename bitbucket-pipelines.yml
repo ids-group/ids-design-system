@@ -32,6 +32,14 @@ definitions:
           - bun.lock
           - angular.json
       path: .angular/cache
+    # Its own entry, because a cache is saved only while its key has none: the docs build saves
+    # `angular` first, so the bundle step's ds-elements build never reached it.
+    angular-elements:
+      key:
+        files:
+          - bun.lock
+          - angular.json
+      path: .angular/cache
     # eslint and stylelint `--cache` (package.json scripts). Their cache sees a file's content and the
     # config, not the code of the repo's own rule plugins, so those are in the key; locally, delete
     # `.cache/` after editing a rule under eslint/, eslint-rules/ or stylelint/.
@@ -201,7 +209,7 @@ pipelines:
               - npm
               - bun-bin
               - bun-cache
-              - angular
+              - angular-elements
             artifacts:
               - .design-sync/elements/dist/**
             script:
