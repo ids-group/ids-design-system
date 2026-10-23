@@ -265,9 +265,13 @@ export class TimeColumnsComponent {
     if (event.ctrlKey || event.deltaY === 0 || !second) {
       return;
     }
+    this.onUserScroll(event);
+    // A column that does not loop scrolls at the browser's own wheel speed.
+    if (!column.classList.contains('loops')) {
+      return;
+    }
     // Snapping pulls a sub-row scroll back to the row it left, so the deltas add up and the column moves by whole rows.
     event.preventDefault();
-    this.onUserScroll(event);
     const rowPitch = second.offsetTop - first.offsetTop;
     const pixels =
       event.deltaMode === WheelEvent.DOM_DELTA_LINE

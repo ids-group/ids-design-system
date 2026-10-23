@@ -9,6 +9,11 @@
   trailing icon when there is no leading one, and `'replace'` keeps the centred spinner on every
   button. Neither mode changes the button's size or moves its label. To keep the centred spinner on
   a button with an icon, bind `loadingMode="replace"`.
+- **A `ds-time-picker` column that does not loop scrolls at the browser's wheel speed.** Every
+  column turned one wheel notch into about one row; a column that loops still does, so it reads
+  as a drum, while one with `loop="never"` now scrolls as far
+  as any list, still snapping to a cell. Measured on a 34px row, a 100px notch moves it about
+  three rows instead of one. Nothing to change in your code.
 
 ### Fixed
 
