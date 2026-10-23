@@ -57,7 +57,7 @@
   background: transparent;
   border: 0;
 
-  // Square: a radius here cannot be concentric with the panel's and leaves corner slivers. The menu clips the fill.
+  // Square: a radius here cannot be concentric with the panel's and leaves corner slivers. Edge rows follow the clip.
   border-radius: var(--ds-menu-item-radius, 0);
   font: var(--_menu-item-label-font-weight) var(--_menu-item-label-font-size) / var(--line-height-base) var(--font-sans);
   color: var(--_menu-item-label-color);
@@ -65,11 +65,22 @@
   text-align: left;
   transition: background-color var(--duration-fast) var(--ease-standard);
 
+  :host(:first-child) & {
+    border-start-start-radius: var(--ds-menu-item-radius, var(--_menu-edge-radius, 0));
+    border-start-end-radius: var(--ds-menu-item-radius, var(--_menu-edge-radius, 0));
+  }
+
+  :host(:last-child) & {
+    border-end-start-radius: var(--ds-menu-item-radius, var(--_menu-edge-radius, 0));
+    border-end-end-radius: var(--ds-menu-item-radius, var(--_menu-edge-radius, 0));
+  }
+
   &:hover { background: var(--_menu-item-hover-bg-color); }
 
   &:active:not(.disabled) { background: var(--surface-muted); }
 
-  &:focus-visible { @include focus.ring; }
+  // Inset: the menu clips at its edge, so an outer ring loses its sides and corners there.
+  &:focus-visible { @include focus.ring(calc(-1 * var(--focus-ring-width))); }
 
   &.disabled {
     color: var(--text-disabled);
