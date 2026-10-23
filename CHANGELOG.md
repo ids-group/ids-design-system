@@ -17,6 +17,20 @@
 
 ### Fixed
 
+- **The first and last `ds-menu-item` round their corners with the menu.** The rows are square and
+  the menu clips them at its rounded edge, so the focus ring of the first or last item was cut off
+  at two corners and kept square ones at the other two. Those rows now take the menu's inner radius
+  and the ring is drawn inside the row. `--ds-menu-item-radius` still sets every row's radius.
+  Nothing to change in your code.
+- **`ds-menu` rows touch each other, so the pointer never falls between them.** The menu put a 2px
+  gap between rows, and a pointer resting in it hovered no row, so the hover fill flickered off
+  while moving down the list. `--ds-menu-gap` now defaults to `0px`, which makes the menu 2px
+  shorter per row boundary. A custom `--ds-menu-gap` brings the gap and its dead strip back.
+- **A looping `ds-time-picker` column marks the selected value once.** A column with fewer values
+  than fit in it, such as minutes at a 15-minute step, repeats its set so it can scroll round, and
+  every repeat of the selected value was filled. While scrolling, two filled cells four rows apart
+  were on screen at once. Only the one nearest the column's centre is filled now. Nothing to change
+  in your code.
 - **`ds-chart` and `ds-column-chart` size the value-axis gutter for the web font.** The tick labels
   were measured once, when they first rendered, so on a page whose web font arrived after the chart
   the gutter kept the width of the fallback face, and a label wider in the real face could be

@@ -5289,7 +5289,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--ds-menu-gap",
-        "value": "var(--space-0-5)",
+        "value": "0px",
         "notes": "Gap between menu items."
       },
       {
