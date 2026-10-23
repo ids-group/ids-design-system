@@ -14,6 +14,8 @@
   as a drum, while one with `loop="never"` now scrolls as far
   as any list, still snapping to a cell. Measured on a 34px row, a 100px notch moves it about
   three rows instead of one. Nothing to change in your code.
+- **Now in a single `ds-time-picker` picks the current time and closes the panel.** It used to set
+  the time and leave the panel open. A range panel stays open until Done, as before.
 
 ### Fixed
 
