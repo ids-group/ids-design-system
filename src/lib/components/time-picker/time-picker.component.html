@@ -36,7 +36,17 @@
           [attr.aria-describedby]="hintId()"
           (click)="onTriggerClick('start')">
           <span class="time-value">
-            {{ formatFor(rangeValue()[0]) || placeholder() }}
+            <span>
+              {{ formatFor(rangeValue()[0]) || placeholder() }}
+            </span>
+
+            @for (widest of widestValues(); track $index) {
+              <span
+                class="time-value-sizer"
+                aria-hidden="true">
+                {{ widest }}
+              </span>
+            }
           </span>
 
           <ds-icon
@@ -65,7 +75,17 @@
           [attr.aria-describedby]="hintId()"
           (click)="onTriggerClick('end')">
           <span class="time-value">
-            {{ formatFor(rangeValue()[1]) || placeholder() }}
+            <span>
+              {{ formatFor(rangeValue()[1]) || placeholder() }}
+            </span>
+
+            @for (widest of widestValues(); track $index) {
+              <span
+                class="time-value-sizer"
+                aria-hidden="true">
+                {{ widest }}
+              </span>
+            }
           </span>
 
           <ds-icon
@@ -94,7 +114,17 @@
         [attr.aria-describedby]="hintId()"
         (click)="onTriggerClick('single')">
         <span class="time-value">
-          {{ displayValue() }}
+          <span>
+            {{ displayValue() }}
+          </span>
+
+          @for (widest of widestValues(); track $index) {
+            <span
+              class="time-value-sizer"
+              aria-hidden="true">
+              {{ widest }}
+            </span>
+          }
         </span>
 
         <ds-field-status
