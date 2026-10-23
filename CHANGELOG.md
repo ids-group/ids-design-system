@@ -9,8 +9,8 @@
   trailing icon when there is no leading one, and `'replace'` keeps the centred spinner on every
   button. Neither mode changes the button's size or moves its label. To keep the centred spinner on
   a button with an icon, bind `loadingMode="replace"`.
-- **Now in a `ds-time-picker` panel picks the current time and closes the panel.** It used to set
-  the time and leave the panel open. In a range, it closes the panel of the end it set.
+- **Now in a single `ds-time-picker` picks the current time and closes the panel.** It used to set
+  the time and leave the panel open. A range panel stays open until Done, as before.
 
 ### Fixed
 
