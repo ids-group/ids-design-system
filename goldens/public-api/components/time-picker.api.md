@@ -79,6 +79,7 @@ export class TimePickerComponent extends DsControlValueAccessor<string | TimeRan
     protected readonly uid = `ds-timepicker-${++nextId}`;
     public readonly value = model<string | TimeRangeValue | null>(null);
     private readonly vcr;
+    protected readonly widestValues = computed(…);
 }
 
 export type TimePickerLoop = 'auto' | 'always' | 'never';
