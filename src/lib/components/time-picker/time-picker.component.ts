@@ -450,6 +450,7 @@ export class TimePickerComponent
       disabledTime: this.disabledTime(),
     };
     this.onPick(clampToRange(snapToStep(raw, this.minuteStep()), constraints));
+    this.close('select');
   }
 
   protected clear(event: Event): void {
