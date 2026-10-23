@@ -146,6 +146,15 @@
   font-size: var(--_time-picker-value-font-size);
   font-weight: var(--_time-picker-value-font-weight);
   font-variant-numeric: tabular-nums;
+  display: grid;
+
+  > * {
+    grid-area: 1 / 1;
+  }
+}
+
+.time-value-sizer {
+  visibility: hidden;
 }
 
 .time-clear {

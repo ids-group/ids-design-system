@@ -12,6 +12,10 @@
 
 ### Fixed
 
+- **A `ds-time-picker` field keeps its width when it is empty.** The trigger was as wide as its
+  text, so the `--:--` placeholder made it 10px narrower than a picked time and the field jumped
+  when a time was set or cleared; in 12-hour format AM and PM differed by about 1px too. The
+  trigger now reserves the width of its widest time. Nothing to change in your code.
 - **`ds-chart` and `ds-column-chart` size the value-axis gutter for the web font.** The tick labels
   were measured once, when they first rendered, so on a page whose web font arrived after the chart
   the gutter kept the width of the fallback face, and a label wider in the real face could be
