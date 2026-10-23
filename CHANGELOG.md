@@ -12,6 +12,11 @@
 
 ### Fixed
 
+- **The first and last `ds-menu-item` round their corners with the menu.** The rows are square and
+  the menu clips them at its rounded edge, so the focus ring of the first or last item was cut off
+  at two corners and kept square ones at the other two. Those rows now take the menu's inner radius
+  and the ring is drawn inside the row. `--ds-menu-item-radius` still sets every row's radius.
+  Nothing to change in your code.
 - **`ds-chart` and `ds-column-chart` size the value-axis gutter for the web font.** The tick labels
   were measured once, when they first rendered, so on a page whose web font arrived after the chart
   the gutter kept the width of the fallback face, and a label wider in the real face could be
