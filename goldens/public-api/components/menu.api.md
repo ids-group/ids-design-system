@@ -91,6 +91,6 @@ ds-menu-item {
     --ds-menu-item-padding-x: var(--space-3);
     --ds-menu-item-padding-y: var(--space-2);
     --ds-menu-item-quiet-label-color: var(--text-secondary);
-    --ds-menu-item-radius: 0;
+    --ds-menu-item-radius: 0 | var(--_menu-edge-radius, 0);
 }
 ```
