@@ -5,14 +5,16 @@
 <ng-template
   #loopCopy
   let-cells
-  let-pick="pick">
+  let-pick="pick"
+  let-firstCopy="firstCopy"
+  let-selectedCopy="selectedCopy">
   @for (copy of loopCopiesEachSide; track copy) {
     @for (cell of cells; track cell.value) {
       <!-- Not a button: a copy is never focused or announced, the real option is. -->
       <span
         class="opt"
         aria-hidden="true"
-        [class.is-selected]="cell.selected"
+        [class.is-selected]="cell.selected && firstCopy + copy === selectedCopy"
         [class.is-disabled]="cell.disabled"
         (click)="pick(cell)">
         {{ cell.label }}
@@ -35,7 +37,12 @@
   @if (hoursLoop()) {
     <ng-container
       [ngTemplateOutlet]="loopCopy"
-      [ngTemplateOutletContext]="{ $implicit: hourCells(), pick: pickHour }" />
+      [ngTemplateOutletContext]="{
+        $implicit: hourCells(),
+        pick: pickHour,
+        firstCopy: -loopCopiesEachSide.length,
+        selectedCopy: hoursSelectedCopy(),
+      }" />
   }
 
   @for (cell of hourCells(); track cell.value; let i = $index) {
@@ -44,7 +51,7 @@
       type="button"
       role="option"
       class="opt"
-      [class.is-selected]="cell.selected"
+      [class.is-selected]="cell.selected && hoursSelectedCopy() === 0"
       [attr.aria-selected]="cell.selected"
       [attr.tabindex]="i === hourEntry() ? 0 : -1"
       [disabled]="cell.disabled"
@@ -57,7 +64,12 @@
   @if (hoursLoop()) {
     <ng-container
       [ngTemplateOutlet]="loopCopy"
-      [ngTemplateOutletContext]="{ $implicit: hourCells(), pick: pickHour }" />
+      [ngTemplateOutletContext]="{
+        $implicit: hourCells(),
+        pick: pickHour,
+        firstCopy: 1,
+        selectedCopy: hoursSelectedCopy(),
+      }" />
   }
 </div>
 
@@ -78,6 +90,8 @@
       [ngTemplateOutletContext]="{
         $implicit: minuteCells(),
         pick: pickMinute,
+        firstCopy: -loopCopiesEachSide.length,
+        selectedCopy: minutesSelectedCopy(),
       }" />
   }
 
@@ -87,7 +101,7 @@
       type="button"
       role="option"
       class="opt"
-      [class.is-selected]="cell.selected"
+      [class.is-selected]="cell.selected && minutesSelectedCopy() === 0"
       [attr.aria-selected]="cell.selected"
       [attr.tabindex]="i === minuteEntry() ? 0 : -1"
       [disabled]="cell.disabled"
@@ -103,6 +117,8 @@
       [ngTemplateOutletContext]="{
         $implicit: minuteCells(),
         pick: pickMinute,
+        firstCopy: 1,
+        selectedCopy: minutesSelectedCopy(),
       }" />
   }
 </div>

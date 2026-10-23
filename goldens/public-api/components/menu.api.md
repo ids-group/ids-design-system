@@ -67,7 +67,7 @@ ds-menu {
     --ds-menu-bg-color: var(--surface-default);
     --ds-menu-border-color: var(--border-divider);
     --ds-menu-clip-radius: var(--radius-flat);
-    --ds-menu-gap: var(--space-0-5);
+    --ds-menu-gap: 0px;
     --ds-menu-max-width: none;
     --ds-menu-min-width: auto;
     --ds-menu-radius: var(--radius-md);
@@ -91,6 +91,6 @@ ds-menu-item {
     --ds-menu-item-padding-x: var(--space-3);
     --ds-menu-item-padding-y: var(--space-2);
     --ds-menu-item-quiet-label-color: var(--text-secondary);
-    --ds-menu-item-radius: 0;
+    --ds-menu-item-radius: 0 | var(--_menu-edge-radius, 0);
 }
 ```

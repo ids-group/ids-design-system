@@ -455,6 +455,10 @@ export class TimePickerComponent
       disabledTime: this.disabledTime(),
     };
     this.onPick(clampToRange(snapToStep(raw, this.minuteStep()), constraints));
+    // A range stays open for Done, so the other end can still be adjusted.
+    if (this.mode() === 'single') {
+      this.close('select');
+    }
   }
 
   protected clear(event: Event): void {
