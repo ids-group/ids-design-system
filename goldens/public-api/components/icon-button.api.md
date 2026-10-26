@@ -12,6 +12,7 @@ export class IconButtonComponent {
     public readonly ariaLabel = input.required<string>();
     protected readonly classes = computed(…);
     public readonly color = input<ButtonColor>('primary');
+    public readonly controlRef = viewChild.required<ElementRef<HTMLElement>>(…);
     public readonly disabled = input(false, { transform: booleanAttribute });
     public readonly icon = input.required<IconName>();
     protected readonly iconSize = computed(…);

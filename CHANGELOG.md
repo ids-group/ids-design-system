@@ -5,6 +5,9 @@
 - **`ds-icon-button` takes an `ariaHasPopup` input.** It sets `aria-haspopup` on the inner
   `<button>` and accepts the same values as `ds-button`: `'true'`, `'menu'`, `'listbox'`, `'tree'`,
   `'grid'`, `'dialog'` or `null`. Bind it on an icon button that opens a menu or another overlay.
+- **`ds-icon-button` exposes `controlRef`.** It is the inner `<button>` as an `ElementRef`, the same as
+  on `ds-button`, so an overlay can position against it and return focus to it: pass
+  `trigger.controlRef().nativeElement` to `toggle` of `ds-popover`.
 
 ### Changed
 
