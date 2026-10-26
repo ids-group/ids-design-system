@@ -54,6 +54,10 @@ export class IconButtonComponent {
     transform: (value: unknown) =>
       value == null ? null : booleanAttribute(value),
   });
+  /** `aria-haspopup` on the inner `<button>`; set when this button triggers an overlay. */
+  readonly ariaHasPopup = input<
+    'true' | 'menu' | 'listbox' | 'tree' | 'grid' | 'dialog' | null
+  >(null);
   /** `aria-expanded` on the inner `<button>`; bind to the open state. On the host it would land
    *  on a non-focusable wrapper. */
   readonly ariaExpanded = input<boolean | null>(null);
