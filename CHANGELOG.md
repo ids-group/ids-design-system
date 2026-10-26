@@ -46,6 +46,9 @@
   are focused.** A `ds-table` with `dsTableResize` set the range on a separator only while it held
   focus, so a screen reader reading the page met separators with no value. Nothing to change in your
   code.
+- **The `ds-date-picker` input announces as a combobox.** The input already declared a dialog popup
+  and an expanded state, which a plain text box does not support; it now carries `role="combobox"`.
+  Typing a date works as before. Nothing to change in your code.
 
 ## 1.0.1 — 2026-10-22
 
