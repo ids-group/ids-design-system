@@ -1,5 +1,11 @@
 ## Unreleased
 
+### Added
+
+- **`ds-icon-button` takes an `ariaHasPopup` input.** It sets `aria-haspopup` on the inner
+  `<button>` and accepts the same values as `ds-button`: `'true'`, `'menu'`, `'listbox'`, `'tree'`,
+  `'grid'`, `'dialog'` or `null`. Bind it on an icon button that opens a menu or another overlay.
+
 ### Changed
 
 - **A loading `ds-button` with an `icon` keeps its label and spins in the icon's place.** The
@@ -16,12 +22,6 @@
   three rows instead of one. Nothing to change in your code.
 - **Now in a single `ds-time-picker` picks the current time and closes the panel.** It used to set
   the time and leave the panel open. A range panel stays open until Done, as before.
-
-### Added
-
-- **`ds-icon-button` takes an `ariaHasPopup` input.** It sets `aria-haspopup` on the inner
-  `<button>` and accepts the same values as `ds-button`: `'true'`, `'menu'`, `'listbox'`, `'tree'`,
-  `'grid'`, `'dialog'` or `null`. Bind it on an icon button that opens a menu or another overlay.
 
 ### Fixed
 
