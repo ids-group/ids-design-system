@@ -42,6 +42,10 @@
   the gutter kept the width of the fallback face, and a label wider in the real face could be
   clipped. The labels are measured again once the page's fonts have loaded. Nothing to change in
   your code.
+- **Column resize separators expose `aria-valuenow`, `aria-valuemin` and `aria-valuemax` before they
+  are focused.** A `ds-table` with `dsTableResize` set the range on a separator only while it held
+  focus, so a screen reader reading the page met separators with no value. Nothing to change in your
+  code.
 
 ## 1.0.1 — 2026-10-22
 
