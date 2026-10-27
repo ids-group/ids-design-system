@@ -475,12 +475,15 @@ Run `node tools/check.mjs migration-lint` before you call the manifest done — 
       voice. No → nothing, and a quiet correction to the old file if it still misleads. Never a line
       saying our earlier note was wrong. (`CONTRIBUTING.md`, "Never in a published artefact")
 - [ ] Nothing documented in the block is silently dropped (actionable → item; else → `informational`).
-      (`tools/check-manifest-coverage.mjs`, at the cut) It was the one line here with nothing
-      enforcing it, and six entries went missing across 0.11.3 and 0.11.4 before it got a gate. The
-      gate asks only where the reader can tell: an entry outside `### Added` naming a token, tag or
-      symbol that resolves against the library tree, and a manifest that mentions none of them. So
-      it cannot be answered with prose — name the surface, or the entry needed no line and is not
-      asked for one.
+      (`tools/check-manifest-coverage.mjs`, at the cut) The gate asks only where the reader can
+      tell: an entry outside `### Added` naming a token, tag or symbol that resolves against the
+      library tree, and a manifest that mentions none of them. It cannot be answered with prose -
+      name the surface. An entry that names a `ds-*` element needs a line even when it says "Nothing
+      to change in your code": rendering, ARIA and behaviour move without the consumer's code
+      moving, and the upgrade run checks only what the manifest names. That line is an
+      `informational` entry whose `verify` says what to look at. The gate sees whether the element
+      is named; the author checks that each Changed or Fixed entry naming an element has a line of
+      its own for its subject.
 - [ ] Every public change since the last tag - a class whose members moved (by its class or
       element, never by member), an exported symbol, an element, a `--ds-*` hook or its
       fallback - is named under `## Unreleased` or in `unreleased.json` by the

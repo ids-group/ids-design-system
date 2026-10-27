@@ -19,10 +19,12 @@
 //     greps for and finds nothing; one mention of an unrelated tag no longer answers for it. A
 //     token that already existed at the boundary is exempt — the row ring reads `--space-1-5`,
 //     and a line about it is filler pointing at a knob that is not the supported one.
-//   * An entry that SAYS FOR ITSELF that nothing changed for the consumer is exempt. What is being
-//     caught is DISAGREEMENT between the two records, and a block saying "nothing to do on your
-//     side" agrees with a silent manifest. Measured at about 2% of published non-Added entries, so
-//     it is not a habitual escape hatch; a wrong one is a defect in the changelog.
+//   * An entry that SAYS FOR ITSELF that nothing changed for the consumer is exempt, unless it names
+//     a `ds-*` element. What is being caught is DISAGREEMENT between the two records, and a block
+//     saying "nothing to do on your side" agrees with a silent manifest. An element is the
+//     exception: its rendering, ARIA and behaviour change without a line of the consumer's code
+//     changing, and the upgrade run checks only what the manifest names. The line for it is an
+//     `informational` entry whose `verify` says what to look at.
 //
 //   node tools/check-manifest-coverage.mjs              # the version being cut
 //   node tools/check-manifest-coverage.mjs --audit      # every published block, reports only
@@ -380,9 +382,13 @@ function check(block) {
   const gaps = [];
 
   for (const entry of entries) {
-    if (SAYS_NOTHING_CHANGED.some((phrase) => phrase.test(entry.body)))
-      continue;
     const hooks = hooksIn(entry.body, hooksAt(block.version));
+    const namesElement = [...hooks].some((hook) => hook.startsWith('ds-'));
+    if (
+      !namesElement &&
+      SAYS_NOTHING_CHANGED.some((phrase) => phrase.test(entry.body))
+    )
+      continue;
     if (!hooks.size) continue;
     // A missing manifest is only a gap once something in the block actually needs one; that
     // keeps a cycle with no actionable work from being told to create an empty file.
