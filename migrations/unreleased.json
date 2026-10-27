@@ -1,0 +1,11 @@
+{
+  "version": "unreleased",
+  "items": [],
+  "informational": [
+    {
+      "text": "A `ds-table` header button (sort or definition term) takes a pointer target at least `--hit-xs` tall through a transparent `::before`; its focus ring stays on the label.",
+      "verify": "Point just above the text of a sortable `ds-table` header: the pointer becomes a hand a few pixels before it reaches the letters, and a click there sorts the column."
+    }
+  ],
+  "deleteList": []
+}

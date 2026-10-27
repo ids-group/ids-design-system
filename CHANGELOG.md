@@ -1,5 +1,12 @@
 ## Unreleased
 
+### Fixed
+
+- **A `ds-table` header button takes a 24px pointer target.** The sort and definition buttons of a
+  header cell were as tall as their text; a transparent area around the label now makes each
+  target at least `--hit-xs` (24px) tall, for WCAG 2.5.8. The focus ring stays on the label.
+  Nothing to change in your code.
+
 ## 1.0.2 — 2026-10-27
 
 ### Added
