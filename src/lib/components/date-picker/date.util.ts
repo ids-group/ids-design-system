@@ -228,7 +228,7 @@ export function renderFieldValue(
   return out;
 }
 
-/** Ordered runs for the overlay; an untouched slot shows its format letters, a partial one digits + `_`. */
+/** Ordered runs for the overlay; an untouched slot shows its format letters, a partial one digits + `_`; a separator stays muted until the slot before it is full. */
 export function displayParts(
   segments: string[],
   layout: FieldLayout,
@@ -249,7 +249,7 @@ export function displayParts(
       }
     }
     if (index < layout.slots.length - 1) {
-      parts.push({ text: layout.literals[index], muted: false });
+      parts.push({ text: layout.literals[index], muted: digits.length < slot.maxLength });
     }
   }
 
