@@ -9,9 +9,8 @@
 // its own inline script, and a second copy of that logic here would drift from it — the hand pass
 // this replaces measured whole sections while the cards had already started slicing.
 //
-// One browser per card, deliberately. Eight cards as iframes in one page was the first attempt and
-// Chrome returned an empty DOM: each card pulls the whole 2 MB bundle and runs its own Angular
-// application.
+// One window per card, never several cards as iframes in one page: Chrome returns an empty DOM,
+// because each card pulls the whole 2 MB bundle and runs its own Angular application.
 //
 //   node .design-sync/tools/measure-cards.mjs
 //
@@ -144,8 +143,8 @@ const browser = await launchBrowser({
 });
 const heights = {};
 
-// Concurrent TABS in one browser. Cards are independent, so several run at once; more than this
-// and the machine's own scheduling starts to dominate.
+// Concurrent windows in one browser, one per lane. Cards are independent, so several run at once;
+// more than this and the machine's own scheduling starts to dominate.
 const LANES = Number(process.env.SNAPSHOT_LANES) || 5;
 
 // The probe writes its numbers into the title, which is one small string to read back rather than
