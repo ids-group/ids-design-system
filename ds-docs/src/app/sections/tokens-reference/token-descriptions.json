@@ -1087,6 +1087,7 @@
   "--ds-table-row-stripe-bg-color": "Zebra odd-row stripe fill.",
   "--ds-table-select-column-width": "Table row-selection checkbox column width (--space-10).",
   "--ds-table-sort-active-icon-color": "Active sort caret.",
+  "--ds-table-resize-line-color": "Column resize line at rest.",
   "--ds-table-sticky-scrollbar-offset": "Where the sticky horizontal scrollbar comes to rest, as any CSS length. Unset, the table measures its scroll container's bottom padding and cancels it, so the bar sits on the edge the reader sees; set this for a scrollport whose reachable edge is somewhere else. Overrides `[stickyScrollbarOffset]` and `DS_CONFIG.table.stickyScrollbarOffset`.",
   "--ds-table-utility-column-padding-x": "Horizontal padding of the utility column on both sides, one length (default the cell padding chain: --ds-table-cell-padding-left / -right, then -x). 0 makes the column exactly the button's width.",
   "--ds-table-utility-column-width": "Width hint of the trailing column the column picker and the row-actions button ride in (default --space-6, the buttons' own 24px). Cells are border-box, so the rendered column is max(this, button + both paddings); narrow it through --ds-table-utility-column-padding-x.",

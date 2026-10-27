@@ -7588,6 +7588,11 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "notes": "Row divider."
       },
       {
+        "name": "--ds-table-resize-line-color",
+        "value": "var(--text-tertiary)",
+        "notes": "Column resize line at rest."
+      },
+      {
         "name": "--ds-table-icon-button-color",
         "value": "var(--icon-default)",
         "notes": "Icon colour of ds-table's own icon buttons — the row-action kebab and the column picker. Defaults to --icon-default. Neither is a ds-icon-button, so the icon-button tokens do not reach them."

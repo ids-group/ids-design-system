@@ -1,5 +1,15 @@
 ## Unreleased
 
+### Changed
+
+- **A `ds-table` column resize line is visible at rest.** The line between resizable header cells
+  was `--border-default`, about 1.2:1 against the header; it is `--text-tertiary` now, about 4.3:1.
+  Set `--ds-table-resize-line-color` on `ds-table` to choose another colour, for example
+  `--ds-table-resize-line-color: var(--border-default)` for the previous look.
+- **A focused `ds-table` resize handle shows the focus on its line.** The line becomes
+  `--focus-ring-width` wide in `--focus-ring-color`; the handle draws no ring around itself. In
+  forced-colours mode the outline stays. Nothing to change in your code.
+
 ## 1.0.3 — 2026-10-27
 
 ### Fixed
