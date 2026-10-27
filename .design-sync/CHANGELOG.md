@@ -17,6 +17,12 @@ holds an entry; what the release bot commits afterwards needs none.
 
 ## Unreleased
 
+### Build
+
+- **`DS_CPU_THROTTLE=<n>` renders every card at 1/n of the machine's speed.** `snapshot-cards` and
+  `measure-cards` read it, so a release can be rehearsed against a slower runner than the one it
+  was built on.
+
 ## 1.0.3 — 2026-10-27
 
 ### Build
@@ -26,9 +32,6 @@ holds an entry; what the release bot commits afterwards needs none.
   five in a row, and stopped the build. Those cards are now rendered once more, one at a time, and
   the run fails only for a card that still does not settle. `build-design-sync.sh` sets
   `DS_CDP_DEBUG=1`, so a render that comes back empty names the CDP call that refused.
-- **`DS_CPU_THROTTLE=<n>` renders every card at 1/n of the machine's speed.** `snapshot-cards` and
-  `measure-cards` read it, so a release can be rehearsed against a slower runner than the one it
-  was built on.
 
 ## 1.0.2 — 2026-10-27
 
