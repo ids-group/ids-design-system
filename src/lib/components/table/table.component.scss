@@ -134,14 +134,8 @@
     background-color: var(--_table-sort-active-icon-color);
   }
 
-  /* A hairline: the standard ring would read as the neighbouring column's. Widening the line is
-     the indicator. */
   &:focus-visible {
-    @include focus.own-indicator;
-
-    &::after {
-      width: var(--border-width-strong);
-    }
+    @include focus.ring;
   }
 }
 
