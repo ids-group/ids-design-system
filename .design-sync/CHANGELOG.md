@@ -17,6 +17,8 @@ holds an entry; what the release bot commits afterwards needs none.
 
 ## Unreleased
 
+## 1.0.2 — 2026-10-27
+
 ### Cards
 
 - **Every chart card freezes at its measured width.** A chart card froze at the 640px fallback in
