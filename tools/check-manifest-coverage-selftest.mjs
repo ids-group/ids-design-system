@@ -222,6 +222,25 @@ const cases = [
       '- **A scrim sat under the toast layer.** It read `--layer-toast` and lost. No API change.',
     expect: 'red',
   },
+  {
+    name: 'FIRES on a ds-* element even when the entry says nothing changed for the consumer',
+    section: 'Changed',
+    entry:
+      '- **`ds-accordion` draws a rule under its header.** Nothing to change in your code.',
+    expect: 'red',
+  },
+  {
+    name: 'a ds-* element named by an informational line is covered, whatever the entry says',
+    section: 'Changed',
+    entry:
+      '- **`ds-accordion` draws a rule under its header.** Nothing to change in your code.',
+    expect: 'green',
+    manifest: {
+      informational: [
+        'The header of `ds-accordion` draws a rule under it; open one and look.',
+      ],
+    },
+  },
 ];
 
 let failed = 0;
