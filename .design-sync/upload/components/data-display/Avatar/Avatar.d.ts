@@ -13,7 +13,7 @@ export interface AvatarProps {
   name?: string;
   /** Replaces the rule turning `name` into initials. Falls back to `DS_CONFIG.avatar.initials`, then to `initialsFrom` (first two words, Latin script). */
   initialsRule?: unknown;
-  /** Image source; shown before `initials` or `fallbackIcon` when set. */
+  /** Image source; shown before `initials` or `fallbackIcon` when set. An image that fails to load falls back to them until the URL changes. */
   imageUrl?: string | null;
   /** Accessible name. When omitted, the avatar is decorative (hidden from AT). */
   ariaLabel?: string | null;
