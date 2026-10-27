@@ -28,12 +28,17 @@ holds an entry; what the release bot commits afterwards needs none.
 
 - **`snapshot-cards` and `measure-cards` read a card once it has settled.** Both run on the real
   clock with one window per lane, and wait for the web fonts, then for 150 ms and 3 frames without
-  a DOM change. The injected tidy script parses, and a card counts as settled only when its root
-  carries `data-ds-tidied`. Two freezes in a row are byte-identical.
+  a DOM change. The injected tidy script parses. `snapshot-cards` counts a card as settled only when
+  its root carries `data-ds-tidied`, `measure-cards` once the card has reported its height. Two
+  freezes in a row are byte-identical.
 - **`build-design-sync.sh` renders each card once.** `snapshot-cards` takes the card's height in the
   same render it freezes, writes `viewports.json`, and reruns `build-upload` to stamp the markers
   when a height moved. `viewports.json` and the upload tree are byte-identical to the separate
   `measure-cards` pass; `measure-cards` stays for measuring a frozen tree.
+- **`measure-cards` no longer waits out its 20 s limit on a frozen card.** Its settle check searched
+  the whole document for the slicer's `var OWNS =` marker, which the reporter script itself carries,
+  so a frozen card with no slicer never read as ready. The check now skips the reporter and looks
+  only at the card's other scripts.
 
 ## 1.0.1 — 2026-10-22
 
