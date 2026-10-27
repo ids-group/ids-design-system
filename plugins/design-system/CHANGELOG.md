@@ -4,6 +4,15 @@ Versioning: **patch** = instruction/prompt fixes; **minor** = new capability (pi
 source, agent); **major** = a change to the workflow's behavior contract. Bump `plugin.json` +
 `marketplace.json` together on every published change.
 
+## 1.19.1 - 2026-10-27
+
+### Fixed
+
+- **`ds-recheck` reads the whole result of a whole-root search.** It passes no `head_limit` on that
+  search, counts a widely matching locator before reading it, and reads every file the count
+  names. A list it could not read in full returns `migrated: false` at low confidence with the
+  unread part named.
+
 ## 1.19.0 - 2026-10-22
 
 ### Added
