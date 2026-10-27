@@ -238,6 +238,12 @@ comments — 219 KB of the same three blocks. Tree 20 MB → 9.0 MB.
   between lanes. Each lane is its own window, navigated card to card, and the tool
   reads a card when the page says it has settled. A window per card is a fresh
   renderer per card: 48 s against 13 s for 60 cards (measured 2026-10-22).
+- **A card that does not settle is rendered again on its own.** The lanes take
+  neighbouring cards, so a stall of the browser or the machine fails the cards in
+  flight together and leaves the ones either side untouched. After the lane pass
+  `snapshot-cards` renders each unsettled card once more, alone, and fails only a card
+  that still does not settle. `build-design-sync.sh` sets `DS_CDP_DEBUG=1`, so a
+  render that comes back empty names the CDP call that refused.
 
 ### The gates that keep CI from thawing it
 

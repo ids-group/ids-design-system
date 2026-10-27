@@ -47,6 +47,8 @@ export interface ButtonProps {
   disabled?: boolean;
   /** Busy state: blocks `pressed` and sets `aria-busy` and `aria-disabled`, keeping the button focusable so focus stays on it while the work runs. Button-only; ignored on an anchor with a dev warning. */
   loading?: boolean;
+  /** Where the `loading` spinner draws. `'icon'` puts it in the leading icon's box (the trailing icon's when there is no leading one) and keeps the label visible; `'replace'` hides the contents behind one spinner centred on the button; `'auto'` is `'icon'` when `icon` is set, else `'replace'`. Neither moves the label or resizes the button. */
+  loadingMode?: ('auto' | 'icon' | 'replace');
   /** Fills the container: the host becomes block-level and 100% wide. */
   fullWidth?: boolean;
   /** Accessible name, forwarded as `aria-label`. For an icon-only or non-descriptive label. */

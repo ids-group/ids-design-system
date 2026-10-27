@@ -1,7 +1,8 @@
-@if (imageUrl()) {
+@if (imageUrl() && !imageFailed()) {
   <img
     alt=""
-    [src]="imageUrl()" />
+    [src]="imageUrl()"
+    (error)="imageFailed.set(true)" />
 } @else if (initialsText()) {
   {{ initialsText() }}
 } @else if (fallbackIcon()) {
