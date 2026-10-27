@@ -184,14 +184,14 @@ express.
 ## 2. Attribute directives — no element to register
 
 A directive has no tag, so `@angular/elements` has nothing to define and it is
-absent from the generated surface entirely. Twenty-four of them:
+absent from the generated surface entirely. Twenty-five of them:
 
 `[dsBrandName]` · `[dsCellTemplate]` · `[dsChartPlaced]` · `[dsChartTooltip]` · `[dsChipTemplate]` ·
 `[dsCreateTemplate]` · `[dsDefinitionTerm]` · `[dsEmptyTemplate]` · `[dsFieldClickFocus]` ·
 `[dsGroupLabelTemplate]` · `[dsModalConfirm]` · `[dsOptionTemplate]` · `[dsPanelFooterTemplate]` ·
-`[dsPanelHeaderTemplate]` · `[dsPickerTrigger]` · `[dsProjectionDropped]` · `[dsRailTrigger]` ·
-`[dsReserveMessages]` · `[dsShowDirty]` · `[dsTableColumns]` · `[dsTableExport]` ·
-`[dsTableResize]` · `[dsTooltip]` · `[dsTooltipWhenClipped]`
+`[dsPanelHeaderTemplate]` · `[dsPickerTrigger]` · `[dsPopoverTrigger]` · `[dsProjectionDropped]` ·
+`[dsRailTrigger]` · `[dsReserveMessages]` · `[dsShowDirty]` · `[dsTableColumns]` ·
+`[dsTableExport]` · `[dsTableResize]` · `[dsTooltip]` · `[dsTooltipWhenClipped]`
 
 `[dsModalConfirm]` wires a projected action to `ds-modal`'s `confirmed` output: behaviour with nothing to draw, so a static card loses nothing by its absence and the confirm button renders as the plain button it sits on.
 
@@ -215,6 +215,12 @@ The two header and footer strips simply do not exist without their templates.
 toggles `railOpen`, and while the rail is an overlay it keeps `aria-expanded` and `aria-controls` on
 the button in sync. It draws nothing, so a card draws the button as it is and sets `railOpen` on the
 layout to show the rail open.
+
+`[dsPopoverTrigger]` wires a button to a `ds-popover`: a click opens the popover from the button's
+inner `<button>`, which keeps `aria-haspopup` (`menu` when the popover holds a `ds-menu`, `dialog`
+otherwise), `aria-expanded` and, while the popover is open, `aria-controls` in step. It draws
+nothing and needs an Angular template reference to the popover, so a card draws the button as it is
+and shows the popover open through `staticPreview` on `ds-popover`.
 
 `[dsFieldClickFocus]` is internal to the `ds-input`, `ds-search` and `ds-textarea` templates: a
 mousedown on the field's frame (padding, an icon, an addon) focuses the inner `input` or `textarea`
