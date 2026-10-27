@@ -33,8 +33,8 @@ const SHARED_CSS = '_ds_cards.css';
 const PORT = 4579;
 const WIDTH = 1200;
 const FRAME_HEIGHT = 24000;
-// Concurrent TABS in one browser, not processes: a tab costs a fraction of a chromium, so this is
-// about how much the render queue may hold at once rather than about the container's RAM.
+// Concurrent TABS in one browser, not processes. A stall under this many in flight fails the
+// neighbouring cards together; they are rendered again one at a time after the lanes finish.
 const LANES = Number(process.env.SNAPSHOT_LANES) || 5;
 
 const CHROME = [
