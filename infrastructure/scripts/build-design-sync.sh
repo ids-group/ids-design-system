@@ -74,7 +74,7 @@ export CHROME_BIN
 # `@dsCard viewport` marker, which build-upload writes, so when a height moved snapshot-cards rebuilds
 # the tree before it writes the frozen cards over it.
 step "Measuring and freezing the cards"
-node .design-sync/tools/snapshot-cards.mjs
+DS_CDP_DEBUG=1 node .design-sync/tools/snapshot-cards.mjs
 node .design-sync/tools/check-frozen.mjs
 
 step "Verifying the upload tree"
