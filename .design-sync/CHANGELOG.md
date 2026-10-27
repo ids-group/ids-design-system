@@ -17,6 +17,8 @@ holds an entry; what the release bot commits afterwards needs none.
 
 ## Unreleased
 
+## 1.0.3 — 2026-10-27
+
 ### Build
 
 - **`snapshot-cards` renders a card that did not settle again on its own.** The lanes take

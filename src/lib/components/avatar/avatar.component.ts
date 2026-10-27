@@ -4,6 +4,7 @@ import {
   computed,
   inject,
   input,
+  linkedSignal,
 } from '@angular/core';
 import { IconComponent } from '@ids-group-ltd/ids-design-system/icons';
 import type { IconName } from '@ids-group-ltd/ids-design-system/core';
@@ -40,7 +41,8 @@ export class AvatarComponent {
   /** Replaces the rule turning `name` into initials. Falls back to
    *  `DS_CONFIG.avatar.initials`, then to `initialsFrom` (first two words, Latin script). */
   readonly initialsRule = input<((name: string) => string) | null>(null);
-  /** Image source; shown before `initials` or `fallbackIcon` when set. */
+  /** Image source; shown before `initials` or `fallbackIcon` when set. An image that fails to
+   *  load falls back to them until the URL changes. */
   readonly imageUrl = input<string | null>(null);
   /** Accessible name. When omitted, the avatar is decorative (hidden from AT). */
   readonly ariaLabel = input<string | null>(null);
@@ -60,6 +62,11 @@ export class AvatarComponent {
 
   private readonly config = inject(DS_CONFIG);
   protected readonly intl = inject(DS_INTL);
+
+  protected readonly imageFailed = linkedSignal({
+    source: this.imageUrl,
+    computation: () => false,
+  });
 
   protected readonly initialsText = computed(() => {
     const explicit = this.initials();
