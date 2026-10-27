@@ -2,6 +2,10 @@
 
 ### Changed
 
+- **A resizable `ds-table` column shows its resize handle at rest.** Each handle in the header
+  draws a thin line in `--border-default`, so a column that can be resized is visible before the
+  pointer reaches its edge. Hover, drag and keyboard focus look as before. Nothing to change in
+  your code.
 - **A loading `ds-button` with an `icon` keeps its label and spins in the icon's place.** The
   spinner takes the leading icon's box and the label stays visible; a button without an icon still
   hides its contents behind one centred spinner. The new `loadingMode` input (`ButtonLoadingMode`:
