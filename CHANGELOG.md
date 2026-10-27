@@ -2,6 +2,9 @@
 
 ### Changed
 
+- **The separators of an empty `ds-date-picker` mask are muted with its placeholder.** `DD/MM/YYYY`
+  reads in one colour; a separator takes the value colour once the part before it is typed in full,
+  so `12/MM/YYYY` shows the first slash dark and the second muted. Nothing to change in your code.
 - **A loading `ds-button` with an `icon` keeps its label and spins in the icon's place.** The
   spinner takes the leading icon's box and the label stays visible; a button without an icon still
   hides its contents behind one centred spinner. The new `loadingMode` input (`ButtonLoadingMode`:
