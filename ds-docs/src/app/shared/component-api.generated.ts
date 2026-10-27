@@ -787,7 +787,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "Image source; shown before `initials` or `fallbackIcon` when set."
+        "description": "Image source; shown before `initials` or `fallbackIcon` when set. An image that fails to load falls back to them until the URL changes."
       },
       {
         "name": "ariaLabel",

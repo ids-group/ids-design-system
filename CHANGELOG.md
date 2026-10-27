@@ -1,5 +1,16 @@
 ## Unreleased
 
+### Fixed
+
+- **A `ds-table` header button takes a 24px pointer target.** The sort and definition buttons of a
+  header cell were as tall as their text; a transparent area around the label now makes each
+  target at least `--hit-xs` (24px) tall, for WCAG 2.5.8. The focus ring stays on the label.
+  Nothing to change in your code.
+- **`ds-avatar` falls back to its initials when the image fails to load.** An `imageUrl` that
+  answered with an error (an expired signed URL, a deleted object) left the avatar showing only its
+  background tint, with neither `initials` nor `fallbackIcon` drawn. The avatar now shows `initials`,
+  or `fallbackIcon`, until `imageUrl` changes. Nothing to change in your code.
+
 ## 1.0.2 — 2026-10-27
 
 ### Added
