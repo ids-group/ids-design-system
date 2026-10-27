@@ -172,6 +172,26 @@ export class TimeColumnsComponent {
     this.loops(this.minutesOverflow()),
   );
 
+  // The row under each column's centre, counted from the real cells' first row; copies run past 0 and count.
+  private readonly hoursCentredRow = signal<number | null>(null);
+  private readonly minutesCentredRow = signal<number | null>(null);
+
+  // A set shorter than the column shows the selected value twice; only the occurrence nearest the centre is marked.
+  protected readonly hoursSelectedCopy = computed(() =>
+    this.selectedCopy(
+      this.hoursLoop(),
+      this.hoursCentredRow(),
+      this.hourCells(),
+    ),
+  );
+  protected readonly minutesSelectedCopy = computed(() =>
+    this.selectedCopy(
+      this.minutesLoop(),
+      this.minutesCentredRow(),
+      this.minuteCells(),
+    ),
+  );
+
   protected readonly pickHour = (cell: Cell<number>): void =>
     this.selectHour(cell);
   protected readonly pickMinute = (cell: Cell<number>): void =>
@@ -234,6 +254,39 @@ export class TimeColumnsComponent {
     if (this.userScrolledColumns.has(element)) {
       this.selectCentred(element, column, count);
     }
+    this.trackCentredRow(element);
+  }
+
+  // Also called right after a set jump: its scroll event comes a frame later, and the old copy is scrolled out of view by then.
+  private trackCentredRow(element: HTMLElement): void {
+    const column: TimeColumnId =
+      element === this.hourColumn()?.nativeElement ? 'hours' : 'minutes';
+    const [first, second] = this.buttonsFor(column)();
+    if (!first || !second) {
+      return;
+    }
+    const top = first.nativeElement.offsetTop;
+    const pitch = second.nativeElement.offsetTop - top;
+    const centre = element.scrollTop + element.clientHeight / 2;
+    const row = Math.floor((centre - top) / pitch);
+    (column === 'hours' ? this.hoursCentredRow : this.minutesCentredRow).set(
+      row,
+    );
+  }
+
+  private selectedCopy(
+    loops: boolean,
+    centredRow: number | null,
+    cells: readonly { selected: boolean }[],
+  ): number {
+    const selected = cells.findIndex((cell) => cell.selected);
+    if (!loops || centredRow === null || selected < 0) {
+      return 0;
+    }
+    const copies = this.loopCopiesEachSide.length;
+    const nearest = Math.round((centredRow - selected) / cells.length);
+
+    return Math.max(-copies, Math.min(copies, nearest));
   }
 
   /** Keeps a looping column inside its middle set, so a copy is always beyond either edge. */
@@ -265,9 +318,13 @@ export class TimeColumnsComponent {
     if (event.ctrlKey || event.deltaY === 0 || !second) {
       return;
     }
+    this.onUserScroll(event);
+    // A column that does not loop scrolls at the browser's own wheel speed.
+    if (!column.classList.contains('loops')) {
+      return;
+    }
     // Snapping pulls a sub-row scroll back to the row it left, so the deltas add up and the column moves by whole rows.
     event.preventDefault();
-    this.onUserScroll(event);
     const rowPitch = second.offsetTop - first.offsetTop;
     const pixels =
       event.deltaMode === WheelEvent.DOM_DELTA_LINE
@@ -384,6 +441,7 @@ export class TimeColumnsComponent {
     const setsOff = Math.round((column.scrollTop - middle) / set);
     if (setsOff !== 0) {
       column.scrollTop -= setsOff * set;
+      this.trackCentredRow(column);
       // The write cut the wheel animation short; it resumes towards the same row, a whole number of sets nearer.
       const wheel = this.wheelScrolls.get(column);
       if (wheel?.target != null) {
@@ -677,6 +735,7 @@ export class TimeColumnsComponent {
       );
       if (nearest !== top) {
         column.scrollTop += top - nearest;
+        this.trackCentredRow(column);
       }
     }
     // Assigning scrollTop while this runs would abort the animation, so wrapScroll stands down until scrollend; the timer covers browsers without it.

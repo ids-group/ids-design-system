@@ -12,7 +12,7 @@ is stale. Closing an item means deleting the item and nothing else.
 
 <!-- todo-index:start -->
 
-**134 open — 2 P1, 11 P2, 121 P3**, 1 of them half-done and waiting on a verdict. Counted by `node tools/todo-index.mjs` from the items themselves.
+**138 open — 2 P1, 13 P2, 123 P3**, 1 of them half-done and waiting on a verdict. Counted by `node tools/todo-index.mjs` from the items themselves.
 
 ### P1 — 2
 
@@ -21,7 +21,7 @@ is stale. Closing an item means deleting the item and nothing else.
 - **Asked by Stas**
   - ½ A `ds-table` column without `width` grows to its text; it needs a sensible default clip width (Stas, 2026-10-06)
 
-### P2 — 11
+### P2 — 13
 
 - **Defects consumers work around today (swept 2026-09-23)**
   - The stock control edge and `--secondary-on` fail contrast; the second breaks on any light brand secondary (from the ids-europe-landing consumer)
@@ -34,6 +34,10 @@ is stale. Closing an item means deleting the item and nothing else.
   - Tooltips and trigger-anchored overlays should follow their trigger on scroll, not close (Stas, 2026-10-08)
   - Document how to build `ds-modal` actions (Stas, 2026-10-06)
   - Bring `ai-sdlc-prototype` up to the mm-broker frontend (Stas, 2026-10-07)
+- **Asked by Dashboard Review (DR), status visuals**
+  - Status visuals in DR: public tokens or DR-own CSS (asked by DR, 2026-10-11)
+- **Asked by Dashboard Review (DR), busy region**
+  - A busy overlay for a region with a title and a step list (asked by DR, 2026-10-10)
 - **Open verdicts**
   - Six behaviour changes published in 0.14.7 without a choice between alternatives
 - **Tooling**
@@ -42,7 +46,7 @@ is stale. Closing an item means deleting the item and nothing else.
 - **The field system — the two controls outside it, and the two with no box to paint**
   - `ds-slider` and `ds-switch` compute no `controlState`, so a validation state reaches only their message
 
-### P3 — 121
+### P3 — 123
 
 - **Focus indicators — what the two-wave review left open (recorded 2026-09-04)**
   - Thirteen ds-docs forced-state pins misrepresent their component
@@ -61,6 +65,7 @@ is stale. Closing an item means deleting the item and nothing else.
 - **Reported by Stas from the docs site, 2026-09-05**
   - The shimmer's viewport anchoring breaks inside a transformed ancestor
 - **Asked by Stas**
+  - Parked: a Done button closes a single `ds-time-picker` panel (Stas, 2026-10-22: «вариант с кнопкой done запиши в todo»)
   - A single select with a search box (Stas, 2026-10-14, from mm-ecm ME-530)
   - `ds-waterfall-chart` is `ds-cascade-chart` (Stas, 2026-09-23)
   - Rename `ds-bar-chart` to `ds-row-chart` (Stas, 2026-09-24)
@@ -136,6 +141,8 @@ is stale. Closing an item means deleting the item and nothing else.
   - Two inputs decide one thing on `ds-funnel-chart`, and two vocabularies name one idea
 - **Two chart interactions held back (Stas, 2026-10-12: not now)**
   - «Разница между двумя колонками» and «Отток виден на воронке»
+- **ds-info-hint sits below the cap middle of an UPPERCASE label (recorded 2026-10-13, Stas: parked)**
+  - `ds-info-hint` sits below the cap middle of an UPPERCASE label - PARKED 2026-10-13 by Stas, not for this release
 - **Wrapping in a `ds-table` cell (recorded 2026-10-09, Stas: parked, come back later)**
   - Two wrap options for a `truncate` column
 - **ds-icon does not read the icon size scale (recorded 2026-08-24, from the state-glyph work)**
@@ -532,6 +539,15 @@ Each has somebody behind it. Nothing here is speculative work.
 - [ ] **[P3] Styles in cascade layers (Vanya, 2026-10-05).** Ship the library
   CSS inside `@layer` so a consumer's styles win without specificity fights. Weigh the effect on
   existing consumers' overrides.
+
+## Asked by Dashboard Review (DR), status visuals
+
+- [ ] **[P2] Status visuals in DR: public tokens or DR-own CSS (asked by DR, 2026-10-11).** DR repaints three DS components with its own CSS, which can break on a DS update: the status mark in the sidebar (`status-mark.component.ts`: colour AND shape - dot, check, pause, rotate, slash - so it reads without colour), the «agent alive» light on a repository tab (`main-layout.html`) and the group tags (`group-row.component.ts`: tones, and the dashed «DS придёт сам»). Public tokens in DS 0.14.8 cover the colours: `--ds-tag-bg-color`, `--ds-tag-border-color`, `--ds-tag-label-color` (plus hover and active), `--ds-status-dot-color`, `--ds-status-dot-size`, `--ds-tab-label-color`, `--ds-tab-indicator-color`. No token or input exists for a dashed tag border, the shape of a status mark or a status light on a tab. **Open: one pick in deck `27-status-visuals.html` (branch `dr-ask/status-visuals`):** A colours by DS tokens, shape, dashed border and tab light as small DR-own pieces on DS tokens, nothing asked from the DS and this branch dropped (recommended); B a tag border-style token, a `shape` on `ds-status-dot` and a status on `ds-tab` in the DS (no product use beyond DR found in mm-ecm-platform, mm-broker or pinkmoon-platform); C colour only, no shapes or dashes. Not built until Stas picks.
+
+## Asked by Dashboard Review (DR), busy region
+
+- [ ] **[P2] A busy overlay for a region with a title and a step list (asked by DR, 2026-10-10).** While the engine prepares a slide, DR's item view covers the two panes with an absolutely positioned layer (`scenario-view.component.html`, `.overlay`): `inset: 0`, `--surface-overlay`, `ds-spinner size="lg"` and one line of text, the current step (`step()`, falling back to "готовлю слайд..."). DR shows only the current step; the earlier and the coming ones are not shown. `ds-loading-overlay` already covers a region with a scrim, a spinner and a `label`, but has no title and no list of steps. **Wanted:** a busy overlay for a region with a spinner, a title and a step list where each step is done, current or pending. Options and the open API choice are drawn in deck `27-busy-overlay.html` (branch `dr-ask/busy-overlay`); not built until Stas picks.
+  **Open: DR or DS.** The deck's first block asks whether this belongs in DR (built there from DS tokens and existing components, no DS change) or in the DS; no product beyond DR is known to need it, so the recommendation is DR.
 
 ## Tooling
 
@@ -1237,6 +1253,15 @@ Ordered by how close each is to a first consumer ask, which is the only thing th
 ## Two chart interactions held back (Stas, 2026-10-12: not now)
 
 - [ ] **[P3] «Разница между двумя колонками» and «Отток виден на воронке».** The first: a clicked column becomes the base and the hovered one shows a bracket with the difference («+130 (+18%)»), built on the existing pin. The second: the hovered `ds-funnel-chart` stage draws the previous stage's width behind it, outlined, with the drop («-34%»); today the drop exists only as a number (`stageDrops`, `fellAway`). Both are new gestures or new marks, so opt-in when built.
+
+## ds-info-hint sits below the cap middle of an UPPERCASE label (recorded 2026-10-13, Stas: parked)
+
+- [ ] **[P3] `ds-info-hint` sits below the cap middle of an UPPERCASE label - PARKED 2026-10-13 by Stas, not for this release.** Drawn in deck
+  `28-info-hint-align.html`, research in `.claude/superpowers/research/2026-10-13-info-hint-alignment.md`.
+  `vertical-align: middle` centres the 14px icon on the lowercase middle: it looks right on mixed-case text
+  and sits 1.3px (11px) to 3.5px (32px) below the cap middle. A cap-middle `calc(0.5cap - var(--icon-sm) / 2)`
+  looked crooked on mixed case (Stas) and was taken off the branch `ecm-fix/info-hint-align`. Options in the deck: a
+  consumer rule on uppercase labels, an opt-in on the component, leave it, a flex row, or `text-box-trim`.
 
 ## Wrapping in a `ds-table` cell (recorded 2026-10-09, Stas: parked, come back later)
 

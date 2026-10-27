@@ -4,6 +4,10 @@
   "description": "IDS Group Angular design system: components, tokens, themes",
   "license": "MIT",
   "homepage": "https://ids-ds.proto.ids-group.co.uk/",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ids-group/ids-design-system.git"
+  },
   "keywords": [
     "angular",
     "design-system",

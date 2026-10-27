@@ -35,6 +35,8 @@ export class ButtonComponent extends DsMessageBase {
     protected readonly inGroup = inFieldGroup(…);
     protected readonly linkModifiers = computed<DsLinkModifiers>(…);
     public readonly loading = input(false, { transform: booleanAttribute });
+    protected readonly loadingIconSlot = computed<'leading' | 'trailing' | null>(…);
+    public readonly loadingMode = input<ButtonLoadingMode>('auto');
     protected readonly message = this.fieldMessage.message;
     protected onClick(event: MouseEvent): void;
     public readonly pressed = output<MouseEvent>();
@@ -54,6 +56,8 @@ export class ButtonComponent extends DsMessageBase {
     private readonly uid;
     public readonly variant = input<ButtonVariant>('solid');
 }
+
+export type ButtonLoadingMode = 'auto' | 'icon' | 'replace';
 
 export type ButtonType = 'button' | 'submit' | 'reset';
 

@@ -1,0 +1,63 @@
+{
+  "version": "unreleased",
+  "items": [
+    {
+      "id": "button-loading-spinner-in-icon-slot",
+      "kind": "behavior",
+      "old": "ds-button[loading]",
+      "new": null,
+      "surface": "template",
+      "searchHints": [
+        "loading",
+        "icon="
+      ],
+      "action": "None, unless a loading button with an `icon` must keep hiding its label behind a centred spinner: bind `loadingMode=\"replace\"` on that button.",
+      "appliesWhen": "A `ds-button` that sets both `icon` and `loading`. A button without `icon` renders as before, and `ds-icon-button` has no loading state.",
+      "restore": "<ds-button icon=\"save\" [loading]=\"saving()\" loadingMode=\"replace\">Save</ds-button>",
+      "verify": "A loading `ds-button` with an `icon` shows its label with a spinner in the icon's place, unless it binds `loadingMode=\"replace\"`."
+    },
+    {
+      "id": "date-picker-input-combobox-role",
+      "kind": "behavior",
+      "old": "ds-date-picker",
+      "new": null,
+      "surface": "template",
+      "searchHints": ["ds-date-picker", "role=\"textbox\"", "getByRole('textbox')"],
+      "action": "None, unless a test or a selector finds the date input by the `textbox` role: query the `combobox` role instead.",
+      "appliesWhen": "A test, a selector or a template that targets the text input of a `ds-date-picker` by role.",
+      "restore": "screen.getByRole('combobox', { name: 'Start date' })",
+      "verify": "The `ds-date-picker` text input reports `role=\"combobox\"` and still parses a typed date."
+    },
+    {
+      "id": "menu-gap-default-zero",
+      "kind": "behavior",
+      "old": "--ds-menu-gap",
+      "new": null,
+      "surface": "style",
+      "searchHints": ["--ds-menu-gap", "ds-menu"],
+      "action": "None, unless a layout relied on the gap between menu rows (the default was `var(--space-0-5)`, now `0px`): set `--ds-menu-gap: var(--space-0-5)` on that menu.",
+      "appliesWhen": "A `ds-menu` that does not set `--ds-menu-gap`. A menu that sets it keeps its value, and the strip between rows where the pointer hovers no row.",
+      "restore": "ds-menu { --ds-menu-gap: var(--space-0-5); }",
+      "verify": "A `ds-menu` without `--ds-menu-gap` renders its rows touching, and one that sets `--ds-menu-gap: var(--space-0-5)` shows the gap between rows again."
+    }
+  ],
+  "informational": [
+    {
+      "text": "New `[dsPopoverTrigger]` directive (`DsPopoverTrigger`, exported with `PopoverComponent`) opens a `ds-popover` from a button and sets `aria-haspopup`, `aria-expanded` and `aria-controls` on its inner `<button>`.",
+      "verify": "A `ds-icon-button` with `[dsPopoverTrigger]` around a `ds-menu` popover: Enter opens the menu, the inner button reads aria-haspopup=\"menu\" and aria-expanded=\"true\", and Escape closes it and returns focus to the button."
+    },
+    {
+      "text": "Now in a single `ds-time-picker` picks the current time and closes the panel; a range panel stays open until Done. A single panel used to stay open after Now.",
+      "verify": "Open a single `ds-time-picker` and press Now: the current time is set and the panel closes. In a range picker the panel stays open after Now."
+    },
+    {
+      "text": "A looping hour or minute column of `ds-time-picker` marks only the copy of the selected value nearest the column's centre with `is-selected`, so a test that counts `.is-selected` cells inside its internal `ds-time-columns` element sees fewer than before.",
+      "verify": "Scroll a minute column with a 15-minute step and `loop=\"always\"`: one cell carries `is-selected` at a time."
+    },
+    {
+      "text": "The trigger `<button>` of `ds-time-picker` holds its shown time in an inner `<span>` beside hidden `.time-value-sizer` spans (`aria-hidden=\"true\"`) that reserve its width, so the text content of the trigger also contains their text.",
+      "verify": "A `ds-time-picker` set to 09:30 shows `09:30` and keeps the same width when cleared; a query by role and accessible name still finds the trigger."
+    }
+  ],
+  "deleteList": []
+}

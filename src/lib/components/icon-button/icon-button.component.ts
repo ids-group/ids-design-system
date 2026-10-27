@@ -1,10 +1,12 @@
 import {
   Component,
+  ElementRef,
   ViewEncapsulation,
   booleanAttribute,
   computed,
   input,
   output,
+  viewChild,
 } from '@angular/core';
 import { IconComponent } from '@ids-group-ltd/ids-design-system/icons';
 import type { IconName } from '@ids-group-ltd/ids-design-system/core';
@@ -54,6 +56,10 @@ export class IconButtonComponent {
     transform: (value: unknown) =>
       value == null ? null : booleanAttribute(value),
   });
+  /** `aria-haspopup` on the inner `<button>`; set when this button triggers an overlay. */
+  readonly ariaHasPopup = input<
+    'true' | 'menu' | 'listbox' | 'tree' | 'grid' | 'dialog' | null
+  >(null);
   /** `aria-expanded` on the inner `<button>`; bind to the open state. On the host it would land
    *  on a non-focusable wrapper. */
   readonly ariaExpanded = input<boolean | null>(null);
@@ -61,6 +67,9 @@ export class IconButtonComponent {
   readonly ariaControls = input<string | null>(null);
   /** Fires on click unless disabled. */
   readonly pressed = output<MouseEvent>();
+
+  /** The inner control, for an overlay to position against and restore focus to. */
+  readonly controlRef = viewChild.required<ElementRef<HTMLElement>>('btn');
 
   protected readonly classes = computed(() => {
     const parts = ['icon-button', this.variant(), this.sizeResolved()];

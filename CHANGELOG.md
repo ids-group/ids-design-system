@@ -1,5 +1,85 @@
 ## Unreleased
 
+### Added
+
+- **`ds-icon-button` takes an `ariaHasPopup` input.** It sets `aria-haspopup` on the inner
+  `<button>` and accepts the same values as `ds-button`: `'true'`, `'menu'`, `'listbox'`, `'tree'`,
+  `'grid'`, `'dialog'` or `null`. Bind it on an icon button that opens a menu or another overlay.
+- **`ds-icon-button` exposes `controlRef`.** It is the inner `<button>` as an `ElementRef`, the same as
+  on `ds-button`, so an overlay can position against it and return focus to it: pass
+  `trigger.controlRef().nativeElement` to `toggle` of `ds-popover`.
+- **`[dsPopoverTrigger]` opens a `ds-popover` from a button and keeps its ARIA in step.** Put
+  `[dsPopoverTrigger]="pop"` on a `ds-button`, `ds-icon-button` or native button: a click or
+  Enter opens the popover from the inner `<button>`, which gets `aria-haspopup` (`menu` when the
+  popover holds a `ds-menu`, `dialog` otherwise), `aria-expanded` and, while open, `aria-controls`.
+  It replaces `#t` with `(pressed)="pop.toggle(t.controlRef().nativeElement)"` and the
+  `ariaHasPopup` / `[ariaExpanded]` bindings; leave those unbound on a button that uses it. Nothing
+  to change in existing code.
+
+### Changed
+
+- **A resizable `ds-table` column shows its resize handle at rest.** Each handle in the header
+  draws a thin line in `--border-default`, so a column that can be resized is visible before the
+  pointer reaches its edge. Hover and drag look as before. Nothing to change in
+  your code.
+- **The separators of an empty `ds-date-picker` mask are muted with its placeholder.** `DD/MM/YYYY`
+  reads in one colour; a separator takes the value colour once the part before it is typed in full,
+  so `12/MM/YYYY` shows the first slash dark and the second muted. Nothing to change in your code.
+- **A loading `ds-button` with an `icon` keeps its label and spins in the icon's place.** The
+  spinner takes the leading icon's box and the label stays visible; a button without an icon still
+  hides its contents behind one centred spinner. The new `loadingMode` input (`ButtonLoadingMode`:
+  `'auto' | 'icon' | 'replace'`, default `'auto'`) picks the behaviour: `'icon'` also uses the
+  trailing icon when there is no leading one, and `'replace'` keeps the centred spinner on every
+  button. Neither mode changes the button's size or moves its label. To keep the centred spinner on
+  a button with an icon, bind `loadingMode="replace"`.
+- **A `ds-time-picker` column that does not loop scrolls at the browser's wheel speed.** Every
+  hour and minute column turned one wheel notch into about one row; a column that loops still does, so it reads
+  as a drum, while a column that does not loop, such as one with `loop="never"`, now scrolls as far
+  as any list, still snapping to a cell. Nothing to change in your code.
+- **Now in a single `ds-time-picker` picks the current time and closes the panel.** It used to set
+  the time and leave the panel open. A range panel stays open until Done, as before.
+
+### Fixed
+
+- **A `ds-menu-item` that is the first or last child of the menu rounds its corners with it.** The rows are square and
+  the menu clips them at its rounded edge, so the focus ring of the first or last item was cut off
+  at two corners and kept square ones at the other two. Those rows now take the menu's inner radius
+  and every row's focus ring is drawn inside the row. `--ds-menu-item-radius` still sets every
+  row's radius.
+  Nothing to change in your code.
+- **`ds-menu` rows touch each other, so the pointer never falls between them.** The menu put a 2px
+  gap between rows, and a pointer resting in it hovered no row, so the hover fill flickered off
+  while moving down the list. `--ds-menu-gap` now defaults to `0px`, which makes the menu 2px
+  shorter per boundary between two rows; a `ds-menu-divider` cancels the gap with a
+  negative margin, so a boundary at a divider is not one of them. A custom `--ds-menu-gap` brings the gap and its dead strip back.
+- **A looping `ds-time-picker` column marks the selected value once.** A column with fewer values
+  than fit in it, such as minutes at a 15-minute step with `loop="always"`, repeats its set so it can scroll round, and
+  every repeat of the selected value was filled. While scrolling, two filled cells four rows apart
+  were on screen at once. The `ds-time-columns` element inside the panel now fills only the one
+  nearest the column's centre. Nothing to change in your code.
+- **A `ds-time-picker` field keeps its width when it is empty.** Unless it was `fullWidth`, the
+  trigger was as wide as its text, so the `--:--` placeholder made it narrower than a picked time and the field jumped when a
+  time was set or cleared; in 12-hour format AM and PM differed slightly too. The
+  trigger now reserves room for its widest time with hidden `aria-hidden` spans, so a test that
+  reads the whole text content of the trigger also gets their text. Nothing else to change in your
+  code.
+- **`ds-chart`, `ds-column-chart`, `ds-line-chart` and `ds-waterfall-chart` size the value-axis gutter
+  for the web font.** The tick labels were measured when they rendered and again only when their
+  text changed, so on a page whose web font arrived after the chart
+  the gutter kept the width of the fallback face, and a label wider in the real face could be
+  clipped. The labels are measured again once the page's fonts have loaded. Nothing to change in
+  your code.
+- **Column resize separators expose `aria-valuenow`, `aria-valuemin` and `aria-valuemax` before they
+  are focused.** A `ds-table` with `dsTableResize` set the range on a separator only while it held
+  focus, so a screen reader reading the page met separators with no value. Nothing to change in your
+  code.
+- **A keyboard-focused `ds-table` resize handle shows the standard focus ring.** The handle widened
+  its line on keyboard focus instead of drawing the focus ring; it now draws the same ring as other
+  controls. Nothing to change in your code.
+- **The `ds-date-picker` input announces as a combobox.** The input already declared a dialog popup
+  and an expanded state, which a plain text box does not support; it now carries `role="combobox"`.
+  Typing a date works as before. Nothing to change in your code.
+
 ## 1.0.1 — 2026-10-22
 
 ### Changed

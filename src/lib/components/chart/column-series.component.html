@@ -124,7 +124,11 @@
   }
 
   <!-- One ring for every column, so keyboard focus glides to the next column with the panel. -->
-  @if (interactive() && !hidden() && focusedMark(); as focused) {
+  @if (
+      interactive() &&
+      !hidden() &&
+      focusedMark(); as focused
+    ) {
     <svg:g
       class="focus-ring"
       aria-hidden="true"

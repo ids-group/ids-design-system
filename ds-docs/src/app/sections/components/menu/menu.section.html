@@ -85,12 +85,9 @@
 
   <div class="demo">
     <ds-button
-      #acctTrigger
       color="neutral"
       variant="outline"
-      ariaHasPopup="menu"
-      [ariaExpanded]="acct.opened()"
-      (pressed)="acct.toggle(acctTrigger.controlRef().nativeElement)">
+      [dsPopoverTrigger]="acct">
       Account ▾
     </ds-button>
 

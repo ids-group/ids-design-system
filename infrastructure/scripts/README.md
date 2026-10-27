@@ -34,7 +34,7 @@ one-time `npm i -g bun` bootstrap only runs on a cold cache.
 
 Installs use the committed **`bun.lock`** with `--frozen-lockfile` for
 reproducible builds (it pins cross-platform, incl. the linux/musl optionals).
-Regenerate it with `bun install` whenever dependencies change, and the five cache
+Regenerate it with `bun install` whenever dependencies change, and the six cache
 keys are keyed on that file because it is the one `--frozen-lockfile` reads.
 
 `package-lock.json` is kept only for a developer who installs with npm: it is not
@@ -92,5 +92,7 @@ worth auto-firing on our cadence.
 ## Caches
 
 `bun-bin` / `bun-cache` (installs), `angular` (`.angular/cache`, speeds up
-`ng build`), and `dist-ds` (`dist/ds` keyed on library sources, lets a docs-only
-change reuse the built library).
+`ng build`), `angular-elements` (the same directory for the design-sync bundle step,
+whose `ds-elements` build never reaches `angular`), `apk-chromium` (the chromium
+packages `build-design-sync.sh` installs), and `dist-ds` (`dist/ds` keyed on library
+sources, lets a docs-only change reuse the built library).

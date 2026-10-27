@@ -253,6 +253,11 @@ export class TimePickerComponent
   protected readonly displayValue = computed(
     () => this.formatFor(this.singleValue()) || this.placeholder(),
   );
+  // Laid under the value, hidden: the trigger keeps the width of its widest time whether empty or filled.
+  protected readonly widestValues = computed(() => [
+    this.formatFor('00:00'),
+    this.formatFor('12:00'),
+  ]);
 
   protected readonly triggerClasses = computed(() => {
     const parts = ['trigger'];
@@ -450,6 +455,10 @@ export class TimePickerComponent
       disabledTime: this.disabledTime(),
     };
     this.onPick(clampToRange(snapToStep(raw, this.minuteStep()), constraints));
+    // A range stays open for Done, so the other end can still be adjusted.
+    if (this.mode() === 'single') {
+      this.close('select');
+    }
   }
 
   protected clear(event: Event): void {

@@ -64,10 +64,13 @@ The card's **group** is the ds-docs group page that renders its section, not a
 disagreed — Container, Inline, Stack and Divider were filed under `layout` /
 `data-display` while ds-docs puts all four under Foundations.
 
-Heights are generated: `node .design-sync/tools/measure-cards.mjs` loads every
-built card in a browser and writes `viewports.json`. It needs Chrome:
-`build-design-sync.sh` installs chromium, runs it between two `build-upload` passes and
-checks that every card ended up with a `viewport`.
+Heights are generated: `node .design-sync/tools/snapshot-cards.mjs` loads every
+built card in a browser, writes `viewports.json` and, when a height moved, reruns
+`build-upload` to stamp it into the markers before it freezes the cards. One render
+per card serves both, because the marker is a comment ahead of `<!doctype` and
+outside the DOM the card renders. It needs Chrome: `build-design-sync.sh` installs
+chromium, runs it after `build-upload` and checks that every card ended up with a
+`viewport`. `measure-cards.mjs` measures alone, frozen trees included.
 
 Everything the project holds now has a source here. `.thumbnail` — the project's
 cover image — was the last file that did not: a WebP that arrived with the
@@ -163,7 +166,7 @@ where the ordinary change-detection rules apply and none of this bites.
 ## Freezing the cards (runs LAST)
 
 ```sh
-node .design-sync/tools/snapshot-cards.mjs   # after build-cards and measure-cards
+node .design-sync/tools/snapshot-cards.mjs   # after build-upload
 ```
 
 A card is a whole document that downloads the 2.12 MB bundle and boots its own
@@ -222,14 +225,24 @@ comments — 219 KB of the same three blocks. Tree 20 MB → 9.0 MB.
   `git status` empty.
 - **A built section is not a settled one.** Components that measure write their
   result later — Table's sticky scrollbar pins `.scroll-wrap` to a computed height —
-  so the tidy pass waits for `document.fonts.ready` and then for the DOM to stop
-  changing (a MutationObserver with a 150 ms quiet window, 5 s cap). Counting frames
-  instead froze that one card three different ways in three runs.
+  and a chart draws at a fallback width until its ResizeObserver reports — so the
+  tidy pass and the height probe share one wait (`tools/lib/settle.mjs`):
+  `document.fonts.ready`, then a DOM that has not changed for 150 ms AND for 3
+  frames, 300 frames at most. Neither half alone is enough: counting frames alone
+  froze Table three different ways in three runs, and a quiet window alone can pass
+  before a ResizeObserver or IntersectionObserver has delivered, since both deliver
+  only in a frame.
+- **Real clock, one window per lane.** A virtual clock ran timers far ahead of the
+  frames and froze rendering when its budget ran out, and a background tab gets no
+  frames at all, so whether a chart had measured itself by the read was a race
+  between lanes. Each lane is its own window, navigated card to card, and the tool
+  reads a card when the page says it has settled. A window per card is a fresh
+  renderer per card: 48 s against 13 s for 60 cards (measured 2026-10-22).
 
 ### The gates that keep CI from thawing it
 
 `build-design-sync.sh` installs chromium when the image has none and fails without it, then runs
-`measure-cards`, `snapshot-cards` and `check-frozen`. CI builds the cards FROZEN, the same tree
+`snapshot-cards` and `check-frozen`. CI builds the cards FROZEN, the same tree
 this repo commits.
 
 - **`check-frozen.mjs` asserts the split.** Every card listed in `live-cards.txt` has a
@@ -244,8 +257,8 @@ this repo commits.
   specimen and cost that card a line.
 - **The `@dsCard` marker is re-prepended by hand**: a DOM dump starts at `<html>`,
   so without that the card vanishes from the next manifest.
-- **Proof it changed no pixel**: render every card and compare against
-  `viewports.json`. Measure only after `document.fonts.ready` — Mulish is taller
+- **Proof it changed no pixel**: `measure-cards` over the frozen tree, compared
+  against `viewports.json`. Measure only after `document.fonts.ready` — Mulish is taller
   than the fallback, and measuring before it lands under-reports by ~20px, which
   once produced 66 phantom "shrinks" and had also left 22 recorded heights short.
   Last run: 409 checked, 0 blank, 0 heights moved by more than 3px.

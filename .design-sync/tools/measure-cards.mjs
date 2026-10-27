@@ -9,20 +9,21 @@
 // its own inline script, and a second copy of that logic here would drift from it — the hand pass
 // this replaces measured whole sections while the cards had already started slicing.
 //
-// One browser per card, deliberately. Eight cards as iframes in one page was the first attempt and
-// Chrome returned an empty DOM: each card pulls the whole 2 MB bundle and runs its own Angular
-// application, and virtual time does not advance while those are in flight.
+// One window per card, never several cards as iframes in one page: Chrome returns an empty DOM,
+// because each card pulls the whole 2 MB bundle and runs its own Angular application.
 //
 //   node .design-sync/tools/measure-cards.mjs
 //
 // Exits non-zero if any card measured nothing, so a section that fails to render cannot quietly
-// leave its card unsized. Run build-cards first, then this, then build-cards again to stamp the
-// numbers into the markers.
+// leave its card unsized. A release measures inside snapshot-cards; this one also reads a frozen
+// tree, which is how a freeze is shown to have moved no height.
 import { createServer } from 'node:http';
-import { existsSync, readFileSync, statSync, writeFileSync } from 'node:fs';
+import { existsSync, readFileSync, statSync } from 'node:fs';
 import { dirname, extname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { launchBrowser } from './lib/browser.mjs';
+import { writeHeights } from './lib/heights.mjs';
+import { WHEN_SETTLED, readWhen } from './lib/settle.mjs';
 
 const here = dirname(fileURLToPath(import.meta.url));
 const syncDir = resolve(here, '..');
@@ -82,24 +83,28 @@ const REPORTER = `
 <script>
   (function () {
     var t0 = Date.now();
+    // Asked of the OTHER scripts: this one names the slicer's marker too, and a frozen card has no
+    // slicer, so a match on the whole document waits out the 20 s below on every frozen card.
+    var reporter = document.currentScript;
+    var needsSlice = Array.prototype.some.call(document.scripts, function (script) {
+      return script !== reporter && script.textContent.indexOf('var OWNS =') >= 0;
+    });
     (function settle() {
       var page = document.querySelector('.ds-page');
       var rendered = page && page.firstElementChild && page.firstElementChild.firstElementChild;
       var slices = document.documentElement.hasAttribute('data-ds-sliced');
-      var needsSlice = document.documentElement.innerHTML.indexOf('var OWNS =') >= 0;
       if ((!rendered || (needsSlice && !slices)) && Date.now() - t0 < 20000) {
         return setTimeout(settle, 50);
       }
       var kept = document.documentElement.getAttribute('data-ds-kept');
       // Web fonts land AFTER the section renders, and Mulish is taller than the fallback: measuring
       // on sight came out 20px short on twenty-two cards, which then declared a viewport the pane
-      // had to scroll. Found by measuring a card twice, before and after fonts.ready.
-      document.fonts.ready.then(function () {
-        setTimeout(function () {
-          document.title = 'H=' + (page ? page.offsetHeight : 0) + ';K=' + (kept === null ? '-' : kept);
-        }, 50);
+      // had to scroll.
+      whenSettled(function () {
+        document.title = 'H=' + (page ? page.offsetHeight : 0) + ';K=' + (kept === null ? '-' : kept);
       });
     })();
+    ${WHEN_SETTLED}
   })();
 </script>
 `;
@@ -138,16 +143,18 @@ const browser = await launchBrowser({
 });
 const heights = {};
 
-// Concurrent TABS in one browser. Cards are independent, so several run at once; more than this
-// and the machine's own scheduling starts to dominate.
+// Concurrent windows in one browser, one per lane. Cards are independent, so several run at once;
+// more than this and the machine's own scheduling starts to dominate.
 const LANES = Number(process.env.SNAPSHOT_LANES) || 5;
 
 // The probe writes its numbers into the title, which is one small string to read back rather than
-// a whole DOM. Read after the virtual clock stops, so it must not wait for anything.
+// a whole DOM.
+const READ = readWhen("document.title.indexOf('H=') === 0", 'document.title');
+
 async function measure(card) {
   const title = await browser.render(
     `http://127.0.0.1:${PORT}${card.url}`,
-    'document.title',
+    READ,
   );
   const reported = title.match(/^H=(\d+);K=(\d+|-)$/);
 
@@ -187,50 +194,4 @@ try {
   await browser.close();
 }
 
-// A card that renders nothing still has a height, so a run where the bundle was half-built came in
-// at 144px for all 418 cards and passed on none of them being zero. The floor sits between that and
-// the smallest card that does render its block, which is 281px now that the chapter's lede no
-// longer rides every card.
-const EMPTY_CARD = 200;
-
-// A card that sliced its own content away still renders a heading and a lede, so it is 371px, not
-// 144px, and no height threshold separates it from a small real card. The card counts what survived
-// its slice; zero means it published a title over an empty page. Four Menu cards did.
-if (blank.length) {
-  console.error(
-    `\n✗ ${blank.length} card(s) sliced away everything they were meant to show:`,
-  );
-  for (const name of blank) console.error(`    ${name}`);
-  process.exit(1);
-}
-
-const missing = Object.entries(heights).filter(
-  ([, value]) => value < EMPTY_CARD,
-);
-if (missing.length) {
-  console.error(
-    `\n✗ ${missing.length} card(s) rendered no block (under ${EMPTY_CARD}px):`,
-  );
-  for (const [name, value] of missing.slice(0, 12))
-    console.error(`    ${value}px  ${name}`);
-  if (missing.length > 12)
-    console.error(`    … and ${missing.length - 12} more`);
-  console.error(
-    '\nA whole run at one small height means the bundle is stale: rebuild it with' +
-      ' `bun run build:elements` before measuring.',
-  );
-  process.exit(1);
-}
-
-const previous = JSON.parse(readFileSync(VIEWPORTS, 'utf8'));
-const sorted = Object.fromEntries(
-  Object.entries(heights).sort(([a], [b]) => a.localeCompare(b)),
-);
-writeFileSync(
-  VIEWPORTS,
-  `${JSON.stringify({ note: previous.note, width: WIDTH, heights: sorted }, null, 2)}\n`,
-);
-console.error(
-  `\n✓ ${Object.keys(sorted).length} card height(s) into viewports.json` +
-    ` — tallest ${Math.max(...Object.values(sorted))}px, shortest ${Math.min(...Object.values(sorted))}px`,
-);
+writeHeights(VIEWPORTS, WIDTH, heights, blank);

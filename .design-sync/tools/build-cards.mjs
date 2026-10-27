@@ -995,7 +995,7 @@ for (const name of [...byName.keys()].sort()) {
   }
 
   // Keyed by the card FILE, not the component: a component publishes one card per block it owns and
-  // each is a different height. measure-cards.mjs writes these keys.
+  // each is a different height. snapshot-cards.mjs writes these keys.
   const partKey = apiKeyBySelector.get(component.selector) ?? '';
   for (const card of cardsFor(name)) {
     const height = viewports.heights[card.file];

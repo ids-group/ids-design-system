@@ -175,20 +175,24 @@ export class DsTableResize<T extends object> {
     });
   }
 
-  /** Computed only while the separator holds focus: measuring on every change detection forces layout per column. */
   private resizeRange(
     column: TableColumn<T>,
   ): { now: number; min: number; max: number } | null {
     const focused = this.resizeFocus();
-    if (focused?.key !== column.key) {
+    if (focused?.key === column.key) {
+      return {
+        now: this.columnWidth(column) ?? focused.measured,
+        min: MIN_COLUMN_WIDTH,
+        max: focused.max,
+      };
+    }
+    const now =
+      this.columnWidth(column) ?? this.headerCellFor(column)?.offsetWidth;
+    if (now === undefined) {
       return null;
     }
 
-    return {
-      now: this.columnWidth(column) ?? focused.measured,
-      min: MIN_COLUMN_WIDTH,
-      max: focused.max,
-    };
+    return { now, min: MIN_COLUMN_WIDTH, max: this.columnWidthCeiling() };
   }
 
   private resolvedColumnWidth(

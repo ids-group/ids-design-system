@@ -12,3 +12,5 @@ export type ButtonVariant = 'solid' | 'tonal' | 'ghost' | 'outline' | 'text';
 export type ButtonType = 'button' | 'submit' | 'reset';
 
 export type ButtonAlign = 'center' | 'between';
+
+export type ButtonLoadingMode = 'auto' | 'icon' | 'replace';

@@ -3,6 +3,14 @@
 @use '../../styles/component-base' as component-base;
 @include component-base.rules;
 
+@mixin spinner-ring {
+  content: ""; position: absolute; box-sizing: border-box;
+  border: var(--border-width-strong) solid var(--_button-label-color);
+  border-right-color: transparent;
+  border-radius: var(--radius-pill);
+  animation: spin var(--duration-loop-fast) linear infinite;
+}
+
 /* Truncation contract:
    Label - single line, ellipsis on overflow, no tooltip. Rephrase if it needs multiple lines.
    Icon-only - no visible label; the full label MUST live in aria-label and tooltip-on-hover.
@@ -267,21 +275,33 @@
     --_button-label-color-hover: var(--ds-button-label-color-hover, var(--_family-base));
   }
 
+  /* aria-disabled is set while loading; keep the variant fill and label, not the disabled gray. */
   &.loading {
-    color: transparent !important;
+    color: var(--_button-label-color);
     pointer-events: none;
-
-    /* aria-disabled is set while loading; keep the variant fill, not the disabled gray. */
     background-color: var(--_button-bg-color);
     border-color: var(--_button-border-color);
+  }
+
+  &.loading-replace {
+    color: transparent !important;
 
     &::after {
-      content: ""; position: absolute; box-sizing: border-box;
+      @include spinner-ring;
+
       width: var(--spinner-md); height: var(--spinner-md);
-      border: var(--border-width-strong) solid var(--_button-label-color);
-      border-right-color: transparent;
-      border-radius: var(--radius-pill);
-      animation: spin var(--duration-loop-fast) linear infinite;
+    }
+  }
+
+  /* The spinner is drawn over the icon's own box, so the label and the button keep their geometry. */
+  .loading-spinner {
+    position: relative;
+    color: transparent;
+
+    &::after {
+      @include spinner-ring;
+
+      inset: 0;
     }
   }
 }

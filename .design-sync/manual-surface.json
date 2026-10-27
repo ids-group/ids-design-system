@@ -33,6 +33,7 @@
     "[dsPanelFooterTemplate]",
     "[dsPanelHeaderTemplate]",
     "[dsPickerTrigger]",
+    "[dsPopoverTrigger]",
     "[dsProjectionDropped]",
     "[dsRailTrigger]",
     "[dsReserveMessages]",

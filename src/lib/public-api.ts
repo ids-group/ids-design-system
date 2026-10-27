@@ -87,6 +87,7 @@ export { ButtonComponent } from '@ids-group-ltd/ids-design-system/components/but
 export type {
   ButtonAlign,
   ButtonColor,
+  ButtonLoadingMode,
   ButtonType,
   ButtonVariant,
 } from '@ids-group-ltd/ids-design-system/components/button';
@@ -258,7 +259,10 @@ export type {
   PieChartCenterPlacement,
   PieChartSlice,
 } from '@ids-group-ltd/ids-design-system/components/pie-chart';
-export { PopoverComponent } from '@ids-group-ltd/ids-design-system/components/popover';
+export {
+  DsPopoverTrigger,
+  PopoverComponent,
+} from '@ids-group-ltd/ids-design-system/components/popover';
 export type {
   PopoverAlign,
   PopoverPlacement,

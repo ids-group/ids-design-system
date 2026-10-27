@@ -1749,6 +1749,19 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Busy state: blocks `pressed` and sets `aria-busy` and `aria-disabled`, keeping the button focusable so focus stays on it while the work runs. Button-only; ignored on an anchor with a dev warning."
       },
       {
+        "name": "loadingMode",
+        "kind": "input",
+        "type": "ButtonLoadingMode",
+        "union": [
+          "auto",
+          "icon",
+          "replace"
+        ],
+        "default": "'auto'",
+        "required": false,
+        "description": "Where the `loading` spinner draws. `'icon'` puts it in the leading icon's box (the trailing icon's when there is no leading one) and keeps the label visible; `'replace'` hides the contents behind one spinner centred on the button; `'auto'` is `'icon'` when `icon` is set, else `'replace'`. Neither moves the label or resizes the button."
+      },
+      {
         "name": "fullWidth",
         "kind": "input",
         "type": "boolean",
@@ -5064,6 +5077,22 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Toggle state: renders the pressed look and sets `aria-pressed`, `\"false\"` when bound off. Unbound, the button is no toggle and carries no `aria-pressed`."
       },
       {
+        "name": "ariaHasPopup",
+        "kind": "input",
+        "type": "'true' | 'menu' | 'listbox' | 'tree' | 'grid' | 'dialog' | null",
+        "union": [
+          "true",
+          "menu",
+          "listbox",
+          "tree",
+          "grid",
+          "dialog"
+        ],
+        "default": "null",
+        "required": false,
+        "description": "`aria-haspopup` on the inner `<button>`; set when this button triggers an overlay."
+      },
+      {
         "name": "ariaExpanded",
         "kind": "input",
         "type": "boolean | null",
@@ -7895,6 +7924,29 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "The slice that was clicked or activated with Enter or Space."
       }
     ]
+  },
+  "popover:DsPopoverTrigger": {
+    "key": "popover",
+    "selector": "[dsPopoverTrigger]",
+    "isElement": false,
+    "className": "DsPopoverTrigger",
+    "status": "stable",
+    "importName": "DsPopoverTrigger",
+    "importPath": "@ids-group-ltd/ids-design-system",
+    "entryPoint": "@ids-group-ltd/ids-design-system/components/popover",
+    "summary": null,
+    "inputs": [
+      {
+        "name": "dsPopoverTrigger",
+        "kind": "input-required",
+        "type": "PopoverComponent",
+        "union": null,
+        "default": null,
+        "required": true,
+        "description": ""
+      }
+    ],
+    "outputs": []
   },
   "popover": {
     "key": "popover",

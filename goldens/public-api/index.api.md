@@ -48,6 +48,7 @@ export { ButtonAlign } from '@ids-group-ltd/ids-design-system/components/button'
 export { ButtonColor } from '@ids-group-ltd/ids-design-system/components/button'; // type
 export { ButtonComponent } from '@ids-group-ltd/ids-design-system/components/button'; // component
 export { ButtonGroupComponent } from '@ids-group-ltd/ids-design-system/components/button-group'; // component
+export { ButtonLoadingMode } from '@ids-group-ltd/ids-design-system/components/button'; // type
 export { ButtonType } from '@ids-group-ltd/ids-design-system/components/button'; // type
 export { ButtonVariant } from '@ids-group-ltd/ids-design-system/components/button'; // type
 export { CHART_DEFAULT_VALUE_SPACE } from '@ids-group-ltd/ids-design-system/components/chart'; // const
@@ -143,6 +144,7 @@ export { DsPanelHeaderTemplateDirective } from '@ids-group-ltd/ids-design-system
 export { DsPasswordRule } from '@ids-group-ltd/ids-design-system/components/password-rules'; // interface
 export { DsPasswordRuleState } from '@ids-group-ltd/ids-design-system/components/password-rules'; // type
 export { DsPickerTriggerDirective } from '@ids-group-ltd/ids-design-system/components'; // directive
+export { DsPopoverTrigger } from '@ids-group-ltd/ids-design-system/components/popover'; // directive
 export { DsRouterLink } from '@ids-group-ltd/ids-design-system/components'; // type
 export { DsSize } from '@ids-group-ltd/ids-design-system/core'; // type
 export { DsStaticPreview } from '@ids-group-ltd/ids-design-system/components'; // directive

@@ -5,7 +5,7 @@ import {
   MenuDividerComponent,
   MenuItemComponent,
 } from 'ds/menu';
-import { PopoverComponent } from 'ds/popover';
+import { DsPopoverTrigger, PopoverComponent } from 'ds/popover';
 import { TooltipDirective } from 'ds/tooltip';
 import { DocsSectionComponent } from '../../../shared/docs-section.component';
 
@@ -17,6 +17,7 @@ import { DocsSectionComponent } from '../../../shared/docs-section.component';
     MenuComponent,
     MenuDividerComponent,
     MenuItemComponent,
+    DsPopoverTrigger,
     PopoverComponent,
     TooltipDirective,
     DocsSectionComponent,

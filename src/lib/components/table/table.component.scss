@@ -124,7 +124,7 @@
     inset-block: var(--space-2);
     right: 0;
     width: var(--border-width-default);
-    background-color: transparent;
+    background-color: var(--border-default);
     transition: background-color var(--duration-fast) var(--ease-standard);
   }
 
@@ -134,14 +134,8 @@
     background-color: var(--_table-sort-active-icon-color);
   }
 
-  /* A hairline: the standard ring would read as the neighbouring column's. Widening the line is
-     the indicator. */
   &:focus-visible {
-    @include focus.own-indicator;
-
-    &::after {
-      width: var(--border-width-strong);
-    }
+    @include focus.ring;
   }
 }
 

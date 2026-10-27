@@ -65,13 +65,19 @@
               scope="colgroup"
               class="print-heading"
               [attr.colspan]="expandedColspan()">
-              <span class="print-heading-title">{{ printHeading() }}</span>
+              <span class="print-heading-title">
+                {{ printHeading() }}
+              </span>
+
               @if (printHeadingNote()) {
-                <span class="print-heading-note">{{ printHeadingNote() }}</span>
+                <span class="print-heading-note">
+                  {{ printHeadingNote() }}
+                </span>
               }
             </th>
           </tr>
         }
+
         <tr>
           @if (selectable()) {
             <th

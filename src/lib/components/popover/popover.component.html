@@ -21,6 +21,7 @@
 <ng-template #panel>
   <div
     class="popover"
+    [attr.id]="panelId"
     [attr.role]="panelRole()"
     [attr.aria-label]="panelLabel()"
     [class.has-arrow]="arrow()"

@@ -17,6 +17,29 @@ holds an entry; what the release bot commits afterwards needs none.
 
 ## Unreleased
 
+### Cards
+
+- **Every chart card freezes at its measured width.** A chart card froze at the 640px fallback in
+  some runs and at its real width in others; it is now the real width every run, with the axis
+  gutter sized for Mulish. The frozen cards also carry no template indentation: the tidy pass
+  collapses it.
+
+### Build
+
+- **`snapshot-cards` and `measure-cards` read a card once it has settled.** Both run on the real
+  clock with one window per lane, and wait for the web fonts, then for 150 ms and 3 frames without
+  a DOM change. The injected tidy script parses. `snapshot-cards` counts a card as settled only when
+  its root carries `data-ds-tidied`, `measure-cards` once the card has reported its height. Two
+  freezes in a row are byte-identical.
+- **`build-design-sync.sh` renders each card once.** `snapshot-cards` takes the card's height in the
+  same render it freezes, writes `viewports.json`, and reruns `build-upload` to stamp the markers
+  when a height moved. `viewports.json` and the upload tree are byte-identical to the separate
+  `measure-cards` pass; `measure-cards` stays for measuring a frozen tree.
+- **`measure-cards` no longer waits out its 20 s limit on a frozen card.** Its settle check searched
+  the whole document for the slicer's `var OWNS =` marker, which the reporter script itself carries,
+  so a frozen card with no slicer never read as ready. The check now skips the reporter and looks
+  only at the card's other scripts.
+
 ## 1.0.1 — 2026-10-22
 
 ### Cards
