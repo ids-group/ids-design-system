@@ -222,6 +222,15 @@ export async function launchBrowser({
       flatten: true,
     });
     await send('Page.enable', {}, sessionId);
+    // DS_CPU_THROTTLE=4 renders every card at a quarter of the machine's speed, so a run can be
+    // rehearsed against a slow CI runner.
+    const slowdown = Number(process.env.DS_CPU_THROTTLE);
+    if (slowdown > 1)
+      await send(
+        'Emulation.setCPUThrottlingRate',
+        { rate: slowdown },
+        sessionId,
+      );
 
     return { targetId, sessionId };
   };
