@@ -45,9 +45,9 @@
 
 - **A `ds-menu-item` that is the first or last child of the menu rounds its corners with it.** The rows are square and
   the menu clips them at its rounded edge, so the focus ring of the first or last item was cut off
-  at two corners and kept square ones at the other two. Those rows now take the menu's inner radius
-  and every row's focus ring is drawn inside the row. `--ds-menu-item-radius` still sets every
-  row's radius.
+  at two corners and kept square ones at the other two. Those rows now take the menu's inner radius,
+  so the ring, drawn inside the row, follows the menu's rounded corners. `--ds-menu-item-radius`
+  still sets every row's radius.
   Nothing to change in your code.
 - **`ds-menu` rows touch each other, so the pointer never falls between them.** The menu put a 2px
   gap between rows, and a pointer resting in it hovered no row, so the hover fill flickered off
