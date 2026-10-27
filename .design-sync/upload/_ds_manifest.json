@@ -449,7 +449,7 @@
     {
       "path": "components/actions/IconButton/Icon Button - Toggle.html",
       "group": "actions",
-      "viewport": "1200x375",
+      "viewport": "1200x394",
       "name": "Icon button - toggle",
       "subtitle": "[selected] renders the pressed state and sets aria-pressed, 'false' when off; an icon button with no [selected] is no toggle and has none."
     },
@@ -854,14 +854,14 @@
     {
       "path": "components/navigation/Menu/Menu - Standing description.html",
       "group": "navigation",
-      "viewport": "1200x503",
+      "viewport": "1200x499",
       "name": "Menu - standing description",
       "subtitle": "description adds a visible second line for a limitation ('will not be saved'), unlike hover-only [dsTooltip]."
     },
     {
       "path": "components/navigation/MenuDivider/Menu Divider - Dividers.html",
       "group": "navigation",
-      "viewport": "1200x429",
+      "viewport": "1200x427",
       "name": "Menu Divider - dividers",
       "subtitle": "ds-menu-divider separates item groups with a role='separator' rule that keyboard navigation skips."
     },
