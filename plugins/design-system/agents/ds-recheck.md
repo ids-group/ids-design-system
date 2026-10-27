@@ -22,6 +22,12 @@ Two verification modes:
 
 ## What to do
 
+- **A search result counts only when nothing capped it.** `Grep` truncates silently (250 lines by
+  default, fewer with `head_limit`). Pass no `head_limit` on a search of the whole root, or pass
+  `head_limit: 0`. For a locator that matches widely (an element such as `ds-button` together with
+  an attribute), count first with `output_mode: "count"`, then read every file the count names. A
+  verdict rests on the whole list: when any part was not read, return `migrated: false` with
+  `confidence: "low"` and a `note` naming what was not read, never `migrated: true`.
 - Search the target source (`*.html`, `*.ts`, `*.scss`, `*.css`; skip `node_modules`, `dist`,
   `.git`) for the item's `old`, every `searchHint`, AND every `detect` shape — `detect` is the
   primary locator exactly where `old` names nothing the affected code mentions.
