@@ -22,7 +22,11 @@
       "old": "ds-date-picker input",
       "new": null,
       "surface": "template",
-      "searchHints": ["ds-date-picker", "role=\"textbox\"", "getByRole('textbox')"],
+      "searchHints": [
+        "ds-date-picker",
+        "role=\"textbox\"",
+        "getByRole('textbox')"
+      ],
       "action": "None, unless a test or a selector finds the date input by the `textbox` role: query the `combobox` role instead.",
       "appliesWhen": "A test, a selector or a template that targets the `ds-date-picker` text input by role.",
       "restore": "screen.getByRole('combobox', { name: 'Start date' })",
@@ -33,6 +37,14 @@
     {
       "text": "New `[dsPopoverTrigger]` directive (`DsPopoverTrigger`, exported with `PopoverComponent`) opens a `ds-popover` from a button and sets `aria-haspopup`, `aria-expanded` and `aria-controls` on its inner `<button>`; `ds-popover` gains `panelId` and `holdsMenu`.",
       "verify": "A `ds-icon-button` with `[dsPopoverTrigger]` around a `ds-menu` popover: Enter opens the menu, the inner button reads aria-haspopup=\"menu\" and aria-expanded=\"true\", and Escape closes it and returns focus to the button."
+    },
+    {
+      "text": "Now in a single `ds-time-picker` sets the current time and closes the panel; a range panel stays open until Done.",
+      "verify": "Open a single ds-time-picker, press Now: the field shows the current time and the panel is closed."
+    },
+    {
+      "text": "`--ds-menu-gap` defaults to `0px` instead of `var(--space-0-5)`, so `ds-menu` rows touch. To restore the gap, set `--ds-menu-gap: var(--space-0-5)` on the menu or a parent.",
+      "verify": "Open any ds-menu: there is no strip between rows, and hovering down the list keeps one row filled at every pointer position."
     }
   ],
   "deleteList": []

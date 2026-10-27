@@ -51,7 +51,7 @@
   gap between rows, and a pointer resting in it hovered no row, so the hover fill flickered off
   while moving down the list. `--ds-menu-gap` now defaults to `0px`, which makes the menu 2px
   shorter per row boundary. A custom `--ds-menu-gap` brings the gap and its dead strip back.
-- **A looping `ds-time-picker` column marks the selected value once.** A column with fewer values
+- **A looping `ds-time-picker` column marks the selected value once.** A `ds-time-columns` column with fewer values
   than fit in it, such as minutes at a 15-minute step, repeats its set so it can scroll round, and
   every repeat of the selected value was filled. While scrolling, two filled cells four rows apart
   were on screen at once. Only the one nearest the column's centre is filled now. Nothing to change

@@ -249,7 +249,10 @@ export function displayParts(
       }
     }
     if (index < layout.slots.length - 1) {
-      parts.push({ text: layout.literals[index], muted: digits.length < slot.maxLength });
+      parts.push({
+        text: layout.literals[index],
+        muted: digits.length < slot.maxLength,
+      });
     }
   }
 

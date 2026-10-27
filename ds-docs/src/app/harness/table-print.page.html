@@ -30,10 +30,10 @@
 <ds-table
   sortMode="client"
   caption="Agents, every row in print"
+  printAllRows
   [data]="rows"
   [columns]="columns"
-  [pageSize]="25"
-  printAllRows />
+  [pageSize]="25" />
 
 <h2>
   Paged, with a print heading
@@ -42,8 +42,8 @@
 <ds-table
   sortMode="client"
   caption="Agents with a print heading"
+  printHeading="Agent performance"
+  printHeadingNote="One row per agent with policyholders in scope"
   [data]="rows"
   [columns]="columns"
-  [pageSize]="25"
-  printHeading="Agent performance"
-  printHeadingNote="One row per agent with policyholders in scope" />
+  [pageSize]="25" />
