@@ -23,6 +23,7 @@ const page = (
   linkToken,
   hairColor = '#1a4fd6',
   panelColor = '#f8f9fb',
+  firstLineColor = '#202124',
 ) => `<!doctype html>
 <html><head><style>
   body { margin: 0; font: 16px sans-serif; }
@@ -31,7 +32,8 @@ const page = (
   .plain-link { color: var(--text-link); }
   ${linkToken ? ':root { --text-link: #1a4fd6; }' : ''}
   .hair { display: block; width: 40px; height: 1px; background: ${hairColor}; }
-  .panel { display: block; width: 400px; height: 200px; background: ${panelColor}; }
+  .panel { display: block; width: 400px; height: 200px; background: ${panelColor}; font-size: 48px; }
+  .panel::first-line { color: ${firstLineColor}; }
 </style></head><body><main class="content">
   <section data-anchor="widget">
     <h2>Widget</h2>
@@ -48,11 +50,19 @@ const page = (
     <h3 class="block-title">Hair</h3>
     <ds-hair class="hair"></ds-hair>
     <h3 class="block-title">Panel</h3>
-    <ds-panel class="panel"></ds-panel>
+    <ds-panel class="panel">Panel text over a few words</ds-panel>
   </section>
 </main></body></html>`;
 
-for (const [name, widgetHeight, gadgetWidth, linkToken, hair, panel] of [
+for (const [
+  name,
+  widgetHeight,
+  gadgetWidth,
+  linkToken,
+  hair,
+  panel,
+  firstLine,
+] of [
   ['before', 40, 40, true],
   ['token-removed', 40, 40, false],
   ['after', 40, 41, true],
@@ -60,11 +70,12 @@ for (const [name, widgetHeight, gadgetWidth, linkToken, hair, panel] of [
   ['pushed-and-wider', 40.5, 41, true],
   ['hair-tinted', 40, 40, true, '#1c51d8'],
   ['panel-tinted', 40, 40, true, '#1a4fd6', '#f5f6f8'],
+  ['first-line-recoloured', 40, 40, true, '#1a4fd6', '#f8f9fb', '#d62a1a'],
 ]) {
   mkdirSync(join(work, name));
   writeFileSync(
     join(work, name, 'index.html'),
-    page(widgetHeight, gadgetWidth, linkToken, hair, panel),
+    page(widgetHeight, gadgetWidth, linkToken, hair, panel, firstLine),
   );
 }
 
@@ -213,7 +224,15 @@ const cases = [
     manifest: { items: [] },
     status: 1,
     present: [/UNNAMED\s+changed\s+tone\/panel\s/],
-    absent: [/differ by antialiasing only/],
+    absent: [/differ by antialiasing only/, /differ by raster noise only/],
+  },
+  {
+    name: 'HOLDS on a panel whose pixels differ past the antialiasing bound while markup, styles and geometry are the same',
+    after: 'first-line-recoloured',
+    manifest: { items: [] },
+    status: 0,
+    present: [/0 differ/, /1 block\(s\) differ by raster noise only/],
+    absent: [/UNNAMED/, /differ by antialiasing only/],
   },
 ];
 
