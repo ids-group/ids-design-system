@@ -1,5 +1,7 @@
 ## Unreleased
 
+## 1.0.3 — 2026-10-27
+
 ### Fixed
 
 - **A `ds-table` header button takes a 24px pointer target.** The sort and definition buttons of a
