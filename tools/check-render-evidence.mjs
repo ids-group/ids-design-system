@@ -27,7 +27,8 @@
 // settled (every face is bundled), infinite animations paused at zero and finite ones finished,
 // software raster on one thread (RASTER_FLAGS). Two blocks are equal when their PNGs are equal
 // byte for byte, or when they differ only as antialiasing does: no channel more than
-// ANTIALIAS_CHANNEL_DELTA apart, on at most ANTIALIAS_PIXEL_SHARE of the block's pixels.
+// ANTIALIAS_CHANNEL_DELTA apart, on at most ANTIALIAS_PIXEL_SHARE of the block's pixels, or when
+// markup text, computed styles and geometry are identical and no image or url() is inside.
 // A block that only moved down the page is not one: a differing block whose document top differs
 // is captured again with the higher side pushed down to the other's top, and compared once more.
 //
@@ -369,6 +370,63 @@ const alignBlock = (index, target) => `() => {
   return documentTop();
 }`;
 
+// A hash of everything in block `index` that decides its pixels apart from rasterisation: each
+// element's tag, class, own text and attributes, its whole computed style, the pseudo-elements
+// that generate a box, inner scroll offsets and its box relative to the block's own origin. An
+// element with no area keeps its style but not its box: it paints nothing, and a fixed one moves
+// with the scroll position. A block holding an image, canvas, video or any url() paints content
+// this cannot see, so it reports `hasResource`.
+const fingerprintBlock = (index) => `() => {
+  const block = window.__renderBlocks[${index}];
+  const follows = (node, other) => !!(node.compareDocumentPosition(other) & Node.DOCUMENT_POSITION_FOLLOWING);
+  const { start, end, section } = block;
+  const inside = (element) =>
+    (start ? start === element || start.contains(element) || follows(start, element) : true) &&
+    (!end || (follows(element, end) && !element.contains(end)));
+  const origin = (start ?? section).getBoundingClientRect();
+  const sectionLeft = section.getBoundingClientRect().left;
+  const round = (value) => Math.round(value * 64) / 64;
+  const replaced = ['img', 'canvas', 'video', 'audio', 'picture', 'iframe', 'object', 'embed', 'foreignobject', 'image'];
+  const styleText = (style) => { let text = ''; for (const name of [...style].sort()) text += name + ':' + style.getPropertyValue(name) + ';'; return text; };
+  const newline = String.fromCharCode(10);
+  let hasResource = false;
+  let text = '';
+  let count = 0;
+  for (const element of section.querySelectorAll('*')) {
+    if (!inside(element)) continue;
+    count++;
+    const tag = element.tagName.toLowerCase();
+    const style = getComputedStyle(element);
+    const styles = styleText(style);
+    let pseudo = '';
+    for (const which of ['::before', '::after', '::marker', '::placeholder']) {
+      const computed = getComputedStyle(element, which);
+      const generates = which === '::marker' ? style.display === 'list-item'
+        : which === '::placeholder' ? element.hasAttribute('placeholder')
+        : computed.content !== 'none' && computed.content !== 'normal';
+      if (generates) pseudo += which + '{' + styleText(computed) + '}';
+    }
+    const attributes = [...element.attributes]
+      .filter((attribute) => !['id', 'class', 'style'].includes(attribute.name) && !attribute.name.startsWith('_ng') && !attribute.name.startsWith('ng-'))
+      .map((attribute) => attribute.name + '=' + attribute.value).sort().join(' ');
+    const own = [...element.childNodes].filter((node) => node.nodeType === 3).map((node) => node.data).join('');
+    const rect = element.getBoundingClientRect();
+    const box = rect.width > 0 || rect.height > 0 ? [round(rect.left - sectionLeft), round(rect.top - origin.top), round(rect.width), round(rect.height)].join(',') : 'none';
+    if (replaced.includes(tag) || styles.includes('url(') || pseudo.includes('url(')) hasResource = true;
+    text += [tag, element.getAttribute('class') ?? '', own, attributes, element.scrollTop, element.scrollLeft, box, styles, pseudo].join('|') + newline;
+  }
+  let h1 = 0xdeadbeef;
+  let h2 = 0x41c6ce57;
+  for (let position = 0; position < text.length; position++) {
+    const code = text.charCodeAt(position);
+    h1 = Math.imul(h1 ^ code, 2654435761);
+    h2 = Math.imul(h2 ^ code, 1597334677);
+  }
+  h1 = Math.imul(h1 ^ (h1 >>> 16), 2246822507) ^ Math.imul(h2 ^ (h2 >>> 13), 3266489909);
+  h2 = Math.imul(h2 ^ (h2 >>> 16), 2246822507) ^ Math.imul(h1 ^ (h1 >>> 13), 3266489909);
+  return { hasResource, count, hash: 4294967296 * (2097151 & h2) + (h1 >>> 0) };
+}`;
+
 // Screenshots block `index` in parts of one viewport, top to bottom.
 async function captureBlock({ s, evaluate }, index) {
   const chunks = [];
@@ -407,7 +465,12 @@ async function captureBlock({ s, evaluate }, index) {
     chunks.push(data);
     offset += Math.max(1, settled.visible);
   }
-  return { chunks, unstable, top };
+  return {
+    chunks,
+    unstable,
+    top,
+    structure: await evaluate(fingerprintBlock(index)),
+  };
 }
 
 // With `targets` (block id -> document top), captures only those blocks, each pushed down to its
@@ -540,6 +603,17 @@ async function antialiasOnly(before, after) {
 const samePixels = (a, b) =>
   a.chunks.length === b.chunks.length &&
   a.chunks.every((chunk, index) => chunk === b.chunks[index]);
+
+// A block that differs past the antialiasing bound is still raster noise when nothing its pixels
+// can depend on differs: same markup text, computed styles and geometry, and no image, canvas or
+// url() whose content the fingerprint cannot see. A change to the page's height elsewhere moves
+// the raster of such a block by up to a dozen levels on a handful of pixels, however it is aligned.
+const sameStructure = (a, b) =>
+  Boolean(a.structure && b.structure) &&
+  !a.structure.hasResource &&
+  !b.structure.hasResource &&
+  a.structure.count === b.structure.count &&
+  a.structure.hash === b.structure.hash;
 
 // Antialiasing depends on a block's absolute position in the document: a block pushed down 40 px
 // by a change above it repaints the edges of its circles and rounded corners a level or two apart.
@@ -816,7 +890,27 @@ async function main() {
     { dir: after.dir, blocks: blocksAfter },
   ]);
   const antialiased = await antialiasOnly(blocksBefore, blocksAfter);
-  const differing = compareBlocks(blocksBefore, blocksAfter, antialiased);
+  const rasterNoise = new Set(
+    [...blocksBefore]
+      .filter(([id, a]) => {
+        const b = blocksAfter.get(id);
+
+        return (
+          b &&
+          !a.unstable &&
+          !b.unstable &&
+          !antialiased.has(id) &&
+          !samePixels(a, b) &&
+          sameStructure(a, b)
+        );
+      })
+      .map(([id]) => id),
+  );
+  const differing = compareBlocks(
+    blocksBefore,
+    blocksAfter,
+    new Set([...antialiased, ...rasterNoise]),
+  );
   const manifestPath = join(MIGRATIONS, `${version}.json`);
   const manifestText = existsSync(manifestPath)
     ? readFileSync(manifestPath, 'utf8')
@@ -860,6 +954,10 @@ async function main() {
   if (antialiased.size)
     console.log(
       `  ${antialiased.size} block(s) differ by antialiasing only (no channel more than ${ANTIALIAS_CHANNEL_DELTA}/255 apart, on at most ${ANTIALIAS_PIXEL_SHARE * 100}% of pixels)`,
+    );
+  if (rasterNoise.size)
+    console.log(
+      `  ${rasterNoise.size} block(s) differ by raster noise only (same markup, computed styles and geometry): ${[...rasterNoise].join(', ')}`,
     );
   if (realigned)
     console.log(

@@ -247,34 +247,56 @@ const report = (count) => {
     console.error(`  rendered ${count}/${cards.length}`);
 };
 
+// `data-ds-tidied` is the last thing set, after the card's own script has finished slicing.
+// Without it the page was caught mid-boot and the snapshot would freeze a half-built section.
+// Matched on the root element: the injected script's own source names the attribute too.
+const settled = (dom) =>
+  /^<!DOCTYPE html>\s*<html[^>]*\sdata-ds-tidied="/.test(dom);
+
+function record(path, { dom, height, kept: survived }) {
+  // Keyed by the card FILE, which is what build-cards reads back.
+  const name = path
+    .split('/')
+    .pop()
+    .replace(/\.html$/, '');
+  heights[name] = height;
+  if (survived === 0) blank.push(name);
+  if (frozen.has(path)) snapshots.set(path, dom);
+}
+
 let next = 0;
 let finished = 0;
 async function lane() {
   while (next < cards.length) {
     const path = cards[next++];
-    const { dom, height, kept: survived } = await render(path);
-    // Keyed by the card FILE, which is what build-cards reads back.
-    const name = path
-      .split('/')
-      .pop()
-      .replace(/\.html$/, '');
-    heights[name] = height;
-    if (survived === 0) blank.push(name);
+    const result = await render(path);
     report((finished += 1));
-    if (!frozen.has(path)) continue;
-    // `data-ds-tidied` is the last thing set, after the card's own script has finished slicing.
-    // Without it the page was caught mid-boot and the snapshot would freeze a half-built section.
-    // Matched on the root element: the injected script's own source names the attribute too.
-    if (!/^<!DOCTYPE html>\s*<html[^>]*\sdata-ds-tidied="/.test(dom)) {
+    if (frozen.has(path) && !settled(result.dom)) {
       failed.push(path);
       continue;
     }
-    snapshots.set(path, dom);
+    record(path, result);
   }
 }
 
 try {
   await Promise.all(Array.from({ length: LANES }, lane));
+  // The lanes take neighbouring cards, so a stall of the browser or the machine fails the cards in
+  // flight together and leaves the ones either side untouched. Alone they settle.
+  if (failed.length) {
+    const retried = failed.splice(0);
+    console.error(
+      `\n  ${retried.length} card(s) did not settle with ${LANES} in flight, rendering each again on its own`,
+    );
+    for (const path of retried) {
+      const result = await render(path);
+      if (settled(result.dom)) record(path, result);
+      else failed.push(path);
+    }
+    console.error(
+      `  ${retried.length - failed.length} of ${retried.length} settled on their own`,
+    );
+  }
 } finally {
   server.close();
   await browser.close();
@@ -283,7 +305,7 @@ try {
 process.stderr.write('\r'.padEnd(90));
 if (failed.length) {
   console.error(
-    `\n✗ ${failed.length} card(s) never finished rendering, so nothing was written:`,
+    `\n✗ ${failed.length} card(s) never finished rendering, even on their own, so nothing was written:`,
   );
   for (const path of failed.slice(0, 10)) console.error(`    ${path}`);
   process.exit(1);
