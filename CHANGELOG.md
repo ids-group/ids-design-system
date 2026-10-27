@@ -1,5 +1,7 @@
 ## Unreleased
 
+## 1.0.2 — 2026-10-27
+
 ### Added
 
 - **`ds-icon-button` takes an `ariaHasPopup` input.** It sets `aria-haspopup` on the inner

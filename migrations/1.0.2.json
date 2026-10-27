@@ -1,5 +1,5 @@
 {
-  "version": "unreleased",
+  "version": "1.0.2",
   "items": [
     {
       "id": "button-loading-spinner-in-icon-slot",
@@ -22,7 +22,11 @@
       "old": "ds-date-picker",
       "new": null,
       "surface": "template",
-      "searchHints": ["ds-date-picker", "role=\"textbox\"", "getByRole('textbox')"],
+      "searchHints": [
+        "ds-date-picker",
+        "role=\"textbox\"",
+        "getByRole('textbox')"
+      ],
       "action": "None, unless a test or a selector finds the date input by the `textbox` role: query the `combobox` role instead.",
       "appliesWhen": "A test, a selector or a template that targets the text input of a `ds-date-picker` by role.",
       "restore": "screen.getByRole('combobox', { name: 'Start date' })",
@@ -34,7 +38,10 @@
       "old": "--ds-menu-gap",
       "new": null,
       "surface": "style",
-      "searchHints": ["--ds-menu-gap", "ds-menu"],
+      "searchHints": [
+        "--ds-menu-gap",
+        "ds-menu"
+      ],
       "action": "None, unless a layout relied on the gap between menu rows (the default was `var(--space-0-5)`, now `0px`): set `--ds-menu-gap: var(--space-0-5)` on that menu.",
       "appliesWhen": "A `ds-menu` that does not set `--ds-menu-gap`. A menu that sets it keeps its value, and the strip between rows where the pointer hovers no row.",
       "restore": "ds-menu { --ds-menu-gap: var(--space-0-5); }",
