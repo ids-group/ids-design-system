@@ -23,6 +23,8 @@ export interface IconButtonProps {
   disabled?: boolean;
   /** Toggle state: renders the pressed look and sets `aria-pressed`, `"false"` when bound off. Unbound, the button is no toggle and carries no `aria-pressed`. */
   selected?: boolean | null;
+  /** `aria-haspopup` on the inner `<button>`; set when this button triggers an overlay. */
+  ariaHasPopup?: 'true' | 'menu' | 'listbox' | 'tree' | 'grid' | 'dialog' | null;
   /** `aria-expanded` on the inner `<button>`; bind to the open state. On the host it would land on a non-focusable wrapper. */
   ariaExpanded?: boolean | null;
   /** `aria-controls` on the inner `<button>`: the id of the panel this button opens. */

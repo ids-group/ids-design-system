@@ -230,8 +230,8 @@
         "message": "<Breadcrumbs> doesn't accept that prop. Declared props: items, separator, clickable, maxItems, onNavigate, children."
       },
       {
-        "selector": "JSXOpeningElement[name.name='Button'] > JSXAttribute > JSXIdentifier[name!=/^(?:hint|error|warning|reserveMessage|messageIcon|color|variant|align|size|routerLink|href|fragment|queryParams|queryParamsHandling|target|rel|routerLinkActiveOptions|ariaCurrent|type|disabled|loading|fullWidth|ariaLabel|icon|trailingIcon|ariaHasPopup|ariaExpanded|ariaControls|disabledReason|ariaDescribedBy|onPressed|subtext|children|key|ref|className|style)$/]",
-        "message": "<Button> doesn't accept that prop. Declared props: hint, error, warning, reserveMessage, messageIcon, color, variant, align, size, routerLink, href, fragment, queryParams, queryParamsHandling, target, rel, routerLinkActiveOptions, ariaCurrent, type, disabled, loading, fullWidth, ariaLabel, icon, trailingIcon, ariaHasPopup, ariaExpanded, ariaControls, disabledReason, ariaDescribedBy, onPressed, subtext, children."
+        "selector": "JSXOpeningElement[name.name='Button'] > JSXAttribute > JSXIdentifier[name!=/^(?:hint|error|warning|reserveMessage|messageIcon|color|variant|align|size|routerLink|href|fragment|queryParams|queryParamsHandling|target|rel|routerLinkActiveOptions|ariaCurrent|type|disabled|loading|loadingMode|fullWidth|ariaLabel|icon|trailingIcon|ariaHasPopup|ariaExpanded|ariaControls|disabledReason|ariaDescribedBy|onPressed|subtext|children|key|ref|className|style)$/]",
+        "message": "<Button> doesn't accept that prop. Declared props: hint, error, warning, reserveMessage, messageIcon, color, variant, align, size, routerLink, href, fragment, queryParams, queryParamsHandling, target, rel, routerLinkActiveOptions, ariaCurrent, type, disabled, loading, loadingMode, fullWidth, ariaLabel, icon, trailingIcon, ariaHasPopup, ariaExpanded, ariaControls, disabledReason, ariaDescribedBy, onPressed, subtext, children."
       },
       {
         "selector": "JSXOpeningElement[name.name='ButtonGroup'] > JSXAttribute > JSXIdentifier[name!=/^(?:ariaLabel|children|key|ref|className|style)$/]",
@@ -318,8 +318,8 @@
         "message": "<Icon> doesn't accept that prop. Declared props: name, size, stroke, ariaLabel, children."
       },
       {
-        "selector": "JSXOpeningElement[name.name='IconButton'] > JSXAttribute > JSXIdentifier[name!=/^(?:icon|ariaLabel|ariaDescribedBy|variant|color|size|type|disabled|selected|ariaExpanded|ariaControls|onPressed|children|key|ref|className|style)$/]",
-        "message": "<IconButton> doesn't accept that prop. Declared props: icon, ariaLabel, ariaDescribedBy, variant, color, size, type, disabled, selected, ariaExpanded, ariaControls, onPressed, children."
+        "selector": "JSXOpeningElement[name.name='IconButton'] > JSXAttribute > JSXIdentifier[name!=/^(?:icon|ariaLabel|ariaDescribedBy|variant|color|size|type|disabled|selected|ariaHasPopup|ariaExpanded|ariaControls|onPressed|children|key|ref|className|style)$/]",
+        "message": "<IconButton> doesn't accept that prop. Declared props: icon, ariaLabel, ariaDescribedBy, variant, color, size, type, disabled, selected, ariaHasPopup, ariaExpanded, ariaControls, onPressed, children."
       },
       {
         "selector": "JSXOpeningElement[name.name='InfoHint'] > JSXAttribute > JSXIdentifier[name!=/^(?:text|content|ariaLabel|icon|children|key|ref|className|style)$/]",
