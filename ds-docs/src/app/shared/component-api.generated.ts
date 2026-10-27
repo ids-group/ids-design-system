@@ -7925,6 +7925,29 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       }
     ]
   },
+  "popover:DsPopoverTrigger": {
+    "key": "popover",
+    "selector": "[dsPopoverTrigger]",
+    "isElement": false,
+    "className": "DsPopoverTrigger",
+    "status": "stable",
+    "importName": "DsPopoverTrigger",
+    "importPath": "@ids-group-ltd/ids-design-system",
+    "entryPoint": "@ids-group-ltd/ids-design-system/components/popover",
+    "summary": null,
+    "inputs": [
+      {
+        "name": "dsPopoverTrigger",
+        "kind": "input-required",
+        "type": "PopoverComponent",
+        "union": null,
+        "default": null,
+        "required": true,
+        "description": ""
+      }
+    ],
+    "outputs": []
+  },
   "popover": {
     "key": "popover",
     "selector": "ds-popover",

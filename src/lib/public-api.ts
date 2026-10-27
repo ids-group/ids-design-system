@@ -259,7 +259,10 @@ export type {
   PieChartCenterPlacement,
   PieChartSlice,
 } from '@ids-group-ltd/ids-design-system/components/pie-chart';
-export { PopoverComponent } from '@ids-group-ltd/ids-design-system/components/popover';
+export {
+  DsPopoverTrigger,
+  PopoverComponent,
+} from '@ids-group-ltd/ids-design-system/components/popover';
 export type {
   PopoverAlign,
   PopoverPlacement,

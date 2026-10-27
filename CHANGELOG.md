@@ -8,6 +8,13 @@
 - **`ds-icon-button` exposes `controlRef`.** It is the inner `<button>` as an `ElementRef`, the same as
   on `ds-button`, so an overlay can position against it and return focus to it: pass
   `trigger.controlRef().nativeElement` to `toggle` of `ds-popover`.
+- **`[dsPopoverTrigger]` opens a `ds-popover` from a button and keeps its ARIA in step.** Put
+  `[dsPopoverTrigger]="pop"` on a `ds-button`, `ds-icon-button` or native button: a click or
+  Enter opens the popover from the inner `<button>`, which gets `aria-haspopup` (`menu` when the
+  popover holds a `ds-menu`, `dialog` otherwise), `aria-expanded` and, while open, `aria-controls`.
+  It replaces `#t` with `(pressed)="pop.toggle(t.controlRef().nativeElement)"` and the
+  `ariaHasPopup` / `[ariaExpanded]` bindings; leave those unbound on a button that uses it.
+  `ds-popover` gains `panelId` and `holdsMenu`. Nothing to change in existing code.
 
 ### Changed
 

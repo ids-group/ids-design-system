@@ -144,6 +144,7 @@ export { DsPanelHeaderTemplateDirective } from '@ids-group-ltd/ids-design-system
 export { DsPasswordRule } from '@ids-group-ltd/ids-design-system/components/password-rules'; // interface
 export { DsPasswordRuleState } from '@ids-group-ltd/ids-design-system/components/password-rules'; // type
 export { DsPickerTriggerDirective } from '@ids-group-ltd/ids-design-system/components'; // directive
+export { DsPopoverTrigger } from '@ids-group-ltd/ids-design-system/components/popover'; // directive
 export { DsRouterLink } from '@ids-group-ltd/ids-design-system/components'; // type
 export { DsSize } from '@ids-group-ltd/ids-design-system/core'; // type
 export { DsStaticPreview } from '@ids-group-ltd/ids-design-system/components'; // directive

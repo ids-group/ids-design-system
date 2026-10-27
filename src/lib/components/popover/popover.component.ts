@@ -6,6 +6,8 @@ import {
   ViewContainerRef,
   ViewEncapsulation,
   booleanAttribute,
+  computed,
+  contentChild,
   forwardRef,
   inject,
   input,
@@ -35,6 +37,9 @@ import { CdkTrapFocus } from '@angular/cdk/a11y';
 import { NgTemplateOutlet } from '@angular/common';
 import { DsOverlayCloseRef } from '@ids-group-ltd/ids-design-system/overlay';
 import { DsStaticPreview } from '@ids-group-ltd/ids-design-system/components';
+import { MenuComponent } from '@ids-group-ltd/ids-design-system/components/menu';
+
+let nextPanelId = 0;
 
 export type PopoverAlign = 'start' | 'end';
 export type PopoverPlacement = 'top' | 'bottom' | 'left' | 'right';
@@ -97,6 +102,11 @@ export class PopoverComponent implements OnDestroy, DsOverlayCloseRef {
 
   /** Open/closed state, for callers binding `aria-expanded` on the trigger. */
   readonly opened = signal(false);
+  /** Id of the open panel, for `aria-controls` on the trigger. */
+  readonly panelId = `ds-popover-${++nextPanelId}`;
+  private readonly menu = contentChild(MenuComponent, { descendants: true });
+  /** Whether the projected content holds a `ds-menu`, which makes the trigger `aria-haspopup="menu"`. */
+  readonly holdsMenu = computed(() => this.menu() !== undefined);
   /** Resolved placement after the overlay positions; drives the arrow direction. */
   readonly resolvedPlacement = signal<PopoverPlacement>('bottom');
 

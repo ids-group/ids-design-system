@@ -7,7 +7,10 @@
       "old": "ds-button[loading]",
       "new": null,
       "surface": "template",
-      "searchHints": ["loading", "icon="],
+      "searchHints": [
+        "loading",
+        "icon="
+      ],
       "action": "None, unless a loading button with an `icon` must keep hiding its label behind a centred spinner: bind `loadingMode=\"replace\"` on that button.",
       "appliesWhen": "A `ds-button` that sets both `icon` and `loading`. A button without `icon` renders as before, and `ds-icon-button` has no loading state.",
       "restore": "<ds-button icon=\"save\" [loading]=\"saving()\" loadingMode=\"replace\">Save</ds-button>",
@@ -26,6 +29,11 @@
       "verify": "The `ds-date-picker` text input reports `role=\"combobox\"` and still parses a typed date."
     }
   ],
-  "informational": [],
+  "informational": [
+    {
+      "text": "New `[dsPopoverTrigger]` directive (`DsPopoverTrigger`, exported with `PopoverComponent`) opens a `ds-popover` from a button and sets `aria-haspopup`, `aria-expanded` and `aria-controls` on its inner `<button>`; `ds-popover` gains `panelId` and `holdsMenu`.",
+      "verify": "A `ds-icon-button` with `[dsPopoverTrigger]` around a `ds-menu` popover: Enter opens the menu, the inner button reads aria-haspopup=\"menu\" and aria-expanded=\"true\", and Escape closes it and returns focus to the button."
+    }
+  ],
   "deleteList": []
 }
