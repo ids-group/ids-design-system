@@ -46,6 +46,13 @@
 
   <ul class="block-desc t-s">
     <li>
+      <code class="t-mono-inline">[dsPopoverTrigger]="pop"</code> on the button opens
+      the popover from it and sets <code class="t-mono-inline">aria-haspopup</code>,
+      <code class="t-mono-inline">aria-expanded</code> and, while open,
+      <code class="t-mono-inline">aria-controls</code>.
+    </li>
+
+    <li>
       Interactive content needs <code class="t-mono-inline">panelRole</code> and
       <code class="t-mono-inline">
         panelLabel
@@ -73,11 +80,9 @@
 
   <div class="demo">
     <ds-button
-      #trigger
       color="neutral"
       variant="outline"
-      [ariaExpanded]="pop.opened()"
-      (pressed)="pop.toggle(trigger.controlRef().nativeElement)">
+      [dsPopoverTrigger]="pop">
       Open summary
     </ds-button>
 

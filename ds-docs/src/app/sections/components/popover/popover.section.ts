@@ -1,6 +1,6 @@
 import { Component, ViewEncapsulation } from '@angular/core';
 import { ButtonComponent } from 'ds/button';
-import { PopoverComponent } from 'ds/popover';
+import { DsPopoverTrigger, PopoverComponent } from 'ds/popover';
 import { DocsSectionComponent } from '../../../shared/docs-section.component';
 import { DocsNonmodalNoteComponent } from '../../../shared/docs-nonmodal-note.component';
 
@@ -9,6 +9,7 @@ import { DocsNonmodalNoteComponent } from '../../../shared/docs-nonmodal-note.co
   standalone: true,
   imports: [
     ButtonComponent,
+    DsPopoverTrigger,
     PopoverComponent,
     DocsSectionComponent,
     DocsNonmodalNoteComponent,
