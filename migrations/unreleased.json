@@ -5,6 +5,10 @@
     {
       "text": "A `ds-table` header button (sort or definition term) takes a pointer target at least `--hit-xs` tall through a transparent `::before`; its focus ring stays on the label.",
       "verify": "Point just above the text of a sortable `ds-table` header: the pointer becomes a hand a few pixels before it reaches the letters, and a click there sorts the column."
+    },
+    {
+      "text": "A `ds-avatar` whose `imageUrl` fails to load shows `initials`, or `fallbackIcon`, in place of the image until `imageUrl` changes; a new URL is tried again.",
+      "verify": "Bind `imageUrl` to an address that answers 404 on a `ds-avatar` with `initials`: the initials are drawn on the tint, and binding a working URL afterwards shows the image."
     }
   ],
   "deleteList": []
