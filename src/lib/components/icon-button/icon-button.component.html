@@ -1,11 +1,13 @@
 <!-- target-size-guard: --ds-icon-button-size, --hit-min (32px) and up -->
 <button
+  #btn
   [class]="classes()"
   [type]="type()"
   [disabled]="disabled()"
   [attr.aria-label]="ariaLabel()"
   [attr.aria-describedby]="ariaDescribedBy()"
   [attr.aria-pressed]="selected()"
+  [attr.aria-haspopup]="ariaHasPopup()"
   [attr.aria-expanded]="ariaExpanded()"
   [attr.aria-controls]="ariaControls()"
   (click)="onClick($event)">

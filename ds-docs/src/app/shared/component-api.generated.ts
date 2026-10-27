@@ -5077,6 +5077,22 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Toggle state: renders the pressed look and sets `aria-pressed`, `\"false\"` when bound off. Unbound, the button is no toggle and carries no `aria-pressed`."
       },
       {
+        "name": "ariaHasPopup",
+        "kind": "input",
+        "type": "'true' | 'menu' | 'listbox' | 'tree' | 'grid' | 'dialog' | null",
+        "union": [
+          "true",
+          "menu",
+          "listbox",
+          "tree",
+          "grid",
+          "dialog"
+        ],
+        "default": "null",
+        "required": false,
+        "description": "`aria-haspopup` on the inner `<button>`; set when this button triggers an overlay."
+      },
+      {
         "name": "ariaExpanded",
         "kind": "input",
         "type": "boolean | null",

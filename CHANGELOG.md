@@ -1,5 +1,14 @@
 ## Unreleased
 
+### Added
+
+- **`ds-icon-button` takes an `ariaHasPopup` input.** It sets `aria-haspopup` on the inner
+  `<button>` and accepts the same values as `ds-button`: `'true'`, `'menu'`, `'listbox'`, `'tree'`,
+  `'grid'`, `'dialog'` or `null`. Bind it on an icon button that opens a menu or another overlay.
+- **`ds-icon-button` exposes `controlRef`.** It is the inner `<button>` as an `ElementRef`, the same as
+  on `ds-button`, so an overlay can position against it and return focus to it: pass
+  `trigger.controlRef().nativeElement` to `toggle` of `ds-popover`.
+
 ### Changed
 
 - **A loading `ds-button` with an `icon` keeps its label and spins in the icon's place.** The
@@ -42,6 +51,13 @@
   the gutter kept the width of the fallback face, and a label wider in the real face could be
   clipped. The labels are measured again once the page's fonts have loaded. Nothing to change in
   your code.
+- **Column resize separators expose `aria-valuenow`, `aria-valuemin` and `aria-valuemax` before they
+  are focused.** A `ds-table` with `dsTableResize` set the range on a separator only while it held
+  focus, so a screen reader reading the page met separators with no value. Nothing to change in your
+  code.
+- **The `ds-date-picker` input announces as a combobox.** The input already declared a dialog popup
+  and an expanded state, which a plain text box does not support; it now carries `role="combobox"`.
+  Typing a date works as before. Nothing to change in your code.
 
 ## 1.0.1 — 2026-10-22
 

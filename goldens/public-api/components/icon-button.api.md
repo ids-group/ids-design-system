@@ -8,9 +8,11 @@ export class IconButtonComponent {
     public readonly ariaControls = input<string | null>(null);
     public readonly ariaDescribedBy = input<string | null>(null);
     public readonly ariaExpanded = input<boolean | null>(null);
+    public readonly ariaHasPopup = input<'true' | 'menu' | 'listbox' | 'tree' | 'grid' | 'dialog' | null>(null);
     public readonly ariaLabel = input.required<string>();
     protected readonly classes = computed(…);
     public readonly color = input<ButtonColor>('primary');
+    public readonly controlRef = viewChild.required<ElementRef<HTMLElement>>(…);
     public readonly disabled = input(false, { transform: booleanAttribute });
     public readonly icon = input.required<IconName>();
     protected readonly iconSize = computed(…);

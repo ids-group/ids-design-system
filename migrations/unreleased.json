@@ -12,6 +12,18 @@
       "appliesWhen": "A `ds-button` that sets both `icon` and `loading`. A button without `icon` renders as before, and `ds-icon-button` has no loading state.",
       "restore": "<ds-button icon=\"save\" [loading]=\"saving()\" loadingMode=\"replace\">Save</ds-button>",
       "verify": "A loading `ds-button` with an `icon` shows its label with a spinner in the icon's place, unless it binds `loadingMode=\"replace\"`."
+    },
+    {
+      "id": "date-picker-input-combobox-role",
+      "kind": "behavior",
+      "old": "ds-date-picker input",
+      "new": null,
+      "surface": "template",
+      "searchHints": ["ds-date-picker", "role=\"textbox\"", "getByRole('textbox')"],
+      "action": "None, unless a test or a selector finds the date input by the `textbox` role: query the `combobox` role instead.",
+      "appliesWhen": "A test, a selector or a template that targets the `ds-date-picker` text input by role.",
+      "restore": "screen.getByRole('combobox', { name: 'Start date' })",
+      "verify": "The `ds-date-picker` text input reports `role=\"combobox\"` and still parses a typed date."
     }
   ],
   "informational": [],
