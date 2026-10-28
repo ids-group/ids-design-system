@@ -1,5 +1,23 @@
 ## Unreleased
 
+### Added
+
+- **Repeated toasts can fold into one `×N` stack.** With
+  `provideDsConfig({ toast: { groupDuplicates: true } })`, a `ToastService.show()` whose `variant`,
+  `title` and `body` match a toast on screen or queued adds an occurrence to that toast instead of a
+  new one, and restarts its countdown. `ToastOptions.groupKey` groups calls by a key of your own,
+  whatever their text. The stack shows a `×N` count and two edges behind it; "Show all" lists each
+  occurrence with its time and its own close button, and the stack's close dismisses all of them. A
+  folded call returns the stack's `ToastRef`, so its `dismiss()` closes the whole stack. A screen
+  reader hears a repeat once, with its count ("Save failed, 3 times"), however many arrive at once.
+  Loading toasts and `ToastService.promise()` never fold. Off by default; nothing to change in your
+  code.
+- **New toast types and members for the stack.** `ToastOccurrence` (`id`, `body`, `at`), the optional
+  `ToastEntry.groupKey` and `ToastEntry.occurrences`, the `ds-toast` input `occurrences` and output
+  `occurrenceClosed`, `ToastRegionComponent.stackFor(key)` and `DsConfig.toast.groupDuplicates`
+  (default `false`). `DsIntl.toast` takes the optional
+  `showAll`, `hide`, `dismissAll` and `repeated(message, count)`.
+
 ### Changed
 
 - **A `ds-table` column resize line is visible at rest.** The line between resizable header cells

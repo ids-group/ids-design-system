@@ -232,6 +232,57 @@
   </div>
 
   <h3 class="block-title t-h4">
+    Repeated toasts
+  </h3>
+
+  <p class="block-desc t-s">
+    <code class="t-mono-inline">
+      toast.groupDuplicates: true
+    </code> folds a toast with
+    the same variant, title and body into the one on screen as a
+    <code class="t-mono-inline">
+      ×N
+    </code> stack, and restarts its countdown.
+    <code class="t-mono-inline">
+      groupKey
+    </code> in
+    <code class="t-mono-inline">
+      show()
+    </code> groups by key. Off by default.
+  </p>
+
+  <ul class="block-desc t-s">
+    <li>
+      The stack's close dismisses every occurrence; so does the
+      <code class="t-mono-inline">
+        ToastRef
+      </code> a folded call returns.
+    </li>
+
+    <li>
+      A repeat is announced once with its count, however many arrive at once.
+    </li>
+
+    <li>
+      Loading and
+      <code class="t-mono-inline">
+        promise()
+      </code> toasts never fold.
+    </li>
+  </ul>
+
+  <div class="states">
+    <ds-toast
+      variant="error"
+      title="Save failed"
+      body="The server did not answer. Try again later."
+      [dismissible]="true"
+      [occurrences]="occurrences()"
+      (occurrenceClosed)="closeOccurrence($event)"
+      (closed)="resetOccurrences()" />
+  </div>
+
+  <h3 class="block-title t-h4">
     Dev warnings
   </h3>
 

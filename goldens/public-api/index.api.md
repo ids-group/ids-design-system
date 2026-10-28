@@ -310,6 +310,7 @@ export { TimelineTone } from '@ids-group-ltd/ids-design-system/components/timeli
 export { ToastAction } from '@ids-group-ltd/ids-design-system/components/toast'; // interface
 export { ToastComponent } from '@ids-group-ltd/ids-design-system/components/toast'; // component
 export { ToastEntry } from '@ids-group-ltd/ids-design-system/components/toast'; // interface
+export { ToastOccurrence } from '@ids-group-ltd/ids-design-system/components/toast'; // interface
 export { ToastOptions } from '@ids-group-ltd/ids-design-system/components/toast'; // interface
 export { ToastPromiseMessages } from '@ids-group-ltd/ids-design-system/components/toast'; // interface
 export { ToastRef } from '@ids-group-ltd/ids-design-system/components/toast'; // interface

@@ -6,12 +6,18 @@ import {
   inject,
   input,
   output,
+  signal,
 } from '@angular/core';
 import { IconComponent } from '@ids-group-ltd/ids-design-system/icons';
 import { SpinnerComponent } from '@ids-group-ltd/ids-design-system/components/spinner';
-import { DS_INTL, retainStyles } from '@ids-group-ltd/ids-design-system/core';
+import {
+  DS_INTL,
+  DS_INTL_DEFAULTS,
+  injectDsLocale,
+  retainStyles,
+} from '@ids-group-ltd/ids-design-system/core';
 import type { IconName } from '@ids-group-ltd/ids-design-system/core';
-import type { ToastAction, ToastVariant } from './toast.types';
+import type { ToastAction, ToastOccurrence, ToastVariant } from './toast.types';
 
 /**
  * Single toast pill, rendered by ToastRegion for service-driven toasts or placed inline as a specimen.
@@ -23,7 +29,7 @@ import type { ToastAction, ToastVariant } from './toast.types';
   templateUrl: './toast.component.html',
   styleUrl: './toast.component.scss',
   // Keeps a static `title` attribute from becoming a native tooltip on the host.
-  host: { '[attr.title]': 'null' },
+  host: { '[attr.title]': 'null', '[class.piled]': 'stacked() && !expanded()' },
   encapsulation: ViewEncapsulation.Emulated,
 })
 export class ToastComponent {
@@ -41,8 +47,25 @@ export class ToastComponent {
   readonly icon = input<IconName | null>(null);
   /** Optional action button rendered before the dismiss control. */
   readonly action = input<ToastAction | null>(null);
+  /** Every call folded into this toast; two or more draw a `×N` stack that lists them. */
+  readonly occurrences = input<readonly ToastOccurrence[]>([]);
   /** Fires when the toast is dismissed or its action is invoked. */
   readonly closed = output<void>();
+  /** Fires with an occurrence's `id` when its own close button in the list is pressed. */
+  readonly occurrenceClosed = output<number>();
+
+  protected readonly count = computed(() => this.occurrences().length);
+  protected readonly stacked = computed(() => this.count() > 1);
+  protected readonly expanded = signal(false);
+  protected readonly toastIntl = computed(() => ({
+    ...DS_INTL_DEFAULTS.toast,
+    ...this.intl().toast,
+  }));
+  private readonly timeFormat = new Intl.DateTimeFormat(injectDsLocale(), {
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+  });
 
   protected readonly isLoading = computed(() => this.variant() === 'loading');
 
@@ -69,6 +92,10 @@ export class ToastComponent {
         return 'info';
     }
   });
+
+  protected formatTime(at: number): string {
+    return this.timeFormat.format(at);
+  }
 
   protected onDismiss(): void {
     this.closed.emit();

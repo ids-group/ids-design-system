@@ -8,10 +8,13 @@ import { ComponentPortal } from '@angular/cdk/portal';
 import { LiveAnnouncer } from '@angular/cdk/a11y';
 import {
   DS_CONFIG,
+  DS_INTL,
+  DS_INTL_DEFAULTS,
   addDevWarningSink,
 } from '@ids-group-ltd/ids-design-system/core';
 import { ToastRegionComponent } from './toast-region.component';
 import { DS_TOAST_POSITION_DEFAULT } from './toast.config';
+import { toastGroupKey, toastRepeatPatch } from './toast-group';
 import type {
   ToastEntry,
   ToastVariant,
@@ -32,10 +35,12 @@ export class ToastService {
   private readonly overlay = inject(Overlay);
   private readonly toastConfig = inject(DS_CONFIG).toast;
   private readonly announcer = inject(LiveAnnouncer);
+  private readonly intl = inject(DS_INTL);
   private overlayRef: OverlayRef | null = null;
   private regionRef: ComponentRef<ToastRegionComponent> | null = null;
   private nextId = 1;
-  private pendingAnnouncements: string[] = [];
+  // Keyed so a burst of repeats of one stack leaves only its latest count to speak.
+  private readonly pendingAnnouncements = new Map<unknown, string>();
   private pendingAssertive = false;
   private announceTimer: number | undefined;
   private scrimWatcher: MutationObserver | null = null;
@@ -70,6 +75,30 @@ export class ToastService {
     this.ensureRegion();
     const id = this.nextId++;
     const variant = opts.variant ?? 'info';
+    const groupKey = toastGroupKey(this.toastConfig, opts, variant);
+    const occurrence = { id, body: opts.body, at: Date.now() };
+    const stack =
+      groupKey === undefined
+        ? undefined
+        : this.regionRef!.instance.stackFor(groupKey);
+    if (stack) {
+      const patch = toastRepeatPatch(stack, occurrence);
+      this.regionRef!.instance.update(stack.id, patch);
+      const repeated =
+        this.intl().toast.repeated ?? DS_INTL_DEFAULTS.toast.repeated;
+      const message = [stack.title, stack.body].filter(Boolean).join('. ');
+      this.announce(
+        variant,
+        repeated(message, patch.occurrences.length),
+        undefined,
+        groupKey,
+      );
+
+      return {
+        id: stack.id,
+        dismiss: () => this.regionRef?.instance.remove(stack.id),
+      };
+    }
     // An `action` toast cannot expire: the region is the last child of `body`, so a
     // keyboard user cannot reach the button in time.
     const durationMs =
@@ -83,10 +112,13 @@ export class ToastService {
       dismissible: durationMs > 0 ? (opts.dismissible ?? true) : true,
       action: opts.action,
       durationMs,
+      ...(groupKey === undefined
+        ? {}
+        : { groupKey, occurrences: [occurrence] }),
     };
     // The region runs the countdown: a toast queued behind `maxVisible` would expire unseen if started here.
     this.regionRef!.instance.add(entry);
-    this.announce(variant, entry.body, entry.title);
+    this.announce(variant, entry.body, entry.title, groupKey);
 
     return {
       id,
@@ -146,20 +178,25 @@ export class ToastService {
    *  Serialising a burst does not work either: `announce()` clears the region and writes
    *  on a timeout, so the next message wipes the previous one. One region change carrying
    *  every message is the only shape that survives. */
-  private announce(variant: ToastVariant, body: string, title?: string): void {
+  private announce(
+    variant: ToastVariant,
+    body: string,
+    title?: string,
+    key: unknown = Symbol(),
+  ): void {
     const spoken = [title, body].filter(Boolean).join('. ');
     if (!spoken) {
       return;
     }
-    this.pendingAnnouncements.push(spoken);
+    this.pendingAnnouncements.set(key, spoken);
     if (variant === 'error' || variant === 'warning') {
       this.pendingAssertive = true;
     }
     clearTimeout(this.announceTimer);
     this.announceTimer = window.setTimeout(() => {
-      const message = this.pendingAnnouncements.join('. ');
+      const message = [...this.pendingAnnouncements.values()].join('. ');
       const politeness = this.pendingAssertive ? 'assertive' : 'polite';
-      this.pendingAnnouncements = [];
+      this.pendingAnnouncements.clear();
       this.pendingAssertive = false;
       this.announcer.announce(message, politeness);
     }, ANNOUNCE_COALESCE_MS);

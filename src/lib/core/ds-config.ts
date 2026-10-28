@@ -90,6 +90,10 @@ export interface DsConfig {
     maxVisible?: number;
     /** Show a `+N` strip while toasts wait behind `maxVisible`. Default `true`. */
     showQueueCount?: boolean;
+    /** Fold a toast whose `variant`, `title` and `body` match one already shown or queued into
+     *  that toast as a `×N` stack, instead of adding another; `ToastOptions.groupKey` names the
+     *  group instead. Loading and `promise()` toasts never fold. Default `false`. */
+    groupDuplicates?: boolean;
     /** In dev mode, also show each library warning from the console as a warning toast, once the
      *  app has injected `ToastService`; warnings raised earlier show when it is. Never in a
      *  production build. Default `true`. */
