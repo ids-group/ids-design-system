@@ -25,10 +25,14 @@
   --warning-pressed:        color-mix(in srgb, var(--warning) 76%, white);
   --info-hover:             color-mix(in srgb, var(--info) 88%, white);
 
-  // An overlay sits one neutral step above the page, and what it holds steps up with it.
+  // A container overlay (modal, drawer) sits one neutral step above the page and a popover-class overlay one
+  // above that, so a menu opened in a modal stays separate; what each holds steps up with it.
   --surface-overlay:           var(--neutral-100);
   --surface-overlay-secondary: var(--neutral-150);
   --surface-overlay-muted:     var(--neutral-200);
+  --surface-overlay-raised:    var(--neutral-150);
+  --surface-overlay-raised-secondary: var(--neutral-200);
+  --surface-overlay-raised-muted:     var(--neutral-300);
   --border-overlay:            var(--border-strong);
 
   --surface-tint:         hsl(from var(--primary) h 45% 16%);

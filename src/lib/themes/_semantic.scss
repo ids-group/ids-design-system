@@ -7,8 +7,9 @@
      · default   : cards, sheets, toolbars
      · secondary : hover lanes, table heads, addons, code blocks
      · overlay   : modals, drawers, popovers (paired with scrim)
-     · overlay-secondary / overlay-muted : what --surface-secondary / --surface-muted become inside an
-       overlay, which rebinds them so a hover never matches the overlay fill
+     · overlay-raised : popovers, menus, dropdowns, pickers, tooltips, toasts
+     · overlay-[raised-]secondary / -muted : what --surface-secondary / --surface-muted become inside an
+       overlay of that level, which rebinds them so a hover never matches the overlay fill
      · tint      : brand-tinted (active rows, sidenav active item)
      · inverted  : dark-on-light callouts, toasts
      Hover/pressed use --opacity-state-* overlays. */
@@ -23,6 +24,9 @@
   --surface-muted:          var(--neutral-150);
   --surface-overlay-secondary: var(--surface-secondary);
   --surface-overlay-muted:     var(--surface-muted);
+  --surface-overlay-raised:    var(--surface-overlay);
+  --surface-overlay-raised-secondary: var(--surface-secondary);
+  --surface-overlay-raised-muted:     var(--surface-muted);
 
   /* Modal/drawer backdrop; the dark theme flips the tint. */
   --surface-scrim:     hsl(var(--shadow-tint-h) var(--shadow-tint-s) var(--shadow-tint-l) / 55%);

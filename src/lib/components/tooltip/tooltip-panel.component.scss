@@ -6,8 +6,8 @@
   --_tooltip-bg-color:   var(--ds-tooltip-bg-color,   var(--tooltip-bg-color));
   --_tooltip-text-color: var(--ds-tooltip-text-color, var(--tooltip-text-color));
   --_tooltip-border-color: var(--ds-tooltip-border-color, var(--tooltip-border-color));
-  --surface-secondary: var(--surface-overlay-secondary);
-  --surface-muted: var(--surface-overlay-muted);
+  --surface-secondary: var(--surface-overlay-raised-secondary);
+  --surface-muted: var(--surface-overlay-raised-muted);
   --_tooltip-radius:     var(--ds-tooltip-radius,     var(--ds-radius-control));
   --_tooltip-shadow:     var(--ds-tooltip-shadow,     var(--ds-elevation-overlay));
   --_tooltip-max-width:  var(--ds-tooltip-max-width,  var(--tooltip-maxw));

@@ -8,7 +8,7 @@
 }
 
 .queue-count {
-  --_toast-queue-bg-color: var(--ds-toast-queue-bg-color, var(--surface-overlay));
+  --_toast-queue-bg-color: var(--ds-toast-queue-bg-color, var(--surface-overlay-raised));
   --_toast-queue-text-color: var(--ds-toast-queue-text-color, var(--text-secondary));
 
   align-self: center;

@@ -39,7 +39,7 @@
   position: absolute;
   inset-inline: 0;
   height: 100%;
-  background-color: var(--surface-overlay);
+  background-color: var(--surface-overlay-raised);
   border: var(--border-width-default) solid var(--border-overlay);
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-2);
@@ -57,10 +57,10 @@
 .toast {
   --_toast-count-bg-color: var(--accent-muted);
   --_toast-count-text-color: var(--accent-strong);
-  --_toast-bg-color:     var(--ds-toast-bg-color,     var(--surface-overlay));
+  --_toast-bg-color:     var(--ds-toast-bg-color,     var(--surface-overlay-raised));
   --_toast-border:        var(--ds-toast-border-color,        var(--border-overlay));
-  --surface-secondary: var(--surface-overlay-secondary);
-  --surface-muted: var(--surface-overlay-muted);
+  --surface-secondary: var(--surface-overlay-raised-secondary);
+  --surface-muted: var(--surface-overlay-raised-muted);
   --_toast-bar-color: var(--ds-toast-bar-color, var(--accent));
   --_toast-icon-color: var(--ds-toast-icon-color, var(--accent));
   --_toast-enter-keyframes: var(--ds-toast-enter-keyframes, ds-fade-in);
@@ -151,7 +151,7 @@
   }
 
   &.info {
-    --_toast-bg-color:     var(--ds-toast-bg-color-info,     var(--ds-toast-bg-color,     var(--surface-overlay)));
+    --_toast-bg-color:     var(--ds-toast-bg-color-info,     var(--ds-toast-bg-color,     var(--surface-overlay-raised)));
     --_toast-border: var(--ds-toast-border-color-info,  var(--ds-toast-border-color, var(--border-overlay)));
     --_toast-bar-color: var(--ds-toast-bar-color, var(--accent));
     --_toast-icon-color: var(--ds-toast-icon-color, var(--accent));
@@ -159,7 +159,7 @@
     border-left-color: var(--_toast-bar-color);
   }
   &.success {
-    --_toast-bg-color:     var(--ds-toast-bg-color-success,     var(--ds-toast-bg-color,     var(--surface-overlay)));
+    --_toast-bg-color:     var(--ds-toast-bg-color-success,     var(--ds-toast-bg-color,     var(--surface-overlay-raised)));
     --_toast-border: var(--ds-toast-border-color-success,  var(--ds-toast-border-color, var(--border-overlay)));
     --_toast-bar-color: var(--ds-toast-bar-color, var(--success));
     --_toast-icon-color: var(--ds-toast-icon-color, var(--success));
@@ -170,7 +170,7 @@
     .icon { color: var(--_toast-icon-color); }
   }
   &.warning {
-    --_toast-bg-color:     var(--ds-toast-bg-color-warning,     var(--ds-toast-bg-color,     var(--surface-overlay)));
+    --_toast-bg-color:     var(--ds-toast-bg-color-warning,     var(--ds-toast-bg-color,     var(--surface-overlay-raised)));
     --_toast-border: var(--ds-toast-border-color-warning,  var(--ds-toast-border-color, var(--border-overlay)));
     --_toast-bar-color: var(--ds-toast-bar-color, var(--warning-hover));
     --_toast-icon-color: var(--ds-toast-icon-color, var(--warning-hover));
@@ -181,7 +181,7 @@
     .icon { color: var(--_toast-icon-color); }
   }
   &.error {
-    --_toast-bg-color:     var(--ds-toast-bg-color-error,     var(--ds-toast-bg-color,     var(--surface-overlay)));
+    --_toast-bg-color:     var(--ds-toast-bg-color-error,     var(--ds-toast-bg-color,     var(--surface-overlay-raised)));
     --_toast-border: var(--ds-toast-border-color-error,  var(--ds-toast-border-color, var(--border-overlay)));
     --_toast-bar-color: var(--ds-toast-bar-color, var(--error));
     --_toast-icon-color: var(--ds-toast-icon-color, var(--error));

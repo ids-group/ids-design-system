@@ -192,11 +192,11 @@
 .time-panel {
   display: flex;
   flex-direction: column;
-  background: var(--ds-time-picker-bg-color, var(--surface-overlay));
+  background: var(--ds-time-picker-bg-color, var(--surface-overlay-raised));
   border: var(--border-width-default) solid
     var(--ds-time-picker-border, var(--border-overlay));
-  --surface-secondary: var(--surface-overlay-secondary);
-  --surface-muted: var(--surface-overlay-muted);
+  --surface-secondary: var(--surface-overlay-raised-secondary);
+  --surface-muted: var(--surface-overlay-raised-muted);
 
   /* The public token: this panel is portaled out of the host, so a :host-declared `--_…` resolves to nothing here. */
   border-radius: var(--ds-time-picker-panel-radius, var(--ds-radius-panel));
