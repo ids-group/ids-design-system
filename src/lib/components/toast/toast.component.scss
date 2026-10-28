@@ -152,7 +152,7 @@
 
   &.info {
     --_toast-bg-color:     var(--ds-toast-bg-color-info,     var(--ds-toast-bg-color,     var(--surface-overlay)));
-    --_toast-border: var(--ds-toast-border-color-info,  var(--ds-toast-border-color, var(--border-default)));
+    --_toast-border: var(--ds-toast-border-color-info,  var(--ds-toast-border-color, var(--border-overlay)));
     --_toast-bar-color: var(--ds-toast-bar-color, var(--accent));
     --_toast-icon-color: var(--ds-toast-icon-color, var(--accent));
 
@@ -160,7 +160,7 @@
   }
   &.success {
     --_toast-bg-color:     var(--ds-toast-bg-color-success,     var(--ds-toast-bg-color,     var(--surface-overlay)));
-    --_toast-border: var(--ds-toast-border-color-success,  var(--ds-toast-border-color, var(--border-default)));
+    --_toast-border: var(--ds-toast-border-color-success,  var(--ds-toast-border-color, var(--border-overlay)));
     --_toast-bar-color: var(--ds-toast-bar-color, var(--success));
     --_toast-icon-color: var(--ds-toast-icon-color, var(--success));
     --_toast-count-bg-color: var(--success-muted);
@@ -171,7 +171,7 @@
   }
   &.warning {
     --_toast-bg-color:     var(--ds-toast-bg-color-warning,     var(--ds-toast-bg-color,     var(--surface-overlay)));
-    --_toast-border: var(--ds-toast-border-color-warning,  var(--ds-toast-border-color, var(--border-default)));
+    --_toast-border: var(--ds-toast-border-color-warning,  var(--ds-toast-border-color, var(--border-overlay)));
     --_toast-bar-color: var(--ds-toast-bar-color, var(--warning-hover));
     --_toast-icon-color: var(--ds-toast-icon-color, var(--warning-hover));
     --_toast-count-bg-color: var(--warning-muted);
@@ -182,7 +182,7 @@
   }
   &.error {
     --_toast-bg-color:     var(--ds-toast-bg-color-error,     var(--ds-toast-bg-color,     var(--surface-overlay)));
-    --_toast-border: var(--ds-toast-border-color-error,  var(--ds-toast-border-color, var(--border-default)));
+    --_toast-border: var(--ds-toast-border-color-error,  var(--ds-toast-border-color, var(--border-overlay)));
     --_toast-bar-color: var(--ds-toast-bar-color, var(--error));
     --_toast-icon-color: var(--ds-toast-icon-color, var(--error));
     --_toast-count-bg-color: var(--error-muted);

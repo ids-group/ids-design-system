@@ -50,7 +50,7 @@ export type PopoverPlacement = 'top' | 'bottom' | 'left' | 'right';
 ds-popover {
     --ds-popover-arrow-size: 7px;
     --ds-popover-bg-color: var(--surface-overlay);
-    --ds-popover-border-color: var(--border-default);
+    --ds-popover-border-color: var(--border-overlay);
     --ds-popover-max-width: var(--popover-maxw);
     --ds-popover-min-width: auto;
     --ds-popover-padding: var(--space-3);

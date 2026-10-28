@@ -8271,7 +8271,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--ds-toast-border-color-info",
-        "value": "var(--ds-toast-border-color, var(--border-default))",
+        "value": "var(--ds-toast-border-color, var(--border-overlay))",
         "notes": "Info tint border."
       },
       {
@@ -8281,7 +8281,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--ds-toast-border-color-success",
-        "value": "var(--ds-toast-border-color, var(--border-default))",
+        "value": "var(--ds-toast-border-color, var(--border-overlay))",
         "notes": "Success tint border."
       },
       {
@@ -8291,7 +8291,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--ds-toast-border-color-warning",
-        "value": "var(--ds-toast-border-color, var(--border-default))",
+        "value": "var(--ds-toast-border-color, var(--border-overlay))",
         "notes": "Warning tint border."
       },
       {
@@ -8301,7 +8301,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--ds-toast-border-color-error",
-        "value": "var(--ds-toast-border-color, var(--border-default))",
+        "value": "var(--ds-toast-border-color, var(--border-overlay))",
         "notes": "Error tint border."
       },
       {

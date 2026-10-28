@@ -160,11 +160,11 @@ ds-toast {
     --ds-toast-bg-color-info: var(--ds-toast-bg-color, var(--surface-overlay));
     --ds-toast-bg-color-success: var(--ds-toast-bg-color, var(--surface-overlay));
     --ds-toast-bg-color-warning: var(--ds-toast-bg-color, var(--surface-overlay));
-    --ds-toast-border-color: var(--border-default);
-    --ds-toast-border-color-error: var(--ds-toast-border-color, var(--border-default));
-    --ds-toast-border-color-info: var(--ds-toast-border-color, var(--border-default));
-    --ds-toast-border-color-success: var(--ds-toast-border-color, var(--border-default));
-    --ds-toast-border-color-warning: var(--ds-toast-border-color, var(--border-default));
+    --ds-toast-border-color: var(--border-overlay);
+    --ds-toast-border-color-error: var(--ds-toast-border-color, var(--border-overlay));
+    --ds-toast-border-color-info: var(--ds-toast-border-color, var(--border-overlay));
+    --ds-toast-border-color-success: var(--ds-toast-border-color, var(--border-overlay));
+    --ds-toast-border-color-warning: var(--ds-toast-border-color, var(--border-overlay));
     --ds-toast-enter-duration: var(--ds-motion-enter-large-duration);
     --ds-toast-enter-easing: var(--ds-motion-enter-large-easing);
     --ds-toast-enter-keyframes: ds-fade-in;
