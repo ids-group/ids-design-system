@@ -23,6 +23,11 @@ outside it gets no edit; `pitfall` is how a correct application still breaks —
 reporting applied; `note` is the why, not an instruction.** An old manifest item may carry only
 `note` — then it plays the `action` role.
 
+**A condition is decided per hit, from the code at that hit.** Before a `no-op`, Read each hit's
+`loc` with enough of the file around it to judge the condition, and record in `noop["<id>"]` one
+`{ loc, why }` per hit naming what at that `loc` shows the condition does not hold. A `no-op` with a
+hit you did not read is `needsReview`, with the unread `locs`.
+
 ## Rules
 
 - Only edit the file(s) you were given (this keeps parallel appliers from conflicting).
@@ -111,6 +116,7 @@ consumer's own code quality.
 Return ONLY a fenced ```json block — one object per file (an array when you were given a batch):
 
 [ { "file": "<path>", "applied": ["<item-id>"], "modes": { "<item-id>": "replaced | inserted | no-op" },
+"noop": { "<item-id>": [ { "loc": "<path:line>", "why": "<what there shows the condition does not hold>" } ] },
 "needsReview": [ { "id": "<item-id>", "why": "<reason>", "locs": ["<path:line> of each occurrence left in place"] } ],
 "feedback": [] } ]
 

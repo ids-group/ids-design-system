@@ -4,6 +4,14 @@ Versioning: **patch** = instruction/prompt fixes; **minor** = new capability (pi
 source, agent); **major** = a change to the workflow's behavior contract. Bump `plugin.json` +
 `marketplace.json` together on every published change.
 
+## 1.19.2 - 2026-10-28
+
+### Fixed
+
+- **`ds-migration-applier` reads every hit before a `no-op`.** An item whose `action` is "None,
+  unless …" is judged per hit from the code at its `loc`; each `no-op` lists one `{ loc, why }` per
+  hit in the new `noop` field, and a hit left unread makes the item `needsReview`.
+
 ## 1.19.1 - 2026-10-27
 
 ### Fixed
