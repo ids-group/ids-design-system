@@ -68,8 +68,19 @@
   --info-border:          hsl(217deg 38% 32%);
   --info-text:            hsl(217deg 90% 74%);
 
-  // Must not follow --shadow-tint-l (95%) or the scrim turns light.
   --surface-scrim: hsl(225deg 39% 4% / 70%);
+
+  // A shadow barely shows on a dark canvas, so the alphas are several times the light ones; the modal
+  // and drawer surface has no border of its own, so the top step adds a 1px light hairline as its edge.
+  --shadow-1: 0 1px 2px  hsl(var(--shadow-tint-h) var(--shadow-tint-s) var(--shadow-tint-l) / 30%),
+              0 1px 3px  hsl(var(--shadow-tint-h) var(--shadow-tint-s) var(--shadow-tint-l) / 40%);
+  --shadow-2: 0 4px 8px  hsl(var(--shadow-tint-h) var(--shadow-tint-s) var(--shadow-tint-l) / 30%),
+              0 4px 16px hsl(var(--shadow-tint-h) var(--shadow-tint-s) var(--shadow-tint-l) / 45%);
+  --shadow-3: 0 8px 16px hsl(var(--shadow-tint-h) var(--shadow-tint-s) var(--shadow-tint-l) / 40%),
+              0 16px 32px hsl(var(--shadow-tint-h) var(--shadow-tint-s) var(--shadow-tint-l) / 50%);
+  --shadow-4: 0 0 0 1px  hsl(var(--shadow-tint-h) var(--shadow-tint-s) 95% / 8%),
+              0 16px 32px hsl(var(--shadow-tint-h) var(--shadow-tint-s) var(--shadow-tint-l) / 50%),
+              0 24px 48px hsl(var(--shadow-tint-h) var(--shadow-tint-s) var(--shadow-tint-l) / 60%);
 
   --focus-field-alpha: .35;
 

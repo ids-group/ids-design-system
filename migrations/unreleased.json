@@ -28,7 +28,11 @@
       "text": "A focused `ds-table` resize handle draws no outline; its line becomes `--focus-ring-width` wide in `--focus-ring-color`, inset `--space-1` from the cell's top and bottom. Forced-colours mode keeps the outline.",
       "verify": "Tab to a column resize handle: the line at the column edge turns the focus colour and wider, with no ring around the handle."
     },
-    "`ToastService` can fold repeated toasts into one `×N` stack under `provideDsConfig({ toast: { groupDuplicates: true } })`, or by `ToastOptions.groupKey`; off by default. Adds `ToastOccurrence`, `ToastEntry.groupKey` and `ToastEntry.occurrences`, the `ds-toast` input `occurrences` and output `occurrenceClosed`, `ToastRegionComponent.stackFor`, and the optional `DsIntl.toast` keys `showAll`, `hide`, `dismissAll` and `repeated`. Nothing to change in your code."
+    "`ToastService` can fold repeated toasts into one `×N` stack under `provideDsConfig({ toast: { groupDuplicates: true } })`, or by `ToastOptions.groupKey`; off by default. Adds `ToastOccurrence`, `ToastEntry.groupKey` and `ToastEntry.occurrences`, the `ds-toast` input `occurrences` and output `occurrenceClosed`, `ToastRegionComponent.stackFor`, and the optional `DsIntl.toast` keys `showAll`, `hide`, `dismissAll` and `repeated`. Nothing to change in your code.",
+    {
+      "text": "Under `data-theme=\"dark\"`, `--shadow-1` to `--shadow-4` and every `--shadow-*` and `--ds-elevation-*` alias built on them are near-black at 30% to 60% alpha instead of a light glow, `--shadow-4` adds a 1px light hairline at 8% alpha, and `--shadow-tint-l` is `3%`.",
+      "verify": "In the dark theme open a modal and a popover and read their computed box-shadow: every layer is a dark rgba, and the modal's first layer is `0 0 0 1px` at 0.08 alpha."
+    }
   ],
   "deleteList": []
 }
