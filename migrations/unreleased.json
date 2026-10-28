@@ -62,7 +62,7 @@
       "verify": "In the dark theme open a modal and a popover and read their computed box-shadow: every layer is a dark rgba, and the modal's first layer is `0 0 0 1px` at 0.08 alpha."
     },
     {
-      "text": "Under `data-theme=\"dark\"` the border of `ds-popover`, the dropdown panels, the `ds-date-picker`, `ds-time-picker` and `ds-color-picker` panels, `ds-tooltip-panel` and `ds-toast` is `--border-overlay`, which is `--border-strong` in dark and `--border-default` in light. `--ds-popover-border-color`, `--ds-dropdown-panel-border-color`, `--ds-date-picker-border`, `--ds-time-picker-border`, `--ds-toast-border-color` (and through it the `-info`, `-success`, `-warning` and `-error` variants) and `--tooltip-border-color` default to it; a value you set on them still wins.",
+      "text": "Under `data-theme=\"dark\"` the border of `ds-popover`, the dropdown panels, the `ds-date-picker`, `ds-time-picker` and `ds-color-picker` panels, `ds-tooltip-panel` and `ds-toast` is `--border-overlay`, which is `--border-strong` in dark and `--border-default` in light. `--ds-popover-border-color`, `--ds-dropdown-panel-border-color`, `--ds-date-picker-border`, `--ds-time-picker-border`, `--ds-toast-border-color`, `--ds-toast-border-color-info`, `--ds-toast-border-color-success`, `--ds-toast-border-color-warning`, `--ds-toast-border-color-error` and `--tooltip-border-color` default to it instead of `--border-default`; set one to `var(--border-default)` for the previous border; a value you set on them still wins.",
       "verify": "In the dark theme open a `ds-select` and read the computed border colour of its panel: it equals `--border-strong`."
     }
   ],
