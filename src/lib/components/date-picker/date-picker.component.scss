@@ -225,7 +225,9 @@
 
 .calendar {
   --_date-picker-bg-color: var(--ds-date-picker-bg-color, var(--surface-overlay));
-  --_date-picker-border: var(--ds-date-picker-border, var(--border-default));
+  --_date-picker-border: var(--ds-date-picker-border, var(--border-overlay));
+  --surface-secondary: var(--surface-overlay-secondary);
+  --surface-muted: var(--surface-overlay-muted);
   --_date-picker-shadow: var(--ds-date-picker-shadow, var(--ds-elevation-overlay));
   --_date-picker-day-hover-bg-color: var(--ds-date-picker-day-hover-bg-color, var(--surface-secondary));
   --_date-picker-day-today-label-color: var(--ds-date-picker-day-today-label-color, var(--accent));

@@ -17,7 +17,7 @@ Colour is layered in three concerns: a **base palette** (theme-independent primi
 - **`_base-palette.scss`** — theme-independent primitives at `:root`: hue ramps (`--blue/red/green/yellow/sky/orange-*`) + HSL channels, `--cool-gray-*` / `--brand-gray-*` ramps, `--static-ink` (never flips), `--shadow-tint-h/s`, font families. Shared by every theme.
 - **`_semantic.scss`** — `@mixin roles`: the semantic role map (surfaces, text, icons, borders, primary/secondary/tertiary families, status, status-pills, focus). Structure is identical across themes; values resolve through each theme's own `--neutral-*` ramp. Holds the **light-default** values.
 - **`light/_palette.scss` + `light/_theme.scss`** — `@mixin palette` (the `--neutral-*` slot = cool-gray + `--shadow-tint-l: 7%`) and `@mixin theme` (`palette` + `semantic.roles`). Light is the **default** skin and needs no extra overrides.
-- **`dark/_palette.scss` + `dark/_theme.scss`** — `@mixin palette` (dark neutral ramp + `--shadow-tint-l: 3%`) and `@mixin theme` (`palette` + `semantic.roles` + the value overrides that genuinely differ on dark: tint surfaces, on-tint text, hover/pressed mixed toward white, scrim, `--shadow-1..4` alphas, focus-halo alpha, chart tokens).
+- **`dark/_palette.scss` + `dark/_theme.scss`** — `@mixin palette` (dark neutral ramp + `--shadow-tint-l: 3%`) and `@mixin theme` (`palette` + `semantic.roles` + the value overrides that genuinely differ on dark: tint surfaces, on-tint text, hover/pressed mixed toward white, the overlay surfaces and border, scrim, `--shadow-1..4` alphas, focus-halo alpha, chart tokens).
 - **`../styles/_theme-activation.scss`** — applies light at `:root` and dark at `:root[data-theme='dark']`, plus the light-context `data-neutrals='brand'` switch.
 
 `styles/ds.scss` forwards `_base-palette` then `theme-activation` (before `tokens`), so `@use 'styles/ds';` renders light out of the box.
@@ -197,4 +197,5 @@ Green brand, measured in Chrome 2026-10-12:
 - Light is the default; dark is opt-in (`data-theme="dark"`); OS-follow is a consumer opt-in. No `prefers-color-scheme` by default.
 - Themes are sibling and self-contained; `_semantic.scss`'s `@mixin roles` holds the light-default values, dark overrides the deltas.
 - Brands are theme-authored overlays, and a brand authored on light pairs with the default theme.
+- A container painted with `--surface-overlay` sets `--surface-secondary: var(--surface-overlay-secondary)` and `--surface-muted: var(--surface-overlay-muted)` on itself, so the hovers and fills inside it stay a step above the overlay. On dark the overlay is `--neutral-100`, the same as `--surface-secondary`; in light both tokens equal the roles they replace.
 - `--primary-hover`/`--primary-pressed` are auto-derived via `color-mix()` (toward black in light, toward white in dark).

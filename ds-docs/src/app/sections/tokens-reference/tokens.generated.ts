@@ -401,7 +401,7 @@ export const SEMANTIC_SURFACE: readonly ColourRow[] = [
   {
     "name": "--surface-overlay",
     "value": "var(--neutral-0)",
-    "notes": "Modals, drawers, popovers (with scrim)."
+    "notes": "Modals, drawers, popovers (with scrim). In the dark theme one neutral step lighter than --surface-default."
   },
   {
     "name": "--surface-inverted",
@@ -431,6 +431,16 @@ export const SEMANTIC_SURFACE: readonly ColourRow[] = [
     "notes": "Muted neutral chip background (stat icon chip, etc.)."
   },
   {
+    "name": "--surface-overlay-secondary",
+    "value": "var(--surface-secondary)",
+    "notes": "What --surface-secondary becomes inside an overlay: one step above the overlay fill in the dark theme, the same as --surface-secondary in light."
+  },
+  {
+    "name": "--surface-overlay-muted",
+    "value": "var(--surface-muted)",
+    "notes": "What --surface-muted becomes inside an overlay: one step above --surface-overlay-secondary in the dark theme, the same as --surface-muted in light."
+  },
+  {
     "name": "--surface-scrim",
     "value": "hsl(var(--shadow-tint-h) var(--shadow-tint-s) var(--shadow-tint-l) / 55%)",
     "notes": "Modal/overlay backdrop tint (55% shadow-tinted black)."
@@ -447,6 +457,11 @@ export const SEMANTIC_BORDER: readonly ColourRow[] = [
     "name": "--border-strong",
     "value": "var(--neutral-300)",
     "notes": "Hover / emphasised border."
+  },
+  {
+    "name": "--border-overlay",
+    "value": "var(--border-default)",
+    "notes": "Border of a popover-class overlay (popover, dropdown, pickers, tooltip, toast): --border-default in light, --border-strong in dark."
   },
   {
     "name": "--border-subtitle",
@@ -3870,7 +3885,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--ds-date-picker-border",
-        "value": "var(--border-default)",
+        "value": "var(--border-overlay)",
         "notes": "Popover border."
       },
       {
@@ -4203,7 +4218,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--ds-dropdown-panel-border-color",
-        "value": "var(--border-default)",
+        "value": "var(--border-overlay)",
         "notes": ""
       },
       {
@@ -6031,8 +6046,8 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--ds-popover-border-color",
-        "value": "var(--border-default)",
-        "notes": "Popover border colour (defaults to --border-default)."
+        "value": "var(--border-overlay)",
+        "notes": "Popover border colour (defaults to --border-overlay)."
       },
       {
         "name": "--ds-popover-radius",
@@ -8087,7 +8102,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--ds-time-picker-border",
-        "value": "var(--border-default)",
+        "value": "var(--border-overlay)",
         "notes": "Panel border."
       },
       {
@@ -8201,7 +8216,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--ds-toast-border-color",
-        "value": "var(--border-default)",
+        "value": "var(--border-overlay)",
         "notes": "Base border."
       },
       {
@@ -8432,8 +8447,8 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--tooltip-border-color",
-        "value": "var(--border-default)",
-        "notes": "Border of ds-tooltip and the chart tooltip: --border-default, --border-strong on the dark theme."
+        "value": "var(--border-overlay)",
+        "notes": "Border of ds-tooltip and the chart tooltip (defaults to --border-overlay)."
       }
     ]
   },

@@ -40,7 +40,7 @@
   inset-inline: 0;
   height: 100%;
   background-color: var(--surface-overlay);
-  border: var(--border-width-default) solid var(--border-default);
+  border: var(--border-width-default) solid var(--border-overlay);
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-2);
 }
@@ -58,7 +58,9 @@
   --_toast-count-bg-color: var(--accent-muted);
   --_toast-count-text-color: var(--accent-strong);
   --_toast-bg-color:     var(--ds-toast-bg-color,     var(--surface-overlay));
-  --_toast-border:        var(--ds-toast-border-color,        var(--border-default));
+  --_toast-border:        var(--ds-toast-border-color,        var(--border-overlay));
+  --surface-secondary: var(--surface-overlay-secondary);
+  --surface-muted: var(--surface-overlay-muted);
   --_toast-bar-color: var(--ds-toast-bar-color, var(--accent));
   --_toast-icon-color: var(--ds-toast-icon-color, var(--accent));
   --_toast-enter-keyframes: var(--ds-toast-enter-keyframes, ds-fade-in);

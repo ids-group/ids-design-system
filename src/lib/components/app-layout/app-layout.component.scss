@@ -44,6 +44,9 @@
   // Same DOM position as the inline rail, so the projected sidenav keeps its state across open/close.
   // `left`, not a logical property: RTL is unsupported.
   @include bp.down(lg) {
+    --surface-secondary: var(--surface-overlay-secondary);
+    --surface-muted: var(--surface-overlay-muted);
+
     position: absolute;
     z-index: var(--layer-drawer);
     top: 0;

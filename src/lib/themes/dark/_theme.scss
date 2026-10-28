@@ -1,6 +1,6 @@
 // Dark theme role overrides. Most roles follow the inverted --neutral-* ramp because custom
 // properties resolve at use time; only roles that cannot follow the flip are overridden: tint
-// surfaces, on-tint text, hover/pressed direction, scrim, focus halo alpha, and charts.
+// surfaces, on-tint text, hover/pressed direction, overlay surfaces, scrim, focus halo alpha, and charts.
 
 @use 'palette';
 @use '../semantic';
@@ -24,6 +24,12 @@
   --success-pressed:        color-mix(in srgb, var(--success) 76%, white);
   --warning-pressed:        color-mix(in srgb, var(--warning) 76%, white);
   --info-hover:             color-mix(in srgb, var(--info) 88%, white);
+
+  // An overlay sits one neutral step above the page, and what it holds steps up with it.
+  --surface-overlay:           var(--neutral-100);
+  --surface-overlay-secondary: var(--neutral-150);
+  --surface-overlay-muted:     var(--neutral-200);
+  --border-overlay:            var(--border-strong);
 
   --surface-tint:         hsl(from var(--primary) h 45% 16%);
   --primary-subtitle:     hsl(from var(--primary) h 45% 18%);
@@ -86,7 +92,6 @@
 
   // Axis, grid, label and cursor already flip via --neutral-* / --text-*; only light-tuned values move.
   --chart-hover-bg-color:     hsl(0deg 0% 100% / 6%);
-  --tooltip-border-color: var(--border-strong);
 
   // The two chart neutrals are dark on light to keep a lightness gap from the emerald; on a dark canvas that
   // gap points the wrong way and they read as holes, so both flip. Slot 8 sits at dE 12 from the orchid under

@@ -194,7 +194,9 @@
   flex-direction: column;
   background: var(--ds-time-picker-bg-color, var(--surface-overlay));
   border: var(--border-width-default) solid
-    var(--ds-time-picker-border, var(--border-default));
+    var(--ds-time-picker-border, var(--border-overlay));
+  --surface-secondary: var(--surface-overlay-secondary);
+  --surface-muted: var(--surface-overlay-muted);
 
   /* The public token: this panel is portaled out of the host, so a :host-declared `--_…` resolves to nothing here. */
   border-radius: var(--ds-time-picker-panel-radius, var(--ds-radius-panel));

@@ -96,9 +96,11 @@
   width: var(--_color-picker-panel-width);
   padding: var(--space-4);
   background-color: var(--surface-overlay);
-  border: var(--border-width-default) solid var(--border-default);
+  border: var(--border-width-default) solid var(--border-overlay);
   border-radius: var(--radius-md);
   box-shadow: var(--shadow-popover);
+  --surface-secondary: var(--surface-overlay-secondary);
+  --surface-muted: var(--surface-overlay-muted);
 }
 
 .sv-plane {
