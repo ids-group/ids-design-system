@@ -1,0 +1,33 @@
+{
+  "version": "unreleased",
+  "items": [
+    {
+      "id": "table-resize-line-default-color",
+      "kind": "behavior",
+      "old": "--border-default",
+      "new": null,
+      "surface": [
+        "template",
+        "style"
+      ],
+      "searchHints": [
+        "dsTableResize",
+        "--ds-table-resize-line-color"
+      ],
+      "detect": [
+        "dsTableResize"
+      ],
+      "action": "None, unless a table must keep the faint resize line it had: set `--ds-table-resize-line-color: var(--border-default)` on that `ds-table`.",
+      "appliesWhen": "A `ds-table` with `dsTableResize`. A table without it draws no resize line.",
+      "restore": "ds-table { --ds-table-resize-line-color: var(--border-default); }",
+      "verify": "At rest, a resizable `ds-table` header shows a `--text-tertiary` line at each column edge, unless `--ds-table-resize-line-color` is set."
+    }
+  ],
+  "informational": [
+    {
+      "text": "A focused `ds-table` resize handle draws no outline; its line becomes `--focus-ring-width` wide in `--focus-ring-color`, inset `--space-1` from the cell's top and bottom. Forced-colours mode keeps the outline.",
+      "verify": "Tab to a column resize handle: the line at the column edge turns the focus colour and wider, with no ring around the handle."
+    }
+  ],
+  "deleteList": []
+}

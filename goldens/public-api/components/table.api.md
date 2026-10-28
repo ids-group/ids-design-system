@@ -413,6 +413,7 @@ ds-table {
     --ds-table-icon-button-focus-color: var(--accent);
     --ds-table-min-width: 0;
     --ds-table-radius: var(--ds-radius-control);
+    --ds-table-resize-line-color: var(--text-tertiary);
     --ds-table-row-active-bg-color: var(--accent-subtitle);
     --ds-table-row-hover-bg-color: var(--surface-secondary);
     --ds-table-row-pressed-bg-color: var(--surface-muted);
