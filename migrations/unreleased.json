@@ -43,7 +43,12 @@
       "appliesWhen": "The dark theme (`data-theme=\"dark\"`) only: `--surface-overlay` is `--neutral-100` there, the value `--surface-secondary` has, so a hover in that colour on your own overlay no longer shows. The library overlays (`ds-popover`, `ds-menu` in it, the dropdown panels of `ds-select`, `ds-multi-select` and `ds-autocomplete`, `ds-date-picker`, `ds-time-picker`, `ds-color-picker`, `ds-tooltip-panel`, `ds-toast`, `ds-modal`, `ds-drawer`, the `ds-app-layout` rail below `lg`) set both tokens themselves. Light values are unchanged.",
       "pitfall": "A dark-theme `--surface-secondary` or `--surface-muted` override on `:root` no longer reaches inside the library overlays, which read `--surface-overlay-secondary` and `--surface-overlay-muted` there; override those two as well.",
       "restore": ":root[data-theme='dark'] { --surface-overlay: var(--neutral-0); --surface-overlay-secondary: var(--neutral-100); --surface-overlay-muted: var(--neutral-150); --border-overlay: var(--border-default); }",
-      "verify": "In the dark theme, open a `ds-select` and each panel of your own painted with `--surface-overlay`: the panel is lighter than the page, and a hovered row is lighter than the panel."
+      "verify": "In the dark theme, open a `ds-select` and each panel of your own painted with `--surface-overlay`: the panel is lighter than the page, and a hovered row is lighter than the panel.",
+      "evidence": [
+        "tokens:--surface-overlay-secondary",
+        "tokens:--surface-overlay-muted",
+        "tokens:--border-overlay"
+      ]
     }
   ],
   "informational": [
