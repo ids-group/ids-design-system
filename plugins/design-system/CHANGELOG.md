@@ -4,6 +4,20 @@ Versioning: **patch** = instruction/prompt fixes; **minor** = new capability (pi
 source, agent); **major** = a change to the workflow's behavior contract. Bump `plugin.json` +
 `marketplace.json` together on every published change.
 
+## 1.19.2 - 2026-10-28
+
+### Fixed
+
+- **`ds-migration-applier` reads every hit before a `no-op`.** An item whose `action` is "None,
+  unless …" is judged per hit from the code at its `loc`; each `no-op` lists one `{ loc, why }` per
+  hit in the new `noop` field, and a hit left unread makes the item `needsReview`; the step-7
+  re-check confirms the condition at each of those `loc`s.
+- **Applier and re-check prompts carry no consumer intent from outside the run.** Phase B step 3:
+  the items, the hits and the trees only, so a conditional item is judged from the consumer code.
+- **Phase B step 5 names the visual-check fallback for an app that needs a backend or a login.**
+  The run asks once for a served, signed-in URL and keeps it in the ledger as `visualBaseUrl`;
+  without one, every rendering change of the version is `not-verified` with that reason.
+
 ## 1.19.1 - 2026-10-27
 
 ### Fixed
