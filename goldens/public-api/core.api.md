@@ -66,6 +66,7 @@ export const DS_INTL = new InjectionToken<Signal<DsIntl>>('DS_INTL', {
 export const DS_INTL_DEFAULTS: DsIntl & {
     readonly field: Required<DsIntl['field']>;
     readonly chart: Required<DsIntl['chart']>;
+    readonly toast: Required<DsIntl['toast']>;
 };
 
 export interface DsConfig {
@@ -110,6 +111,7 @@ export interface DsConfig {
         position?: Partial<DsToastPosition>;
         maxVisible?: number;
         showQueueCount?: boolean;
+        groupDuplicates?: boolean;
         mirrorDevWarnings?: boolean;
     };
     picker?: {
@@ -283,6 +285,10 @@ export interface DsIntl {
     };
     readonly toast: {
         readonly region: string;
+        readonly showAll?: string;
+        readonly hide?: string;
+        readonly dismissAll?: string;
+        readonly repeated?: (message: string, count: number) => string;
     };
     readonly spinner: {
         readonly label: string;

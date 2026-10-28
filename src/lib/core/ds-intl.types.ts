@@ -155,6 +155,14 @@ export interface DsIntl {
   };
   readonly toast: {
     readonly region: string;
+    /** `'Show all'` - the button that lists each occurrence of a `×N` stack. */
+    readonly showAll?: string;
+    /** `'Hide'` - the same button while the list is open. */
+    readonly hide?: string;
+    /** `'Dismiss all'` - the close button of a `×N` stack. */
+    readonly dismissAll?: string;
+    /** `` `${message}, ${count} times` `` - spoken when a stack grows. */
+    readonly repeated?: (message: string, count: number) => string;
   };
   readonly spinner: {
     readonly label: string;

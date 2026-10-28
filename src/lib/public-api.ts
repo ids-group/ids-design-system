@@ -396,6 +396,7 @@ export type {
   DsToastVerticalPosition,
   ToastAction,
   ToastEntry,
+  ToastOccurrence,
   ToastOptions,
   ToastPromiseMessages,
   ToastRef,

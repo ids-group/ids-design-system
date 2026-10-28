@@ -5,6 +5,7 @@ import type { DsIntl } from './ds-intl.types';
 export const DS_INTL_DEFAULTS: DsIntl & {
   readonly field: Required<DsIntl['field']>;
   readonly chart: Required<DsIntl['chart']>;
+  readonly toast: Required<DsIntl['toast']>;
 } = {
   field: {
     optional: '(optional)',
@@ -133,6 +134,10 @@ export const DS_INTL_DEFAULTS: DsIntl & {
   },
   toast: {
     region: 'Notifications',
+    showAll: 'Show all',
+    hide: 'Hide',
+    dismissAll: 'Dismiss all',
+    repeated: (message, count) => `${message}, ${count} times`,
   },
   spinner: {
     label: 'Loading',

@@ -6,6 +6,7 @@ export type {
   ToastVariant,
   ToastAction,
   ToastOptions,
+  ToastOccurrence,
   ToastRef,
   ToastEntry,
   ToastPromiseMessages,

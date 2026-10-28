@@ -27,7 +27,8 @@
     {
       "text": "A focused `ds-table` resize handle draws no outline; its line becomes `--focus-ring-width` wide in `--focus-ring-color`, inset `--space-1` from the cell's top and bottom. Forced-colours mode keeps the outline.",
       "verify": "Tab to a column resize handle: the line at the column edge turns the focus colour and wider, with no ring around the handle."
-    }
+    },
+    "`ToastService` can fold repeated toasts into one `×N` stack under `provideDsConfig({ toast: { groupDuplicates: true } })`, or by `ToastOptions.groupKey`; off by default. Adds `ToastOccurrence`, `ToastEntry.groupKey` and `ToastEntry.occurrences`, the `ds-toast` input `occurrences` and output `occurrenceClosed`, `ToastRegionComponent.stackFor`, and the optional `DsIntl.toast` keys `showAll`, `hide`, `dismissAll` and `repeated`. Nothing to change in your code."
   ],
   "deleteList": []
 }

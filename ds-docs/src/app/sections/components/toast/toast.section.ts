@@ -7,7 +7,12 @@ import {
   viewChild,
 } from '@angular/core';
 import { ButtonComponent } from 'ds/button';
-import { ToastComponent, ToastRegionComponent, ToastService } from 'ds/toast';
+import {
+  ToastComponent,
+  ToastRegionComponent,
+  ToastService,
+  type ToastOccurrence,
+} from 'ds/toast';
 import { DocsSectionComponent } from '../../../shared/docs-section.component';
 
 @Component({
@@ -65,6 +70,26 @@ export class ToastSection {
   }
 
   readonly promiseRunning = signal(false);
+
+  private readonly repeatedAt = new Date(2026, 0, 1, 14, 2, 11).getTime();
+  private readonly allOccurrences: readonly ToastOccurrence[] = [0, 2, 9].map(
+    (offsetSeconds, index) => ({
+      id: index + 1,
+      body: 'The server did not answer.',
+      at: this.repeatedAt + offsetSeconds * 1000,
+    }),
+  );
+  readonly occurrences = signal(this.allOccurrences);
+
+  closeOccurrence(id: number): void {
+    this.occurrences.update((list) =>
+      list.filter((occurrence) => occurrence.id !== id),
+    );
+  }
+
+  resetOccurrences(): void {
+    this.occurrences.set(this.allOccurrences);
+  }
 
   fire(variant: 'info' | 'success' | 'warning' | 'error'): void {
     const messages = {

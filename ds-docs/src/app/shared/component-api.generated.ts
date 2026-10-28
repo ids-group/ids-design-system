@@ -12358,6 +12358,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "null",
         "required": false,
         "description": "Optional action button rendered before the dismiss control."
+      },
+      {
+        "name": "occurrences",
+        "kind": "input",
+        "type": "readonly ToastOccurrence[]",
+        "union": null,
+        "default": "[]",
+        "required": false,
+        "description": "Every call folded into this toast; two or more draw a `×N` stack that lists them."
       }
     ],
     "outputs": [
@@ -12369,6 +12378,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": null,
         "required": false,
         "description": "Fires when the toast is dismissed or its action is invoked."
+      },
+      {
+        "name": "occurrenceClosed",
+        "kind": "output",
+        "type": "number",
+        "union": null,
+        "default": null,
+        "required": false,
+        "description": "Fires with an occurrence's `id` when its own close button in the list is pressed."
       }
     ]
   },
