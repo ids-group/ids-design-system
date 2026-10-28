@@ -539,7 +539,7 @@ The companion `<ds-toast-region>` lives inside the `ToastService` (see Services)
 A toast leaving with focus inside it (its action, its close button, or `ToastRef.dismiss()`) hands focus to the next toast in the region, else back to the element focused before focus entered the region, as a dialog returns it.
 
 <!-- inputs:ds-toast -->
-All inputs: `variant: 'info' | 'success' | 'warning' | 'error' | 'loading' = 'info'`, `title: string = ''`, `body: string = ''`, `dismissible: boolean = false`, `icon: IconName | null = null`, `action: ToastAction | null = null`
+All inputs: `variant: 'info' | 'success' | 'warning' | 'error' | 'loading' = 'info'`, `title: string = ''`, `body: string = ''`, `dismissible: boolean = false`, `icon: IconName | null = null`, `action: ToastAction | null = null`, `occurrences: readonly ToastOccurrence[] = []`
 <!-- /inputs -->
 
 ---
@@ -1332,13 +1332,14 @@ this.crumbs.clear();
 
 #### `ToastService`
 `@Injectable({ providedIn: 'root' })`. Inject and call:
-- `show(opts: ToastOptions): ToastRef` — `{ title?, body, variant?: 'info' | 'success' | 'warning' | 'error' | 'loading', dismissible?, icon?, action?: ToastAction, durationMs? = 5000 }`. Returns `{ id, dismiss() }`. `durationMs: 0` (and any negative) means it never auto-dismisses, and it is counted from the moment the toast becomes VISIBLE, not from the call — a toast queued behind `maxVisible` keeps its full time on screen. A `loading` toast is forced to 0 and discards a supplied `durationMs`.
+- `show(opts: ToastOptions): ToastRef` — `{ title?, body, variant?: 'info' | 'success' | 'warning' | 'error' | 'loading', dismissible?, icon?, action?: ToastAction, durationMs? = 5000, groupKey? }`. Returns `{ id, dismiss() }`. `durationMs: 0` (and any negative) means it never auto-dismisses, and it is counted from the moment the toast becomes VISIBLE, not from the call — a toast queued behind `maxVisible` keeps its full time on screen. A `loading` toast is forced to 0 and discards a supplied `durationMs`.
 - `promise<T>(source: Promise<T>, messages: ToastPromiseMessages): Promise<T>` — shows a `loading` toast, then patches it in place to `success` or `error` when `source` settles. Returns `source` itself, so an un-`catch`ed call still produces an unhandled rejection. The settled toast dismisses after a hard-coded 4s (success) or 6s (error), counted from the moment it becomes visible and not overridable; `dismissAll()` cancels it like any other.
 - `dismissAll(): void`
 
 Defaults come from `provideDsConfig({ toast: … })`:
 - `maxVisible?: number` — cap on concurrently visible toasts. Default `5`; `0` means unlimited. Extras queue and appear as earlier ones dismiss.
 - `position?: { horizontalPosition?: 'left' | 'center' | 'right', verticalPosition?: 'top' | 'bottom', offset?: string }` — merged field by field over `right` / `top` / `var(--space-6)`, so naming one key keeps the other two.
+- `groupDuplicates?: boolean` — fold a `show()` whose `variant`, `title` and `body` match a visible or queued toast into it as a `×N` stack (or, with `groupKey`, any call with the same key), restarting its countdown. The stack lists each occurrence with its time under "Show all"; its close, and the `ToastRef` every folded call returns, dismiss the whole stack. Loading and `promise()` toasts never fold. Default `false`.
 - `mirrorDevWarnings?: boolean` — in dev mode, every library warning that reaches the console also shows as a `warning` toast titled "Dev warning" for 10s, once per message, from the moment the app first injects `ToastService` (warnings raised before that show then, up to 50). Default `true`; never in a production build, and an app that never injects `ToastService` gets the console only.
 
 The `toast` section resolves **once, at the root injector**, when the service is first used — unlike every other section, which a `Route` or a component can narrow. `ToastService` is `providedIn: 'root'`, so a route-level `provideDsConfig` never reaches it, and the position cannot change after the first `show()`.
