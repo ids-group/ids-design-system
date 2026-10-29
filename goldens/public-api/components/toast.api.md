@@ -155,11 +155,11 @@ export type ToastVariant = 'info' | 'success' | 'warning' | 'error' | 'loading';
 ds-toast {
     --ds-radius-inner: (none);
     --ds-toast-bar-color: var(--accent) | var(--error) | var(--success) | var(--warning-hover);
-    --ds-toast-bg-color: var(--surface-overlay);
-    --ds-toast-bg-color-error: var(--ds-toast-bg-color, var(--surface-overlay));
-    --ds-toast-bg-color-info: var(--ds-toast-bg-color, var(--surface-overlay));
-    --ds-toast-bg-color-success: var(--ds-toast-bg-color, var(--surface-overlay));
-    --ds-toast-bg-color-warning: var(--ds-toast-bg-color, var(--surface-overlay));
+    --ds-toast-bg-color: var(--surface-overlay-raised);
+    --ds-toast-bg-color-error: var(--ds-toast-bg-color, var(--surface-overlay-raised));
+    --ds-toast-bg-color-info: var(--ds-toast-bg-color, var(--surface-overlay-raised));
+    --ds-toast-bg-color-success: var(--ds-toast-bg-color, var(--surface-overlay-raised));
+    --ds-toast-bg-color-warning: var(--ds-toast-bg-color, var(--surface-overlay-raised));
     --ds-toast-border-color: var(--border-overlay);
     --ds-toast-border-color-error: var(--ds-toast-border-color, var(--border-overlay));
     --ds-toast-border-color-info: var(--ds-toast-border-color, var(--border-overlay));
@@ -180,7 +180,7 @@ ds-toast {
 }
 
 ds-toast-region {
-    --ds-toast-queue-bg-color: var(--surface-overlay);
+    --ds-toast-queue-bg-color: var(--surface-overlay-raised);
     --ds-toast-queue-text-color: var(--text-secondary);
 }
 ```

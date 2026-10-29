@@ -408,7 +408,7 @@ styles/_clear-button.scss {
 styles/_dropdown-overlay.scss {
     --ds-dropdown-empty-color: var(--text-tertiary);
     --ds-dropdown-empty-font-size: inherit;
-    --ds-dropdown-panel-bg-color: var(--surface-overlay);
+    --ds-dropdown-panel-bg-color: var(--surface-overlay-raised);
     --ds-dropdown-panel-border-color: var(--border-overlay);
     --ds-dropdown-panel-max-height: 320px;
     --ds-dropdown-panel-max-width: none;

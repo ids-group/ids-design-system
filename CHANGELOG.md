@@ -24,19 +24,25 @@
   was `--border-default`, about 1.2:1 against the header; it is `--text-tertiary` now, about 4.3:1.
   Set `--ds-table-resize-line-color` on `ds-table` to choose another colour, for example
   `--ds-table-resize-line-color: var(--border-default)` for the previous look.
-- **Dark theme overlays are one step lighter than the page.** Under `data-theme="dark"`,
-  `--surface-overlay` is `--neutral-100` (`#1E2330`, about 1.19:1 against the canvas) instead of
-  `--neutral-0`, the colour of cards. Popovers, menus, dropdown panels, the date, time and colour
-  picker panels, tooltips, toasts, modals, drawers and the `ds-app-layout` rail below `lg` take it.
-  The border of a popover, a dropdown panel, a picker panel, a tooltip and a toast is the new
-  `--border-overlay`: `--border-strong` in the dark theme (about 1.84:1 against the canvas),
-  `--border-default` in light. Inside every one of those overlays `--surface-secondary` and
-  `--surface-muted` take the new `--surface-overlay-secondary` and `--surface-overlay-muted`
-  (`--neutral-150` and `--neutral-200` in dark), so hover, pressed and selected fills stay a step
-  above the overlay. The light theme is unchanged. Nothing to change in your code, unless a panel of
-  your own is painted with `--surface-overlay` and hovers with `--surface-secondary`: set
+- **Dark theme overlays are lighter than the page, in two levels.** Under `data-theme="dark"`:
+  - Modals, drawers and the `ds-app-layout` rail below `lg` take `--surface-overlay`, which is
+    `--neutral-100` (`#1E2330`, about 1.19:1 against the canvas) instead of `--neutral-0`, the
+    colour of cards.
+  - Popovers, menus, dropdown panels, the date, time and colour picker panels, tooltips and toasts
+    take the new `--surface-overlay-raised`, `--neutral-150` (`#242A38`, about 1.30:1 against the
+    canvas), so a menu or a select opened in a modal stands apart from it. Their border is the new
+    `--border-overlay`: `--border-strong` in the dark theme, `--border-default` in light.
+  - Inside each overlay `--surface-secondary` and `--surface-muted` take its level's tokens:
+    `--surface-overlay-secondary` and `--surface-overlay-muted` (`--neutral-150`, `--neutral-200`)
+    in a modal or drawer, `--surface-overlay-raised-secondary` and `--surface-overlay-raised-muted`
+    (`--neutral-200`, `--neutral-300`) in a popover-class overlay, so hover, pressed and selected
+    fills stay a step above the overlay.
+
+  The light theme is unchanged. Nothing to change in your code, unless a panel of your own is
+  painted with `--surface-overlay` and hovers with `--surface-secondary`: set
   `--surface-secondary: var(--surface-overlay-secondary)` and
-  `--surface-muted: var(--surface-overlay-muted)` on that panel.
+  `--surface-muted: var(--surface-overlay-muted)` on that panel, or the `-raised-` pair on a panel
+  that floats like a popover.
 - **A focused `ds-table` resize handle shows the focus on its line.** The line becomes
   `--focus-ring-width` wide in `--focus-ring-color`; the handle draws no ring around itself. In
   forced-colours mode the outline stays. Nothing to change in your code.

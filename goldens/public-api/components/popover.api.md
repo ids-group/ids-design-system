@@ -49,7 +49,7 @@ export type PopoverPlacement = 'top' | 'bottom' | 'left' | 'right';
 ```css
 ds-popover {
     --ds-popover-arrow-size: 7px;
-    --ds-popover-bg-color: var(--surface-overlay);
+    --ds-popover-bg-color: var(--surface-overlay-raised);
     --ds-popover-border-color: var(--border-overlay);
     --ds-popover-max-width: var(--popover-maxw);
     --ds-popover-min-width: auto;
