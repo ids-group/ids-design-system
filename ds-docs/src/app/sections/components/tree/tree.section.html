@@ -124,6 +124,21 @@
           Select
         </td>
       </tr>
+
+      <tr>
+        <td>
+          <kbd>
+            Shift+Space
+          </kbd> / <kbd>Ctrl+Space</kbd>
+        </td>
+
+        <td>
+          Adds or removes, with
+          <code class="t-mono-inline">
+            selection="multiple"
+          </code>
+        </td>
+      </tr>
     </tbody>
   </table>
 
@@ -136,6 +151,77 @@
 
     <p class="block-desc t-s">
       Selected: {{ selected() }} ({{ selectedLabel() }})
+    </p>
+  </div>
+
+  <h3
+    data-claude-design
+    class="block-title t-h4">
+    Trailing content, hover and multiple selection
+  </h3>
+
+  <ul class="block-desc t-s">
+    <li>
+      <code class="t-mono-inline">
+        &lt;ng-template dsTreeTrailing let-node&gt;
+      </code>
+      draws at the end of every row: a badge, a count, a small icon button. A
+      click inside it neither selects nor toggles the row; its controls are tab
+      stops on the focused row only.
+    </li>
+
+    <li>
+      <code class="t-mono-inline">
+        (nodeHover)
+      </code> emits the node under the
+      pointer or newly focused, and
+      <code class="t-mono-inline">
+        null
+      </code> when the pointer leaves the
+      tree.
+    </li>
+
+    <li>
+      <code class="t-mono-inline">
+        selection="multiple"
+      </code> binds
+      <code class="t-mono-inline">
+        [(selectedIds)]
+      </code>: Shift-click,
+      Ctrl-click or Shift+Space adds or removes a row; a plain click or Enter
+      selects that row alone.
+    </li>
+  </ul>
+
+  <div class="demo-panel">
+    <ds-tree
+      selection="multiple"
+      [nodes]="layers"
+      [(expandedIds)]="layersExpanded"
+      [(selectedIds)]="layersSelected"
+      (nodeHover)="hovered.set($event?.label ?? null)">
+      <ng-template
+        let-node
+        dsTreeTrailing>
+        @if (badges[node.id]; as badge) {
+          <ds-badge>
+            {{ badge }}
+          </ds-badge>
+        }
+
+        <ds-icon-button
+          icon="eye"
+          size="sm"
+          color="neutral"
+          [ariaLabel]="'Hide ' + node.label"
+          (pressed)="hidden.set(node.label)" />
+      </ng-template>
+    </ds-tree>
+
+    <p class="block-desc t-s">
+      nodeHover: {{ hovered() ?? 'null' }} · selectedIds: [{{
+        layersSelected().join(', ')
+      }}] · last hidden: {{ hidden() ?? '-' }}
     </p>
   </div>
 

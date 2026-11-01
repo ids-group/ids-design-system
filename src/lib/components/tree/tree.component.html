@@ -1,17 +1,23 @@
-@for (entry of visibleNodes(); track entry.node.id) {
-  <button
-    type="button"
+@for (entry of visibleNodes(); track entry.node.id; let index = $index) {
+  <!-- eslint-disable-next-line @angular-eslint/template/click-events-have-key-events -- Enter and Space reach the host keydown handler, which activates the focused row -->
+  <div
     class="row"
     role="treeitem"
     [attr.data-node-id]="entry.node.id"
     [attr.aria-level]="entry.level + 1"
     [attr.aria-expanded]="entry.hasChildren ? entry.expanded : null"
     [attr.aria-selected]="isSelected(entry.node.id)"
+    [attr.aria-disabled]="entry.node.disabled ? 'true' : null"
+    [attr.aria-labelledby]="idPrefix + '-' + index"
+    [attr.aria-describedby]="
+      trailing() ? idPrefix + '-' + index + '-trailing' : null
+    "
     [attr.tabindex]="isActive(entry.node.id) ? 0 : -1"
     [class.selected]="isSelected(entry.node.id)"
-    [disabled]="entry.node.disabled"
     [style.--_level]="entry.level"
-    (click)="onRowClick(entry)">
+    (click)="onRowClick(entry, $event)"
+    (focus)="onRowFocus(entry)"
+    (pointerenter)="hover(entry.node)">
     @if (entry.hasChildren) {
       <ds-icon
         class="caret"
@@ -28,8 +34,22 @@
         [size]="16" />
     }
 
-    <span class="label">
+    <span
+      class="label"
+      [id]="idPrefix + '-' + index">
       {{ entry.node.label }}
     </span>
-  </button>
+
+    @if (trailing(); as trailing) {
+      <span
+        class="trailing"
+        [id]="idPrefix + '-' + index + '-trailing'">
+        <ng-container
+          *ngTemplateOutlet="
+            trailing.template;
+            context: { $implicit: entry.node, node: entry.node }
+          " />
+      </span>
+    }
+  </div>
 }

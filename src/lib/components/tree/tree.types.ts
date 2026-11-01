@@ -7,3 +7,5 @@ export interface TreeNode {
   children?: TreeNode[];
   disabled?: boolean;
 }
+
+export type TreeSelection = 'single' | 'multiple';

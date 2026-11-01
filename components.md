@@ -578,8 +578,10 @@ All inputs: `maxVisible: number`, `showQueueCount: boolean = true`
 
 #### `<ds-tree>` — `TreeComponent`
 
+Nested rows with one tab stop and arrow-key navigation. `(nodeSelected)` emits the node selected; `(nodeHover)` emits the node under the pointer or newly focused, `null` when the pointer leaves the tree. `<ng-template dsTreeTrailing let-node>` draws at the end of every row (a badge, a count, a small icon button); a click inside it neither selects nor toggles the row, and its controls are tab stops on the focused row only. `selection="multiple"` binds `[(selectedIds)]`: Shift-click, Ctrl-click, Shift+Space or Ctrl+Space adds or removes a row, a plain click or Enter selects it alone, and the host carries `aria-multiselectable`.
+
 <!-- inputs:ds-tree -->
-All inputs: `nodes: readonly TreeNode[] = []`, `expandedIds: Set<string>`, `selectedId: string | null = null`
+All inputs: `nodes: readonly TreeNode[] = []`, `expandedIds: Set<string>`, `selection: 'single' | 'multiple' = 'single'`, `selectedId: string | null = null`, `selectedIds: string[] = []`
 <!-- /inputs -->
 
 #### `<ds-description-list>` — `DescriptionListComponent`

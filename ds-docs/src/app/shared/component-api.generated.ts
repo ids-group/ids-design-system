@@ -12643,13 +12643,34 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Ids of the expanded nodes."
       },
       {
+        "name": "selection",
+        "kind": "input",
+        "type": "TreeSelection",
+        "union": [
+          "single",
+          "multiple"
+        ],
+        "default": "'single'",
+        "required": false,
+        "description": "`'multiple'` reads and writes `selectedIds`; `'single'` reads and writes `selectedId`."
+      },
+      {
         "name": "selectedId",
         "kind": "model",
         "type": "string | null",
         "union": null,
         "default": "null",
         "required": false,
-        "description": "Id of the selected node."
+        "description": "Id of the selected node, in `'single'` selection."
+      },
+      {
+        "name": "selectedIds",
+        "kind": "model",
+        "type": "string[]",
+        "union": null,
+        "default": "[]",
+        "required": false,
+        "description": "Ids of the selected nodes, in `'multiple'` selection."
       }
     ],
     "outputs": [
@@ -12660,9 +12681,31 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": null,
         "required": false,
-        "description": "Fires with the node when a row is selected (click or Enter/Space)."
+        "description": "Fires with the node when a row is selected (click or Enter/Space), not when one is deselected."
+      },
+      {
+        "name": "nodeHover",
+        "kind": "output",
+        "type": "TreeNode | null",
+        "union": null,
+        "default": null,
+        "required": false,
+        "description": "Fires with the node under the pointer or newly focused, and `null` when the pointer leaves the tree."
       }
     ]
+  },
+  "tree:TreeTrailingDirective": {
+    "key": "tree",
+    "selector": "ng-template[dsTreeTrailing]",
+    "isElement": true,
+    "className": "TreeTrailingDirective",
+    "status": "stable",
+    "importName": "TreeTrailingDirective",
+    "importPath": "@ids-group-ltd/ids-design-system",
+    "entryPoint": "@ids-group-ltd/ids-design-system/components/tree",
+    "summary": null,
+    "inputs": [],
+    "outputs": []
   },
   "w3w": {
     "key": "w3w",
