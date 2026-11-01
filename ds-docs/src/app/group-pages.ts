@@ -34,6 +34,7 @@ import { BreadcrumbsSection } from './sections/components/breadcrumbs/breadcrumb
 import { MenuSection } from './sections/components/menu/menu.section';
 import { PaginationSection } from './sections/components/pagination/pagination.section';
 import { SidenavSection } from './sections/components/sidenav/sidenav.section';
+import { SplitterSection } from './sections/components/splitter/splitter.section';
 import { StepperSection } from './sections/components/stepper/stepper.section';
 import { TabsSection } from './sections/components/tabs/tabs.section';
 import { TopbarSection } from './sections/components/topbar/topbar.section';
@@ -175,6 +176,7 @@ export const GROUP_PAGES: readonly GroupPageDef[] = [
       MenuSection,
       PaginationSection,
       SidenavSection,
+      SplitterSection,
       StepperSection,
       TabsSection,
       TopbarSection,

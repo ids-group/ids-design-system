@@ -6813,6 +6813,33 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
     ]
   },
   {
+    "component": "Splitter",
+    "selector": ".splitter",
+    "description": "",
+    "tokens": [
+      {
+        "name": "--ds-splitter-handle-size",
+        "value": "var(--space-2)",
+        "notes": ""
+      },
+      {
+        "name": "--ds-splitter-line-color",
+        "value": "var(--border-divider)",
+        "notes": ""
+      },
+      {
+        "name": "--ds-splitter-active-color",
+        "value": "var(--primary)",
+        "notes": ""
+      },
+      {
+        "name": "--ds-splitter-grip-color",
+        "value": "var(--text-tertiary)",
+        "notes": ""
+      }
+    ]
+  },
+  {
     "component": "Stat",
     "selector": ".stat",
     "description": "",

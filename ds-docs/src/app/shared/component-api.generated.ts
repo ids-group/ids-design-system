@@ -10087,6 +10087,98 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       }
     ]
   },
+  "splitter": {
+    "key": "splitter",
+    "selector": "ds-splitter",
+    "isElement": true,
+    "className": "SplitterComponent",
+    "status": "stable",
+    "importName": "SplitterComponent",
+    "importPath": "@ids-group-ltd/ids-design-system",
+    "entryPoint": "@ids-group-ltd/ids-design-system/components/splitter",
+    "summary": null,
+    "inputs": [
+      {
+        "name": "orientation",
+        "kind": "input",
+        "type": "SplitterOrientation",
+        "union": [
+          "horizontal",
+          "vertical"
+        ],
+        "default": "'horizontal'",
+        "required": false,
+        "description": "`'horizontal'`: panes side by side. `'vertical'`: panes stacked."
+      },
+      {
+        "name": "pane",
+        "kind": "input",
+        "type": "SplitterPane",
+        "union": [
+          "start",
+          "end"
+        ],
+        "default": "'start'",
+        "required": false,
+        "description": "The pane `size` measures; the other pane takes the rest."
+      },
+      {
+        "name": "size",
+        "kind": "model",
+        "type": "number | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Size of `pane` in px, two-way bound; `null` shows `defaultSize`. A drag writes it once, on release."
+      },
+      {
+        "name": "defaultSize",
+        "kind": "input",
+        "type": "number",
+        "union": null,
+        "default": "320",
+        "required": false,
+        "description": "Size in px when `size` is `null`, and what a double click on the handle returns to."
+      },
+      {
+        "name": "min",
+        "kind": "input",
+        "type": "number",
+        "union": null,
+        "default": "160",
+        "required": false,
+        "description": "Smallest size in px, inclusive."
+      },
+      {
+        "name": "max",
+        "kind": "input",
+        "type": "number",
+        "union": null,
+        "default": "640",
+        "required": false,
+        "description": "Largest size in px, inclusive. The pane never takes more than the splitter less the handle."
+      },
+      {
+        "name": "persistKey",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "''",
+        "required": false,
+        "description": "Saves the size in `localStorage` under `ds-splitter:<key>` and restores it on init, over `size`."
+      },
+      {
+        "name": "ariaLabel",
+        "kind": "input",
+        "type": "string | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Accessible name of the handle; unset falls back to `DS_INTL.splitter.label`. Name what it resizes."
+      }
+    ],
+    "outputs": []
+  },
   "stat": {
     "key": "stat",
     "selector": "ds-stat",
