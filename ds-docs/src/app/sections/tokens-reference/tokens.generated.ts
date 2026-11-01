@@ -8143,6 +8143,16 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "notes": "Timeline connector spine colour (defaults to --border-divider)."
       },
       {
+        "name": "--ds-timeline-toggle-icon-color",
+        "value": "var(--icon-default)",
+        "notes": ""
+      },
+      {
+        "name": "--ds-timeline-toggle-icon-color-hover",
+        "value": "var(--icon-strong)",
+        "notes": ""
+      },
+      {
         "name": "--timeline-node-size",
         "value": "var(--hit-sm)",
         "notes": "Timeline event node size (var(--hit-sm), 28px)."

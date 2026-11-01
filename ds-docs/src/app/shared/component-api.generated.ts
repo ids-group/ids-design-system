@@ -12267,7 +12267,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "Marker icon; omit for a plain dot."
+        "description": "Marker icon; omit for a plain dot. Ignored while `status` is set."
       },
       {
         "name": "tone",
@@ -12283,7 +12283,30 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         ],
         "default": "'default'",
         "required": false,
-        "description": "Semantic accent color for the marker."
+        "description": "Semantic accent color for the marker. Ignored while `status` is set."
+      },
+      {
+        "name": "status",
+        "kind": "input",
+        "type": "TimelineStatus | null",
+        "union": [
+          "done",
+          "running",
+          "pending",
+          "error"
+        ],
+        "default": "null",
+        "required": false,
+        "description": "Step state: draws the marker and is spoken before the heading. `null` leaves `icon` and `tone` in charge."
+      },
+      {
+        "name": "expanded",
+        "kind": "model",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Whether the `[details]` area is open, two-way bound."
       }
     ],
     "outputs": []
