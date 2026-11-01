@@ -30,6 +30,7 @@ import type { ChatMessageRole } from './chat.types';
     '[class.in-thread]': '!!thread',
     '[class.is-first]': 'isFirst()',
     '[class.is-grouped]': 'isGrouped()',
+    '[class.has-divider]': '!!timeBreak()',
   },
 })
 export class ChatMessageComponent {
@@ -39,6 +40,8 @@ export class ChatMessageComponent {
   readonly author = input<string>('');
   /** Time label shown above the bubble, already formatted. */
   readonly time = input<string>('');
+  /** When it was sent. Inside a `ds-chat-thread` it splits a run by time and dates the divider. */
+  readonly sentAt = input<Date | string | number | null>(null);
 
   private readonly intl = inject(DS_INTL);
   protected readonly thread = inject(CHAT_THREAD, { optional: true });
@@ -49,6 +52,18 @@ export class ChatMessageComponent {
   protected readonly isGrouped = computed(
     () => this.thread?.groupedMessages().has(this) ?? false,
   );
+
+  protected readonly timeBreak = computed(
+    () => this.thread?.timeBreaks().get(this) ?? '',
+  );
+
+  /** `sentAt` in milliseconds, or `null` when unset or unreadable. */
+  readonly sentAtMs = computed(() => {
+    const value = this.sentAt();
+    const ms = value === null ? Number.NaN : new Date(value).getTime();
+
+    return Number.isNaN(ms) ? null : ms;
+  });
 
   protected readonly speaker = computed(() => {
     const wording = { ...DS_INTL_DEFAULTS.chat, ...this.intl().chat };

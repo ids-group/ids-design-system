@@ -36,6 +36,29 @@
   margin-top: 0;
 }
 
+// A time break: the divider spans the thread whichever side the message sits on.
+.divider {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  align-self: stretch;
+  margin-bottom: var(--space-3);
+  font-size: var(--font-size-xs);
+  line-height: var(--line-height-base);
+  color: var(--text-tertiary);
+
+  &::before,
+  &::after {
+    content: '';
+    flex: 1;
+    border-top: var(--border-width-default) solid var(--border-divider);
+  }
+}
+
+.divider-label {
+  flex: none;
+}
+
 .visually-hidden {
   @include visually-hidden.visually-hidden;
 }

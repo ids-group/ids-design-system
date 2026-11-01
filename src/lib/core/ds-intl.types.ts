@@ -229,6 +229,10 @@ export interface DsIntl {
     readonly newMessages?: string;
     /** `'Jump to latest'` - the jump button while nothing new arrived. */
     readonly latest?: string;
+    /** `'Today'` - the time divider of a message sent today, before its time. */
+    readonly today?: string;
+    /** `'Yesterday'` - the same for a message sent yesterday. */
+    readonly yesterday?: string;
   };
   readonly tabs: {
     readonly close: (label: string) => string;

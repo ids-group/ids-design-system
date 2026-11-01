@@ -4,8 +4,10 @@ import { InjectionToken, type Signal } from '@angular/core';
 export interface ChatThreadContract {
   /** The first message, which takes no space above it. */
   readonly firstMessage: Signal<object | undefined>;
-  /** Messages that follow one of the same role, drawn closer to it. */
+  /** Messages that follow one of the same role with no time break, drawn closer to it. */
   readonly groupedMessages: Signal<ReadonlySet<object>>;
+  /** Messages that open a time section, with the divider text shown above them. */
+  readonly timeBreaks: Signal<ReadonlyMap<object, string>>;
 }
 
 export const CHAT_THREAD = new InjectionToken<ChatThreadContract>(

@@ -19,6 +19,7 @@ import {
 import {
   DS_INTL,
   DS_INTL_DEFAULTS,
+  injectDsLocale,
 } from '@ids-group-ltd/ids-design-system/core';
 import { ButtonComponent } from '@ids-group-ltd/ids-design-system/components/button';
 import { SpinnerComponent } from '@ids-group-ltd/ids-design-system/components/spinner';
@@ -55,6 +56,8 @@ export class ChatThreadComponent {
   readonly workingLabel = input<string>('');
   /** Accessible name of the scroll area; unset falls back to `DS_INTL.chat.thread`. */
   readonly ariaLabel = input<string | null>(null);
+  /** Minutes between two messages' `sentAt` that start a new section with a time divider. */
+  readonly timeBreakMinutes = input<number>(15);
 
   // Descendants, so a message inside a wrapper element or an @for block still counts.
   private readonly messages = contentChildren(ChatMessageComponent, {
@@ -66,18 +69,40 @@ export class ChatThreadComponent {
     this.messages().at(0),
   );
 
-  /** Messages that follow one of the same role. */
+  /** Messages that open a time section, with their divider text: the first message with a
+   *  `sentAt`, and each one sent `timeBreakMinutes` or more after the message before it. */
+  readonly timeBreaks = computed<ReadonlyMap<object, string>>(() => {
+    const breaks = new Map<object, string>();
+    const gap = this.timeBreakMinutes() * 60_000;
+    let previous: number | null = null;
+    for (const message of this.messages()) {
+      const sent = message.sentAtMs();
+      if (sent !== null && (previous === null || sent - previous >= gap)) {
+        breaks.set(message, this.dividerText(sent));
+      }
+      previous = sent ?? previous;
+    }
+
+    return breaks;
+  });
+
+  /** Messages that follow one of the same role with no time break between them. */
   readonly groupedMessages = computed<ReadonlySet<object>>(() => {
     const list = this.messages();
+    const breaks = this.timeBreaks();
 
     return new Set(
       list.filter(
-        (message, i) => i > 0 && message.role() === list[i - 1].role(),
+        (message, i) =>
+          i > 0 &&
+          message.role() === list[i - 1].role() &&
+          !breaks.has(message),
       ),
     );
   });
 
   private readonly intl = inject(DS_INTL);
+  private readonly locale = injectDsLocale();
   private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
   private readonly injector = inject(Injector);
   private readonly destroyRef = inject(DestroyRef);
@@ -183,6 +208,34 @@ export class ChatThreadComponent {
     if (!this.working()) {
       this.announceLastReply();
     }
+  }
+
+  private dividerText(sent: number): string {
+    const date = new Date(sent);
+    const today = new Date();
+    const yesterday = new Date(today);
+    yesterday.setDate(today.getDate() - 1);
+    const sameDay = (other: Date) =>
+      date.toDateString() === other.toDateString();
+    let day: string;
+    if (sameDay(today)) {
+      day = this.wording().today;
+    } else if (sameDay(yesterday)) {
+      day = this.wording().yesterday;
+    } else {
+      day = date.toLocaleDateString(this.locale, {
+        day: 'numeric',
+        month: 'short',
+        year:
+          date.getFullYear() === today.getFullYear() ? undefined : 'numeric',
+      });
+    }
+    const time = date.toLocaleTimeString(this.locale, {
+      hour: '2-digit',
+      minute: '2-digit',
+    });
+
+    return `${day} ${time}`;
   }
 
   private toEnd(): void {

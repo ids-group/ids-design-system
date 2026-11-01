@@ -190,6 +190,8 @@ export const DS_INTL_DEFAULTS: DsIntl & {
     working: 'Assistant is working',
     newMessages: 'New messages',
     latest: 'Jump to latest',
+    today: 'Today',
+    yesterday: 'Yesterday',
   },
   tabs: {
     close: (label) => `Close ${label}`,
