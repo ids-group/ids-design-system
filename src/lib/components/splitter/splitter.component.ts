@@ -3,6 +3,7 @@ import {
   Component,
   ElementRef,
   OnDestroy,
+  NgZone,
   OnInit,
   ViewEncapsulation,
   computed,
@@ -47,6 +48,7 @@ export class SplitterComponent implements OnInit, OnDestroy {
   private readonly intl = inject(DS_INTL);
   private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
   private readonly document = inject(DOCUMENT);
+  private readonly zone = inject(NgZone);
   private readonly handle =
     viewChild.required<ElementRef<HTMLElement>>('handle');
 
@@ -125,12 +127,16 @@ export class SplitterComponent implements OnInit, OnDestroy {
       size: this.current(),
     };
     this.dragging.set(true);
+    // Outside Angular: a move writes the DOM itself, so it must not start change detection per frame.
+    this.zone.runOutsideAngular(() =>
+      handle.addEventListener('pointermove', this.onPointerMove),
+    );
     const root = this.document.documentElement;
     root.setAttribute('data-ds-splitter-dragging', '');
     root.style.setProperty('--_ds-splitter-cursor', this.cursor());
   }
 
-  protected onPointerMove(event: PointerEvent): void {
+  private readonly onPointerMove = (event: PointerEvent): void => {
     if (event.pointerId !== this.drag?.pointerId) {
       return;
     }
@@ -152,7 +158,7 @@ export class SplitterComponent implements OnInit, OnDestroy {
       '--_ds-splitter-cursor',
       cursor,
     );
-  }
+  };
 
   protected onPointerUp(event: PointerEvent): void {
     if (event.pointerId !== this.drag?.pointerId) {
@@ -214,8 +220,10 @@ export class SplitterComponent implements OnInit, OnDestroy {
     if (!this.drag) {
       return;
     }
+    const handle = this.handle().nativeElement;
+    handle.removeEventListener('pointermove', this.onPointerMove);
     try {
-      this.handle().nativeElement.releasePointerCapture(this.drag.pointerId);
+      handle.releasePointerCapture(this.drag.pointerId);
     } catch {
       // The pointer can already be gone.
     }
