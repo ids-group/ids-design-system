@@ -2412,6 +2412,18 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
     ]
   },
   {
+    "component": "Attachment",
+    "selector": ".attachment",
+    "description": "",
+    "tokens": [
+      {
+        "name": "--ds-radius-inner",
+        "value": "—",
+        "notes": "Radius role for shapes INSIDE a control — the checkbox box, an option row, a tag. Defaults to --radius-sm."
+      }
+    ]
+  },
+  {
     "component": "Auth Layout",
     "selector": ".auth-layout",
     "description": "",
@@ -2552,11 +2564,6 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "name": "--ds-autocomplete-placeholder-color",
         "value": "var(--_field-placeholder-color)",
         "notes": "Placeholder colour of the filter input (default --ds-field-placeholder-color, then --text-tertiary - the same as ds-input; before this the placeholder was the browser's own grey)."
-      },
-      {
-        "name": "--ds-radius-inner",
-        "value": "—",
-        "notes": "Radius role for shapes INSIDE a control — the checkbox box, an option row, a tag. Defaults to --radius-sm."
       }
     ]
   },

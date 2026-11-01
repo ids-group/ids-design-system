@@ -93,6 +93,7 @@ export const NAV: NavGroup[] = [
     kind: 'component',
     items: [
       { label: 'Accordion', anchor: 'accordion' },
+      { label: 'Attachment', anchor: 'attachment' },
       { label: 'Avatars', anchor: 'avatar' },
       { label: 'Cards', anchor: 'card' },
       { label: 'Description list', anchor: 'description-list' },

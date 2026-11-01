@@ -244,6 +244,80 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
     "inputs": [],
     "outputs": []
   },
+  "attachment": {
+    "key": "attachment",
+    "selector": "ds-attachment",
+    "isElement": true,
+    "className": "AttachmentComponent",
+    "status": "stable",
+    "importName": "AttachmentComponent",
+    "importPath": "@ids-group-ltd/ids-design-system",
+    "entryPoint": "@ids-group-ltd/ids-design-system/components/attachment",
+    "summary": null,
+    "inputs": [
+      {
+        "name": "name",
+        "kind": "input-required",
+        "type": "string",
+        "union": null,
+        "default": null,
+        "required": true,
+        "description": "File name, shown on the first line and used in the remove button's accessible name."
+      },
+      {
+        "name": "meta",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "''",
+        "required": false,
+        "description": "Second line, such as `'PDF · 240 KB'`."
+      },
+      {
+        "name": "kind",
+        "kind": "input",
+        "type": "AttachmentKind",
+        "union": [
+          "pdf",
+          "doc",
+          "image",
+          "file"
+        ],
+        "default": "'file'",
+        "required": false,
+        "description": "Draws the type tile and is announced before `meta`."
+      },
+      {
+        "name": "previewUrl",
+        "kind": "input",
+        "type": "string | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Image shown in place of the tile when `kind` is `'image'`."
+      },
+      {
+        "name": "removable",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Shows a remove button that emits `removed`."
+      }
+    ],
+    "outputs": [
+      {
+        "name": "removed",
+        "kind": "output",
+        "type": "void",
+        "union": null,
+        "default": null,
+        "required": false,
+        "description": "Fires when the remove button is pressed."
+      }
+    ]
+  },
   "auth-layout": {
     "key": "auth-layout",
     "selector": "ds-auth-layout",

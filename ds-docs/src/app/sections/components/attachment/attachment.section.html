@@ -1,0 +1,93 @@
+<docs-section
+  anchor="attachment"
+  eyebrow="Components"
+  title="Attachment">
+  <span lede>
+    A file attached to a message: a type tile or an image preview, the name
+    and its size. It sits in the chips slot of the message input.
+  </span>
+
+  <h3 class="block-title t-h4">
+    Kinds
+  </h3>
+
+  <div class="states is-cols-2">
+    <div class="state-cell">
+      <div class="state-cell-stage">
+        <ds-attachment
+          name="Brief.pdf"
+          meta="PDF · 240 KB"
+          kind="pdf" />
+      </div>
+
+      <div class="state-cell-label">
+        PDF
+      </div>
+    </div>
+
+    <div class="state-cell">
+      <div class="state-cell-stage">
+        <ds-attachment
+          name="Scope.docx"
+          meta="Word · 38 KB"
+          kind="doc" />
+      </div>
+
+      <div class="state-cell-label">
+        Word
+      </div>
+    </div>
+
+    <div class="state-cell">
+      <div class="state-cell-stage">
+        <ds-attachment
+          name="screenshot.png"
+          meta="Image · 1280×720"
+          kind="image"
+          [previewUrl]="screenshot" />
+      </div>
+
+      <div class="state-cell-label">
+        Image with preview
+      </div>
+    </div>
+
+    <div class="state-cell">
+      <div class="state-cell-stage">
+        <ds-attachment
+          name="notes.txt"
+          meta="Text · 2 KB"
+          removable />
+      </div>
+
+      <div class="state-cell-label">
+        Any file · removable
+      </div>
+    </div>
+  </div>
+
+  <h3 class="block-title t-h4">
+    In the message input
+  </h3>
+
+  <ds-message-input
+    placeholder="Describe a change…"
+    value="Use the layout from the brief">
+    @for (file of files(); track file.name) {
+      <ds-attachment
+        chips
+        removable
+        [name]="file.name"
+        [meta]="file.meta"
+        [kind]="file.kind"
+        [previewUrl]="file.previewUrl"
+        (removed)="remove(file.name)" />
+    }
+
+    <ds-icon-button
+      actions
+      icon="paperclip"
+      size="sm"
+      ariaLabel="Attach a file" />
+  </ds-message-input>
+</docs-section>

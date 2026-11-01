@@ -47,6 +47,7 @@ import { IconSection } from './sections/components/icon/icon.section';
 import { ListSection } from './sections/components/list/list.section';
 import { StatSection } from './sections/components/stat/stat.section';
 import { TableSection } from './sections/components/table/table.section';
+import { AttachmentSection } from './sections/components/attachment/attachment.section';
 import { TagSection } from './sections/components/tag/tag.section';
 import { TimelineSection } from './sections/components/timeline/timeline.section';
 import { TreeSection } from './sections/components/tree/tree.section';
@@ -187,6 +188,7 @@ export const GROUP_PAGES: readonly GroupPageDef[] = [
     title: 'Data display',
     sections: [
       AccordionSection,
+      AttachmentSection,
       AvatarSection,
       CardSection,
       DescriptionListSection,
