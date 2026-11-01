@@ -101,23 +101,17 @@
   user-select: text;
 }
 
-// A run reads as one block: the corners on the speaker's side meet the neighbour tight, and the
-// bottom one stays tight on the last message as its tail.
-:host([data-role='assistant']) .bubble {
+// The tail is the tight bottom corner on the speaker's side, drawn only on the last message of a run,
+// so the run ends where it reads as ending; the messages above it keep every corner round.
+:host([data-role='assistant']:not(.is-continued)) .bubble {
   border-end-start-radius: var(--ds-radius-inner);
 }
 
-:host([data-role='assistant'].is-grouped) .bubble {
-  border-start-start-radius: var(--ds-radius-inner);
-}
-
-:host([data-role='user'].is-grouped) .bubble {
-  border-start-end-radius: var(--ds-radius-inner);
+:host([data-role='user']:not(.is-continued)) .bubble {
+  border-end-end-radius: var(--ds-radius-inner);
 }
 
 :host([data-role='user']) .bubble {
-  border-end-end-radius: var(--ds-radius-inner);
-
   // The page's selection tint is mixed from --primary, which is this bubble's fill.
   ::selection {
     background-color: var(--_chat-bubble-color);

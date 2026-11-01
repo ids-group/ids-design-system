@@ -6,6 +6,8 @@ export interface ChatThreadContract {
   readonly firstMessage: Signal<object | undefined>;
   /** Messages that follow one of the same role with no time break, drawn closer to it. */
   readonly groupedMessages: Signal<ReadonlySet<object>>;
+  /** Messages followed by one of the same run, drawn joined to it. */
+  readonly continuedMessages: Signal<ReadonlySet<object>>;
   /** Messages that open a time section, with the divider text shown above them. */
   readonly timeBreaks: Signal<ReadonlyMap<object, string>>;
 }

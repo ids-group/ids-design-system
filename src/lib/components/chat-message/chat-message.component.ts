@@ -30,6 +30,7 @@ import type { ChatMessageRole } from './chat.types';
     '[class.in-thread]': '!!thread',
     '[class.is-first]': 'isFirst()',
     '[class.is-grouped]': 'isGrouped()',
+    '[class.is-continued]': 'isContinued()',
     '[class.has-divider]': '!!timeBreak()',
   },
 })
@@ -51,6 +52,10 @@ export class ChatMessageComponent {
   );
   protected readonly isGrouped = computed(
     () => this.thread?.groupedMessages().has(this) ?? false,
+  );
+
+  protected readonly isContinued = computed(
+    () => this.thread?.continuedMessages().has(this) ?? false,
   );
 
   protected readonly timeBreak = computed(

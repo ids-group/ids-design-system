@@ -17,6 +17,7 @@ export class ChatAttachmentComponent {
 export class ChatMessageComponent {
     public readonly author = input<string>('');
     private readonly intl;
+    protected readonly isContinued = computed(…);
     protected readonly isFirst = computed(…);
     protected readonly isGrouped = computed(…);
     public readonly role = input<ChatMessageRole>('assistant');
@@ -39,6 +40,7 @@ export class ChatThreadComponent {
     protected readonly announcement = signal(…);
     public readonly ariaLabel = input<string | null>(null);
     private readonly content;
+    public readonly continuedMessages = computed<ReadonlySet<object>>(…);
     private readonly destroyRef;
     private dividerText;
     public readonly firstMessage = computed<object | undefined>(…);

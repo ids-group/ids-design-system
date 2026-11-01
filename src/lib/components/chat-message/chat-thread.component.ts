@@ -101,6 +101,14 @@ export class ChatThreadComponent {
     );
   });
 
+  /** Messages followed by one of the same run. */
+  readonly continuedMessages = computed<ReadonlySet<object>>(() => {
+    const list = this.messages();
+    const grouped = this.groupedMessages();
+
+    return new Set(list.filter((_, i) => grouped.has(list[i + 1])));
+  });
+
   private readonly intl = inject(DS_INTL);
   private readonly locale = injectDsLocale();
   private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);

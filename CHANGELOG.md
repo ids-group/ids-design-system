@@ -47,10 +47,10 @@
   messages and stays at the newest one as messages arrive or grow; once the reader scrolls up it
   stays put and shows a jump button with the count of messages that arrived below ("3 new
   messages", else "Jump to latest"), and a message the reader sends scrolls back down. Consecutive
-  messages of one role sit closer together, their corners tight on the speaker's side, so a run
-  reads as one block. With `sentAt` (`Date`, ISO string or epoch milliseconds) on the messages, a
-  gap of `timeBreakMinutes` (default `15`) or more starts a new run under a centred time divider
-  ("Today 14:32"), and the first message is dated the same way. `working` shows a row with a
+  messages of one role sit closer together, and only the last one of a run takes the tight corner
+  on the speaker's side, so the run reads as one block that ends where its tail is. With `sentAt`
+  (`Date`, ISO string or epoch milliseconds) on the messages, a gap of `timeBreakMinutes` (default
+  `15`) or more starts a new run under a centred time divider ("Today 14:32"), and the first message is dated the same way. `working` shows a row with a
   spinner and `workingLabel` at the end. A screen reader hears the working label and each finished
   reply, once: a reply that arrives while `working` is read when `working` clears, and the messages
   present when the thread first renders are never read. `scrollToEnd()` scrolls down from code.
