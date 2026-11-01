@@ -5,6 +5,7 @@ import {
   inject,
   signal,
 } from '@angular/core';
+import { NgTemplateOutlet } from '@angular/common';
 import { ButtonComponent } from 'ds/button';
 import { InputComponent } from 'ds/input';
 import { TagComponent } from 'ds/tag';
@@ -34,6 +35,9 @@ const REPLIES = [
   'Both themes checked: the contrast of the muted text is above 4.5:1 in each.',
 ];
 
+const FAIL_PATH =
+  'src/app/features/pricing/components/pricing-card/pricing-card.component.ts:42';
+
 @Component({
   selector: 'section-components-chat-message',
   standalone: true,
@@ -48,6 +52,7 @@ const REPLIES = [
     ButtonComponent,
     IconButtonComponent,
     InputComponent,
+    NgTemplateOutlet,
   ],
   encapsulation: ViewEncapsulation.Emulated,
   templateUrl: './chat-message.section.html',
@@ -57,6 +62,32 @@ const REPLIES = [
   ],
 })
 export class ChatMessageSection {
+  protected readonly failVariants = ['a', 'b', 'c'] as const;
+  protected readonly failPath = FAIL_PATH;
+  protected readonly failFrame = [
+    { no: 41, text: '  @Input() set price(value: number) {', error: false },
+    { no: 42, text: '    this.amount = value.toFixed(2);', error: true },
+    { no: 43, text: '  }', error: false },
+  ];
+  protected readonly failLog = [
+    '> ng build --configuration production',
+    'Building...',
+    `✘ [ERROR] TS2322: Type 'string' is not assignable to type 'number'. [plugin angular-compiler]`,
+    `    ${FAIL_PATH}`,
+    '      42 │     this.amount = value.toFixed(2);',
+    '         ╵                   ~~~~~~~~~~~~~~~',
+    ...Array.from(
+      { length: 18 },
+      (_, i) =>
+        `    at Object.compile (/home/runner/work/prototype-studio/node_modules/@angular/build/src/tools/esbuild/angular/compiler-plugin.js:${120 + i}:17)`,
+    ),
+    'Application bundle generation failed. [4.213 seconds]',
+  ];
+
+  protected copyLog(): void {
+    void navigator.clipboard?.writeText(this.failLog.join('\n'));
+  }
+
   private nextId = 0;
   private olderPages = 0;
   private readonly timers = new Set<ReturnType<typeof setTimeout>>();
