@@ -1,6 +1,8 @@
 <div
   class="node-col"
   aria-hidden="true">
+  <span class="spine lead"></span>
+
   <span class="node">
     @if (status() === 'running') {
       <ds-spinner />
@@ -14,7 +16,7 @@
   <span class="spine"></span>
 </div>
 
-<div class="content">
+<div class="text">
   <div class="head">
     @if (statusLabel()) {
       <span class="visually-hidden">
@@ -53,7 +55,14 @@
       {{ time() }}
     </span>
   }
+</div>
 
+<span
+  class="spine tail"
+  aria-hidden="true">
+</span>
+
+<div class="rest">
   <div
     class="details"
     [id]="detailsId"

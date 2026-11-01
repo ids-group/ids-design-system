@@ -30,6 +30,9 @@ export class TimelineComponent {
     descendants: true,
   });
 
+  /** The item that draws no connector above it. */
+  readonly firstItem = computed<object | undefined>(() => this.items().at(0));
+
   /** The item that draws no connector below it. */
   readonly lastItem = computed<object | undefined>(() => this.items().at(-1));
 }

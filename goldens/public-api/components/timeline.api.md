@@ -5,6 +5,7 @@
 ```ts
 @Component({ selector: 'ds-timeline' })
 export class TimelineComponent {
+    public readonly firstItem = computed<object | undefined>(…);
     private readonly items;
     public readonly lastItem = computed<object | undefined>(…);
 }
@@ -17,6 +18,7 @@ export class TimelineItemComponent {
     public readonly heading = input<string>('');
     public readonly icon = input<IconName | null>(null);
     private readonly intl;
+    protected readonly isFirst = computed(…);
     protected readonly isLast = computed(…);
     protected readonly nodeIcon = computed<IconName | null>(…);
     public readonly status = input<TimelineStatus | null>(null);

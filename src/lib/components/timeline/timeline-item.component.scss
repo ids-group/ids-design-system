@@ -16,6 +16,9 @@
   --_timeline-toggle-icon-color: var(--ds-timeline-toggle-icon-color, var(--icon-default));
   --_timeline-toggle-icon-color-hover: var(--ds-timeline-toggle-icon-color-hover, var(--icon-strong));
 
+  // Row 1 holds the marker and the text (heading, content, time); row 2 holds the details and the
+  // gap to the next item. The marker centres on the text, or the text on the marker when the text
+  // is shorter, so the details opening never moves the marker.
   display: grid;
   grid-template-columns: var(--_timeline-node-size) 1fr;
   column-gap: var(--space-4);
@@ -25,9 +28,6 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-top: calc(
-    (var(--font-size-s) * var(--line-height-base) - var(--_timeline-node-size)) / 2
-  );
 }
 
 .node {
@@ -50,10 +50,26 @@
   background-color: var(--_timeline-spine-color);
 }
 
-.content {
+// Equal to the segment below the marker, so the marker stays centred in the row.
+.lead {
+  margin-top: 0;
+  margin-bottom: var(--space-1);
+}
+
+.tail {
+  justify-self: center;
+  margin-top: 0;
+}
+
+.text {
   display: flex;
   flex-direction: column;
+  align-self: center;
   gap: var(--space-0-5);
+  min-width: 0;
+}
+
+.rest {
   padding-bottom: var(--_timeline-gap);
   min-width: 0;
 }
@@ -62,11 +78,18 @@
 // An item with no ds-timeline above it falls back to its position among its siblings.
 :host(.is-last),
 :host(.outside-timeline:last-child) {
-  .spine {
-    display: none;
+  .spine:not(.lead) {
+    visibility: hidden;
   }
-  .content {
+  .rest {
     padding-bottom: 0;
+  }
+}
+
+:host(.is-first),
+:host(.outside-timeline:first-child) {
+  .lead {
+    visibility: hidden;
   }
 }
 
@@ -114,12 +137,12 @@
 }
 
 // The toggle exists only while something is projected into [details].
-.content:not(:has(> .details > *)) .toggle {
+:host:not(:has(.details > *)) .toggle {
   display: none;
 }
 
 .details {
-  margin-top: var(--space-1);
+  padding-top: var(--space-1);
   min-width: 0;
 
   &:not(:has(*)) {

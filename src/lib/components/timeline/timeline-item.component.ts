@@ -43,6 +43,7 @@ let nextId = 0;
     role: 'listitem',
     '[attr.data-tone]': 'tone()',
     '[attr.data-status]': 'status()',
+    '[class.is-first]': 'isFirst()',
     '[class.is-last]': 'isLast()',
     '[class.outside-timeline]': '!timeline',
   },
@@ -65,6 +66,10 @@ export class TimelineItemComponent {
   protected readonly timeline = inject(TIMELINE, { optional: true });
 
   protected readonly detailsId = `ds-timeline-item-${++nextId}-details`;
+
+  protected readonly isFirst = computed(
+    () => this.timeline?.firstItem() === this,
+  );
 
   protected readonly isLast = computed(
     () => this.timeline?.lastItem() === this,

@@ -30,6 +30,11 @@
 
 ### Changed
 
+- **A `ds-timeline-item` marker centres on its text.** With a description or a time under the
+  heading, the marker sits at the middle of the heading, description and time together; a heading
+  alone sits at the middle of the marker. An open `[details]` area does not move the marker. The
+  connector now also runs above each marker but the first, so it reaches a marker that sits lower.
+  Nothing to change in your code.
 - **A `ds-table` column resize line is visible at rest.** The line between resizable header cells
   was `--border-default`, about 1.2:1 against the header; it is `--text-tertiary` now, about 4.3:1.
   Set `--ds-table-resize-line-color` on `ds-table` to choose another colour, for example
@@ -43,7 +48,7 @@
 - **A `ds-timeline-item` inside a wrapper element keeps its connector.** The line to the next item
   disappeared from every item wrapped in its own element, because each one was the last child of its
   wrapper. `ds-timeline` now finds its items at any depth and only the last one draws no line.
-  `TimelineComponent.lastItem` reads that item.
+  `TimelineComponent.firstItem` and `TimelineComponent.lastItem` read the first and the last item.
 - **Dark theme shadows are dark.** `--shadow-1` to `--shadow-4` (and every `--shadow-*` and
   `--ds-elevation-*` alias built on them) rendered as a light glow around cards, popovers, tooltips,
   toasts, modals and drawers. Under `data-theme="dark"` they are now near-black at 30% to 60% alpha,
