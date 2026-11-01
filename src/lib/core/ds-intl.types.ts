@@ -225,8 +225,9 @@ export interface DsIntl {
     readonly thread?: string;
     /** `'Assistant is working'` - the working row when `workingLabel` is empty. */
     readonly working?: string;
-    /** `'New messages'` - the jump button while messages arrived below the scrolled-up view. */
-    readonly newMessages?: string;
+    /** `` `${count} new messages` `` (`'1 new message'`) - the jump button while messages arrived
+     *  below the scrolled-up view. */
+    readonly newMessages?: (count: number) => string;
     /** `'Jump to latest'` - the jump button while nothing new arrived. */
     readonly latest?: string;
     /** `'Today'` - the time divider of a message sent today, before its time. */

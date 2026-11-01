@@ -123,11 +123,13 @@ export class ChatThreadComponent {
   );
 
   protected readonly pinned = signal(true);
-  protected readonly unseen = signal(false);
+  protected readonly unseen = signal(0);
   protected readonly announcement = signal('');
-  protected readonly jumpLabel = computed(() =>
-    this.unseen() ? this.wording().newMessages : this.wording().latest,
-  );
+  protected readonly jumpLabel = computed(() => {
+    const count = this.unseen();
+
+    return count ? this.wording().newMessages(count) : this.wording().latest;
+  });
 
   constructor() {
     afterNextRender(() => {
@@ -166,9 +168,6 @@ export class ChatThreadComponent {
       untracked(() => {
         if (working) {
           this.announce(text);
-          if (!wasWorking && !this.pinned()) {
-            this.unseen.set(true);
-          }
         } else if (wasWorking) {
           this.afterRender(() => this.announceLastReply());
         }
@@ -180,7 +179,7 @@ export class ChatThreadComponent {
   /** Scrolls to the newest message and pins the thread there. */
   scrollToEnd(): void {
     this.pinned.set(true);
-    this.unseen.set(false);
+    this.unseen.set(0);
     this.toEnd();
   }
 
@@ -191,7 +190,7 @@ export class ChatThreadComponent {
       PIN_TOLERANCE_PX;
     this.pinned.set(atEnd);
     if (atEnd) {
-      this.unseen.set(false);
+      this.unseen.set(0);
     }
   }
 
@@ -203,7 +202,7 @@ export class ChatThreadComponent {
       return;
     }
     if (!this.pinned()) {
-      this.unseen.set(true);
+      this.unseen.update((count) => count + 1);
     }
     if (!this.working()) {
       this.announceLastReply();

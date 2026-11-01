@@ -188,7 +188,8 @@ export const DS_INTL_DEFAULTS: DsIntl & {
     assistant: 'Assistant',
     thread: 'Conversation',
     working: 'Assistant is working',
-    newMessages: 'New messages',
+    newMessages: (count) =>
+      count === 1 ? '1 new message' : `${count} new messages`,
     latest: 'Jump to latest',
     today: 'Today',
     yesterday: 'Yesterday',
