@@ -141,7 +141,9 @@ ds-textarea {
 
 /* One fixed square, idle or busy, so the bar never moves. */
 .send-button.icon-only {
-  --ds-button-padding-x: calc((var(--field-h-sm) - var(--icon-sm)) / 2 - var(--border-width-default));
+  --ds-button-padding-x: 0;
+
+  width: var(--field-h-sm);
 }
 
 /* "Send" and the step share one minimum width; a longer step widens it towards the left. */
