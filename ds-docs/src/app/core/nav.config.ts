@@ -94,6 +94,7 @@ export const NAV: NavGroup[] = [
       { label: 'Accordion', anchor: 'accordion' },
       { label: 'Avatars', anchor: 'avatar' },
       { label: 'Cards', anchor: 'card' },
+      { label: 'Chat', anchor: 'chat-message' },
       { label: 'Description list', anchor: 'description-list' },
       { label: 'Icon', anchor: 'icon' },
       { label: 'List', anchor: 'list' },

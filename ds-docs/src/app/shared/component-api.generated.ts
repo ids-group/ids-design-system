@@ -2841,6 +2841,132 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       }
     ]
   },
+  "chat-message:ChatAttachmentComponent": {
+    "key": "chat-message",
+    "selector": "ds-chat-attachment",
+    "isElement": true,
+    "className": "ChatAttachmentComponent",
+    "status": "stable",
+    "importName": "ChatAttachmentComponent",
+    "importPath": "@ids-group-ltd/ids-design-system",
+    "entryPoint": "@ids-group-ltd/ids-design-system/components/chat-message",
+    "summary": null,
+    "inputs": [
+      {
+        "name": "label",
+        "kind": "input-required",
+        "type": "string",
+        "union": null,
+        "default": null,
+        "required": true,
+        "description": "Chip text: the file name, or the picked element's name."
+      },
+      {
+        "name": "icon",
+        "kind": "input",
+        "type": "IconName | null",
+        "union": null,
+        "default": "'paperclip'",
+        "required": false,
+        "description": "Icon before the label."
+      },
+      {
+        "name": "expanded",
+        "kind": "model",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Whether the snapshot is open, two-way bound."
+      }
+    ],
+    "outputs": []
+  },
+  "chat-message": {
+    "key": "chat-message",
+    "selector": "ds-chat-message",
+    "isElement": true,
+    "className": "ChatMessageComponent",
+    "status": "stable",
+    "importName": "ChatMessageComponent",
+    "importPath": "@ids-group-ltd/ids-design-system",
+    "entryPoint": "@ids-group-ltd/ids-design-system/components/chat-message",
+    "summary": null,
+    "inputs": [
+      {
+        "name": "role",
+        "kind": "input",
+        "type": "ChatMessageRole",
+        "union": [
+          "user",
+          "assistant"
+        ],
+        "default": "'assistant'",
+        "required": false,
+        "description": "Who wrote it: `'user'` draws a filled bubble on the right, `'assistant'` a subtle one on the left."
+      },
+      {
+        "name": "author",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "''",
+        "required": false,
+        "description": "Name shown above the bubble. Without it the role is spoken (`DS_INTL.chat.user` / `assistant`)."
+      },
+      {
+        "name": "time",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "''",
+        "required": false,
+        "description": "Time label shown above the bubble, already formatted."
+      }
+    ],
+    "outputs": []
+  },
+  "chat-message:ChatThreadComponent": {
+    "key": "chat-message",
+    "selector": "ds-chat-thread",
+    "isElement": true,
+    "className": "ChatThreadComponent",
+    "status": "stable",
+    "importName": "ChatThreadComponent",
+    "importPath": "@ids-group-ltd/ids-design-system",
+    "entryPoint": "@ids-group-ltd/ids-design-system/components/chat-message",
+    "summary": null,
+    "inputs": [
+      {
+        "name": "working",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Shows the working row at the end of the thread: a spinner and `workingLabel`."
+      },
+      {
+        "name": "workingLabel",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "''",
+        "required": false,
+        "description": "The current step while `working`, such as \"Rebuilding\"; empty falls back to `DS_INTL.chat.working`."
+      },
+      {
+        "name": "ariaLabel",
+        "kind": "input",
+        "type": "string | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Accessible name of the scroll area; unset falls back to `DS_INTL.chat.thread`."
+      }
+    ],
+    "outputs": []
+  },
   "checkbox": {
     "key": "checkbox",
     "selector": "ds-checkbox",

@@ -1,0 +1,236 @@
+<docs-section
+  anchor="chat-message"
+  eyebrow="Components"
+  title="Chat">
+  <span lede>
+    Message bubbles and the list that holds them. The window around them, the
+    tabs and the composer stay with the app; the text inside a bubble is the
+    app's too, rendered markdown included.
+  </span>
+
+  <h3 class="block-title t-h4">
+    States
+  </h3>
+
+  <div class="states is-cols-2">
+    <div class="state-cell">
+      <div class="state-cell-stage chat-stage">
+        <ds-chat-thread>
+          <ds-chat-message
+            role="user"
+            time="09:41">
+            Make the header use the brand colour.
+          </ds-chat-message>
+
+          <ds-chat-message
+            author="Assistant"
+            time="09:41">
+            Done. The header now uses the brand colour.
+            <ds-icon-button
+              actions
+              icon="copy"
+              size="sm"
+              color="neutral"
+              ariaLabel="Copy answer" />
+          </ds-chat-message>
+        </ds-chat-thread>
+      </div>
+
+      <div class="state-cell-label">
+        User right, assistant left
+      </div>
+    </div>
+
+    <div class="state-cell">
+      <div class="state-cell-stage chat-stage">
+        <ds-chat-thread>
+          <ds-chat-message role="user">
+            Move the search to the right.
+          </ds-chat-message>
+
+          <ds-chat-message role="user">
+            And make it narrower.
+          </ds-chat-message>
+
+          <ds-chat-message role="user">
+            About half the width.
+          </ds-chat-message>
+
+          <ds-chat-message>
+            Moved and narrowed to half.
+          </ds-chat-message>
+        </ds-chat-thread>
+      </div>
+
+      <div class="state-cell-label">
+        A run of one role, tighter
+      </div>
+    </div>
+
+    <div class="state-cell">
+      <div class="state-cell-stage chat-stage">
+        <ds-chat-thread>
+          <ds-chat-message role="user">
+            Make this button bigger.
+            <ds-chat-attachment
+              attachments
+              label="button.primary"
+              icon="scan">
+              <span class="snapshot-sample">
+                Save changes
+              </span>
+            </ds-chat-attachment>
+
+            <ds-tag
+              attachments
+              variant="neutral">
+              brief.pdf
+            </ds-tag>
+          </ds-chat-message>
+        </ds-chat-thread>
+      </div>
+
+      <div class="state-cell-label">
+        Attachment closed
+      </div>
+    </div>
+
+    <div class="state-cell">
+      <div class="state-cell-stage chat-stage">
+        <ds-chat-thread>
+          <ds-chat-message role="user">
+            Make this button bigger.
+            <ds-chat-attachment
+              attachments
+              label="button.primary"
+              icon="scan"
+              [expanded]="true">
+              <span class="snapshot-sample">
+                Save changes
+              </span>
+            </ds-chat-attachment>
+          </ds-chat-message>
+        </ds-chat-thread>
+      </div>
+
+      <div class="state-cell-label">
+        Attachment open: snapshot as sent
+      </div>
+    </div>
+
+    <div class="state-cell">
+      <div class="state-cell-stage chat-stage">
+        <ds-chat-thread>
+          <ds-chat-message>
+            <ds-timeline steps>
+              <ds-timeline-item
+                heading="Read the page"
+                status="done" />
+
+              <ds-timeline-item
+                heading="Run the build"
+                status="error"
+                [expanded]="true">
+                <pre
+                  details
+                  class="t-mono-block">
+error TS2322: Type 'string' is not assignable to type 'number'.
+                </pre
+                >
+              </ds-timeline-item>
+
+              <ds-timeline-item
+                heading="Fix the type"
+                status="done" />
+            </ds-timeline>
+            The build failed once on a type error; I fixed it and it passes now.
+          </ds-chat-message>
+        </ds-chat-thread>
+      </div>
+
+      <div class="state-cell-label">
+        Steps above the answer
+      </div>
+    </div>
+
+    <div class="state-cell">
+      <div class="state-cell-stage chat-stage">
+        <ds-chat-thread
+          workingLabel="Rebuilding"
+          [working]="true">
+          <ds-chat-message role="user">
+            Rebuild the prototype.
+          </ds-chat-message>
+        </ds-chat-thread>
+      </div>
+
+      <div class="state-cell-label">
+        Working, with the current step
+      </div>
+    </div>
+
+    <div class="state-cell">
+      <div class="state-cell-stage chat-stage">
+        <ds-chat-thread>
+          <ds-chat-message role="user">
+            https://ids-ds.proto.ids-group.co.uk/components/data-display?section=chat&amp;variant=long-unbroken-address
+          </ds-chat-message>
+
+          <ds-chat-message>
+            Averylongwordwithnobreakopportunityatallthatwouldotherwiseoverflowthebubble.
+          </ds-chat-message>
+        </ds-chat-thread>
+      </div>
+
+      <div class="state-cell-label">
+        Long words and URLs wrap
+      </div>
+    </div>
+  </div>
+
+  <h3 class="block-title t-h4">
+    Try it
+  </h3>
+
+  <p class="block-desc t-s">
+    Send a few messages: the list follows them. Scroll up and press Reply, and
+    the list stays where you are and offers a jump button instead.
+  </p>
+
+  <ds-chat-thread
+    class="chat-try"
+    workingLabel="Rebuilding"
+    [working]="working()">
+    @for (message of messages(); track message.id) {
+      <ds-chat-message [role]="message.role">
+        {{ message.text }}
+      </ds-chat-message>
+    }
+  </ds-chat-thread>
+
+  <form
+    class="chat-try-bar"
+    (submit)="send($event)">
+    <ds-input
+      class="chat-try-input"
+      ariaLabel="Message"
+      placeholder="Type and press Enter"
+      [(value)]="draft" />
+
+    <ds-button type="submit">
+      Send
+    </ds-button>
+
+    <ds-button
+      variant="outline"
+      (pressed)="reply()">
+      Reply
+    </ds-button>
+
+    <ds-button
+      variant="outline"
+      (pressed)="working.set(!working())">
+      {{ working() ? 'Stop working' : 'Working' }}
+    </ds-button>
+  </form>
+</docs-section>
