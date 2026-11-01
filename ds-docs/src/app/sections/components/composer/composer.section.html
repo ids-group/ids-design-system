@@ -79,6 +79,35 @@
       <div class="state-cell-stage">
         <ds-composer
           placeholder="Describe a change…"
+          value="Align these two to the same width"
+          chipsPlacement="above">
+          @for (chip of chips(); track chip) {
+            <ds-tag
+              chips
+              variant="neutral"
+              closable
+              (closed)="removeChip(chip)">
+              {{ chip }}
+            </ds-tag>
+          }
+
+          <ds-icon-button
+            actions
+            icon="paperclip"
+            size="sm"
+            ariaLabel="Attach a file" />
+        </ds-composer>
+      </div>
+
+      <div class="state-cell-label">
+        Chips above the frame
+      </div>
+    </div>
+
+    <div class="state-cell">
+      <div class="state-cell-stage">
+        <ds-composer
+          placeholder="Describe a change…"
           busyLabel="Rebuilding"
           busy>
           <ds-icon-button

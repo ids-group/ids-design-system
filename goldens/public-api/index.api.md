@@ -91,6 +91,7 @@ export { ColumnChartPoint } from '@ids-group-ltd/ids-design-system/components/co
 export { ColumnChartSeries } from '@ids-group-ltd/ids-design-system/components/column-chart'; // interface
 export { ColumnSeriesComponent } from '@ids-group-ltd/ids-design-system/components/chart'; // component
 export { ColumnSeriesPoint } from '@ids-group-ltd/ids-design-system/components/chart'; // interface
+export { ComposerChipsPlacement } from '@ids-group-ltd/ids-design-system/components/composer'; // type
 export { ComposerComponent } from '@ids-group-ltd/ids-design-system/components/composer'; // component
 export { ComposerLayout } from '@ids-group-ltd/ids-design-system/components/composer'; // type
 export { ContainerComponent } from '@ids-group-ltd/ids-design-system/components/layout'; // component

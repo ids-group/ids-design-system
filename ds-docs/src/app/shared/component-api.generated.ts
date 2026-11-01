@@ -3667,6 +3667,18 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "'status-bar'",
         "required": false,
         "description": "Where the buttons and the step text sit. `'status-bar'`: buttons inside, the step text in the bar beside a fixed-size send button. `'status-above'`: the step text on a line above the box. `'split'`: attach outside on the left, send outside on the right, the step text above. `'send-outside'`: attach and the step inside, a round send button outside on the right. `'toolbar'`: the box holds the text, attach, the step and send sit in a row under it."
+      },
+      {
+        "name": "chipsPlacement",
+        "kind": "input",
+        "type": "ComposerChipsPlacement",
+        "union": [
+          "inside",
+          "above"
+        ],
+        "default": "'inside'",
+        "required": false,
+        "description": "`'inside'` draws the `[chips]` inside the frame above the text, `'above'` right above the frame."
       }
     ],
     "outputs": [

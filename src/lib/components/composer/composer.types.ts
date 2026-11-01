@@ -4,3 +4,5 @@ export type ComposerLayout =
   | 'split'
   | 'send-outside'
   | 'toolbar';
+
+export type ComposerChipsPlacement = 'inside' | 'above';

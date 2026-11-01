@@ -28,7 +28,8 @@
   step beside it, `'status-above'` shows the step on a line above the box, `'split'` puts attach outside on
   the left and send outside on the right with the step above, `'send-outside'` keeps attach and the
   step inside and puts a round 40px send button outside on the right, and `'toolbar'` puts attach,
-  the step and send in a row under the box. `(filesPasted)` emits the
+  the step and send in a row under the box. `chipsPlacement` (`ComposerChipsPlacement`, default
+  `'inside'`) draws the chips inside the frame or, with `'above'`, right above it. `(filesPasted)` emits the
   image files of a paste, which then inserts no text. `submit()`, `focus()` and `canSubmit` serve a
   custom send area. The text is not cleared on submit: clear `value` once the message is accepted.
   New optional `DsIntl.composer` keys `label` (`'Message'`) and `send` (`'Send'`), and CSS hooks

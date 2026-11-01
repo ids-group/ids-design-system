@@ -209,3 +209,12 @@ ds-textarea {
     margin: var(--space-1) 0 0;
   }
 }
+
+/* Chips sit on the page right above the frame; the box starts at the text row. */
+.composer.chips-above .frame .box {
+  grid-row-start: 2;
+}
+
+.chips-above .chips {
+  margin: 0 0 var(--space-2);
+}

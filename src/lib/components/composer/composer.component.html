@@ -1,4 +1,5 @@
-<div [class]="'composer layout-' + layout()">
+<div
+  [class]="'composer layout-' + layout() + ' chips-' + chipsPlacement()">
   @if (statusAbove()) {
     <div
       class="status status-above"
