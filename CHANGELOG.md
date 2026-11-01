@@ -17,23 +17,23 @@
   `occurrenceClosed`, `ToastRegionComponent.stackFor(key)` and `DsConfig.toast.groupDuplicates`
   (default `false`). `DsIntl.toast` takes the optional
   `showAll`, `hide`, `dismissAll` and `repeated(message, count)`.
-- **`ds-composer`, a message box for a chat or an instruction.** An auto-growing text area
+- **`ds-message-input`, a message box for a chat or an instruction.** An auto-growing text area
   (`minRows`, default `1`; `maxRows`, default `8`) with a two-way `value`, `placeholder`, `ariaLabel`
   and `disabled`. Enter emits `(submitted)` with the trimmed text and Shift+Enter breaks the line; an
   Enter that commits an IME composition, blank text, `busy` and `disabled` never submit. Elements
   marked `chips` sit above the text, `actions` on the left of the bottom bar, and `send` replaces the
   default send button on the right. That button is disabled while the text is blank; with `busy` it
-  shows a spinner and refuses the press. `layout` (`ComposerLayout`, default `'status-bar'`) places
+  shows a spinner and refuses the press. `layout` (`MessageInputLayout`, default `'status-bar'`) places
   the buttons and the `busyLabel` step: `'status-bar'` keeps a 32px square send button and shows the
   step beside it, `'status-above'` shows the step on a line above the box, `'split'` puts attach outside on
   the left and send outside on the right with the step above, `'send-outside'` keeps attach and the
   step inside and puts a round 40px send button outside on the right, and `'toolbar'` puts attach,
-  the step and send in a row under the box. `chipsPlacement` (`ComposerChipsPlacement`, default
+  the step and send in a row under the box. `chipsPlacement` (`MessageInputChipsPlacement`, default
   `'inside'`) draws the chips inside the frame or, with `'above'`, right above it. `(filesPasted)` emits the
   image files of a paste, which then inserts no text. `submit()`, `focus()` and `canSubmit` serve a
   custom send area. The text is not cleared on submit: clear `value` once the message is accepted.
-  New optional `DsIntl.composer` keys `label` (`'Message'`) and `send` (`'Send'`), and CSS hooks
-  `--ds-composer-bg-color`, `--ds-composer-radius`, `--ds-composer-padding` (default `--space-2`); the border, hover and
+  New optional `DsIntl.messageInput` keys `label` (`'Message'`) and `send` (`'Send'`), and CSS hooks
+  `--ds-message-input-bg-color`, `--ds-message-input-radius`, `--ds-message-input-padding` (default `--space-2`); the border, hover and
   focus colours follow the `--ds-field-*` set and the focus shadow `--ds-field-focus-shadow`.
 
 ### Changed

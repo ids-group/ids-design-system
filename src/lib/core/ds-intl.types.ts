@@ -164,8 +164,8 @@ export interface DsIntl {
     /** `` `${message}, ${count} times` `` - spoken when a stack grows. */
     readonly repeated?: (message: string, count: number) => string;
   };
-  readonly composer?: {
-    /** `'Message'` - accessible name of the `ds-composer` text area when `ariaLabel` is unset. */
+  readonly messageInput?: {
+    /** `'Message'` - accessible name of the `ds-message-input` text area when `ariaLabel` is unset. */
     readonly label?: string;
     /** `'Send'` - its default send button. */
     readonly send?: string;

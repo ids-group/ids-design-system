@@ -3799,33 +3799,6 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
     ]
   },
   {
-    "component": "Composer",
-    "selector": ".composer",
-    "description": "",
-    "tokens": [
-      {
-        "name": "--ds-composer-bg-color",
-        "value": "var(--surface-default)",
-        "notes": ""
-      },
-      {
-        "name": "--ds-composer-radius",
-        "value": "var(--ds-radius-control)",
-        "notes": ""
-      },
-      {
-        "name": "--ds-composer-padding",
-        "value": "var(--space-2)",
-        "notes": ""
-      },
-      {
-        "name": "--ds-field-focus-shadow",
-        "value": "—",
-        "notes": "Field focus ring shadow — themeable (defaults to --focus-field)."
-      }
-    ]
-  },
-  {
     "component": "Date Picker",
     "selector": ".date-picker",
     "description": "",
@@ -5338,6 +5311,33 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "name": "--menu-sep-h",
         "value": "var(--border-width-default)",
         "notes": "Menu separator line thickness (var(--border-width-default))."
+      }
+    ]
+  },
+  {
+    "component": "Message Input",
+    "selector": ".message-input",
+    "description": "",
+    "tokens": [
+      {
+        "name": "--ds-message-input-bg-color",
+        "value": "var(--surface-default)",
+        "notes": ""
+      },
+      {
+        "name": "--ds-message-input-radius",
+        "value": "var(--ds-radius-control)",
+        "notes": ""
+      },
+      {
+        "name": "--ds-message-input-padding",
+        "value": "var(--space-2)",
+        "notes": ""
+      },
+      {
+        "name": "--ds-field-focus-shadow",
+        "value": "—",
+        "notes": "Field focus ring shadow — themeable (defaults to --focus-field)."
       }
     ]
   },

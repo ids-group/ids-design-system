@@ -1,29 +1,32 @@
 import { Component, ViewEncapsulation, signal } from '@angular/core';
 import { ButtonComponent } from 'ds/button';
-import { ComposerComponent } from 'ds/composer';
-import type { ComposerLayout } from 'ds/composer';
+import { MessageInputComponent } from 'ds/message-input';
+import type { MessageInputLayout } from 'ds/message-input';
 import { IconButtonComponent } from 'ds/icon-button';
 import { SwitchComponent } from 'ds/switch';
 import { TagComponent } from 'ds/tag';
 import { DocsSectionComponent } from '../../../shared/docs-section.component';
 
 @Component({
-  selector: 'section-components-composer',
+  selector: 'section-components-message-input',
   standalone: true,
   imports: [
     DocsSectionComponent,
-    ComposerComponent,
+    MessageInputComponent,
     ButtonComponent,
     IconButtonComponent,
     SwitchComponent,
     TagComponent,
   ],
   encapsulation: ViewEncapsulation.Emulated,
-  templateUrl: './composer.section.html',
-  styleUrls: ['../../../shared/section-demo.scss', './composer.section.scss'],
+  templateUrl: './message-input.section.html',
+  styleUrls: [
+    '../../../shared/section-demo.scss',
+    './message-input.section.scss',
+  ],
 })
-export class ComposerSection {
-  protected readonly layouts: readonly ComposerLayout[] = [
+export class MessageInputSection {
+  protected readonly layouts: readonly MessageInputLayout[] = [
     'status-bar',
     'status-above',
     'split',

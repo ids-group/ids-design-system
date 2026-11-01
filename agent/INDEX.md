@@ -72,7 +72,7 @@ and token names.** These leaves are for orientation and usage.
 - [<ds-icon-button> — IconButtonComponent](forms/ds-icon-button.md) — Icon-only action with its own taxonomy, distinct from ds-button. ariaLabel is required (icon-only must be labe
 - [<ds-input> — InputComponent](forms/ds-input.md) — Content slots — addon attributes apply to any child element:
 - [<ds-textarea> — TextareaComponent](forms/ds-textarea.md) — Multi-line counterpart to <ds-input> — same wrapper/states, reuses the --ds-input-* token family. No prefix/su
-- [<ds-composer> — ComposerComponent](forms/ds-composer.md) — Message box for a chat or an instruction: chips above an auto-growing text area, a bottom bar with actions on 
+- [<ds-message-input> — MessageInputComponent](forms/ds-message-input.md) — Message box for a chat or an instruction: chips above an auto-growing text area, a bottom bar with actions on 
 - [<ds-number-stepper> — NumberStepperComponent](forms/ds-number-stepper.md) — Spinbox for bounded quantities — −/+ buttons around a numeric value.
 - [<ds-checkbox> — CheckboxComponent](forms/ds-checkbox.md) — <!-- inputs:ds-checkbox -->
 - [<ds-radio> — RadioComponent](forms/ds-radio.md) — <!-- inputs:ds-radio -->

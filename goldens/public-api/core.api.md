@@ -67,7 +67,7 @@ export const DS_INTL_DEFAULTS: DsIntl & {
     readonly field: Required<DsIntl['field']>;
     readonly chart: Required<DsIntl['chart']>;
     readonly toast: Required<DsIntl['toast']>;
-    readonly composer: Required<NonNullable<DsIntl['composer']>>;
+    readonly messageInput: Required<NonNullable<DsIntl['messageInput']>>;
 };
 
 export interface DsConfig {
@@ -291,7 +291,7 @@ export interface DsIntl {
         readonly dismissAll?: string;
         readonly repeated?: (message: string, count: number) => string;
     };
-    readonly composer?: {
+    readonly messageInput?: {
         readonly label?: string;
         readonly send?: string;
     };

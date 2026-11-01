@@ -24,7 +24,7 @@ import { SearchSection } from './sections/components/search/search.section';
 import { SelectSection } from './sections/components/select/select.section';
 import { SliderSection } from './sections/components/slider/slider.section';
 import { SwitchSection } from './sections/components/switch/switch.section';
-import { ComposerSection } from './sections/components/composer/composer.section';
+import { MessageInputSection } from './sections/components/message-input/message-input.section';
 import { TextareaSection } from './sections/components/textarea/textarea.section';
 import { TimePickerSection } from './sections/components/time-picker/time-picker.section';
 import { W3wSection } from './sections/components/w3w/w3w.section';
@@ -148,11 +148,11 @@ export const GROUP_PAGES: readonly GroupPageDef[] = [
       AutocompleteSection,
       CheckboxSection,
       ColorPickerSection,
-      ComposerSection,
       DatePickerSection,
       DropzoneSection,
       FieldGroupSection,
       InputSection,
+      MessageInputSection,
       MultiSelectSection,
       NumberStepperSection,
       OtpInputSection,

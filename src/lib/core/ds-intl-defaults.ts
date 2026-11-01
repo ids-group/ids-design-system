@@ -6,7 +6,7 @@ export const DS_INTL_DEFAULTS: DsIntl & {
   readonly field: Required<DsIntl['field']>;
   readonly chart: Required<DsIntl['chart']>;
   readonly toast: Required<DsIntl['toast']>;
-  readonly composer: Required<NonNullable<DsIntl['composer']>>;
+  readonly messageInput: Required<NonNullable<DsIntl['messageInput']>>;
 } = {
   field: {
     optional: '(optional)',
@@ -140,7 +140,7 @@ export const DS_INTL_DEFAULTS: DsIntl & {
     dismissAll: 'Dismiss all',
     repeated: (message, count) => `${message}, ${count} times`,
   },
-  composer: {
+  messageInput: {
     label: 'Message',
     send: 'Send',
   },

@@ -3,18 +3,18 @@
 @use '../../styles/component-base' as component-base;
 @include component-base.rules;
 
-/* The border, hover and focus follow the `--ds-field-*` set, so a retuned field retunes the composer too. */
+/* The border, hover and focus follow the `--ds-field-*` set, so a retuned field retunes the message input too. */
 :host {
   @include field-box.field-box-tokens;
 
-  --_composer-bg-color: var(--ds-composer-bg-color, var(--surface-default));
-  --_composer-radius: var(--ds-composer-radius, var(--ds-radius-control));
-  --_composer-padding: var(--ds-composer-padding, var(--space-2));
+  --_message-input-bg-color: var(--ds-message-input-bg-color, var(--surface-default));
+  --_message-input-radius: var(--ds-message-input-radius, var(--ds-radius-control));
+  --_message-input-padding: var(--ds-message-input-padding, var(--space-2));
 
   display: block;
 }
 
-.composer {
+.message-input {
   display: flex;
   flex-direction: column;
   gap: var(--space-1);
@@ -22,7 +22,7 @@
 
 /* One grid for every layout: rows are chips, text, bar; `.box` draws the frame behind the cells the layout puts inside it. */
 .frame {
-  --_p: var(--_composer-padding);
+  --_p: var(--_message-input-padding);
 
   display: grid;
   grid-template-columns: auto minmax(0, 1fr) auto;
@@ -40,9 +40,9 @@
 .box {
   grid-row: 1 / 4;
   grid-column: 1 / 4;
-  background-color: var(--_composer-bg-color);
+  background-color: var(--_message-input-bg-color);
   border: var(--border-width-default) solid var(--_field-border-color);
-  border-radius: var(--_composer-radius);
+  border-radius: var(--_message-input-radius);
   transition:
     border-color var(--duration-fast) var(--ease-standard),
     box-shadow var(--duration-fast) var(--ease-standard);
@@ -211,7 +211,7 @@ ds-textarea {
 }
 
 /* Chips sit on the page right above the frame; the box starts at the text row. */
-.composer.chips-above .frame .box {
+.message-input.chips-above .frame .box {
   grid-row-start: 2;
 }
 

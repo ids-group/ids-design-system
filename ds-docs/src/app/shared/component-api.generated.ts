@@ -3570,138 +3570,6 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       }
     ]
   },
-  "composer": {
-    "key": "composer",
-    "selector": "ds-composer",
-    "isElement": true,
-    "className": "ComposerComponent",
-    "status": "stable",
-    "importName": "ComposerComponent",
-    "importPath": "@ids-group-ltd/ids-design-system",
-    "entryPoint": "@ids-group-ltd/ids-design-system/components/composer",
-    "summary": null,
-    "inputs": [
-      {
-        "name": "value",
-        "kind": "model",
-        "type": "string",
-        "union": null,
-        "default": "''",
-        "required": false,
-        "description": "Message text, two-way bound. Not cleared on submit: clear it once the message is accepted."
-      },
-      {
-        "name": "placeholder",
-        "kind": "input",
-        "type": "string",
-        "union": null,
-        "default": "''",
-        "required": false,
-        "description": "Placeholder shown when empty."
-      },
-      {
-        "name": "ariaLabel",
-        "kind": "input",
-        "type": "string | null",
-        "union": null,
-        "default": "null",
-        "required": false,
-        "description": "Accessible name of the text area; unset falls back to `DS_INTL.composer.label`."
-      },
-      {
-        "name": "minRows",
-        "kind": "input",
-        "type": "number",
-        "union": null,
-        "default": "1",
-        "required": false,
-        "description": "Height in lines the text area starts at."
-      },
-      {
-        "name": "maxRows",
-        "kind": "input",
-        "type": "number",
-        "union": null,
-        "default": "8",
-        "required": false,
-        "description": "Height in lines the text area grows to before it scrolls."
-      },
-      {
-        "name": "disabled",
-        "kind": "input",
-        "type": "boolean",
-        "union": null,
-        "default": "false",
-        "required": false,
-        "description": "Disables the text area and the send button. Projected controls are the consumer's to disable."
-      },
-      {
-        "name": "busy",
-        "kind": "input",
-        "type": "boolean",
-        "union": null,
-        "default": "false",
-        "required": false,
-        "description": "Work in flight: the send button keeps its place, shows a spinner and refuses to submit, and Enter does not submit. The text area stays editable."
-      },
-      {
-        "name": "busyLabel",
-        "kind": "input",
-        "type": "string",
-        "union": null,
-        "default": "''",
-        "required": false,
-        "description": "The current step while `busy`, such as \"Rebuilding\"; where it shows follows `layout`."
-      },
-      {
-        "name": "layout",
-        "kind": "input",
-        "type": "ComposerLayout",
-        "union": [
-          "status-bar",
-          "status-above",
-          "split",
-          "send-outside",
-          "toolbar"
-        ],
-        "default": "'status-bar'",
-        "required": false,
-        "description": "Where the buttons and the step text sit. `'status-bar'`: buttons inside, the step text in the bar beside a fixed-size send button. `'status-above'`: the step text on a line above the box. `'split'`: attach outside on the left, send outside on the right, the step text above. `'send-outside'`: attach and the step inside, a round send button outside on the right. `'toolbar'`: the box holds the text, attach, the step and send sit in a row under it."
-      },
-      {
-        "name": "chipsPlacement",
-        "kind": "input",
-        "type": "ComposerChipsPlacement",
-        "union": [
-          "inside",
-          "above"
-        ],
-        "default": "'inside'",
-        "required": false,
-        "description": "`'inside'` draws the `[chips]` inside the frame above the text, `'above'` right above the frame."
-      }
-    ],
-    "outputs": [
-      {
-        "name": "submitted",
-        "kind": "output",
-        "type": "string",
-        "union": null,
-        "default": null,
-        "required": false,
-        "description": "The trimmed text, on Enter or the send button. Never fires for blank text, while `busy` or while `disabled`."
-      },
-      {
-        "name": "filesPasted",
-        "kind": "output",
-        "type": "File[]",
-        "union": null,
-        "default": null,
-        "required": false,
-        "description": "Image files pasted into the text area. The paste inserts no text when it carries images."
-      }
-    ]
-  },
   "create-template": {
     "key": "create-template",
     "selector": "[dsCreateTemplate]",
@@ -6549,6 +6417,138 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": null,
         "required": false,
         "description": "Fires on click, unless the item is disabled or opens a submenu."
+      }
+    ]
+  },
+  "message-input": {
+    "key": "message-input",
+    "selector": "ds-message-input",
+    "isElement": true,
+    "className": "MessageInputComponent",
+    "status": "stable",
+    "importName": "MessageInputComponent",
+    "importPath": "@ids-group-ltd/ids-design-system",
+    "entryPoint": "@ids-group-ltd/ids-design-system/components/message-input",
+    "summary": null,
+    "inputs": [
+      {
+        "name": "value",
+        "kind": "model",
+        "type": "string",
+        "union": null,
+        "default": "''",
+        "required": false,
+        "description": "Message text, two-way bound. Not cleared on submit: clear it once the message is accepted."
+      },
+      {
+        "name": "placeholder",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "''",
+        "required": false,
+        "description": "Placeholder shown when empty."
+      },
+      {
+        "name": "ariaLabel",
+        "kind": "input",
+        "type": "string | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Accessible name of the text area; unset falls back to `DS_INTL.messageInput.label`."
+      },
+      {
+        "name": "minRows",
+        "kind": "input",
+        "type": "number",
+        "union": null,
+        "default": "1",
+        "required": false,
+        "description": "Height in lines the text area starts at."
+      },
+      {
+        "name": "maxRows",
+        "kind": "input",
+        "type": "number",
+        "union": null,
+        "default": "8",
+        "required": false,
+        "description": "Height in lines the text area grows to before it scrolls."
+      },
+      {
+        "name": "disabled",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Disables the text area and the send button. Projected controls are the consumer's to disable."
+      },
+      {
+        "name": "busy",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Work in flight: the send button keeps its place, shows a spinner and refuses to submit, and Enter does not submit. The text area stays editable."
+      },
+      {
+        "name": "busyLabel",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "''",
+        "required": false,
+        "description": "The current step while `busy`, such as \"Rebuilding\"; where it shows follows `layout`."
+      },
+      {
+        "name": "layout",
+        "kind": "input",
+        "type": "MessageInputLayout",
+        "union": [
+          "status-bar",
+          "status-above",
+          "split",
+          "send-outside",
+          "toolbar"
+        ],
+        "default": "'status-bar'",
+        "required": false,
+        "description": "Where the buttons and the step text sit. `'status-bar'`: buttons inside, the step text in the bar beside a fixed-size send button. `'status-above'`: the step text on a line above the box. `'split'`: attach outside on the left, send outside on the right, the step text above. `'send-outside'`: attach and the step inside, a round send button outside on the right. `'toolbar'`: the box holds the text, attach, the step and send sit in a row under it."
+      },
+      {
+        "name": "chipsPlacement",
+        "kind": "input",
+        "type": "MessageInputChipsPlacement",
+        "union": [
+          "inside",
+          "above"
+        ],
+        "default": "'inside'",
+        "required": false,
+        "description": "`'inside'` draws the `[chips]` inside the frame above the text, `'above'` right above the frame."
+      }
+    ],
+    "outputs": [
+      {
+        "name": "submitted",
+        "kind": "output",
+        "type": "string",
+        "union": null,
+        "default": null,
+        "required": false,
+        "description": "The trimmed text, on Enter or the send button. Never fires for blank text, while `busy` or while `disabled`."
+      },
+      {
+        "name": "filesPasted",
+        "kind": "output",
+        "type": "File[]",
+        "union": null,
+        "default": null,
+        "required": false,
+        "description": "Image files pasted into the text area. The paste inserts no text when it carries images."
       }
     ]
   },

@@ -134,11 +134,6 @@ export type {
   ColumnChartPoint,
   ColumnChartSeries,
 } from '@ids-group-ltd/ids-design-system/components/column-chart';
-export { ComposerComponent } from '@ids-group-ltd/ids-design-system/components/composer';
-export type {
-  ComposerChipsPlacement,
-  ComposerLayout,
-} from '@ids-group-ltd/ids-design-system/components/composer';
 export { DatePickerComponent } from '@ids-group-ltd/ids-design-system/components/date-picker';
 export type {
   DatePickerMode,
@@ -225,6 +220,11 @@ export {
   MenuDividerComponent,
   MenuItemComponent,
 } from '@ids-group-ltd/ids-design-system/components/menu';
+export { MessageInputComponent } from '@ids-group-ltd/ids-design-system/components/message-input';
+export type {
+  MessageInputChipsPlacement,
+  MessageInputLayout,
+} from '@ids-group-ltd/ids-design-system/components/message-input';
 export {
   ModalCardComponent,
   ModalComponent,

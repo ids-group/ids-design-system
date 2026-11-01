@@ -16,7 +16,10 @@ import {
 import { ButtonComponent } from '@ids-group-ltd/ids-design-system/components/button';
 import { TextareaComponent } from '@ids-group-ltd/ids-design-system/components/textarea';
 import { FieldClickFocusDirective } from '@ids-group-ltd/ids-design-system/components';
-import type { ComposerChipsPlacement, ComposerLayout } from './composer.types';
+import type {
+  MessageInputChipsPlacement,
+  MessageInputLayout,
+} from './message-input.types';
 
 /**
  * Message box for a chat or an instruction: an auto-growing text area with chips above it, actions
@@ -24,14 +27,14 @@ import type { ComposerChipsPlacement, ComposerLayout } from './composer.types';
  * line. Slots: `[chips]`, `[actions]`, `[send]` (replaces the default send button).
  */
 @Component({
-  selector: 'ds-composer',
+  selector: 'ds-message-input',
   standalone: true,
   imports: [TextareaComponent, ButtonComponent, FieldClickFocusDirective],
-  templateUrl: './composer.component.html',
-  styleUrl: './composer.component.scss',
+  templateUrl: './message-input.component.html',
+  styleUrl: './message-input.component.scss',
   encapsulation: ViewEncapsulation.Emulated,
 })
-export class ComposerComponent {
+export class MessageInputComponent {
   private readonly intl = inject(DS_INTL);
   private readonly textarea = viewChild.required(TextareaComponent);
 
@@ -39,7 +42,7 @@ export class ComposerComponent {
   readonly value = model<string>('');
   /** Placeholder shown when empty. */
   readonly placeholder = input<string>('');
-  /** Accessible name of the text area; unset falls back to `DS_INTL.composer.label`. */
+  /** Accessible name of the text area; unset falls back to `DS_INTL.messageInput.label`. */
   readonly ariaLabel = input<string | null>(null);
   /** Height in lines the text area starts at. */
   readonly minRows = input<number>(1);
@@ -57,9 +60,9 @@ export class ComposerComponent {
    *  `'split'`: attach outside on the left, send outside on the right, the step text above.
    *  `'send-outside'`: attach and the step inside, a round send button outside on the right.
    *  `'toolbar'`: the box holds the text, attach, the step and send sit in a row under it. */
-  readonly layout = input<ComposerLayout>('status-bar');
+  readonly layout = input<MessageInputLayout>('status-bar');
   /** `'inside'` draws the `[chips]` inside the frame above the text, `'above'` right above the frame. */
-  readonly chipsPlacement = input<ComposerChipsPlacement>('inside');
+  readonly chipsPlacement = input<MessageInputChipsPlacement>('inside');
 
   /** The trimmed text, on Enter or the send button. Never fires for blank text, while `busy` or
    *  while `disabled`. */
@@ -73,8 +76,8 @@ export class ComposerComponent {
   );
 
   private readonly labels = computed(() => ({
-    ...DS_INTL_DEFAULTS.composer,
-    ...this.intl().composer,
+    ...DS_INTL_DEFAULTS.messageInput,
+    ...this.intl().messageInput,
   }));
   protected readonly textareaLabel = computed(
     () => this.ariaLabel() || this.labels().label,

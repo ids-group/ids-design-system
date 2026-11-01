@@ -91,9 +91,6 @@ export { ColumnChartPoint } from '@ids-group-ltd/ids-design-system/components/co
 export { ColumnChartSeries } from '@ids-group-ltd/ids-design-system/components/column-chart'; // interface
 export { ColumnSeriesComponent } from '@ids-group-ltd/ids-design-system/components/chart'; // component
 export { ColumnSeriesPoint } from '@ids-group-ltd/ids-design-system/components/chart'; // interface
-export { ComposerChipsPlacement } from '@ids-group-ltd/ids-design-system/components/composer'; // type
-export { ComposerComponent } from '@ids-group-ltd/ids-design-system/components/composer'; // component
-export { ComposerLayout } from '@ids-group-ltd/ids-design-system/components/composer'; // type
 export { ContainerComponent } from '@ids-group-ltd/ids-design-system/components/layout'; // component
 export { ContainerSize } from '@ids-group-ltd/ids-design-system/components/layout'; // type
 export { DS_CONFIG } from '@ids-group-ltd/ids-design-system/core'; // const
@@ -204,6 +201,9 @@ export { LoadingOverlayComponent } from '@ids-group-ltd/ids-design-system/compon
 export { MenuComponent } from '@ids-group-ltd/ids-design-system/components/menu'; // component
 export { MenuDividerComponent } from '@ids-group-ltd/ids-design-system/components/menu'; // component
 export { MenuItemComponent } from '@ids-group-ltd/ids-design-system/components/menu'; // component
+export { MessageInputChipsPlacement } from '@ids-group-ltd/ids-design-system/components/message-input'; // type
+export { MessageInputComponent } from '@ids-group-ltd/ids-design-system/components/message-input'; // component
+export { MessageInputLayout } from '@ids-group-ltd/ids-design-system/components/message-input'; // type
 export { ModalCardComponent } from '@ids-group-ltd/ids-design-system/components/modal'; // component
 export { ModalComponent } from '@ids-group-ltd/ids-design-system/components/modal'; // component
 export { ModalConfirmActionDirective } from '@ids-group-ltd/ids-design-system/components/modal'; // directive

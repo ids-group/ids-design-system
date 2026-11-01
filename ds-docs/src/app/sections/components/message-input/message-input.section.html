@@ -1,7 +1,7 @@
 <docs-section
-  anchor="composer"
+  anchor="message-input"
   eyebrow="Components"
-  title="Composer">
+  title="Message input">
   <span lede>
     Message box for a chat or an instruction: chips above an auto-growing text,
     actions and the send button in the bar below. Enter sends, Shift+Enter
@@ -15,13 +15,13 @@
   <div class="states is-cols-2">
     <div class="state-cell">
       <div class="state-cell-stage">
-        <ds-composer placeholder="Describe a change…">
+        <ds-message-input placeholder="Describe a change…">
           <ds-icon-button
             actions
             icon="paperclip"
             size="sm"
             ariaLabel="Attach a file" />
-        </ds-composer>
+        </ds-message-input>
       </div>
 
       <div class="state-cell-label">
@@ -31,7 +31,7 @@
 
     <div class="state-cell">
       <div class="state-cell-stage">
-        <ds-composer
+        <ds-message-input
           placeholder="Describe a change…"
           [(value)]="typed">
           <ds-icon-button
@@ -39,7 +39,7 @@
             icon="paperclip"
             size="sm"
             ariaLabel="Attach a file" />
-        </ds-composer>
+        </ds-message-input>
       </div>
 
       <div class="state-cell-label">
@@ -49,7 +49,7 @@
 
     <div class="state-cell">
       <div class="state-cell-stage">
-        <ds-composer
+        <ds-message-input
           placeholder="Describe a change…"
           value="Align these two to the same width">
           @for (chip of chips(); track chip) {
@@ -67,7 +67,7 @@
             icon="paperclip"
             size="sm"
             ariaLabel="Attach a file" />
-        </ds-composer>
+        </ds-message-input>
       </div>
 
       <div class="state-cell-label">
@@ -77,7 +77,7 @@
 
     <div class="state-cell">
       <div class="state-cell-stage">
-        <ds-composer
+        <ds-message-input
           placeholder="Describe a change…"
           value="Align these two to the same width"
           chipsPlacement="above">
@@ -96,7 +96,7 @@
             icon="paperclip"
             size="sm"
             ariaLabel="Attach a file" />
-        </ds-composer>
+        </ds-message-input>
       </div>
 
       <div class="state-cell-label">
@@ -106,7 +106,7 @@
 
     <div class="state-cell">
       <div class="state-cell-stage">
-        <ds-composer
+        <ds-message-input
           placeholder="Describe a change…"
           busyLabel="Rebuilding"
           busy>
@@ -115,7 +115,7 @@
             icon="paperclip"
             size="sm"
             ariaLabel="Attach a file" />
-        </ds-composer>
+        </ds-message-input>
       </div>
 
       <div class="state-cell-label">
@@ -125,7 +125,7 @@
 
     <div class="state-cell">
       <div class="state-cell-stage">
-        <ds-composer
+        <ds-message-input
           placeholder="Describe a change…"
           busy>
           <ds-icon-button
@@ -133,7 +133,7 @@
             icon="paperclip"
             size="sm"
             ariaLabel="Attach a file" />
-        </ds-composer>
+        </ds-message-input>
       </div>
 
       <div class="state-cell-label">
@@ -143,7 +143,7 @@
 
     <div class="state-cell">
       <div class="state-cell-stage">
-        <ds-composer
+        <ds-message-input
           placeholder="Describe a change…"
           value="Waiting for access"
           disabled>
@@ -153,7 +153,7 @@
             size="sm"
             ariaLabel="Attach a file"
             disabled />
-        </ds-composer>
+        </ds-message-input>
       </div>
 
       <div class="state-cell-label">
@@ -178,7 +178,7 @@
     @for (option of layouts; track option) {
       <div class="state-cell">
         <div class="state-cell-stage">
-          <ds-composer
+          <ds-message-input
             placeholder="Describe a change…"
             busyLabel="Rebuilding"
             busy
@@ -188,7 +188,7 @@
               icon="paperclip"
               size="sm"
               ariaLabel="Attach a file" />
-          </ds-composer>
+          </ds-message-input>
         </div>
 
         <div class="state-cell-label">
@@ -211,7 +211,7 @@
     the box offers to queue the message, redirect the agent or stop it.
   </p>
 
-  <ds-composer
+  <ds-message-input
     placeholder="Describe a change…"
     busy
     [(value)]="studioText">
@@ -252,7 +252,7 @@
         Stop
       </ds-button>
     </div>
-  </ds-composer>
+  </ds-message-input>
 
   <h3 class="block-title t-h4">
     Try it
@@ -268,7 +268,7 @@
       label="Busy"
       [(checked)]="busy" />
 
-    <ds-composer
+    <ds-message-input
       placeholder="Describe a change…"
       busyLabel="Rebuilding"
       [busy]="busy()"
@@ -290,7 +290,7 @@
         icon="paperclip"
         size="sm"
         ariaLabel="Attach a file" />
-    </ds-composer>
+    </ds-message-input>
 
     <ol
       class="sent t-s"
