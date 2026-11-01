@@ -115,6 +115,7 @@ and token names.** These leaves are for orientation and usage.
 - [<ds-container> — ContainerComponent](navigation/ds-container.md) — <!-- inputs:ds-container -->
 - [<ds-inline> — InlineComponent](navigation/ds-inline.md) — <!-- inputs:ds-inline -->
 - [<ds-stack> — StackComponent](navigation/ds-stack.md) — <!-- inputs:ds-stack -->
+- [<ds-splitter> — SplitterComponent](navigation/ds-splitter.md) — Two panes with a handle between them that resizes one of them: a preview beside a chat, a list beside a detail
 - [<ds-sidenav-footer> — SidenavFooterComponent](navigation/ds-sidenav-footer.md) — <!-- inputs:ds-sidenav-footer -->
 - [<ds-tab> — TabComponent](navigation/ds-tab.md) — <!-- inputs:ds-tab -->
 

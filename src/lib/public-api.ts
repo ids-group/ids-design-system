@@ -325,6 +325,11 @@ export type {
   SplitButtonItem,
   SplitButtonVariant,
 } from '@ids-group-ltd/ids-design-system/components/split-button';
+export { SplitterComponent } from '@ids-group-ltd/ids-design-system/components/splitter';
+export type {
+  SplitterOrientation,
+  SplitterPane,
+} from '@ids-group-ltd/ids-design-system/components/splitter';
 export { StatComponent } from '@ids-group-ltd/ids-design-system/components/stat';
 export { StatusDotComponent } from '@ids-group-ltd/ids-design-system/components/status-dot';
 export { StepperComponent } from '@ids-group-ltd/ids-design-system/components/stepper';

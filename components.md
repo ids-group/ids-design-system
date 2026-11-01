@@ -736,6 +736,16 @@ All inputs: `gap: 'none' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' = null`, `align: 'st
 All inputs: `gap: 'none' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' = null`, `align: 'start' | 'center' | 'end' | 'stretch' = null`
 <!-- /inputs -->
 
+#### `<ds-splitter>` — `SplitterComponent`
+Two panes with a handle between them that resizes one of them: a preview beside a chat, a list beside a detail, an editor above its output. Slots: `[start]` and `[end]`. `orientation="horizontal"` (default) lays them side by side, `"vertical"` stacks them. `pane` (`'start'` default, or `'end'`) is the pane `size` measures; the other takes the rest. Give the splitter a size: it fills the box its parent gives it.
+Size: `size: model<number | null>` in px, `null` shows `defaultSize` (320); `min` (160) and `max` (640) bound it inclusively, and the pane never takes more than the splitter less the handle. A drag writes `size` once, on release; each key press writes it. `persistKey` saves the size in `localStorage` under `ds-splitter:<key>` and restores it on init, over the bound `size`.
+Handle: `role="separator"`, focusable, `aria-valuenow` / `aria-valuemin` / `aria-valuemax` in px, `aria-controls` the measured pane. Name it with `ariaLabel` (what it resizes, e.g. "Preview width"); unset falls back to `DS_INTL.splitter.label`. Keyboard: arrows along the axis move it by 16px, with Shift or PageUp / PageDown by 64px, Home / End to `min` / `max`. A double click returns to `defaultSize`. The left button only; the handle stays under the pointer, and while it is dragged the whole page keeps the resize cursor and selects no text. At a limit the cursor shows the one direction still possible.
+Tokens: `--ds-splitter-handle-size`, `--ds-splitter-line-color`, `--ds-splitter-active-color`, `--ds-splitter-grip-color`.
+
+<!-- inputs:ds-splitter -->
+All inputs: `orientation: 'horizontal' | 'vertical' = 'horizontal'`, `pane: 'start' | 'end' = 'start'`, `size: number | null = null`, `defaultSize: number = 320`, `min: number = 160`, `max: number = 640`, `persistKey: string = ''`, `ariaLabel: string | null = null`
+<!-- /inputs -->
+
 #### `<ds-sidenav-footer>` — `SidenavFooterComponent`
 
 <!-- inputs:ds-sidenav-footer -->

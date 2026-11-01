@@ -1,0 +1,162 @@
+@use '../../styles/focus' as focus;
+@use '../../styles/component-base' as component-base;
+@include component-base.rules;
+
+:host {
+  --_splitter-handle-size: var(--ds-splitter-handle-size, var(--space-2));
+  --_splitter-line-color: var(--ds-splitter-line-color, var(--border-divider));
+  --_splitter-active-color: var(--ds-splitter-active-color, var(--primary));
+  --_splitter-grip-color: var(--ds-splitter-grip-color, var(--text-tertiary));
+  --_splitter-grip-dot: calc(var(--border-width-strong) + var(--border-width-default));
+  --_splitter-sized: min(var(--_splitter-size), 100% - var(--_splitter-handle-size));
+  --_splitter-rest: minmax(0, 1fr);
+
+  display: grid;
+  min-inline-size: 0;
+  min-block-size: 0;
+  overflow: hidden;
+}
+
+:host([data-pane='start']) {
+  --_splitter-start: var(--_splitter-sized);
+  --_splitter-end: var(--_splitter-rest);
+}
+
+:host([data-pane='end']) {
+  --_splitter-start: var(--_splitter-rest);
+  --_splitter-end: var(--_splitter-sized);
+}
+
+:host([data-orientation='horizontal']) {
+  grid-template-columns: var(--_splitter-start) var(--_splitter-handle-size) var(--_splitter-end);
+  grid-template-rows: minmax(0, 1fr);
+}
+
+:host([data-orientation='vertical']) {
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: var(--_splitter-start) var(--_splitter-handle-size) var(--_splitter-end);
+}
+
+.pane {
+  min-inline-size: 0;
+  min-block-size: 0;
+  overflow: auto;
+}
+
+.handle {
+  position: relative;
+  touch-action: none;
+  user-select: none;
+
+  /* The line: the divider at rest, the active colour and twice as wide on hover, drag and focus. */
+  &::after {
+    position: absolute;
+    content: '';
+    background-color: var(--_splitter-line-color);
+    border-radius: var(--radius-pill);
+    transition: background-color var(--duration-fast) var(--ease-standard);
+  }
+
+  /* The grip: a column of dots on a surface pill over the line, shown with the active line. */
+  &::before {
+    position: absolute;
+    z-index: 1;
+    inset-block-start: 50%;
+    inset-inline-start: 50%;
+    content: '';
+    background-color: var(--surface-default);
+    border: var(--border-width-default) solid var(--_splitter-active-color);
+    border-radius: var(--radius-pill);
+    translate: -50% -50%;
+    opacity: 0;
+    transition: opacity var(--duration-fast) var(--ease-standard);
+  }
+
+  /* A pointer crossing the handle on its way elsewhere does not flash it. */
+  &:hover::after,
+  &:hover::before {
+    transition-delay: var(--duration-slow);
+  }
+
+  &:hover,
+  &.dragging,
+  &:focus-visible {
+    &::after {
+      background-color: var(--_splitter-active-color);
+    }
+
+    &::before {
+      opacity: 1;
+    }
+  }
+
+  &.dragging::after,
+  &.dragging::before {
+    transition-delay: 0s;
+  }
+
+  /* The line carries the focus indicator: a ring around an 8px handle would cover both panes' edges. */
+  &:focus-visible {
+    @include focus.own-indicator;
+  }
+
+  &:focus-visible::after {
+    background-color: var(--focus-ring-color);
+  }
+}
+
+:host([data-orientation='horizontal']) .handle {
+  &::after {
+    inset-block: 0;
+    inset-inline-start: calc(50% - var(--border-width-default) / 2);
+    inline-size: var(--border-width-default);
+  }
+
+  &:hover::after,
+  &.dragging::after,
+  &:focus-visible::after {
+    inset-inline-start: calc(50% - var(--focus-ring-width) / 2);
+    inline-size: var(--focus-ring-width);
+  }
+
+  &::before {
+    inline-size: calc(var(--_splitter-grip-dot) * 3);
+    block-size: calc(var(--_splitter-grip-dot) * 9);
+    background-image: radial-gradient(
+      circle closest-side,
+      var(--_splitter-grip-color) 98%,
+      transparent
+    );
+    background-position: center;
+    background-size: var(--_splitter-grip-dot) calc(var(--_splitter-grip-dot) * 2);
+    background-repeat: repeat-y;
+  }
+}
+
+:host([data-orientation='vertical']) .handle {
+  &::after {
+    inset-inline: 0;
+    inset-block-start: calc(50% - var(--border-width-default) / 2);
+    block-size: var(--border-width-default);
+  }
+
+  &:hover::after,
+  &.dragging::after,
+  &:focus-visible::after {
+    inset-block-start: calc(50% - var(--focus-ring-width) / 2);
+    block-size: var(--focus-ring-width);
+  }
+
+  &::before {
+    inline-size: calc(var(--_splitter-grip-dot) * 9);
+    block-size: calc(var(--_splitter-grip-dot) * 3);
+    background-image: radial-gradient(
+      circle closest-side,
+      var(--_splitter-grip-color) 98%,
+      transparent
+    );
+    background-position: center;
+    background-size: calc(var(--_splitter-grip-dot) * 2) var(--_splitter-grip-dot);
+    background-repeat: repeat-x;
+  }
+}
