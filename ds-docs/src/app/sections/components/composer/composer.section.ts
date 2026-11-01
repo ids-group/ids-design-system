@@ -1,6 +1,7 @@
 import { Component, ViewEncapsulation, signal } from '@angular/core';
 import { ButtonComponent } from 'ds/button';
 import { ComposerComponent } from 'ds/composer';
+import type { ComposerLayout } from 'ds/composer';
 import { IconButtonComponent } from 'ds/icon-button';
 import { SwitchComponent } from 'ds/switch';
 import { TagComponent } from 'ds/tag';
@@ -22,6 +23,12 @@ import { DocsSectionComponent } from '../../../shared/docs-section.component';
   styleUrls: ['../../../shared/section-demo.scss', './composer.section.scss'],
 })
 export class ComposerSection {
+  protected readonly layouts: readonly ComposerLayout[] = [
+    'status-bar',
+    'status-above',
+    'labelled',
+    'outside',
+  ];
   protected readonly typed = signal('Make the header sticky on scroll');
   protected readonly chips = signal(['Header', 'Pricing card']);
   protected readonly studioText = signal('Use the brand blue for the button');

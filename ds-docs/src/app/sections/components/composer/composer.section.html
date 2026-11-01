@@ -19,6 +19,7 @@
           <ds-icon-button
             actions
             icon="paperclip"
+            size="sm"
             ariaLabel="Attach a file" />
         </ds-composer>
       </div>
@@ -36,6 +37,7 @@
           <ds-icon-button
             actions
             icon="paperclip"
+            size="sm"
             ariaLabel="Attach a file" />
         </ds-composer>
       </div>
@@ -63,6 +65,7 @@
           <ds-icon-button
             actions
             icon="paperclip"
+            size="sm"
             ariaLabel="Attach a file" />
         </ds-composer>
       </div>
@@ -81,6 +84,7 @@
           <ds-icon-button
             actions
             icon="paperclip"
+            size="sm"
             ariaLabel="Attach a file" />
         </ds-composer>
       </div>
@@ -98,6 +102,7 @@
           <ds-icon-button
             actions
             icon="paperclip"
+            size="sm"
             ariaLabel="Attach a file" />
         </ds-composer>
       </div>
@@ -116,6 +121,7 @@
           <ds-icon-button
             actions
             icon="paperclip"
+            size="sm"
             ariaLabel="Attach a file"
             disabled />
         </ds-composer>
@@ -125,6 +131,42 @@
         Disabled
       </div>
     </div>
+  </div>
+
+  <h3 class="block-title t-h4">
+    Layout
+  </h3>
+
+  <p class="block-desc t-s">
+    <code class="t-mono-inline">
+      layout
+    </code>
+    decides where the buttons and the busy step sit. Every layout keeps the
+    send button at one size, idle or busy.
+  </p>
+
+  <div class="states is-cols-2">
+    @for (option of layouts; track option) {
+      <div class="state-cell">
+        <div class="state-cell-stage">
+          <ds-composer
+            placeholder="Describe a change…"
+            busyLabel="Rebuilding"
+            busy
+            [layout]="option">
+            <ds-icon-button
+              actions
+              icon="paperclip"
+              size="sm"
+              ariaLabel="Attach a file" />
+          </ds-composer>
+        </div>
+
+        <div class="state-cell-label">
+          {{ option }} · busy
+        </div>
+      </div>
+    }
   </div>
 
   <h3 class="block-title t-h4">
@@ -154,6 +196,7 @@
     <ds-icon-button
       actions
       icon="paperclip"
+      size="sm"
       ariaLabel="Attach a file" />
 
     <div
@@ -216,6 +259,7 @@
       <ds-icon-button
         actions
         icon="paperclip"
+        size="sm"
         ariaLabel="Attach a file" />
     </ds-composer>
 

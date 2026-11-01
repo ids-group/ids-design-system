@@ -3651,7 +3651,21 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "''",
         "required": false,
-        "description": "Text beside the spinner while `busy`, such as the current step."
+        "description": "The current step while `busy`, such as \"Rebuilding\"; where it shows follows `layout`."
+      },
+      {
+        "name": "layout",
+        "kind": "input",
+        "type": "ComposerLayout",
+        "union": [
+          "status-bar",
+          "status-above",
+          "labelled",
+          "outside"
+        ],
+        "default": "'status-bar'",
+        "required": false,
+        "description": "Where the buttons and the step text sit. `'status-bar'`: buttons inside, the step text in the bar beside a fixed-size send button. `'status-above'`: the step text on a line above the box. `'labelled'`: the send button carries \"Send\" or the step, at one minimum width. `'outside'`: the buttons to the right of the box, the step text above it."
       }
     ],
     "outputs": [
