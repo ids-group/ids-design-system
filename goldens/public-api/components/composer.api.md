@@ -41,7 +41,7 @@ ds-composer {
     --ds-composer-bg-color: var(--surface-default);
     --ds-composer-padding: var(--space-2);
     --ds-composer-radius: var(--ds-radius-control);
-    --ds-composer-send-min-width: 8rem;
+    --ds-composer-send-min-width: 9rem;
     --ds-field-focus-shadow: (none);
 }
 ```

@@ -3825,7 +3825,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--ds-composer-send-min-width",
-        "value": "8rem",
+        "value": "9rem",
         "notes": ""
       }
     ]
