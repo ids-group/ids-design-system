@@ -55,12 +55,21 @@
   spinner and `workingLabel` at the end. A screen reader hears the working label and each finished
   reply, once: a reply that arrives while `working` is read when `working` clears, and the messages
   present when the thread first renders are never read. `scrollToEnd()` scrolls down from code.
+  With `hasOlder`, scrolling near the start emits `(loadOlder)`; prepend the older messages and the
+  thread keeps the message the reader was looking at where it was, while `loadingOlder` shows a
+  spinner over the top of the list. On `ds-chat-message`, `streaming` marks a reply whose text is
+  still arriving: a caret blinks after the text, `aria-busy` is set, `[actions]` stay hidden, and the
+  thread reads the reply once it completes. `status` (`ChatMessageStatus`: `'sending'`, `'sent'` or
+  `'failed'`) shows the delivery of a message the reader sent under its bubble; `'sending'` dims the
+  bubble, `'failed'` says it was not sent with a Retry button that emits `(retry)`. Sending is the
+  app's: set `status` back to `'sending'` on retry.
   `ds-chat-attachment` is a chip in `[attachments]` with `label`, an optional `source` (the page it
   was picked on) and `icon` (default `paperclip`); open, it becomes a card on its own line that
   frames its default slot, such as a snapshot of what was attached, in a preview of at most
   `--ds-chat-attachment-preview-max-height` (default `16rem`). `expanded` binds the open state
   two-way. A plain file is a `ds-tag`. New optional `DsIntl.chat` keys `user`, `assistant`,
-  `thread`, `working`, `newMessages(count)`, `latest`, `today` and `yesterday`, and CSS hooks
+  `thread`, `working`, `newMessages(count)`, `latest`, `today`, `yesterday`, `sending`, `sent`,
+  `notSent` and `retry`, and CSS hooks
   `--ds-chat-message-max-width` (default `85%`), `--ds-chat-message-radius`,
   `--ds-chat-message-padding`, `--ds-chat-message-user-bg-color`, `--ds-chat-message-user-color`,
   `--ds-chat-message-assistant-bg-color`, `--ds-chat-message-assistant-color`,

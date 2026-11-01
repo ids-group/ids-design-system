@@ -20,21 +20,28 @@ export class ChatMessageComponent {
     protected readonly isContinued = computed(…);
     protected readonly isFirst = computed(…);
     protected readonly isGrouped = computed(…);
+    public readonly retry = output<void>();
     public readonly role = input<ChatMessageRole>('assistant');
     public readonly sentAt = input<Date | string | number | null>(null);
     public readonly sentAtMs = computed(…);
     protected readonly speaker = computed(…);
+    public readonly status = input<ChatMessageStatus | null>(null);
+    public readonly streaming = input(false, { transform: booleanAttribute });
     protected readonly thread = inject(…);
     public readonly time = input<string>('');
     protected readonly timeBreak = computed(…);
+    protected readonly wording = computed(…);
 }
 
 export type ChatMessageRole = 'user' | 'assistant';
+
+export type ChatMessageStatus = 'sending' | 'sent' | 'failed';
 
 @Component({ selector: 'ds-chat-thread' })
 export class ChatThreadComponent {
     public constructor();
     private afterRender;
+    private anchor;
     private announce;
     private announceLastReply;
     protected readonly announcement = signal(…);
@@ -45,16 +52,22 @@ export class ChatThreadComponent {
     private dividerText;
     public readonly firstMessage = computed<object | undefined>(…);
     public readonly groupedMessages = computed<ReadonlySet<object>>(…);
+    public readonly hasOlder = input(false, { transform: booleanAttribute });
+    private holdAnchor;
     private readonly host;
     private readonly injector;
     private readonly intl;
     protected readonly jumpLabel = computed(…);
     protected readonly label = computed(…);
+    public readonly loadOlder = output<void>();
+    public readonly loadingOlder = input(false, { transform: booleanAttribute });
     private readonly locale;
     private readonly messages;
+    private olderRequested;
     private onArrival;
     protected onScroll(): void;
     protected readonly pinned = signal(…);
+    private recordAnchor;
     public scrollToEnd(): void;
     private readonly scroller;
     public readonly timeBreakMinutes = input<number>(15);

@@ -343,6 +343,10 @@ export interface DsIntl {
         readonly latest?: string;
         readonly today?: string;
         readonly yesterday?: string;
+        readonly sending?: string;
+        readonly sent?: string;
+        readonly notSent?: string;
+        readonly retry?: string;
     };
     readonly tabs: {
         readonly close: (label: string) => string;

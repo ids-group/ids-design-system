@@ -87,6 +87,7 @@ export { ChartValueFormat } from '@ids-group-ltd/ids-design-system/core'; // typ
 export { ChatAttachmentComponent } from '@ids-group-ltd/ids-design-system/components/chat-message'; // component
 export { ChatMessageComponent } from '@ids-group-ltd/ids-design-system/components/chat-message'; // component
 export { ChatMessageRole } from '@ids-group-ltd/ids-design-system/components/chat-message'; // type
+export { ChatMessageStatus } from '@ids-group-ltd/ids-design-system/components/chat-message'; // type
 export { ChatThreadComponent } from '@ids-group-ltd/ids-design-system/components/chat-message'; // component
 export { CheckboxComponent } from '@ids-group-ltd/ids-design-system/components/checkbox'; // component
 export { ColorPickerComponent } from '@ids-group-ltd/ids-design-system/components/color-picker'; // component
