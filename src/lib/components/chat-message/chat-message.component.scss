@@ -78,8 +78,18 @@
   user-select: text;
 }
 
+// A run reads as one block: the corners on the speaker's side meet the neighbour tight, and the
+// bottom one stays tight on the last message as its tail.
 :host([data-role='assistant']) .bubble {
   border-end-start-radius: var(--ds-radius-inner);
+}
+
+:host([data-role='assistant'].is-grouped) .bubble {
+  border-start-start-radius: var(--ds-radius-inner);
+}
+
+:host([data-role='user'].is-grouped) .bubble {
+  border-start-end-radius: var(--ds-radius-inner);
 }
 
 :host([data-role='user']) .bubble {
