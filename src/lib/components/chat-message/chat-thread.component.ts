@@ -12,6 +12,7 @@ import {
   forwardRef,
   inject,
   input,
+  output,
   signal,
   untracked,
   viewChild,
@@ -29,6 +30,9 @@ import { ChatMessageComponent } from './chat-message.component';
 // Closer to the end than this still counts as at the end, so a sub-pixel scroll position or a
 // small nudge does not unpin the thread.
 const PIN_TOLERANCE_PX = 32;
+
+// Closer to the start than this asks for older messages.
+const OLDER_THRESHOLD_PX = 64;
 
 /**
  * Scrollable list of `ds-chat-message`s that stays at the newest message unless the reader has
@@ -58,6 +62,14 @@ export class ChatThreadComponent {
   readonly ariaLabel = input<string | null>(null);
   /** Minutes between two messages' `sentAt` that start a new section with a time divider. */
   readonly timeBreakMinutes = input<number>(15);
+  /** More messages exist before the first one; scrolling near the start then emits `loadOlder`. */
+  readonly hasOlder = input(false, { transform: booleanAttribute });
+  /** Older messages are on their way: a spinner shows over the top of the list. */
+  readonly loadingOlder = input(false, { transform: booleanAttribute });
+
+  /** The reader scrolled near the start while `hasOlder` and not `loadingOlder`. Prepend the older
+   *  messages; the thread keeps the message the reader was looking at in place. */
+  readonly loadOlder = output<void>();
 
   // Descendants, so a message inside a wrapper element or an @for block still counts.
   private readonly messages = contentChildren(ChatMessageComponent, {
@@ -147,7 +159,10 @@ export class ChatThreadComponent {
       const observer = new ResizeObserver(() => {
         if (this.pinned()) {
           this.toEnd();
+        } else {
+          this.holdAnchor();
         }
+        this.recordAnchor();
       });
       observer.observe(this.content().nativeElement);
       observer.observe(this.scroller().nativeElement);
@@ -157,16 +172,31 @@ export class ChatThreadComponent {
     // The messages present at the first render, or the first batch to arrive into an empty
     // thread, are history: they are scrolled to, never announced.
     let seen = -1;
+    let lastMessage: object | undefined;
     effect(() => {
       const list = this.messages();
       untracked(() => {
         const previous = seen;
+        const previousLast = lastMessage;
         seen = list.length;
-        if (previous > 0 && list.length > previous) {
+        lastMessage = list.at(-1);
+        this.olderRequested = false;
+        // Messages prepended by `loadOlder` leave the last one in place and are not new.
+        if (
+          previous > 0 &&
+          list.length > previous &&
+          list.at(-1) !== previousLast
+        ) {
           // After the render: a message created in this pass has not read its `role` input yet.
           this.afterRender(() => this.onArrival());
         }
       });
+    });
+
+    effect(() => {
+      if (!this.loadingOlder()) {
+        this.olderRequested = false;
+      }
     });
 
     let wasWorking = false;
@@ -200,6 +230,45 @@ export class ChatThreadComponent {
     if (atEnd) {
       this.unseen.set(0);
     }
+    this.recordAnchor();
+    if (
+      scroller.scrollTop <= OLDER_THRESHOLD_PX &&
+      this.hasOlder() &&
+      !this.loadingOlder() &&
+      !this.olderRequested
+    ) {
+      this.olderRequested = true;
+      this.loadOlder.emit();
+    }
+  }
+
+  private olderRequested = false;
+  private anchor: { element: Element; top: number } | null = null;
+
+  // The first message still in view, and how far below the top of the viewport it sits.
+  private recordAnchor(): void {
+    const scroller = this.scroller().nativeElement;
+    const viewTop = scroller.getBoundingClientRect().top;
+    const element = [
+      ...this.content().nativeElement.querySelectorAll('ds-chat-message'),
+    ].find((message) => message.getBoundingClientRect().bottom > viewTop);
+    this.anchor = element
+      ? { element, top: element.getBoundingClientRect().top - viewTop }
+      : null;
+  }
+
+  // Content added or grown above the reader (older messages, an opened snapshot) pushes the message
+  // they were reading down; scroll by the same amount so it stays where it was.
+  private holdAnchor(): void {
+    const anchor = this.anchor;
+    if (!anchor?.element.isConnected) {
+      return;
+    }
+    const scroller = this.scroller().nativeElement;
+    const top =
+      anchor.element.getBoundingClientRect().top -
+      scroller.getBoundingClientRect().top;
+    scroller.scrollTop += top - anchor.top;
   }
 
   private onArrival(): void {

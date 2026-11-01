@@ -20,12 +20,28 @@
   min-height: 0;
   overflow-y: auto;
   overscroll-behavior: contain;
+
+  // The thread keeps the reader's place itself; the browser's own anchoring would move it twice.
+  overflow-anchor: none;
   padding: var(--_chat-thread-padding);
 }
 
 .content {
   display: flex;
   flex-direction: column;
+}
+
+// Over the top of the list rather than in it, so the messages do not move while older ones load.
+.older {
+  position: absolute;
+  top: var(--space-3);
+  left: 50%;
+  translate: -50% 0;
+  display: flex;
+  padding: var(--space-1-5);
+  border-radius: var(--ds-radius-pill);
+  background-color: var(--surface-default);
+  box-shadow: var(--shadow-popover);
 }
 
 .working {

@@ -24,6 +24,12 @@
   </div>
 </div>
 
+@if (loadingOlder()) {
+  <div class="older">
+    <ds-spinner size="sm" />
+  </div>
+}
+
 @if (!pinned()) {
   <ds-button
     class="jump"
