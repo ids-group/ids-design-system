@@ -5,23 +5,35 @@
 ```ts
 @Component({ selector: 'ds-tree' })
 export class TreeComponent {
+    public constructor();
+    private activate;
     private readonly activeId;
     protected readonly effectiveActiveId = computed(…);
     public readonly expandedIds = model<Set<string>>(new Set());
     private focusNode;
+    private fromTrailing;
     private readonly host;
+    protected hover(node: TreeNode | null): void;
+    private hoveredId;
+    protected readonly idPrefix = `ds-tree-${++nextId}`;
     protected isActive(id: string): boolean;
     protected isExpanded(id: string): boolean;
     protected isSelected(id: string): boolean;
     private moveActive;
     private moveToParent;
+    protected readonly multiple = computed(…);
+    public readonly nodeHover = output<TreeNode | null>();
     public readonly nodeSelected = output<TreeNode>();
     public readonly nodes = input<readonly TreeNode[]>([]);
     protected onKeydown(event: KeyboardEvent): void;
-    protected onRowClick(entry: VisibleNode): void;
-    private select;
+    protected onRowClick(entry: VisibleNode, event: MouseEvent): void;
+    protected onRowFocus(entry: VisibleNode): void;
+    private parkTrailingTabStops;
     public readonly selectedId = model<string | null>(null);
+    public readonly selectedIds = model<string[]>([]);
+    public readonly selection = input<TreeSelection>('single');
     private toggle;
+    protected readonly trailing = contentChild(…);
     protected readonly visibleNodes = computed<VisibleNode[]>(…);
 }
 
@@ -31,6 +43,19 @@ export interface TreeNode {
     icon?: IconName;
     children?: TreeNode[];
     disabled?: boolean;
+}
+
+export type TreeSelection = 'single' | 'multiple';
+
+export interface TreeTrailingContext {
+    readonly $implicit: TreeNode;
+    readonly node: TreeNode;
+}
+
+@Directive({ selector: 'ng-template[dsTreeTrailing]' })
+export class TreeTrailingDirective {
+    public static ngTemplateContextGuard(_directive: TreeTrailingDirective, _context: unknown): _context is TreeTrailingContext;
+    public readonly template = inject<TemplateRef<TreeTrailingContext>>(…);
 }
 ```
 

@@ -412,8 +412,15 @@ export type {
   TooltipPlacement,
 } from '@ids-group-ltd/ids-design-system/components/tooltip';
 export { TopBarComponent } from '@ids-group-ltd/ids-design-system/components/topbar';
-export { TreeComponent } from '@ids-group-ltd/ids-design-system/components/tree';
-export type { TreeNode } from '@ids-group-ltd/ids-design-system/components/tree';
+export {
+  TreeComponent,
+  TreeTrailingDirective,
+} from '@ids-group-ltd/ids-design-system/components/tree';
+export type {
+  TreeNode,
+  TreeSelection,
+  TreeTrailingContext,
+} from '@ids-group-ltd/ids-design-system/components/tree';
 export { W3wComponent } from '@ids-group-ltd/ids-design-system/components/w3w';
 export { WaterfallChartComponent } from '@ids-group-ltd/ids-design-system/components/waterfall-chart';
 export type {

@@ -34,13 +34,14 @@
     var(--font-sans);
   text-align: left;
   cursor: pointer;
+  user-select: none;
   transition: background-color var(--duration-fast) var(--ease-standard);
 
   &:hover {
     background-color: var(--_tree-row-hover-bg-color);
   }
 
-  &:active:not(:disabled) {
+  &:active:not([aria-disabled='true'], :has(.trailing:active)) {
     background-color: var(--surface-muted);
   }
 
@@ -48,7 +49,7 @@
     @include focus.ring(calc(-1 * var(--focus-ring-width)));
   }
 
-  &:disabled {
+  &[aria-disabled='true'] {
     color: var(--text-disabled);
     cursor: not-allowed;
   }
@@ -86,4 +87,23 @@
   @include text-clip.single-line-ellipsis;
 
   white-space: nowrap;
+}
+
+.trailing {
+  display: flex;
+  flex: none;
+  align-items: center;
+  gap: var(--space-1);
+
+  // A control up to the row's height (a 32px icon button) fills the padding instead of growing the row.
+  margin-block: calc(-1 * var(--_tree-row-padding-y));
+  margin-inline-start: auto;
+  font-weight: var(--font-weight-regular);
+  cursor: default;
+}
+
+// The ring of a focused control reaches past the row, under the next row's background.
+.trailing:focus-within {
+  position: relative;
+  z-index: 1;
 }

@@ -17,9 +17,21 @@
   `occurrenceClosed`, `ToastRegionComponent.stackFor(key)` and `DsConfig.toast.groupDuplicates`
   (default `false`). `DsIntl.toast` takes the optional
   `showAll`, `hide`, `dismissAll` and `repeated(message, count)`.
+- **`ds-tree` draws content at the end of a row, reports hover and selects several rows.**
+  `<ng-template dsTreeTrailing let-node>` renders at the end of every row, for a badge, a count or
+  a small icon button; a click inside it neither selects nor toggles the row, and its controls are
+  tab stops on the focused row only, so Tab from that row reaches them. `(nodeHover)` emits the node
+  under the pointer or newly focused, and `null` when the pointer leaves the tree.
+  `selection="multiple"` binds `[(selectedIds)]` (`string[]`): Shift-click, Ctrl-click, Shift+Space
+  or Ctrl+Space adds or removes a row, a plain click or Enter selects that row alone, and the tree
+  carries `aria-multiselectable="true"`. `selection` defaults to `'single'`, where `selectedId`
+  works as before. New exports `TreeTrailingDirective`, `TreeTrailingContext` and `TreeSelection`.
 
 ### Changed
 
+- **A `ds-tree` row is a `div role="treeitem"` instead of a `button`.** It renders the same. A
+  disabled row is reached by the arrow keys, shows the focus ring and is announced as disabled;
+  Enter and Space on it select nothing. A style that selects the row as a `button` matches nothing.
 - **A `ds-table` column resize line is visible at rest.** The line between resizable header cells
   was `--border-default`, about 1.2:1 against the header; it is `--text-tertiary` now, about 4.3:1.
   Set `--ds-table-resize-line-color` on `ds-table` to choose another colour, for example
