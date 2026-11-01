@@ -13,7 +13,6 @@ export class ComposerComponent {
     public readonly filesPasted = output<File[]>();
     public focus(options?: FocusOptions): void;
     private readonly intl;
-    protected readonly labelled = computed(…);
     private readonly labels;
     public readonly layout = input<ComposerLayout>('status-bar');
     public readonly maxRows = input<number>(8);
@@ -31,7 +30,7 @@ export class ComposerComponent {
     public readonly value = model<string>('');
 }
 
-export type ComposerLayout = 'status-bar' | 'status-above' | 'labelled' | 'outside';
+export type ComposerLayout = 'status-bar' | 'status-above' | 'outside';
 ```
 
 ## CSS hooks
@@ -41,7 +40,6 @@ ds-composer {
     --ds-composer-bg-color: var(--surface-default);
     --ds-composer-padding: var(--space-2);
     --ds-composer-radius: var(--ds-radius-control);
-    --ds-composer-send-min-width: 9rem;
     --ds-field-focus-shadow: (none);
 }
 ```

@@ -140,15 +140,10 @@ ds-textarea {
 }
 
 /* One fixed square, idle or busy, so the bar never moves. */
-.send-button.icon-only {
+.send-button {
   --ds-button-padding-x: 0;
 
   width: var(--field-h-sm);
-}
-
-/* "Send" and the step share one minimum width; a longer step widens it towards the left. */
-.send-button:not(.icon-only) {
-  min-width: var(--ds-composer-send-min-width, 9rem);
 }
 
 .status {

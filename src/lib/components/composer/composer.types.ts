@@ -1,5 +1,1 @@
-export type ComposerLayout =
-  | 'status-bar'
-  | 'status-above'
-  | 'labelled'
-  | 'outside';
+export type ComposerLayout = 'status-bar' | 'status-above' | 'outside';

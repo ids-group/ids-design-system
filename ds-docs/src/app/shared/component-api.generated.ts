@@ -3660,12 +3660,11 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": [
           "status-bar",
           "status-above",
-          "labelled",
           "outside"
         ],
         "default": "'status-bar'",
         "required": false,
-        "description": "Where the buttons and the step text sit. `'status-bar'`: buttons inside, the step text in the bar beside a fixed-size send button. `'status-above'`: the step text on a line above the box. `'labelled'`: the send button carries \"Send\" or the step, at one minimum width. `'outside'`: the buttons to the right of the box, the step text above it."
+        "description": "Where the buttons and the step text sit. `'status-bar'`: buttons inside, the step text in the bar beside a fixed-size send button. `'status-above'`: the step text on a line above the box. `'outside'`: the buttons to the right of the box, the step text above it."
       }
     ],
     "outputs": [

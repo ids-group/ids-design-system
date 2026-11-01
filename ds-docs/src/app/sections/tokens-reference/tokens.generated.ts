@@ -3822,11 +3822,6 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "name": "--ds-field-focus-shadow",
         "value": "—",
         "notes": "Field focus ring shadow — themeable (defaults to --focus-field)."
-      },
-      {
-        "name": "--ds-composer-send-min-width",
-        "value": "9rem",
-        "notes": ""
       }
     ]
   },

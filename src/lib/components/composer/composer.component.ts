@@ -54,8 +54,7 @@ export class ComposerComponent {
   readonly busyLabel = input<string>('');
   /** Where the buttons and the step text sit. `'status-bar'`: buttons inside, the step text in the
    *  bar beside a fixed-size send button. `'status-above'`: the step text on a line above the box.
-   *  `'labelled'`: the send button carries "Send" or the step, at one minimum width. `'outside'`:
-   *  the buttons to the right of the box, the step text above it. */
+   *  `'outside'`: the buttons to the right of the box, the step text above it. */
   readonly layout = input<ComposerLayout>('status-bar');
 
   /** The trimmed text, on Enter or the send button. Never fires for blank text, while `busy` or
@@ -77,7 +76,6 @@ export class ComposerComponent {
     () => this.ariaLabel() || this.labels().label,
   );
   protected readonly sendLabel = computed(() => this.labels().send);
-  protected readonly labelled = computed(() => this.layout() === 'labelled');
   protected readonly statusAbove = computed(
     () => this.layout() === 'status-above' || this.layout() === 'outside',
   );

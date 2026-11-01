@@ -50,15 +50,10 @@
             size="sm"
             class="send-button"
             loadingMode="icon"
-            [class.icon-only]="!labelled()"
-            [ariaLabel]="labelled() ? null : sendLabel()"
+            [ariaLabel]="sendLabel()"
             [disabled]="!busy() && !canSubmit()"
             [loading]="busy()"
-            (pressed)="submit()">
-            @if (labelled()) {
-              {{ busy() && busyLabel() ? busyLabel() : sendLabel() }}
-            }
-          </ds-button>
+            (pressed)="submit()" />
         </ng-content>
       </div>
     </div>

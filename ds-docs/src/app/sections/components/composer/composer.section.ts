@@ -26,7 +26,6 @@ export class ComposerSection {
   protected readonly layouts: readonly ComposerLayout[] = [
     'status-bar',
     'status-above',
-    'labelled',
     'outside',
   ];
   protected readonly typed = signal('Make the header sticky on scroll');
