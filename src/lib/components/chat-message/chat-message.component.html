@@ -1,0 +1,31 @@
+<div class="meta">
+  <span
+    class="speaker"
+    [class.visually-hidden]="!author() || isGrouped()">
+    {{ speaker() }}
+  </span>
+
+  @if (time()) {
+    <span class="time">
+      {{ time() }}
+    </span>
+  }
+</div>
+
+<div class="bubble">
+  <div class="steps">
+    <ng-content select="[steps]"></ng-content>
+  </div>
+
+  <div class="body">
+    <ng-content></ng-content>
+  </div>
+
+  <div class="attachments">
+    <ng-content select="[attachments]"></ng-content>
+  </div>
+</div>
+
+<div class="actions">
+  <ng-content select="[actions]"></ng-content>
+</div>

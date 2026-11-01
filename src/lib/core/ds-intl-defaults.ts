@@ -7,6 +7,7 @@ export const DS_INTL_DEFAULTS: DsIntl & {
   readonly chart: Required<DsIntl['chart']>;
   readonly toast: Required<DsIntl['toast']>;
   readonly timeline: Required<NonNullable<DsIntl['timeline']>>;
+  readonly chat: Required<NonNullable<DsIntl['chat']>>;
 } = {
   field: {
     optional: '(optional)',
@@ -181,6 +182,14 @@ export const DS_INTL_DEFAULTS: DsIntl & {
     pending: 'Not started',
     error: 'Failed',
     details: (heading) => (heading ? `Details: ${heading}` : 'Details'),
+  },
+  chat: {
+    user: 'You',
+    assistant: 'Assistant',
+    thread: 'Conversation',
+    working: 'Assistant is working',
+    newMessages: 'New messages',
+    latest: 'Jump to latest',
   },
   tabs: {
     close: (label) => `Close ${label}`,

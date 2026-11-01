@@ -216,6 +216,20 @@ export interface DsIntl {
     /** `` `Details: ${heading}` `` - the toggle of the `[details]` area; `'Details'` without a heading. */
     readonly details?: (heading: string) => string;
   };
+  readonly chat?: {
+    /** `'You'` - spoken before a `ds-chat-message` with `role="user"` and no `author`. */
+    readonly user?: string;
+    /** `'Assistant'` - the same for `role="assistant"`. */
+    readonly assistant?: string;
+    /** `'Conversation'` - accessible name of the `ds-chat-thread` scroll area when `ariaLabel` is unset. */
+    readonly thread?: string;
+    /** `'Assistant is working'` - the working row when `workingLabel` is empty. */
+    readonly working?: string;
+    /** `'New messages'` - the jump button while messages arrived below the scrolled-up view. */
+    readonly newMessages?: string;
+    /** `'Jump to latest'` - the jump button while nothing new arrived. */
+    readonly latest?: string;
+  };
   readonly tabs: {
     readonly close: (label: string) => string;
   };

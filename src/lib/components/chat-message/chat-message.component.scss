@@ -1,0 +1,143 @@
+@use '../../styles/visually-hidden' as visually-hidden;
+@use '../../styles/component-base' as component-base;
+@include component-base.rules;
+
+:host {
+  --_chat-bubble-max-width: var(--ds-chat-message-max-width, 85%);
+  --_chat-bubble-radius: var(--ds-chat-message-radius, var(--ds-radius-panel));
+  --_chat-bubble-padding: var(--ds-chat-message-padding, var(--space-2) var(--space-3));
+  --_chat-bubble-bg-color: var(--ds-chat-message-assistant-bg-color, var(--surface-secondary));
+  --_chat-bubble-color: var(--ds-chat-message-assistant-color, var(--text-primary));
+
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  min-width: 0;
+}
+
+:host([data-role='user']) {
+  --_chat-bubble-bg-color: var(--ds-chat-message-user-bg-color, var(--primary));
+  --_chat-bubble-color: var(--ds-chat-message-user-color, var(--text-on-primary));
+
+  align-items: flex-end;
+}
+
+// Spacing between messages is the thread's: a full gap between speakers, a tight one inside a run.
+:host(.in-thread) {
+  margin-top: var(--_chat-thread-gap);
+}
+
+:host(.is-grouped) {
+  margin-top: var(--_chat-thread-group-gap);
+}
+
+:host(.is-first) {
+  margin-top: 0;
+}
+
+.visually-hidden {
+  @include visually-hidden.visually-hidden;
+}
+
+.meta {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-2);
+  max-width: 100%;
+  font-size: var(--font-size-xs);
+  line-height: var(--line-height-base);
+  color: var(--text-tertiary);
+
+  // A row whose only content is the spoken speaker takes no space.
+  &:has(.time, .speaker:not(.visually-hidden)) {
+    margin-bottom: var(--space-1);
+  }
+}
+
+.speaker {
+  font-weight: var(--font-weight-semibold);
+  color: var(--text-secondary);
+}
+
+.bubble {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  max-width: var(--_chat-bubble-max-width);
+  min-width: 0;
+  padding: var(--_chat-bubble-padding);
+  border-radius: var(--_chat-bubble-radius);
+  background-color: var(--_chat-bubble-bg-color);
+  color: var(--_chat-bubble-color);
+  font-size: var(--font-size-s);
+  line-height: var(--line-height-base);
+  overflow-wrap: anywhere;
+
+  // A host app that switches selection off for its chrome must not take the conversation with it.
+  user-select: text;
+}
+
+:host([data-role='assistant']) .bubble {
+  border-end-start-radius: var(--ds-radius-inner);
+}
+
+:host([data-role='user']) .bubble {
+  border-end-end-radius: var(--ds-radius-inner);
+
+  // The page's selection tint is mixed from --primary, which is this bubble's fill.
+  ::selection {
+    background-color: var(--_chat-bubble-color);
+    color: var(--_chat-bubble-bg-color);
+  }
+}
+
+// Typed text keeps its line breaks.
+:host([data-role='user']) .body {
+  white-space: pre-line;
+}
+
+.steps,
+.body,
+.attachments {
+  min-width: 0;
+}
+
+.steps:not(:has(*)),
+.attachments:not(:has(*)),
+.actions:not(:has(*)),
+.body:empty {
+  display: none;
+}
+
+.steps:has(*) + .body:not(:empty) {
+  padding-top: var(--space-2);
+  border-top: var(--border-width-default) solid var(--border-divider);
+}
+
+.attachments {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1);
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  margin-top: var(--space-1);
+  opacity: 0;
+  transition: opacity var(--duration-fast) var(--ease-standard);
+}
+
+:host(:hover) .actions,
+.actions:focus-within {
+  opacity: 1;
+}
+
+// Without hover there is nothing to reveal them, so they stay visible.
+@media (hover: none) {
+  .actions {
+    opacity: 1;
+  }
+}

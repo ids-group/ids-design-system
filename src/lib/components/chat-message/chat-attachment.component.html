@@ -1,0 +1,28 @@
+<button
+  type="button"
+  class="chip"
+  [attr.aria-expanded]="expanded()"
+  [attr.aria-controls]="snapshotId"
+  (click)="toggle()">
+  @if (icon(); as name) {
+    <ds-icon
+      [name]="name"
+      [size]="12" />
+  }
+
+  <span class="label">
+    {{ label() }}
+  </span>
+
+  <ds-icon
+    class="chev"
+    name="chevronDown"
+    [size]="12" />
+</button>
+
+<div
+  class="snapshot"
+  [id]="snapshotId"
+  [hidden]="!expanded()">
+  <ng-content></ng-content>
+</div>

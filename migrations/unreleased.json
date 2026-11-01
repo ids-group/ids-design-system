@@ -24,6 +24,7 @@
     }
   ],
   "informational": [
+    "New components `ds-chat-message`, `ds-chat-thread` and `ds-chat-attachment` (`ChatMessageComponent`, `ChatThreadComponent`, `ChatAttachmentComponent`, type `ChatMessageRole`): chat bubbles with `[steps]`, `[attachments]` and `[actions]` slots, and a list that stays at the newest message unless the reader scrolled up. Adds the optional `DsIntl.chat` keys. Nothing to change in your code.",
     {
       "text": "`ds-tree` takes `<ng-template dsTreeTrailing let-node>` (`TreeTrailingDirective`, `TreeTrailingContext`) drawn at the end of every row, a `(nodeHover)` output, and `selection: 'single' | 'multiple'` (`TreeSelection`) with a two-way `selectedIds` in multiple mode. Each row is a focusable `div role=\"treeitem\"` instead of a `button`, and a disabled row is reached by the arrow keys and announced as disabled. Nothing to change in your code unless your styles select the row as a `button`.",
       "verify": "Open a `ds-tree` with a disabled node: rows look as before, ArrowDown stops on the disabled row with a focus ring, and Enter on it selects nothing."

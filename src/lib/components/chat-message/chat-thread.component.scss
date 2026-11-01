@@ -1,0 +1,58 @@
+@use '../../styles/visually-hidden' as visually-hidden;
+@use '../../styles/component-base' as component-base;
+@include component-base.rules;
+
+// The gaps are read by each ds-chat-message, which sits in this host's light DOM.
+:host {
+  --_chat-thread-gap: var(--ds-chat-thread-gap, var(--space-4));
+  --_chat-thread-group-gap: var(--ds-chat-thread-group-gap, var(--space-1));
+  --_chat-thread-padding: var(--ds-chat-thread-padding, var(--space-4));
+
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.scroller {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: var(--_chat-thread-padding);
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+}
+
+.working {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin-top: var(--_chat-thread-gap);
+  font-size: var(--font-size-s);
+  line-height: var(--line-height-base);
+  color: var(--text-secondary);
+}
+
+.working-label {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.jump {
+  position: absolute;
+  bottom: var(--space-3);
+  left: 50%;
+  translate: -50% 0;
+
+  --ds-button-radius: var(--ds-radius-pill);
+  --ds-button-bg-color: var(--surface-default);
+  --ds-button-shadow: var(--shadow-popover);
+}
+
+.visually-hidden {
+  @include visually-hidden.visually-hidden;
+}

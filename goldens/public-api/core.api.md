@@ -68,6 +68,7 @@ export const DS_INTL_DEFAULTS: DsIntl & {
     readonly chart: Required<DsIntl['chart']>;
     readonly toast: Required<DsIntl['toast']>;
     readonly timeline: Required<NonNullable<DsIntl['timeline']>>;
+    readonly chat: Required<NonNullable<DsIntl['chat']>>;
 };
 
 export interface DsConfig {
@@ -332,6 +333,14 @@ export interface DsIntl {
         readonly pending?: string;
         readonly error?: string;
         readonly details?: (heading: string) => string;
+    };
+    readonly chat?: {
+        readonly user?: string;
+        readonly assistant?: string;
+        readonly thread?: string;
+        readonly working?: string;
+        readonly newMessages?: string;
+        readonly latest?: string;
     };
     readonly tabs: {
         readonly close: (label: string) => string;

@@ -37,6 +37,29 @@
   type `TimelineStatus`, CSS hooks `--ds-timeline-toggle-icon-color` and
   `--ds-timeline-toggle-icon-color-hover`, and the optional `DsIntl.timeline` keys `done`,
   `running`, `pending`, `error` and `details(heading)`.
+- **`ds-chat-message`, `ds-chat-thread` and `ds-chat-attachment`, the bubbles and the list of a
+  chat.** `ds-chat-message` takes `role` (`ChatMessageRole`, `'user'` or `'assistant'`, default
+  `'assistant'`): a user message is a filled bubble on the right, an assistant message a subtle one
+  on the left. Optional `author` and `time` show above the bubble; without `author` the role is
+  spoken. The default slot is the text, rendered by your app; `[steps]` sits above the text (a
+  `ds-timeline`), `[attachments]` under it, and `[actions]` under the bubble, shown on hover or
+  focus. The text is selectable and long words and addresses wrap. `ds-chat-thread` scrolls its
+  messages and stays at the newest one as messages arrive or grow; once the reader scrolls up it
+  stays put and shows a jump button ("New messages" when something arrived, "Jump to latest"
+  otherwise), and a message the reader sends scrolls back down. Consecutive messages of one role sit
+  closer together. `working` shows a row with a spinner and `workingLabel` at the end. A screen reader
+  hears the working label and each finished reply, once: a reply that arrives while `working` is read when
+  `working` clears, and the messages present when the thread first renders are never read.
+  `scrollToEnd()` scrolls down from code. `ds-chat-attachment` is a chip in `[attachments]`, with
+  `label` and `icon` (default `paperclip`), that opens to show its default slot, such as a snapshot
+  of what was attached; `expanded` binds the open state two-way. A plain file is a `ds-tag`. New
+  optional `DsIntl.chat` keys `user`, `assistant`, `thread`, `working`, `newMessages` and `latest`,
+  and CSS hooks `--ds-chat-message-max-width` (default `85%`), `--ds-chat-message-radius`,
+  `--ds-chat-message-padding`, `--ds-chat-message-user-bg-color`, `--ds-chat-message-user-color`,
+  `--ds-chat-message-assistant-bg-color`, `--ds-chat-message-assistant-color`,
+  `--ds-chat-thread-gap`, `--ds-chat-thread-group-gap`, `--ds-chat-thread-padding` and
+  `--ds-chat-attachment-snapshot-bg-color`; the attachment chip and the jump button are rounded by
+  `--ds-radius-pill`.
 
 ### Changed
 
