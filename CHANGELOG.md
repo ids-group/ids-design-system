@@ -27,7 +27,8 @@
   image files of a paste, which then inserts no text. `submit()`, `focus()` and `canSubmit` serve a
   custom send area. The text is not cleared on submit: clear `value` once the message is accepted.
   New optional `DsIntl.composer` keys `label` (`'Message'`) and `send` (`'Send'`), and CSS hooks
-  `--ds-composer-bg-color`, `--ds-composer-radius` and `--ds-composer-padding`.
+  `--ds-composer-bg-color`, `--ds-composer-radius` and `--ds-composer-padding`; the border, hover and
+  focus colours follow the `--ds-field-*` set and the focus shadow `--ds-field-focus-shadow`.
 
 ### Changed
 
