@@ -164,6 +164,18 @@ export interface DsIntl {
     /** `` `${message}, ${count} times` `` - spoken when a stack grows. */
     readonly repeated?: (message: string, count: number) => string;
   };
+  readonly attachment?: {
+    /** `` `Remove ${name}` `` - the remove button of a `ds-attachment`. */
+    readonly remove?: (name: string) => string;
+    /** `'PDF document'` - announced before the second line of `kind="pdf"`. */
+    readonly pdf?: string;
+    /** `'Word document'` - `kind="doc"`. */
+    readonly doc?: string;
+    /** `'Image'` - `kind="image"`. */
+    readonly image?: string;
+    /** `'File'` - `kind="file"`. */
+    readonly file?: string;
+  };
   readonly messageInput?: {
     /** `'Message'` - accessible name of the `ds-message-input` text area when `ariaLabel` is unset. */
     readonly label?: string;

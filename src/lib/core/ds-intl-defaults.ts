@@ -7,6 +7,7 @@ export const DS_INTL_DEFAULTS: DsIntl & {
   readonly chart: Required<DsIntl['chart']>;
   readonly toast: Required<DsIntl['toast']>;
   readonly messageInput: Required<NonNullable<DsIntl['messageInput']>>;
+  readonly attachment: Required<NonNullable<DsIntl['attachment']>>;
 } = {
   field: {
     optional: '(optional)',
@@ -139,6 +140,13 @@ export const DS_INTL_DEFAULTS: DsIntl & {
     hide: 'Hide',
     dismissAll: 'Dismiss all',
     repeated: (message, count) => `${message}, ${count} times`,
+  },
+  attachment: {
+    remove: (name) => `Remove ${name}`,
+    pdf: 'PDF document',
+    doc: 'Word document',
+    image: 'Image',
+    file: 'File',
   },
   messageInput: {
     label: 'Message',

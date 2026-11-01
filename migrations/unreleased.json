@@ -24,6 +24,7 @@
     }
   ],
   "informational": [
+    "New component `ds-attachment` (`AttachmentComponent`): a file chip with a type tile or image preview, name and size, for the `[chips]` slot of `ds-message-input`. Adds `AttachmentKind` and the optional `DsIntl.attachment` keys. Nothing to change in your code.",
     "New component `ds-message-input` (`MessageInputComponent`): an auto-growing message box with `[chips]`, `[actions]` and `[send]` slots, Enter to submit, `busy` / `busyLabel` and `(filesPasted)`. Adds the optional `DsIntl.messageInput` keys `label` and `send`. Nothing to change in your code.",
     {
       "text": "A focused `ds-table` resize handle draws no outline; its line becomes `--focus-ring-width` wide in `--focus-ring-color`, inset `--space-1` from the cell's top and bottom. Forced-colours mode keeps the outline.",

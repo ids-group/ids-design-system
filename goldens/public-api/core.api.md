@@ -68,6 +68,7 @@ export const DS_INTL_DEFAULTS: DsIntl & {
     readonly chart: Required<DsIntl['chart']>;
     readonly toast: Required<DsIntl['toast']>;
     readonly messageInput: Required<NonNullable<DsIntl['messageInput']>>;
+    readonly attachment: Required<NonNullable<DsIntl['attachment']>>;
 };
 
 export interface DsConfig {
@@ -290,6 +291,13 @@ export interface DsIntl {
         readonly hide?: string;
         readonly dismissAll?: string;
         readonly repeated?: (message: string, count: number) => string;
+    };
+    readonly attachment?: {
+        readonly remove?: (name: string) => string;
+        readonly pdf?: string;
+        readonly doc?: string;
+        readonly image?: string;
+        readonly file?: string;
     };
     readonly messageInput?: {
         readonly label?: string;

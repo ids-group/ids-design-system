@@ -42,6 +42,8 @@ export {
   RailTriggerDirective,
 } from '@ids-group-ltd/ids-design-system/components/app-layout';
 export type { DsAppLayoutScrollReset } from '@ids-group-ltd/ids-design-system/components/app-layout';
+export { AttachmentComponent } from '@ids-group-ltd/ids-design-system/components/attachment';
+export type { AttachmentKind } from '@ids-group-ltd/ids-design-system/components/attachment';
 export { AuthLayoutComponent } from '@ids-group-ltd/ids-design-system/components/auth-layout';
 export { AutocompleteComponent } from '@ids-group-ltd/ids-design-system/components/autocomplete';
 export type {

@@ -35,6 +35,12 @@
   New optional `DsIntl.messageInput` keys `label` (`'Message'`) and `send` (`'Send'`), and CSS hooks
   `--ds-message-input-bg-color`, `--ds-message-input-radius`, `--ds-message-input-padding` (default `--space-2`); the border, hover and
   focus colours follow the `--ds-field-*` set and the focus shadow `--ds-field-focus-shadow`.
+- **`ds-attachment` (`AttachmentComponent`), a file attached to a message.** A type tile (`kind`: `'pdf' | 'doc' | 'image' |
+  'file'`, default `'file'`) or, for `'image'` with `previewUrl`, the image itself, then `name` and a
+  second line `meta` such as the size. `removable` shows a remove button named "Remove {name}" that
+  emits `(removed)`; the kind is announced before `meta`, and an image preview takes `name` as its
+  alt text. Place it in the `[chips]` slot of `ds-message-input`. New type `AttachmentKind` and the
+  optional `DsIntl.attachment` keys `remove(name)`, `pdf`, `doc`, `image` and `file`.
 
 ### Changed
 

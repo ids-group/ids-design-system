@@ -1,0 +1,37 @@
+@if (showPreview()) {
+  <img
+    class="preview"
+    [src]="previewUrl()"
+    [alt]="name()" />
+} @else {
+  <span
+    class="tile"
+    aria-hidden="true">
+    {{ tileText() }}
+  </span>
+}
+
+<span class="text">
+  <span class="name">
+    {{ name() }}
+  </span>
+
+  <span class="meta">
+    <span class="visually-hidden">
+      {{ kindLabel() }}
+    </span>
+    {{ meta() }}
+  </span>
+</span>
+
+@if (removable()) {
+  <button
+    type="button"
+    class="remove"
+    [attr.aria-label]="removeLabel()"
+    (click)="removed.emit()">
+    <ds-icon
+      name="x"
+      [size]="12" />
+  </button>
+}

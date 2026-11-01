@@ -449,6 +449,15 @@ Input: `status: DsStatusKey` (same consumer-registered vocabulary as `ds-badge`;
 All inputs: `status: DsStatusKey`, `ariaLabel: string | null = null`
 <!-- /inputs -->
 
+#### `<ds-attachment>` — `AttachmentComponent`
+A file attached to a message, for the `[chips]` slot of `<ds-message-input>`: a 24px type tile (PDF, DOC, IMG, FILE) or an image preview, the file name in bold and a muted second line.
+Inputs: `name: required string`, `meta: string = ''` (e.g. `'PDF · 240 KB'`), `kind: AttachmentKind = 'file'` (`'pdf' | 'doc' | 'image' | 'file'`), `previewUrl: string | null = null` (used when `kind` is `'image'`), `removable: boolean = false`. Output: `(removed): void`.
+Accessibility: the remove button is named `DS_INTL.attachment.remove(name)` ("Remove Brief.pdf"), the kind ("PDF document") is announced before `meta`, an image preview takes `name` as alt text.
+
+<!-- inputs:ds-attachment -->
+All inputs: `name: required string`, `meta: string = ''`, `kind: 'pdf' | 'doc' | 'image' | 'file' = 'file'`, `previewUrl: string | null = null`, `removable: boolean = false`
+<!-- /inputs -->
+
 #### `<ds-tag>` — `TagComponent`
 Inputs: `variant: 'solid' | 'neutral' = 'solid'`, `closable: boolean = false`
 Output: `(closed): void` — emits when the close button is pressed

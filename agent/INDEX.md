@@ -46,6 +46,7 @@ and token names.** These leaves are for orientation and usage.
 
 - [<ds-badge> — BadgeComponent](feedback/ds-badge.md) — Content: label text. Use for status pills, counts, lifecycle markers.
 - [<ds-status-dot> — StatusDotComponent](feedback/ds-status-dot.md) — <!-- inputs:ds-status-dot -->
+- [<ds-attachment> — AttachmentComponent](feedback/ds-attachment.md) — A file attached to a message, for the [chips] slot of <ds-message-input>: a 24px type tile (PDF, DOC, IMG, FIL
 - [<ds-tag> — TagComponent](feedback/ds-tag.md) — Content: label.
 - [<ds-avatar> — AvatarComponent](feedback/ds-avatar.md) — <!-- inputs:ds-avatar -->
 - [<ds-avatar-group> — AvatarGroupComponent](feedback/ds-avatar-group.md) — Content: project <ds-avatar> children.
