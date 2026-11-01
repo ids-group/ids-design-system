@@ -3,12 +3,12 @@
 @include component-base.rules;
 
 :host {
-  --_splitter-handle-size: var(--ds-splitter-handle-size, var(--space-2));
-  --_splitter-line-color: var(--ds-splitter-line-color, var(--border-divider));
-  --_splitter-active-color: var(--ds-splitter-active-color, var(--primary));
-  --_splitter-grip-color: var(--ds-splitter-grip-color, var(--text-tertiary));
+  --_splitter-gap: var(--ds-splitter-gap, var(--space-2));
+  --_splitter-line-color: var(--ds-splitter-line-color, var(--border-strong));
+  --_splitter-drag-color: var(--ds-splitter-drag-color, var(--text-muted));
+  --_splitter-grip-color: var(--ds-splitter-grip-color, var(--text-muted));
   --_splitter-grip-dot: calc(var(--border-width-strong) + var(--border-width-default));
-  --_splitter-sized: min(var(--_splitter-size), 100% - var(--_splitter-handle-size));
+  --_splitter-sized: min(var(--_splitter-size), 100% - var(--_splitter-gap));
   --_splitter-rest: minmax(0, 1fr);
 
   display: grid;
@@ -27,13 +27,13 @@
 }
 
 :host([data-orientation='horizontal']) {
-  grid-template-columns: var(--_splitter-start) var(--_splitter-handle-size) var(--_splitter-end);
+  grid-template-columns: var(--_splitter-start) var(--_splitter-gap) var(--_splitter-end);
   grid-template-rows: minmax(0, 1fr);
 }
 
 :host([data-orientation='vertical']) {
   grid-template-columns: minmax(0, 1fr);
-  grid-template-rows: var(--_splitter-start) var(--_splitter-handle-size) var(--_splitter-end);
+  grid-template-rows: var(--_splitter-start) var(--_splitter-gap) var(--_splitter-end);
 }
 
 .pane {
@@ -42,32 +42,36 @@
   overflow: auto;
 }
 
+/* The handle fills the gap between the panes. At rest only the grip shows; hover, drag and focus
+   swap it for a line on the edge being moved. */
 .handle {
   position: relative;
   touch-action: none;
   user-select: none;
 
-  /* The line: the divider at rest, the active colour and twice as wide on hover, drag and focus. */
   &::after {
     position: absolute;
     content: '';
     background-color: var(--_splitter-line-color);
     border-radius: var(--radius-pill);
-    transition: background-color var(--duration-fast) var(--ease-standard);
+    opacity: 0;
+    transition:
+      opacity var(--duration-fast) var(--ease-standard),
+      background-color var(--duration-fast) var(--ease-standard);
   }
 
-  /* The grip: a column of dots on a surface pill over the line, shown with the active line. */
   &::before {
     position: absolute;
-    z-index: 1;
     inset-block-start: 50%;
     inset-inline-start: 50%;
     content: '';
-    background-color: var(--surface-default);
-    border: var(--border-width-default) solid var(--_splitter-active-color);
-    border-radius: var(--radius-pill);
+    background-image: radial-gradient(
+      circle closest-side,
+      var(--_splitter-grip-color) 98%,
+      transparent
+    );
+    background-position: 0 0;
     translate: -50% -50%;
-    opacity: 0;
     transition: opacity var(--duration-fast) var(--ease-standard);
   }
 
@@ -81,12 +85,16 @@
   &.dragging,
   &:focus-visible {
     &::after {
-      background-color: var(--_splitter-active-color);
+      opacity: 1;
     }
 
     &::before {
-      opacity: 1;
+      opacity: 0;
     }
+  }
+
+  &.dragging::after {
+    background-color: var(--_splitter-drag-color);
   }
 
   &.dragging::after,
@@ -94,7 +102,7 @@
     transition-delay: 0s;
   }
 
-  /* The line carries the focus indicator: a ring around an 8px handle would cover both panes' edges. */
+  /* Only keyboard focus takes the focus colour; the line carries the indicator in place of a ring. */
   &:focus-visible {
     @include focus.own-indicator;
   }
@@ -107,26 +115,13 @@
 :host([data-orientation='horizontal']) .handle {
   &::after {
     inset-block: 0;
-    inset-inline-start: calc(50% - var(--border-width-default) / 2);
-    inline-size: var(--border-width-default);
-  }
-
-  &:hover::after,
-  &.dragging::after,
-  &:focus-visible::after {
-    inset-inline-start: calc(50% - var(--focus-ring-width) / 2);
-    inline-size: var(--focus-ring-width);
+    inset-inline-start: calc(50% - var(--border-width-strong) / 2);
+    inline-size: var(--border-width-strong);
   }
 
   &::before {
-    inline-size: calc(var(--_splitter-grip-dot) * 3);
-    block-size: calc(var(--_splitter-grip-dot) * 9);
-    background-image: radial-gradient(
-      circle closest-side,
-      var(--_splitter-grip-color) 98%,
-      transparent
-    );
-    background-position: center;
+    inline-size: var(--_splitter-grip-dot);
+    block-size: calc(var(--_splitter-grip-dot) * 6);
     background-size: var(--_splitter-grip-dot) calc(var(--_splitter-grip-dot) * 2);
     background-repeat: repeat-y;
   }
@@ -135,26 +130,13 @@
 :host([data-orientation='vertical']) .handle {
   &::after {
     inset-inline: 0;
-    inset-block-start: calc(50% - var(--border-width-default) / 2);
-    block-size: var(--border-width-default);
-  }
-
-  &:hover::after,
-  &.dragging::after,
-  &:focus-visible::after {
-    inset-block-start: calc(50% - var(--focus-ring-width) / 2);
-    block-size: var(--focus-ring-width);
+    inset-block-start: calc(50% - var(--border-width-strong) / 2);
+    block-size: var(--border-width-strong);
   }
 
   &::before {
-    inline-size: calc(var(--_splitter-grip-dot) * 9);
-    block-size: calc(var(--_splitter-grip-dot) * 3);
-    background-image: radial-gradient(
-      circle closest-side,
-      var(--_splitter-grip-color) 98%,
-      transparent
-    );
-    background-position: center;
+    inline-size: calc(var(--_splitter-grip-dot) * 6);
+    block-size: var(--_splitter-grip-dot);
     background-size: calc(var(--_splitter-grip-dot) * 2) var(--_splitter-grip-dot);
     background-repeat: repeat-x;
   }

@@ -35,6 +35,7 @@ export class SplitterComponent implements OnInit, OnDestroy {
     protected onPointerUp(event: PointerEvent): void;
     public readonly orientation = input<SplitterOrientation>('horizontal');
     public readonly pane = input<SplitterPane>('start');
+    private panesBox;
     public readonly persistKey = input<string>('');
     protected reset(): void;
     public readonly size = model<number | null>(null);
@@ -51,9 +52,9 @@ export type SplitterPane = 'start' | 'end';
 
 ```css
 ds-splitter {
-    --ds-splitter-active-color: var(--primary);
-    --ds-splitter-grip-color: var(--text-tertiary);
-    --ds-splitter-handle-size: var(--space-2);
-    --ds-splitter-line-color: var(--border-divider);
+    --ds-splitter-drag-color: var(--text-muted);
+    --ds-splitter-gap: var(--space-2);
+    --ds-splitter-grip-color: var(--text-muted);
+    --ds-splitter-line-color: var(--border-strong);
 }
 ```

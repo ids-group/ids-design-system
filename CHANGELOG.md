@@ -34,11 +34,13 @@
   cursor and selects no text. The handle is a focusable `separator` with `aria-valuenow`,
   `aria-valuemin` and `aria-valuemax`: the arrow keys along the axis move it by 16px, Shift or
   PageUp / PageDown by 64px, Home / End to the limits, and a double click returns to `defaultSize`.
-  At a limit the cursor shows the one direction left. `persistKey` keeps the size in `localStorage`
+  At a limit the cursor shows the one direction left. At rest the handle shows a three-dot grip and
+  no line; hover and drag show a neutral line, keyboard focus a line in the focus colour. The handle
+  fills the gap between the panes, `--ds-splitter-gap` wide. `persistKey` keeps the size in `localStorage`
   under `ds-splitter:<key>`. Name the handle with `ariaLabel`; the new optional `DsIntl.splitter.label`
   (`'Resize panes'`) is the fallback. New exports `SplitterComponent`, `SplitterOrientation` and
-  `SplitterPane`, and CSS hooks `--ds-splitter-handle-size`, `--ds-splitter-line-color`,
-  `--ds-splitter-active-color` and `--ds-splitter-grip-color`.
+  `SplitterPane`, and CSS hooks `--ds-splitter-gap`, `--ds-splitter-line-color`,
+  `--ds-splitter-drag-color` and `--ds-splitter-grip-color`.
 
 ### Changed
 
