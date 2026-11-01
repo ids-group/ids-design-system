@@ -31,7 +31,7 @@ export class SplitterComponent implements OnInit, OnDestroy {
     public ngOnInit(): void;
     protected onKeydown(event: KeyboardEvent): void;
     protected onPointerDown(event: PointerEvent): void;
-    protected onPointerMove(event: PointerEvent): void;
+    private readonly onPointerMove;
     protected onPointerUp(event: PointerEvent): void;
     public readonly orientation = input<SplitterOrientation>('horizontal');
     public readonly pane = input<SplitterPane>('start');
@@ -41,6 +41,7 @@ export class SplitterComponent implements OnInit, OnDestroy {
     public readonly size = model<number | null>(null);
     protected readonly startId = nextControlId(…);
     private storageKey;
+    private readonly zone;
 }
 
 export type SplitterOrientation = 'horizontal' | 'vertical';
