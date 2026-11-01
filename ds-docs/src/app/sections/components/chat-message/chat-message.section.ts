@@ -1,4 +1,10 @@
-import { Component, ViewEncapsulation, signal } from '@angular/core';
+import {
+  Component,
+  DestroyRef,
+  ViewEncapsulation,
+  inject,
+  signal,
+} from '@angular/core';
 import { ButtonComponent } from 'ds/button';
 import { InputComponent } from 'ds/input';
 import { TagComponent } from 'ds/tag';
@@ -9,6 +15,7 @@ import {
   ChatMessageComponent,
   ChatThreadComponent,
   type ChatMessageRole,
+  type ChatMessageStatus,
 } from 'ds/chat-message';
 import { DocsSectionComponent } from '../../../shared/docs-section.component';
 
@@ -17,6 +24,8 @@ interface DemoMessage {
   readonly role: ChatMessageRole;
   readonly text: string;
   readonly sentAt: Date;
+  readonly streaming?: boolean;
+  readonly status?: ChatMessageStatus;
 }
 
 const REPLIES = [
@@ -49,6 +58,8 @@ const REPLIES = [
 })
 export class ChatMessageSection {
   private nextId = 0;
+  private olderPages = 0;
+  private readonly timers = new Set<ReturnType<typeof setTimeout>>();
 
   protected readonly messages = signal<readonly DemoMessage[]>(
     Array.from({ length: 6 }, (_, i) => ({
@@ -60,12 +71,19 @@ export class ChatMessageSection {
   );
   protected readonly draft = signal('');
   protected readonly working = signal(false);
+  protected readonly failNext = signal(false);
+  protected readonly hasOlder = signal(true);
+  protected readonly loadingOlder = signal(false);
   // Minutes the demo clock has been moved forward, so the next message lands after a time break.
   private readonly clockOffset = signal(0);
 
   protected readonly pauseTimes = [64, 63, 12, 11].map((minutes) =>
     this.minutesAgo(minutes),
   );
+
+  constructor() {
+    inject(DestroyRef).onDestroy(() => this.timers.forEach(clearTimeout));
+  }
 
   protected minutesAgo(minutes: number): Date {
     return new Date(Date.now() - minutes * 60_000);
@@ -79,24 +97,80 @@ export class ChatMessageSection {
     event.preventDefault();
     const text = this.draft().trim();
     if (text) {
-      this.add('user', text);
+      const id = this.add({ role: 'user', text, status: 'sending' });
       this.draft.set('');
+      this.deliver(id);
     }
   }
 
-  protected reply(): void {
-    this.add('assistant', REPLIES[this.nextId % REPLIES.length]);
+  protected retry(id: number): void {
+    this.patch(id, { status: 'sending' });
+    this.deliver(id);
   }
 
-  private add(role: ChatMessageRole, text: string): void {
+  // A reply streams in a few words at a time, then completes.
+  protected reply(): void {
+    const words = REPLIES[this.nextId % REPLIES.length].split(' ');
+    const id = this.add({ role: 'assistant', text: '', streaming: true });
+    words.forEach((_, index) =>
+      this.later(
+        () => {
+          const done = index === words.length - 1;
+          this.patch(id, {
+            text: words.slice(0, index + 1).join(' '),
+            streaming: !done,
+          });
+        },
+        120 * (index + 1),
+      ),
+    );
+  }
+
+  protected loadOlder(): void {
+    this.loadingOlder.set(true);
+    this.later(() => {
+      const page = ++this.olderPages;
+      const older: DemoMessage[] = Array.from({ length: 6 }, (_, i) => ({
+        id: this.nextId++,
+        role: i % 2 ? 'assistant' : 'user',
+        text: `Earlier message ${page}.${i + 1}`,
+        sentAt: this.minutesAgo(60 * page + 30 - i),
+      }));
+      this.messages.update((list) => [...older, ...list]);
+      this.loadingOlder.set(false);
+      this.hasOlder.set(page < 3);
+    }, 700);
+  }
+
+  private deliver(id: number): void {
+    const fail = this.failNext();
+    this.failNext.set(false);
+    this.later(() => this.patch(id, { status: fail ? 'failed' : 'sent' }), 600);
+  }
+
+  private add(message: Omit<DemoMessage, 'id' | 'sentAt'>): number {
+    const id = this.nextId++;
     this.messages.update((list) => [
       ...list,
-      {
-        id: this.nextId++,
-        role,
-        text,
-        sentAt: this.minutesAgo(-this.clockOffset()),
-      },
+      { ...message, id, sentAt: this.minutesAgo(-this.clockOffset()) },
     ]);
+
+    return id;
+  }
+
+  private patch(id: number, change: Partial<DemoMessage>): void {
+    this.messages.update((list) =>
+      list.map((message) =>
+        message.id === id ? { ...message, ...change } : message,
+      ),
+    );
+  }
+
+  private later(run: () => void, delay: number): void {
+    const timer = setTimeout(() => {
+      this.timers.delete(timer);
+      run();
+    }, delay);
+    this.timers.add(timer);
   }
 }

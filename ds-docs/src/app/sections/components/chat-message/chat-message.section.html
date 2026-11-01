@@ -252,6 +252,52 @@ error TS2322: Type 'string' is not assignable to type 'number'.
         Long words and URLs wrap
       </div>
     </div>
+
+    <div class="state-cell">
+      <div class="state-cell-stage chat-stage">
+        <ds-chat-thread>
+          <ds-chat-message
+            role="user"
+            status="sent">
+            Rename the page to Pricing.
+          </ds-chat-message>
+
+          <ds-chat-message
+            role="user"
+            status="sending">
+            And move it first in the menu.
+          </ds-chat-message>
+
+          <ds-chat-message
+            role="user"
+            status="failed">
+            Add a FAQ section under it.
+          </ds-chat-message>
+        </ds-chat-thread>
+      </div>
+
+      <div class="state-cell-label">
+        Sent, sending, failed with Retry
+      </div>
+    </div>
+
+    <div class="state-cell">
+      <div class="state-cell-stage chat-stage">
+        <ds-chat-thread>
+          <ds-chat-message role="user">
+            Summarise the changes.
+          </ds-chat-message>
+
+          <ds-chat-message [streaming]="true">
+            I renamed the page, moved it first and
+          </ds-chat-message>
+        </ds-chat-thread>
+      </div>
+
+      <div class="state-cell-label">
+        Reply still streaming
+      </div>
+    </div>
   </div>
 
   <h3 class="block-title t-h4">
@@ -260,17 +306,24 @@ error TS2322: Type 'string' is not assignable to type 'number'.
 
   <p class="block-desc t-s">
     Send a few messages: the list follows them. Scroll up and press Reply, and
-    the list stays where you are and offers a jump button instead.
+    the list stays where you are and offers a jump button instead. Scroll to
+    the top to load earlier messages; the message you were reading stays put.
   </p>
 
   <ds-chat-thread
     class="chat-try"
     workingLabel="Rebuilding"
-    [working]="working()">
+    [working]="working()"
+    [hasOlder]="hasOlder()"
+    [loadingOlder]="loadingOlder()"
+    (loadOlder)="loadOlder()">
     @for (message of messages(); track message.id) {
       <ds-chat-message
         [role]="message.role"
-        [sentAt]="message.sentAt">
+        [sentAt]="message.sentAt"
+        [streaming]="!!message.streaming"
+        [status]="message.status ?? null"
+        (retry)="retry(message.id)">
         {{ message.text }}
       </ds-chat-message>
     }
@@ -299,6 +352,12 @@ error TS2322: Type 'string' is not assignable to type 'number'.
       variant="outline"
       (pressed)="wait()">
       Wait 20 min
+    </ds-button>
+
+    <ds-button
+      variant="outline"
+      (pressed)="failNext.set(!failNext())">
+      {{ failNext() ? 'Next send fails' : 'Fail next send' }}
     </ds-button>
 
     <ds-button

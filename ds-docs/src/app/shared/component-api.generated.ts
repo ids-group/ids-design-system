@@ -2940,9 +2940,41 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "null",
         "required": false,
         "description": "When it was sent. Inside a `ds-chat-thread` it splits a run by time and dates the divider."
+      },
+      {
+        "name": "streaming",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "The text is still arriving: a caret blinks after it and `[actions]` stay hidden until it is done."
+      },
+      {
+        "name": "status",
+        "kind": "input",
+        "type": "ChatMessageStatus | null",
+        "union": [
+          "sending",
+          "sent",
+          "failed"
+        ],
+        "default": "null",
+        "required": false,
+        "description": "Delivery of a message the reader sent: `'sending'` dims it, `'sent'` marks it, `'failed'` says it was not sent and offers Retry. `null` shows nothing."
       }
     ],
-    "outputs": []
+    "outputs": [
+      {
+        "name": "retry",
+        "kind": "output",
+        "type": "void",
+        "union": null,
+        "default": null,
+        "required": false,
+        "description": "Retry was pressed on a `'failed'` message. Send it again and move `status` back to `'sending'`."
+      }
+    ]
   },
   "chat-message:ChatThreadComponent": {
     "key": "chat-message",
@@ -2990,9 +3022,37 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "15",
         "required": false,
         "description": "Minutes between two messages' `sentAt` that start a new section with a time divider."
+      },
+      {
+        "name": "hasOlder",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "More messages exist before the first one; scrolling near the start then emits `loadOlder`."
+      },
+      {
+        "name": "loadingOlder",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Older messages are on their way: a spinner shows over the top of the list."
       }
     ],
-    "outputs": []
+    "outputs": [
+      {
+        "name": "loadOlder",
+        "kind": "output",
+        "type": "void",
+        "union": null,
+        "default": null,
+        "required": false,
+        "description": "The reader scrolled near the start while `hasOlder` and not `loadingOlder`. Prepend the older messages; the thread keeps the message the reader was looking at in place."
+      }
+    ]
   },
   "checkbox": {
     "key": "checkbox",
