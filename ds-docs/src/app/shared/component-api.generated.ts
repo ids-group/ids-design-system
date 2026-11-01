@@ -2862,6 +2862,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Chip text: the file name, or the picked element's name."
       },
       {
+        "name": "source",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "''",
+        "required": false,
+        "description": "Where it came from, shown muted after the label: the page or screen it was picked on."
+      },
+      {
         "name": "icon",
         "kind": "input",
         "type": "IconName | null",
@@ -2922,6 +2931,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "''",
         "required": false,
         "description": "Time label shown above the bubble, already formatted."
+      },
+      {
+        "name": "sentAt",
+        "kind": "input",
+        "type": "Date | string | number | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "When it was sent. Inside a `ds-chat-thread` it splits a run by time and dates the divider."
       }
     ],
     "outputs": []
@@ -2963,6 +2981,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "null",
         "required": false,
         "description": "Accessible name of the scroll area; unset falls back to `DS_INTL.chat.thread`."
+      },
+      {
+        "name": "timeBreakMinutes",
+        "kind": "input",
+        "type": "number",
+        "union": null,
+        "default": "15",
+        "required": false,
+        "description": "Minutes between two messages' `sentAt` that start a new section with a time divider."
       }
     ],
     "outputs": []

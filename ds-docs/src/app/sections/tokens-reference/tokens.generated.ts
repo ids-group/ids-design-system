@@ -3578,8 +3578,18 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
     "description": "",
     "tokens": [
       {
-        "name": "--ds-chat-attachment-snapshot-bg-color",
+        "name": "--ds-chat-attachment-bg-color",
         "value": "var(--surface-default)",
+        "notes": ""
+      },
+      {
+        "name": "--ds-chat-attachment-preview-bg-color",
+        "value": "var(--surface-secondary)",
+        "notes": ""
+      },
+      {
+        "name": "--ds-chat-attachment-preview-max-height",
+        "value": "16rem",
         "notes": ""
       },
       {

@@ -16,6 +16,7 @@ interface DemoMessage {
   readonly id: number;
   readonly role: ChatMessageRole;
   readonly text: string;
+  readonly sentAt: Date;
 }
 
 const REPLIES = [
@@ -54,10 +55,25 @@ export class ChatMessageSection {
       id: this.nextId++,
       role: i % 2 ? 'assistant' : 'user',
       text: i % 2 ? REPLIES[i % REPLIES.length] : `Request number ${i / 2 + 1}`,
+      sentAt: this.minutesAgo(30 - i),
     })),
   );
   protected readonly draft = signal('');
   protected readonly working = signal(false);
+  // Minutes the demo clock has been moved forward, so the next message lands after a time break.
+  private readonly clockOffset = signal(0);
+
+  protected readonly pauseTimes = [64, 63, 12, 11].map((minutes) =>
+    this.minutesAgo(minutes),
+  );
+
+  protected minutesAgo(minutes: number): Date {
+    return new Date(Date.now() - minutes * 60_000);
+  }
+
+  protected wait(): void {
+    this.clockOffset.update((offset) => offset + 20);
+  }
 
   protected send(event: Event): void {
     event.preventDefault();
@@ -75,7 +91,12 @@ export class ChatMessageSection {
   private add(role: ChatMessageRole, text: string): void {
     this.messages.update((list) => [
       ...list,
-      { id: this.nextId++, role, text },
+      {
+        id: this.nextId++,
+        role,
+        text,
+        sentAt: this.minutesAgo(-this.clockOffset()),
+      },
     ]);
   }
 }

@@ -70,11 +70,44 @@
     <div class="state-cell">
       <div class="state-cell-stage chat-stage">
         <ds-chat-thread>
+          <ds-chat-message
+            role="user"
+            [sentAt]="pauseTimes[0]">
+            Make the cards wider.
+          </ds-chat-message>
+
+          <ds-chat-message
+            role="user"
+            [sentAt]="pauseTimes[1]">
+            Three per row.
+          </ds-chat-message>
+
+          <ds-chat-message
+            role="user"
+            [sentAt]="pauseTimes[2]">
+            And add a shadow on hover.
+          </ds-chat-message>
+
+          <ds-chat-message [sentAt]="pauseTimes[3]">
+            Added a hover shadow to the cards.
+          </ds-chat-message>
+        </ds-chat-thread>
+      </div>
+
+      <div class="state-cell-label">
+        A long pause starts a new section
+      </div>
+    </div>
+
+    <div class="state-cell">
+      <div class="state-cell-stage chat-stage">
+        <ds-chat-thread>
           <ds-chat-message role="user">
             Make this button bigger.
             <ds-chat-attachment
               attachments
               label="button.primary"
+              source="Pricing page"
               icon="scan">
               <span class="snapshot-sample">
                 Save changes
@@ -103,6 +136,7 @@
             <ds-chat-attachment
               attachments
               label="button.primary"
+              source="Pricing page"
               icon="scan"
               [expanded]="true">
               <span class="snapshot-sample">
@@ -202,7 +236,9 @@ error TS2322: Type 'string' is not assignable to type 'number'.
     workingLabel="Rebuilding"
     [working]="working()">
     @for (message of messages(); track message.id) {
-      <ds-chat-message [role]="message.role">
+      <ds-chat-message
+        [role]="message.role"
+        [sentAt]="message.sentAt">
         {{ message.text }}
       </ds-chat-message>
     }
@@ -225,6 +261,12 @@ error TS2322: Type 'string' is not assignable to type 'number'.
       variant="outline"
       (pressed)="reply()">
       Reply
+    </ds-button>
+
+    <ds-button
+      variant="outline"
+      (pressed)="wait()">
+      Wait 20 min
     </ds-button>
 
     <ds-button
