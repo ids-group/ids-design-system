@@ -3,9 +3,9 @@
 
 Group: Display & feedback
 
-One message of a chat: `role: ChatMessageRole = 'assistant'` puts a filled bubble on the right (`'user'`) or a subtle one on the left (`'assistant'`). `author` and `time` (already formatted) show above the bubble; without `author` the role is spoken (`DS_INTL.chat.user` / `assistant`). Slots: default (the text, or the markdown your app renders; a user message keeps its line breaks), `[steps]` above the text (a `ds-timeline` of the agent's steps), `[attachments]` under the text (`ds-chat-attachment` for something to open, `ds-tag` for a plain file), `[actions]` under the bubble (copy, retry), shown on hover or focus and always without hover. Text is selectable and long words and URLs wrap. The window, tabs, composer and question cards around it stay in the app.
+One message of a chat: `role: ChatMessageRole = 'assistant'` puts a filled bubble on the right (`'user'`) or a subtle one on the left (`'assistant'`). `author` and `time` (already formatted) show above the bubble; `sentAt: Date | string | number | null` lets a thread split runs by time; without `author` the role is spoken (`DS_INTL.chat.user` / `assistant`). Slots: default (the text, or the markdown your app renders; a user message keeps its line breaks), `[steps]` above the text (a `ds-timeline` of the agent's steps), `[attachments]` under the text (`ds-chat-attachment` for something to open, `ds-tag` for a plain file), `[actions]` under the bubble (copy, retry), shown on hover or focus and always without hover. Text is selectable and long words and URLs wrap. The window, tabs, composer and question cards around it stay in the app.
 Tokens: `--ds-chat-message-max-width` (default `85%`), `--ds-chat-message-radius`, `--ds-chat-message-padding`, `--ds-chat-message-user-bg-color` / `-user-color`, `--ds-chat-message-assistant-bg-color` / `-assistant-color`.
 
 <!-- inputs:ds-chat-message -->
-All inputs: `role: 'user' | 'assistant' = 'assistant'`, `author: string = ''`, `time: string = ''`
+All inputs: `role: 'user' | 'assistant' = 'assistant'`, `author: string = ''`, `time: string = ''`, `sentAt: Date | string | number | null = null`
 <!-- /inputs -->

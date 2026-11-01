@@ -3,8 +3,8 @@
 
 Group: Display & feedback
 
-Chip in a message's `[attachments]` slot (`label` required, `icon` default `paperclip`) that opens to show its default slot on a line of its own, such as a snapshot of a picked element as it was when sent. `expanded` binds the open state two-way; the chip carries `aria-expanded` and `aria-controls`. Token: `--ds-chat-attachment-snapshot-bg-color`.
+Chip in a message's `[attachments]` slot (`label` required, `source` muted after it, `icon` default `paperclip`). Open, it becomes a card on a line of its own: the same header row, then its default slot framed in a preview (such as a snapshot of a picked element as it was when sent), scrolling past `--ds-chat-attachment-preview-max-height` (default `16rem`). `expanded` binds the open state two-way; the header button carries `aria-expanded` and `aria-controls`. Tokens: `--ds-chat-attachment-bg-color`, `--ds-chat-attachment-preview-bg-color`, `--ds-chat-attachment-preview-max-height`.
 
 <!-- inputs:ds-chat-attachment -->
-All inputs: `label: required string`, `icon: IconName | null = 'paperclip'`, `expanded: boolean = false`
+All inputs: `label: required string`, `source: string = ''`, `icon: IconName | null = 'paperclip'`, `expanded: boolean = false`
 <!-- /inputs -->

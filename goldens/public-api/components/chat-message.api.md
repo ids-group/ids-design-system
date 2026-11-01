@@ -9,6 +9,7 @@ export class ChatAttachmentComponent {
     public readonly icon = input<IconName | null>('paperclip');
     public readonly label = input.required<string>();
     protected readonly snapshotId = `ds-chat-attachment-${++nextId}`;
+    public readonly source = input<string>('');
     protected toggle(): void;
 }
 
@@ -19,9 +20,12 @@ export class ChatMessageComponent {
     protected readonly isFirst = computed(…);
     protected readonly isGrouped = computed(…);
     public readonly role = input<ChatMessageRole>('assistant');
+    public readonly sentAt = input<Date | string | number | null>(null);
+    public readonly sentAtMs = computed(…);
     protected readonly speaker = computed(…);
     protected readonly thread = inject(…);
     public readonly time = input<string>('');
+    protected readonly timeBreak = computed(…);
 }
 
 export type ChatMessageRole = 'user' | 'assistant';
@@ -36,6 +40,7 @@ export class ChatThreadComponent {
     public readonly ariaLabel = input<string | null>(null);
     private readonly content;
     private readonly destroyRef;
+    private dividerText;
     public readonly firstMessage = computed<object | undefined>(…);
     public readonly groupedMessages = computed<ReadonlySet<object>>(…);
     private readonly host;
@@ -43,12 +48,15 @@ export class ChatThreadComponent {
     private readonly intl;
     protected readonly jumpLabel = computed(…);
     protected readonly label = computed(…);
+    private readonly locale;
     private readonly messages;
     private onArrival;
     protected onScroll(): void;
     protected readonly pinned = signal(…);
     public scrollToEnd(): void;
     private readonly scroller;
+    public readonly timeBreakMinutes = input<number>(15);
+    public readonly timeBreaks = computed<ReadonlyMap<object, string>>(…);
     private toEnd;
     protected readonly unseen = signal(…);
     private readonly wording;
@@ -62,8 +70,11 @@ export class ChatThreadComponent {
 
 ```css
 ds-chat-attachment {
-    --ds-chat-attachment-snapshot-bg-color: var(--surface-default);
+    --ds-chat-attachment-bg-color: var(--surface-default);
+    --ds-chat-attachment-preview-bg-color: var(--surface-secondary);
+    --ds-chat-attachment-preview-max-height: 16rem;
     --ds-radius-control: (none);
+    --ds-radius-inner: (none);
     --ds-radius-pill: (none);
 }
 

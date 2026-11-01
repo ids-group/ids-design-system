@@ -63,7 +63,7 @@ and token names.** These leaves are for orientation and usage.
 - [<ds-timeline-item> — TimelineItemComponent](feedback/ds-timeline-item.md) — Slots: default content below the heading; [trailing] at the end of the heading row (Undo, Stop, Retry); [detai
 - [<ds-chat-message> — ChatMessageComponent](feedback/ds-chat-message.md) — One message of a chat: role: ChatMessageRole = 'assistant' puts a filled bubble on the right ('user') or a sub
 - [<ds-chat-thread> — ChatThreadComponent](feedback/ds-chat-thread.md) — Scrollable list of ds-chat-messages; give it a height (or flex: 1 in a column). Stays at the newest message as
-- [<ds-chat-attachment> — ChatAttachmentComponent](feedback/ds-chat-attachment.md) — Chip in a message's [attachments] slot (label required, icon default paperclip) that opens to show its default
+- [<ds-chat-attachment> — ChatAttachmentComponent](feedback/ds-chat-attachment.md) — Chip in a message's [attachments] slot (label required, source muted after it, icon default paperclip). Open, 
 - [<ds-toast-region> — ToastRegionComponent](feedback/ds-toast-region.md) — <!-- inputs:ds-toast-region -->
 - [<ds-tree> — TreeComponent](feedback/ds-tree.md) — Nested rows with one tab stop and arrow-key navigation. (nodeSelected) emits the node selected; (nodeHover) em
 - [<ds-description-list> — DescriptionListComponent](feedback/ds-description-list.md) — **A horizontal list stacks when a value would get too narrow.** Each item is a wrapping flex row: once the lis

@@ -574,28 +574,28 @@ All inputs: `heading: string = ''`, `time: string = ''`, `icon: IconName | null 
 
 #### `<ds-chat-message>` — `ChatMessageComponent`
 
-One message of a chat: `role: ChatMessageRole = 'assistant'` puts a filled bubble on the right (`'user'`) or a subtle one on the left (`'assistant'`). `author` and `time` (already formatted) show above the bubble; without `author` the role is spoken (`DS_INTL.chat.user` / `assistant`). Slots: default (the text, or the markdown your app renders; a user message keeps its line breaks), `[steps]` above the text (a `ds-timeline` of the agent's steps), `[attachments]` under the text (`ds-chat-attachment` for something to open, `ds-tag` for a plain file), `[actions]` under the bubble (copy, retry), shown on hover or focus and always without hover. Text is selectable and long words and URLs wrap. The window, tabs, composer and question cards around it stay in the app.
+One message of a chat: `role: ChatMessageRole = 'assistant'` puts a filled bubble on the right (`'user'`) or a subtle one on the left (`'assistant'`). `author` and `time` (already formatted) show above the bubble; `sentAt: Date | string | number | null` lets a thread split runs by time; without `author` the role is spoken (`DS_INTL.chat.user` / `assistant`). Slots: default (the text, or the markdown your app renders; a user message keeps its line breaks), `[steps]` above the text (a `ds-timeline` of the agent's steps), `[attachments]` under the text (`ds-chat-attachment` for something to open, `ds-tag` for a plain file), `[actions]` under the bubble (copy, retry), shown on hover or focus and always without hover. Text is selectable and long words and URLs wrap. The window, tabs, composer and question cards around it stay in the app.
 Tokens: `--ds-chat-message-max-width` (default `85%`), `--ds-chat-message-radius`, `--ds-chat-message-padding`, `--ds-chat-message-user-bg-color` / `-user-color`, `--ds-chat-message-assistant-bg-color` / `-assistant-color`.
 
 <!-- inputs:ds-chat-message -->
-All inputs: `role: 'user' | 'assistant' = 'assistant'`, `author: string = ''`, `time: string = ''`
+All inputs: `role: 'user' | 'assistant' = 'assistant'`, `author: string = ''`, `time: string = ''`, `sentAt: Date | string | number | null = null`
 <!-- /inputs -->
 
 #### `<ds-chat-thread>` — `ChatThreadComponent`
 
-Scrollable list of `ds-chat-message`s; give it a height (or `flex: 1` in a column). Stays at the newest message as messages arrive or grow; once the reader scrolls up it stays put and shows a jump button (`DS_INTL.chat.newMessages` when something arrived, `latest` otherwise). A message with `role="user"` arriving scrolls back down. Consecutive messages of one role sit at `--ds-chat-thread-group-gap`, speakers apart at `--ds-chat-thread-gap`. `working` shows a spinner row with `workingLabel` (else `DS_INTL.chat.working`) at the end; never put a time estimate in it. Screen readers: the list is not a live region; the thread announces a finished assistant reply once (when it arrives while not `working`, or when `working` clears) and the working label, and never the messages present at first render. Method: `scrollToEnd()`.
+Scrollable list of `ds-chat-message`s; give it a height (or `flex: 1` in a column). Stays at the newest message as messages arrive or grow; once the reader scrolls up it stays put and shows a jump button with the count of messages that arrived below (`DS_INTL.chat.newMessages(count)`, `latest` when none). A message with `role="user"` arriving scrolls back down. Consecutive messages of one role sit at `--ds-chat-thread-group-gap`, speakers apart at `--ds-chat-thread-gap`; inside a run the corners on the speaker's side are tight (`--ds-radius-inner`). With `sentAt` on the messages, a gap of `timeBreakMinutes` (default `15`) or more starts a new run under a centred divider (`DS_INTL.chat.today` / `yesterday` or the date, then the time, in `DsConfig.locale`); the first dated message gets one too. `working` shows a spinner row with `workingLabel` (else `DS_INTL.chat.working`) at the end; never put a time estimate in it. Screen readers: the list is not a live region; the thread announces a finished assistant reply once (when it arrives while not `working`, or when `working` clears) and the working label, and never the messages present at first render. Method: `scrollToEnd()`.
 Tokens: `--ds-chat-thread-gap`, `--ds-chat-thread-group-gap`, `--ds-chat-thread-padding`.
 
 <!-- inputs:ds-chat-thread -->
-All inputs: `working: boolean = false`, `workingLabel: string = ''`, `ariaLabel: string | null = null`
+All inputs: `working: boolean = false`, `workingLabel: string = ''`, `ariaLabel: string | null = null`, `timeBreakMinutes: number = 15`
 <!-- /inputs -->
 
 #### `<ds-chat-attachment>` — `ChatAttachmentComponent`
 
-Chip in a message's `[attachments]` slot (`label` required, `icon` default `paperclip`) that opens to show its default slot on a line of its own, such as a snapshot of a picked element as it was when sent. `expanded` binds the open state two-way; the chip carries `aria-expanded` and `aria-controls`. Token: `--ds-chat-attachment-snapshot-bg-color`.
+Chip in a message's `[attachments]` slot (`label` required, `source` muted after it, `icon` default `paperclip`). Open, it becomes a card on a line of its own: the same header row, then its default slot framed in a preview (such as a snapshot of a picked element as it was when sent), scrolling past `--ds-chat-attachment-preview-max-height` (default `16rem`). `expanded` binds the open state two-way; the header button carries `aria-expanded` and `aria-controls`. Tokens: `--ds-chat-attachment-bg-color`, `--ds-chat-attachment-preview-bg-color`, `--ds-chat-attachment-preview-max-height`.
 
 <!-- inputs:ds-chat-attachment -->
-All inputs: `label: required string`, `icon: IconName | null = 'paperclip'`, `expanded: boolean = false`
+All inputs: `label: required string`, `source: string = ''`, `icon: IconName | null = 'paperclip'`, `expanded: boolean = false`
 <!-- /inputs -->
 
 #### `<ds-toast-region>` — `ToastRegionComponent`

@@ -339,8 +339,10 @@ export interface DsIntl {
         readonly assistant?: string;
         readonly thread?: string;
         readonly working?: string;
-        readonly newMessages?: string;
+        readonly newMessages?: (count: number) => string;
         readonly latest?: string;
+        readonly today?: string;
+        readonly yesterday?: string;
     };
     readonly tabs: {
         readonly close: (label: string) => string;

@@ -45,20 +45,27 @@
   `ds-timeline`), `[attachments]` under it, and `[actions]` under the bubble, shown on hover or
   focus. The text is selectable and long words and addresses wrap. `ds-chat-thread` scrolls its
   messages and stays at the newest one as messages arrive or grow; once the reader scrolls up it
-  stays put and shows a jump button ("New messages" when something arrived, "Jump to latest"
-  otherwise), and a message the reader sends scrolls back down. Consecutive messages of one role sit
-  closer together. `working` shows a row with a spinner and `workingLabel` at the end. A screen reader
-  hears the working label and each finished reply, once: a reply that arrives while `working` is read when
-  `working` clears, and the messages present when the thread first renders are never read.
-  `scrollToEnd()` scrolls down from code. `ds-chat-attachment` is a chip in `[attachments]`, with
-  `label` and `icon` (default `paperclip`), that opens to show its default slot, such as a snapshot
-  of what was attached; `expanded` binds the open state two-way. A plain file is a `ds-tag`. New
-  optional `DsIntl.chat` keys `user`, `assistant`, `thread`, `working`, `newMessages` and `latest`,
-  and CSS hooks `--ds-chat-message-max-width` (default `85%`), `--ds-chat-message-radius`,
+  stays put and shows a jump button with the count of messages that arrived below ("3 new
+  messages", else "Jump to latest"), and a message the reader sends scrolls back down. Consecutive
+  messages of one role sit closer together, their corners tight on the speaker's side, so a run
+  reads as one block. With `sentAt` (`Date`, ISO string or epoch milliseconds) on the messages, a
+  gap of `timeBreakMinutes` (default `15`) or more starts a new run under a centred time divider
+  ("Today 14:32"), and the first message is dated the same way. `working` shows a row with a
+  spinner and `workingLabel` at the end. A screen reader hears the working label and each finished
+  reply, once: a reply that arrives while `working` is read when `working` clears, and the messages
+  present when the thread first renders are never read. `scrollToEnd()` scrolls down from code.
+  `ds-chat-attachment` is a chip in `[attachments]` with `label`, an optional `source` (the page it
+  was picked on) and `icon` (default `paperclip`); open, it becomes a card on its own line that
+  frames its default slot, such as a snapshot of what was attached, in a preview of at most
+  `--ds-chat-attachment-preview-max-height` (default `16rem`). `expanded` binds the open state
+  two-way. A plain file is a `ds-tag`. New optional `DsIntl.chat` keys `user`, `assistant`,
+  `thread`, `working`, `newMessages(count)`, `latest`, `today` and `yesterday`, and CSS hooks
+  `--ds-chat-message-max-width` (default `85%`), `--ds-chat-message-radius`,
   `--ds-chat-message-padding`, `--ds-chat-message-user-bg-color`, `--ds-chat-message-user-color`,
   `--ds-chat-message-assistant-bg-color`, `--ds-chat-message-assistant-color`,
-  `--ds-chat-thread-gap`, `--ds-chat-thread-group-gap`, `--ds-chat-thread-padding` and
-  `--ds-chat-attachment-snapshot-bg-color`; the attachment chip and the jump button are rounded by
+  `--ds-chat-thread-gap`, `--ds-chat-thread-group-gap`, `--ds-chat-thread-padding`,
+  `--ds-chat-attachment-bg-color`, `--ds-chat-attachment-preview-bg-color` and
+  `--ds-chat-attachment-preview-max-height`; the attachment chip and the jump button are rounded by
   `--ds-radius-pill`.
 
 ### Changed
