@@ -201,7 +201,6 @@ export { LoadingOverlayComponent } from '@ids-group-ltd/ids-design-system/compon
 export { MenuComponent } from '@ids-group-ltd/ids-design-system/components/menu'; // component
 export { MenuDividerComponent } from '@ids-group-ltd/ids-design-system/components/menu'; // component
 export { MenuItemComponent } from '@ids-group-ltd/ids-design-system/components/menu'; // component
-export { MessageInputChipsPlacement } from '@ids-group-ltd/ids-design-system/components/message-input'; // type
 export { MessageInputComponent } from '@ids-group-ltd/ids-design-system/components/message-input'; // component
 export { MessageInputLayout } from '@ids-group-ltd/ids-design-system/components/message-input'; // type
 export { ModalCardComponent } from '@ids-group-ltd/ids-design-system/components/modal'; // component

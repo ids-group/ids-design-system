@@ -221,10 +221,7 @@ export {
   MenuItemComponent,
 } from '@ids-group-ltd/ids-design-system/components/menu';
 export { MessageInputComponent } from '@ids-group-ltd/ids-design-system/components/message-input';
-export type {
-  MessageInputChipsPlacement,
-  MessageInputLayout,
-} from '@ids-group-ltd/ids-design-system/components/message-input';
+export type { MessageInputLayout } from '@ids-group-ltd/ids-design-system/components/message-input';
 export {
   ModalCardComponent,
   ModalComponent,

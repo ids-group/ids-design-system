@@ -16,15 +16,13 @@ import {
 import { ButtonComponent } from '@ids-group-ltd/ids-design-system/components/button';
 import { TextareaComponent } from '@ids-group-ltd/ids-design-system/components/textarea';
 import { FieldClickFocusDirective } from '@ids-group-ltd/ids-design-system/components';
-import type {
-  MessageInputChipsPlacement,
-  MessageInputLayout,
-} from './message-input.types';
+import type { MessageInputLayout } from './message-input.types';
 
 /**
  * Message box for a chat or an instruction: an auto-growing text area with chips above it, actions
  * on the left of a bottom bar and a send button on the right. Enter submits, Shift+Enter breaks the
- * line. Slots: `[chips]`, `[actions]`, `[send]` (replaces the default send button).
+ * line. Slots: `[attachments]` above the frame, `[chips]`, `[actions]`, `[send]` (replaces the default send
+ * button).
  */
 @Component({
   selector: 'ds-message-input',
@@ -61,8 +59,6 @@ export class MessageInputComponent {
    *  `'send-outside'`: attach and the step inside, a round send button outside on the right.
    *  `'toolbar'`: the box holds the text, attach, the step and send sit in a row under it. */
   readonly layout = input<MessageInputLayout>('status-bar');
-  /** `'inside'` draws the `[chips]` inside the frame above the text, `'above'` right above the frame. */
-  readonly chipsPlacement = input<MessageInputChipsPlacement>('inside');
 
   /** The trimmed text, on Enter or the send button. Never fires for blank text, while `busy` or
    *  while `disabled`. */

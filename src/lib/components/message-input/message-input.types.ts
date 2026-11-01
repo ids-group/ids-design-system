@@ -4,5 +4,3 @@ export type MessageInputLayout =
   | 'split'
   | 'send-outside'
   | 'toolbar';
-
-export type MessageInputChipsPlacement = 'inside' | 'above';

@@ -1,5 +1,8 @@
-<div
-  [class]="'message-input layout-' + layout() + ' chips-' + chipsPlacement()">
+<div [class]="'message-input layout-' + layout()">
+  <div class="attachments">
+    <ng-content select="[attachments]" />
+  </div>
+
   @if (statusAbove()) {
     <div
       class="status status-above"

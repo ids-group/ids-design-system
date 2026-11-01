@@ -79,17 +79,24 @@
       <div class="state-cell-stage">
         <ds-message-input
           placeholder="Describe a change…"
-          value="Align these two to the same width"
-          chipsPlacement="above">
-          @for (chip of chips(); track chip) {
-            <ds-tag
-              chips
-              variant="neutral"
-              closable
-              (closed)="removeChip(chip)">
-              {{ chip }}
-            </ds-tag>
-          }
+          value="Make it bold">
+          <div
+            attachments
+            class="picked-card">
+            <div class="picked-name">
+              <strong>
+                h2 · Recovery codes
+              </strong>
+
+              <span>
+                security.page.html:42
+              </span>
+            </div>
+
+            <div class="picked-snapshot">
+              Recovery codes
+            </div>
+          </div>
 
           <ds-icon-button
             actions
@@ -100,7 +107,7 @@
       </div>
 
       <div class="state-cell-label">
-        Chips above the frame
+        Attachment above the frame
       </div>
     </div>
 

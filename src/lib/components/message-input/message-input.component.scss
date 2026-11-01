@@ -210,11 +210,14 @@ ds-textarea {
   }
 }
 
-/* Chips sit on the page right above the frame; the box starts at the text row. */
-.message-input.chips-above .frame .box {
-  grid-row-start: 2;
-}
+/* What the message points at, such as a picked element with its snapshot, sits on the page above the frame. */
+.attachments {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  margin-block-end: var(--space-1);
 
-.chips-above .chips {
-  margin: 0 0 var(--space-2);
+  &:empty {
+    display: none;
+  }
 }

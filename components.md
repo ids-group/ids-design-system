@@ -232,7 +232,7 @@ All inputs: `hint: string = ''`, `error: string = ''`, `warning: string = ''`, `
 
 #### `<ds-message-input>` — `MessageInputComponent`
 Message box for a chat or an instruction: chips above an auto-growing text area, a bottom bar with actions on the left and the send button on the right. Use it instead of a `ds-textarea` beside icon buttons, or a `ds-search` standing in for a message box.
-Slots: `[chips]` above the text (project `ds-tag`s for attachments and picked elements; hidden while empty), inside the frame or right above it with `chipsPlacement: MessageInputChipsPlacement = 'inside' | 'above'`, `[actions]` on the left of the bar (an attach `ds-icon-button`), `[send]` replaces the default send button (render your own states, e.g. Queue / Stop while `busy`; call `submit()` or read `canSubmit`).
+Slots: `[attachments]` on the page above the frame (the app's own card for a picked element and its snapshot; hidden while empty), `[chips]` above the text inside the frame (project `ds-tag`s for attachments and picked elements; hidden while empty), `[actions]` on the left of the bar (an attach `ds-icon-button`), `[send]` replaces the default send button (render your own states, e.g. Queue / Stop while `busy`; call `submit()` or read `canSubmit`).
 Keyboard: Enter emits `(submitted): string` with the trimmed text; Shift+Enter breaks the line; an Enter that commits an IME composition never submits; blank text, `busy` and `disabled` never submit. Enter on blank text inserts nothing.
 Send button: a 32px `ds-button` with an arrow, named by `DS_INTL.messageInput.send`, disabled while the text is blank. `busy` puts it in `loading` (spinner, `aria-busy`, press refused, focus kept). `layout: MessageInputLayout = 'status-bar'` places the `busyLabel` step: `'status-bar'` beside the fixed square button, `'status-above'` on a reserved line above the box, `'split'` attach outside left and send outside right with the step above, `'send-outside'` a round 40px send outside right, `'toolbar'` attach, step and send in a row under the box.
 Output: `(filesPasted): File[]` — the image files of a paste; the paste inserts no text when it carries images. The value is NOT cleared on submit: set `value` to `''` once the message is accepted.
@@ -240,7 +240,7 @@ Methods: `submit()`, `focus(options?)`; `canSubmit` signal. Text area name: `ari
 Tokens: `--ds-message-input-bg-color`, `--ds-message-input-radius`, `--ds-message-input-padding`; border, hover and focus follow the `--ds-field-*` set.
 
 <!-- inputs:ds-message-input -->
-All inputs: `value: string = ''`, `placeholder: string = ''`, `ariaLabel: string | null = null`, `minRows: number = 1`, `maxRows: number = 8`, `disabled: boolean = false`, `busy: boolean = false`, `busyLabel: string = ''`, `layout: MessageInputLayout = 'status-bar'`, `chipsPlacement: 'inside' | 'above' = 'inside'`
+All inputs: `value: string = ''`, `placeholder: string = ''`, `ariaLabel: string | null = null`, `minRows: number = 1`, `maxRows: number = 8`, `disabled: boolean = false`, `busy: boolean = false`, `busyLabel: string = ''`, `layout: MessageInputLayout = 'status-bar'`
 <!-- /inputs -->
 
 #### `<ds-number-stepper>` — `NumberStepperComponent`
