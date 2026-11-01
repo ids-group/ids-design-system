@@ -193,6 +193,21 @@ export class ChatThreadComponent {
       });
     });
 
+    // A reply that was still streaming is read once its text is complete.
+    let streaming = new Set<object>();
+    effect(() => {
+      const now = new Set<object>(
+        this.messages().filter((message) => message.streaming()),
+      );
+      untracked(() => {
+        const finished = [...streaming].some((message) => !now.has(message));
+        streaming = now;
+        if (finished && !this.working()) {
+          this.afterRender(() => this.announceLastReply());
+        }
+      });
+    });
+
     effect(() => {
       if (!this.loadingOlder()) {
         this.olderRequested = false;
@@ -281,7 +296,7 @@ export class ChatThreadComponent {
     if (!this.pinned()) {
       this.unseen.update((count) => count + 1);
     }
-    if (!this.working()) {
+    if (!this.working() && !this.messages().at(-1)?.streaming()) {
       this.announceLastReply();
     }
   }

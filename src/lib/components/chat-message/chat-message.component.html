@@ -34,6 +34,8 @@
   </div>
 </div>
 
-<div class="actions">
-  <ng-content select="[actions]"></ng-content>
-</div>
+@if (!streaming()) {
+  <div class="actions">
+    <ng-content select="[actions]"></ng-content>
+  </div>
+}

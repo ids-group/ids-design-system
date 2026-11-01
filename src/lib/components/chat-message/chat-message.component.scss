@@ -157,6 +157,24 @@
   gap: var(--space-1);
 }
 
+// The caret sits after the last line of text while the reply is still arriving.
+:host([aria-busy='true']) .body::after {
+  content: '';
+  display: inline-block;
+  inline-size: 0.5em;
+  block-size: 1em;
+  margin-inline-start: var(--space-0-5);
+  vertical-align: text-bottom;
+  background-color: currentcolor;
+  animation: chat-caret var(--duration-loop-fast) steps(1) infinite;
+}
+
+@keyframes chat-caret {
+  50% {
+    opacity: 0;
+  }
+}
+
 .actions {
   display: flex;
   align-items: center;

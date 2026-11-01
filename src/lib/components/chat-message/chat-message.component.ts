@@ -2,6 +2,7 @@ import {
   Component,
   ViewEncapsulation,
   computed,
+  booleanAttribute,
   inject,
   input,
 } from '@angular/core';
@@ -32,6 +33,7 @@ import type { ChatMessageRole } from './chat.types';
     '[class.is-grouped]': 'isGrouped()',
     '[class.is-continued]': 'isContinued()',
     '[class.has-divider]': '!!timeBreak()',
+    '[attr.aria-busy]': 'streaming() || null',
   },
 })
 export class ChatMessageComponent {
@@ -43,6 +45,8 @@ export class ChatMessageComponent {
   readonly time = input<string>('');
   /** When it was sent. Inside a `ds-chat-thread` it splits a run by time and dates the divider. */
   readonly sentAt = input<Date | string | number | null>(null);
+  /** The text is still arriving: a caret blinks after it and `[actions]` stay hidden until it is done. */
+  readonly streaming = input(false, { transform: booleanAttribute });
 
   private readonly intl = inject(DS_INTL);
   protected readonly thread = inject(CHAT_THREAD, { optional: true });
@@ -70,9 +74,12 @@ export class ChatMessageComponent {
     return Number.isNaN(ms) ? null : ms;
   });
 
-  protected readonly speaker = computed(() => {
-    const wording = { ...DS_INTL_DEFAULTS.chat, ...this.intl().chat };
+  protected readonly wording = computed(() => ({
+    ...DS_INTL_DEFAULTS.chat,
+    ...this.intl().chat,
+  }));
 
-    return this.author() || wording[this.role()];
-  });
+  protected readonly speaker = computed(
+    () => this.author() || this.wording()[this.role()],
+  );
 }
