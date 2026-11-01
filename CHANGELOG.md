@@ -30,6 +30,10 @@
 
 ### Fixed
 
+- **A `ds-timeline-item` inside a wrapper element keeps its connector.** The line to the next item
+  disappeared from every item wrapped in its own element, because each one was the last child of its
+  wrapper. `ds-timeline` now finds its items at any depth and only the last one draws no line.
+  `TimelineComponent.lastItem` reads that item.
 - **Dark theme shadows are dark.** `--shadow-1` to `--shadow-4` (and every `--shadow-*` and
   `--ds-elevation-*` alias built on them) rendered as a light glow around cards, popovers, tooltips,
   toasts, modals and drawers. Under `data-theme="dark"` they are now near-black at 30% to 60% alpha,

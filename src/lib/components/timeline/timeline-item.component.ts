@@ -1,6 +1,13 @@
-import { Component, ViewEncapsulation, input } from '@angular/core';
+import {
+  Component,
+  ViewEncapsulation,
+  computed,
+  inject,
+  input,
+} from '@angular/core';
 import { IconComponent } from '@ids-group-ltd/ids-design-system/icons';
 import type { IconName } from '@ids-group-ltd/ids-design-system/core';
+import { TIMELINE } from './timeline.token';
 
 export type TimelineTone =
   | 'default'
@@ -20,6 +27,8 @@ export type TimelineTone =
   host: {
     role: 'listitem',
     '[attr.data-tone]': 'tone()',
+    '[class.is-last]': 'isLast()',
+    '[class.outside-timeline]': '!timeline',
   },
 })
 export class TimelineItemComponent {
@@ -31,4 +40,10 @@ export class TimelineItemComponent {
   readonly icon = input<IconName | null>(null);
   /** Semantic accent color for the marker. */
   readonly tone = input<TimelineTone>('default');
+
+  protected readonly timeline = inject(TIMELINE, { optional: true });
+
+  protected readonly isLast = computed(
+    () => this.timeline?.lastItem() === this,
+  );
 }

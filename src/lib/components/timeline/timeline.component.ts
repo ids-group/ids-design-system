@@ -1,4 +1,12 @@
-import { Component, ViewEncapsulation } from '@angular/core';
+import {
+  Component,
+  ViewEncapsulation,
+  computed,
+  contentChildren,
+  forwardRef,
+} from '@angular/core';
+import { TIMELINE } from './timeline.token';
+import { TimelineItemComponent } from './timeline-item.component';
 
 @Component({
   selector: 'ds-timeline',
@@ -9,5 +17,19 @@ import { Component, ViewEncapsulation } from '@angular/core';
   host: {
     role: 'list',
   },
+  providers: [
+    {
+      provide: TIMELINE,
+      useExisting: forwardRef(() => TimelineComponent),
+    },
+  ],
 })
-export class TimelineComponent {}
+export class TimelineComponent {
+  // Descendants, so an item inside a wrapper element or an @for block still counts.
+  private readonly items = contentChildren(TimelineItemComponent, {
+    descendants: true,
+  });
+
+  /** The item that draws no connector below it. */
+  readonly lastItem = computed<object | undefined>(() => this.items().at(-1));
+}

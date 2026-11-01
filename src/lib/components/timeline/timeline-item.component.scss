@@ -53,11 +53,16 @@
   min-width: 0;
 }
 
-:host(:last-child) .spine {
-  display: none;
-}
-:host(:last-child) .content {
-  padding-bottom: 0;
+// ds-timeline names its last item, so a wrapper element around an item does not break the line.
+// An item with no ds-timeline above it falls back to its position among its siblings.
+:host(.is-last),
+:host(.outside-timeline:last-child) {
+  .spine {
+    display: none;
+  }
+  .content {
+    padding-bottom: 0;
+  }
 }
 
 .heading {

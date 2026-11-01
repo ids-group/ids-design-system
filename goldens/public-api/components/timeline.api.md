@@ -5,13 +5,17 @@
 ```ts
 @Component({ selector: 'ds-timeline' })
 export class TimelineComponent {
+    private readonly items;
+    public readonly lastItem = computed<object | undefined>(…);
 }
 
 @Component({ selector: 'ds-timeline-item' })
 export class TimelineItemComponent {
     public readonly heading = input<string>('');
     public readonly icon = input<IconName | null>(null);
+    protected readonly isLast = computed(…);
     public readonly time = input<string>('');
+    protected readonly timeline = inject(…);
     public readonly tone = input<TimelineTone>('default');
 }
 
