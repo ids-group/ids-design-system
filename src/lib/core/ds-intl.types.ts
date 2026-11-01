@@ -234,6 +234,14 @@ export interface DsIntl {
     readonly today?: string;
     /** `'Yesterday'` - the same for a message sent yesterday. */
     readonly yesterday?: string;
+    /** `'Sending'` - under a message with `status="sending"`. */
+    readonly sending?: string;
+    /** `'Sent'` - under a message with `status="sent"`. */
+    readonly sent?: string;
+    /** `'Not sent'` - under a message with `status="failed"`. */
+    readonly notSent?: string;
+    /** `'Retry'` - the button beside it. */
+    readonly retry?: string;
   };
   readonly tabs: {
     readonly close: (label: string) => string;

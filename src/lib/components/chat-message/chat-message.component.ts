@@ -5,13 +5,16 @@ import {
   booleanAttribute,
   inject,
   input,
+  output,
 } from '@angular/core';
 import {
   DS_INTL,
   DS_INTL_DEFAULTS,
 } from '@ids-group-ltd/ids-design-system/core';
+import { ButtonComponent } from '@ids-group-ltd/ids-design-system/components/button';
+import { IconComponent } from '@ids-group-ltd/ids-design-system/icons';
 import { CHAT_THREAD } from './chat.token';
-import type { ChatMessageRole } from './chat.types';
+import type { ChatMessageRole, ChatMessageStatus } from './chat.types';
 
 /**
  * One message of a conversation: a bubble on the right for the user, on the left for the
@@ -21,6 +24,7 @@ import type { ChatMessageRole } from './chat.types';
 @Component({
   selector: 'ds-chat-message',
   standalone: true,
+  imports: [ButtonComponent, IconComponent],
   templateUrl: './chat-message.component.html',
   styleUrl: './chat-message.component.scss',
   encapsulation: ViewEncapsulation.Emulated,
@@ -33,6 +37,7 @@ import type { ChatMessageRole } from './chat.types';
     '[class.is-grouped]': 'isGrouped()',
     '[class.is-continued]': 'isContinued()',
     '[class.has-divider]': '!!timeBreak()',
+    '[attr.data-status]': 'status()',
     '[attr.aria-busy]': 'streaming() || null',
   },
 })
@@ -47,6 +52,12 @@ export class ChatMessageComponent {
   readonly sentAt = input<Date | string | number | null>(null);
   /** The text is still arriving: a caret blinks after it and `[actions]` stay hidden until it is done. */
   readonly streaming = input(false, { transform: booleanAttribute });
+  /** Delivery of a message the reader sent: `'sending'` dims it, `'sent'` marks it, `'failed'` says it
+   *  was not sent and offers Retry. `null` shows nothing. */
+  readonly status = input<ChatMessageStatus | null>(null);
+
+  /** Retry was pressed on a `'failed'` message. Send it again and move `status` back to `'sending'`. */
+  readonly retry = output<void>();
 
   private readonly intl = inject(DS_INTL);
   protected readonly thread = inject(CHAT_THREAD, { optional: true });

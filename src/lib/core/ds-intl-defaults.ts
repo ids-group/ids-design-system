@@ -193,6 +193,10 @@ export const DS_INTL_DEFAULTS: DsIntl & {
     latest: 'Jump to latest',
     today: 'Today',
     yesterday: 'Yesterday',
+    sending: 'Sending',
+    sent: 'Sent',
+    notSent: 'Not sent',
+    retry: 'Retry',
   },
   tabs: {
     close: (label) => `Close ${label}`,

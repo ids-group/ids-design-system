@@ -175,6 +175,24 @@
   }
 }
 
+:host([data-status='sending']) .bubble {
+  opacity: var(--opacity-disabled);
+}
+
+.status {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  margin-top: var(--space-1);
+  font-size: var(--font-size-xs);
+  line-height: var(--line-height-base);
+  color: var(--text-tertiary);
+
+  &.is-failed {
+    color: var(--error-text);
+  }
+}
+
 .actions {
   display: flex;
   align-items: center;

@@ -132,7 +132,10 @@ export {
   ChatMessageComponent,
   ChatThreadComponent,
 } from '@ids-group-ltd/ids-design-system/components/chat-message';
-export type { ChatMessageRole } from '@ids-group-ltd/ids-design-system/components/chat-message';
+export type {
+  ChatMessageRole,
+  ChatMessageStatus,
+} from '@ids-group-ltd/ids-design-system/components/chat-message';
 export { CheckboxComponent } from '@ids-group-ltd/ids-design-system/components/checkbox';
 export { ColorPickerComponent } from '@ids-group-ltd/ids-design-system/components/color-picker';
 export { ColumnChartComponent } from '@ids-group-ltd/ids-design-system/components/column-chart';
