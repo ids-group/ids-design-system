@@ -3,28 +3,25 @@
 @include component-base.rules;
 
 :host {
-  --_chat-attachment-snapshot-bg-color: var(--ds-chat-attachment-snapshot-bg-color, var(--surface-default));
+  --_chat-attachment-bg-color: var(--ds-chat-attachment-bg-color, var(--surface-default));
+  --_chat-attachment-preview-bg-color: var(--ds-chat-attachment-preview-bg-color, var(--surface-secondary));
+  --_chat-attachment-preview-max-height: var(--ds-chat-attachment-preview-max-height, 16rem);
 
   display: inline-flex;
   flex-direction: column;
-  align-items: flex-start;
-  gap: var(--space-1);
   max-width: 100%;
   min-width: 0;
 }
 
-// Open, the snapshot takes the bubble's full width on a line of its own.
-:host(.is-expanded) {
-  flex-basis: 100%;
-}
-
-// Tinted from the text colour, so the chip reads on the filled user bubble and the subtle one alike.
-.chip {
+// Closed it is a chip tinted from the text colour, so it reads on the filled user bubble and the
+// subtle one alike.
+.head {
   display: inline-flex;
   align-items: center;
-  gap: var(--space-1);
+  gap: var(--space-1-5);
   max-width: 100%;
-  padding: var(--space-0-5) var(--space-2);
+  min-width: 0;
+  padding: var(--space-1) var(--space-2-5) var(--space-1) var(--space-2);
   border: 0;
   border-radius: var(--ds-radius-pill);
   background-color: color-mix(in srgb, currentcolor 14%, transparent);
@@ -32,6 +29,7 @@
   font: inherit;
   font-size: var(--font-size-xs);
   line-height: var(--line-height-base);
+  text-align: start;
   cursor: pointer;
 
   @include press.feedback;
@@ -41,31 +39,71 @@
   }
 }
 
+.icon,
+.chev {
+  flex: none;
+}
+
 .label {
   min-width: 0;
+  font-weight: var(--font-weight-semibold);
   overflow-wrap: anywhere;
-  text-align: start;
+}
+
+.source {
+  min-width: 0;
+  opacity: 0.75;
+  overflow-wrap: anywhere;
 }
 
 .chev {
-  flex: none;
+  margin-inline-start: auto;
   transition: transform var(--duration-base) var(--ease-standard);
 }
 
-.chip[aria-expanded='true'] .chev {
+.head[aria-expanded='true'] .chev {
   transform: rotate(180deg);
 }
 
-.snapshot {
-  align-self: stretch;
-  min-width: 0;
-  max-width: 100%;
-  overflow: auto;
-  padding: var(--space-2);
+// Open it becomes a card on a line of its own: the same header row on a plain surface, the
+// snapshot framed under it.
+:host(.is-expanded) {
+  flex-basis: 100%;
   border: var(--border-width-default) solid var(--border-default);
   border-radius: var(--ds-radius-control);
-  background-color: var(--_chat-attachment-snapshot-bg-color);
+  background-color: var(--_chat-attachment-bg-color);
   color: var(--text-primary);
+
+  .head {
+    width: 100%;
+    padding: var(--space-2) var(--space-3);
+    border-radius: var(--ds-radius-control) var(--ds-radius-control) 0 0;
+    background-color: transparent;
+
+    &:hover {
+      background-color: var(--surface-secondary);
+    }
+  }
+
+  .icon,
+  .source,
+  .chev {
+    color: var(--text-secondary);
+    opacity: 1;
+  }
+}
+
+.preview {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  max-height: var(--_chat-attachment-preview-max-height);
+  min-width: 0;
+  margin: 0 var(--space-2) var(--space-2);
+  padding: var(--space-4);
+  overflow: auto;
+  border-radius: var(--ds-radius-inner);
+  background-color: var(--_chat-attachment-preview-bg-color);
 
   &[hidden] {
     display: none;

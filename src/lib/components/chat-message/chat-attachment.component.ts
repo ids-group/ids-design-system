@@ -6,7 +6,7 @@ let nextId = 0;
 
 /**
  * A chip in a message's `[attachments]` slot that opens to show what was attached as it was when
- * sent. The default slot is the snapshot. A plain file with nothing to show is a `ds-tag`.
+ * sent. The default slot is the snapshot, shown in a framed preview. A plain file with nothing to show is a `ds-tag`.
  */
 @Component({
   selector: 'ds-chat-attachment',
@@ -22,6 +22,8 @@ let nextId = 0;
 export class ChatAttachmentComponent {
   /** Chip text: the file name, or the picked element's name. */
   readonly label = input.required<string>();
+  /** Where it came from, shown muted after the label: the page or screen it was picked on. */
+  readonly source = input<string>('');
   /** Icon before the label. */
   readonly icon = input<IconName | null>('paperclip');
   /** Whether the snapshot is open, two-way bound. */
