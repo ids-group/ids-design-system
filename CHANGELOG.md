@@ -27,11 +27,28 @@
   carries `aria-multiselectable="true"`. `selection` defaults to `'single'`, where `selectedId`
   works as before. New exports `TreeTrailingDirective`, `TreeTrailingContext` and `TreeSelection`.
 
+- **`ds-timeline-item` draws the steps of a process.** `status`
+  (`'done' | 'running' | 'pending' | 'error'`, default `null`) draws the marker: a check, a spinner,
+  an empty ring or a cross, and a screen reader hears it before the heading ("Failed: Send to
+  reviewers"). While `status` is set it decides the marker and `icon` and `tone` are ignored; with
+  `null` the item renders as before. An element marked `trailing` sits at the end of the heading
+  row, for an Undo, Stop or Retry button. An element marked `details` is hidden behind a chevron
+  button at the end of that row, closed by default; `expanded` binds its open state two-way. New
+  type `TimelineStatus`, CSS hooks `--ds-timeline-toggle-icon-color` and
+  `--ds-timeline-toggle-icon-color-hover`, and the optional `DsIntl.timeline` keys `done`,
+  `running`, `pending`, `error` and `details(heading)`.
+
 ### Changed
 
 - **A `ds-tree` row is a `div role="treeitem"` instead of a `button`.** It renders the same. A
   disabled row is reached by the arrow keys, shows the focus ring and is announced as disabled;
   Enter and Space on it select nothing. A style that selects the row as a `button` matches nothing.
+
+- **A `ds-timeline-item` marker centres on its text.** With a description or a time under the
+  heading, the marker sits at the middle of the heading, description and time together; a heading
+  alone sits at the middle of the marker. An open `[details]` area does not move the marker. The
+  connector now also runs above each marker but the first, so it reaches a marker that sits lower.
+  Nothing to change in your code.
 - **A `ds-table` column resize line is visible at rest.** The line between resizable header cells
   was `--border-default`, about 1.2:1 against the header; it is `--text-tertiary` now, about 4.3:1.
   Set `--ds-table-resize-line-color` on `ds-table` to choose another colour, for example
@@ -42,6 +59,10 @@
 
 ### Fixed
 
+- **A `ds-timeline-item` inside a wrapper element keeps its connector.** The line to the next item
+  disappeared from every item wrapped in its own element, because each one was the last child of its
+  wrapper. `ds-timeline` now finds its items at any depth and only the last one draws no line.
+  `TimelineComponent.firstItem` and `TimelineComponent.lastItem` read the first and the last item.
 - **Dark theme shadows are dark.** `--shadow-1` to `--shadow-4` (and every `--shadow-*` and
   `--ds-elevation-*` alias built on them) rendered as a light glow around cards, popovers, tooltips,
   toasts, modals and drawers. Under `data-theme="dark"` they are now near-black at 30% to 60% alpha,

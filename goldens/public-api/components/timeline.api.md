@@ -5,15 +5,32 @@
 ```ts
 @Component({ selector: 'ds-timeline' })
 export class TimelineComponent {
+    public readonly firstItem = computed<object | undefined>(…);
+    private readonly items;
+    public readonly lastItem = computed<object | undefined>(…);
 }
 
 @Component({ selector: 'ds-timeline-item' })
 export class TimelineItemComponent {
+    protected readonly detailsId = `ds-timeline-item-${++nextId}-details`;
+    protected readonly detailsLabel = computed(…);
+    public readonly expanded = model<boolean>(false);
     public readonly heading = input<string>('');
     public readonly icon = input<IconName | null>(null);
+    private readonly intl;
+    protected readonly isFirst = computed(…);
+    protected readonly isLast = computed(…);
+    protected readonly nodeIcon = computed<IconName | null>(…);
+    public readonly status = input<TimelineStatus | null>(null);
+    protected readonly statusLabel = computed(…);
     public readonly time = input<string>('');
+    protected readonly timeline = inject(…);
+    protected toggle(): void;
     public readonly tone = input<TimelineTone>('default');
+    private readonly wording;
 }
+
+export type TimelineStatus = 'done' | 'running' | 'pending' | 'error';
 
 export type TimelineTone = 'default' | 'primary' | 'success' | 'warning' | 'error' | 'muted';
 ```
@@ -29,5 +46,7 @@ ds-timeline-item {
     --ds-timeline-node-size: var(--timeline-node-size);
     --ds-timeline-spine-color: var(--border-divider);
     --ds-timeline-spine-width: var(--timeline-spine-w);
+    --ds-timeline-toggle-icon-color: var(--icon-default);
+    --ds-timeline-toggle-icon-color-hover: var(--icon-strong);
 }
 ```

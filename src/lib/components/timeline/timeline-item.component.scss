@@ -1,3 +1,6 @@
+@use '../../styles/dismiss-button' as dismiss-button;
+@use '../../styles/target' as target;
+@use '../../styles/visually-hidden' as visually-hidden;
 @use '../../styles/component-base' as component-base;
 @include component-base.rules;
 
@@ -10,7 +13,12 @@
   --_timeline-node-color: var(--ds-timeline-node-color, var(--text-tertiary));
   --_timeline-node-border-color: var(--ds-timeline-node-border-color, var(--border-strong));
   --_timeline-spine-color: var(--ds-timeline-spine-color, var(--border-divider));
+  --_timeline-toggle-icon-color: var(--ds-timeline-toggle-icon-color, var(--icon-default));
+  --_timeline-toggle-icon-color-hover: var(--ds-timeline-toggle-icon-color-hover, var(--icon-strong));
 
+  // Row 1 holds the marker and the text (heading, content, time); row 2 holds the details and the
+  // gap to the next item. The marker centres on the text, or the text on the marker when the text
+  // is shorter, so the details opening never moves the marker.
   display: grid;
   grid-template-columns: var(--_timeline-node-size) 1fr;
   column-gap: var(--space-4);
@@ -20,9 +28,6 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-top: calc(
-    (var(--font-size-s) * var(--line-height-base) - var(--_timeline-node-size)) / 2
-  );
 }
 
 .node {
@@ -45,19 +50,104 @@
   background-color: var(--_timeline-spine-color);
 }
 
-.content {
+// Equal to the segment below the marker, so the marker stays centred in the row.
+.lead {
+  margin-top: 0;
+  margin-bottom: var(--space-1);
+}
+
+.tail {
+  justify-self: center;
+  margin-top: 0;
+}
+
+.text {
   display: flex;
   flex-direction: column;
+  align-self: center;
   gap: var(--space-0-5);
+  min-width: 0;
+}
+
+.rest {
   padding-bottom: var(--_timeline-gap);
   min-width: 0;
 }
 
-:host(:last-child) .spine {
+// ds-timeline names its last item, so a wrapper element around an item does not break the line.
+// An item with no ds-timeline above it falls back to its position among its siblings.
+:host(.is-last),
+:host(.outside-timeline:last-child) {
+  .spine:not(.lead) {
+    visibility: hidden;
+  }
+  .rest {
+    padding-bottom: 0;
+  }
+}
+
+:host(.is-first),
+:host(.outside-timeline:first-child) {
+  .lead {
+    visibility: hidden;
+  }
+}
+
+.head {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-2);
+  min-width: 0;
+}
+
+.visually-hidden {
+  @include visually-hidden.visually-hidden;
+}
+
+.trailing {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin-left: auto;
+  flex: none;
+
+  // One heading line tall, so a button here does not push the time and content down; it overflows
+  // the line evenly above and below.
+  height: calc(var(--font-size-s) * var(--line-height-base));
+}
+
+.toggle {
+  @include dismiss-button.button;
+  @include target.min-size;
+
+  color: var(--_timeline-toggle-icon-color);
+
+  &:hover {
+    color: var(--_timeline-toggle-icon-color-hover);
+  }
+
+  .chev {
+    transition: transform var(--duration-base) var(--ease-standard);
+  }
+
+  &[aria-expanded='true'] .chev {
+    transform: rotate(90deg);
+  }
+}
+
+// The toggle exists only while something is projected into [details].
+:host:not(:has(.details > *)) .toggle {
   display: none;
 }
-:host(:last-child) .content {
-  padding-bottom: 0;
+
+.details {
+  padding-top: var(--space-1);
+  min-width: 0;
+
+  &:not(:has(*)) {
+    display: none;
+  }
 }
 
 .heading {
@@ -98,4 +188,26 @@
   --_timeline-node-bg-color: var(--surface-secondary);
   --_timeline-node-color: var(--text-tertiary);
   --_timeline-node-border-color: var(--border-strong);
+}
+
+// status decides the marker over tone.
+:host([data-status='done']) {
+  --_timeline-node-bg-color: var(--success);
+  --_timeline-node-color: var(--text-on-success);
+  --_timeline-node-border-color: var(--success);
+}
+:host([data-status='running']) {
+  --_timeline-node-bg-color: var(--surface-default);
+  --_timeline-node-color: var(--accent);
+  --_timeline-node-border-color: var(--accent);
+}
+:host([data-status='pending']) {
+  --_timeline-node-bg-color: var(--surface-default);
+  --_timeline-node-color: var(--text-tertiary);
+  --_timeline-node-border-color: var(--border-strong);
+}
+:host([data-status='error']) {
+  --_timeline-node-bg-color: var(--error);
+  --_timeline-node-color: var(--text-on-error);
+  --_timeline-node-border-color: var(--error);
 }

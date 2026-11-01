@@ -306,6 +306,7 @@ export { TimeRangeValue } from '@ids-group-ltd/ids-design-system/components/time
 export { TimeValue } from '@ids-group-ltd/ids-design-system/components/time-picker'; // type
 export { TimelineComponent } from '@ids-group-ltd/ids-design-system/components/timeline'; // component
 export { TimelineItemComponent } from '@ids-group-ltd/ids-design-system/components/timeline'; // component
+export { TimelineStatus } from '@ids-group-ltd/ids-design-system/components/timeline'; // type
 export { TimelineTone } from '@ids-group-ltd/ids-design-system/components/timeline'; // type
 export { ToastAction } from '@ids-group-ltd/ids-design-system/components/toast'; // interface
 export { ToastComponent } from '@ids-group-ltd/ids-design-system/components/toast'; // component

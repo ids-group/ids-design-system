@@ -383,7 +383,10 @@ export {
   TimelineComponent,
   TimelineItemComponent,
 } from '@ids-group-ltd/ids-design-system/components/timeline';
-export type { TimelineTone } from '@ids-group-ltd/ids-design-system/components/timeline';
+export type {
+  TimelineStatus,
+  TimelineTone,
+} from '@ids-group-ltd/ids-design-system/components/timeline';
 export {
   DS_TOAST_POSITION_DEFAULT,
   ToastComponent,

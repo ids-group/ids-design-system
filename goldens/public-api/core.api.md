@@ -67,6 +67,7 @@ export const DS_INTL_DEFAULTS: DsIntl & {
     readonly field: Required<DsIntl['field']>;
     readonly chart: Required<DsIntl['chart']>;
     readonly toast: Required<DsIntl['toast']>;
+    readonly timeline: Required<NonNullable<DsIntl['timeline']>>;
 };
 
 export interface DsConfig {
@@ -324,6 +325,13 @@ export interface DsIntl {
     readonly stepper: {
         readonly label: string;
         readonly step: (position: number, label: string, state: DsIntlStepState) => string;
+    };
+    readonly timeline?: {
+        readonly done?: string;
+        readonly running?: string;
+        readonly pending?: string;
+        readonly error?: string;
+        readonly details?: (heading: string) => string;
     };
     readonly tabs: {
         readonly close: (label: string) => string;
