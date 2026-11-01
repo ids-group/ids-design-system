@@ -134,15 +134,7 @@ export class SplitterComponent implements OnInit, OnDestroy {
     if (event.pointerId !== this.drag?.pointerId) {
       return;
     }
-    // The panes start inside the host's border, so measure from its padding box.
-    const host = this.host.nativeElement;
-    const outer = host.getBoundingClientRect();
-    const box = new DOMRect(
-      outer.left + host.clientLeft,
-      outer.top + host.clientTop,
-      host.clientWidth,
-      host.clientHeight,
-    );
+    const box = this.panesBox();
     const size = this.clampToBox(
       Math.round(this.fromPaneEdge(event, box) - this.drag.grab),
     );
@@ -255,14 +247,33 @@ export class SplitterComponent implements OnInit, OnDestroy {
   }
 
   private clampToBox(size: number): number {
-    const host = this.host.nativeElement;
+    const box = this.panesBox();
     const handle = this.handle().nativeElement;
     const room =
       this.orientation() === 'horizontal'
-        ? host.clientWidth - handle.offsetWidth
-        : host.clientHeight - handle.offsetHeight;
+        ? box.width - handle.offsetWidth
+        : box.height - handle.offsetHeight;
 
     return this.clamp(size, Math.min(this.max(), room));
+  }
+
+  // From the start pane's leading edge to the end pane's trailing edge: the host's border and
+  // padding lie outside it.
+  private panesBox(): DOMRect {
+    const handle = this.handle().nativeElement;
+    const start = (
+      handle.previousElementSibling as HTMLElement
+    ).getBoundingClientRect();
+    const end = (
+      handle.nextElementSibling as HTMLElement
+    ).getBoundingClientRect();
+
+    return new DOMRect(
+      start.left,
+      start.top,
+      end.right - start.left,
+      end.bottom - start.top,
+    );
   }
 
   // At a limit the cursor shows the one direction the handle can still move.
