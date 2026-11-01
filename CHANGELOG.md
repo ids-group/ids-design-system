@@ -41,8 +41,8 @@
   chat.** `ds-chat-message` takes `role` (`ChatMessageRole`, `'user'` or `'assistant'`, default
   `'assistant'`): a user message is a filled bubble on the right, an assistant message a subtle one
   on the left. Optional `author` and `time` show above the bubble; without `author` the role is
-  spoken. The default slot is the text, rendered by your app; `[steps]` sits above the text (a
-  `ds-timeline`), `[attachments]` under it, and `[actions]` under the bubble, shown on hover or
+  spoken. The default slot is the text, rendered by your app; `[steps]` sits above the bubble on
+  the thread's surface (a `ds-timeline`; a message with only steps draws no bubble), `[attachments]` under it, and `[actions]` under the bubble, shown on hover or
   focus. The text is selectable and long words and addresses wrap. `ds-chat-thread` scrolls its
   messages and stays at the newest one as messages arrive or grow; once the reader scrolls up it
   stays put and shows a jump button with the count of messages that arrived below ("3 new

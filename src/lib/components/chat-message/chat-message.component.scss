@@ -137,9 +137,17 @@
   display: none;
 }
 
-.steps:has(*) + .body:not(:empty) {
-  padding-top: var(--space-2);
-  border-top: var(--border-width-default) solid var(--border-divider);
+// The agent's steps stand on the thread's own surface above the bubble, where their status colours
+// read; a message that has only steps so far draws no empty bubble.
+.steps {
+  inline-size: 100%;
+  max-inline-size: var(--_chat-bubble-max-width);
+  margin-bottom: var(--space-2);
+  padding-inline: var(--space-1);
+}
+
+.bubble:has(> .body:empty):not(:has(> .attachments > *)) {
+  display: none;
 }
 
 .attachments {

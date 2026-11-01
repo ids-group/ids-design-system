@@ -15,7 +15,7 @@ import type { ChatMessageRole } from './chat.types';
 /**
  * One message of a conversation: a bubble on the right for the user, on the left for the
  * assistant. Slots: default (the text or rendered markdown), `[steps]` (a `ds-timeline` of the
- * agent's steps, above the text), `[attachments]` (under the text), `[actions]` (under the bubble).
+ * agent's steps, above the bubble), `[attachments]` (under the text), `[actions]` (under the bubble).
  */
 @Component({
   selector: 'ds-chat-message',
