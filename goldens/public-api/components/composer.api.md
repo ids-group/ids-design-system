@@ -13,20 +13,25 @@ export class ComposerComponent {
     public readonly filesPasted = output<File[]>();
     public focus(options?: FocusOptions): void;
     private readonly intl;
+    protected readonly labelled = computed(…);
     private readonly labels;
+    public readonly layout = input<ComposerLayout>('status-bar');
     public readonly maxRows = input<number>(8);
     public readonly minRows = input<number>(1);
     protected onKeydown(event: KeyboardEvent): void;
     protected onPaste(event: ClipboardEvent): void;
     public readonly placeholder = input<string>('');
     protected readonly sendLabel = computed(…);
-    protected readonly showBusyLabel = computed(…);
+    protected readonly statusAbove = computed(…);
+    protected readonly statusText = computed(…);
     public submit(): void;
     public readonly submitted = output<string>();
     private readonly textarea;
     protected readonly textareaLabel = computed(…);
     public readonly value = model<string>('');
 }
+
+export type ComposerLayout = 'status-bar' | 'status-above' | 'labelled' | 'outside';
 ```
 
 ## CSS hooks
@@ -34,8 +39,9 @@ export class ComposerComponent {
 ```css
 ds-composer {
     --ds-composer-bg-color: var(--surface-default);
-    --ds-composer-padding: var(--space-3);
+    --ds-composer-padding: var(--space-2);
     --ds-composer-radius: var(--ds-radius-control);
+    --ds-composer-send-min-width: 8rem;
     --ds-field-focus-shadow: (none);
 }
 ```

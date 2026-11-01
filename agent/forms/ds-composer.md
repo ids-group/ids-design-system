@@ -6,11 +6,11 @@ Group: Form & input
 Message box for a chat or an instruction: chips above an auto-growing text area, a bottom bar with actions on the left and the send button on the right. Use it instead of a `ds-textarea` beside icon buttons, or a `ds-search` standing in for a message box.
 Slots: `[chips]` above the text (project `ds-tag`s for attachments and picked elements; hidden while empty), `[actions]` on the left of the bar (an attach `ds-icon-button`), `[send]` replaces the default send button (render your own states, e.g. Queue / Stop while `busy`; call `submit()` or read `canSubmit`).
 Keyboard: Enter emits `(submitted): string` with the trimmed text; Shift+Enter breaks the line; an Enter that commits an IME composition never submits; blank text, `busy` and `disabled` never submit. Enter on blank text inserts nothing.
-Send button: a `ds-button` with an arrow, named by `DS_INTL.composer.send`, disabled while the text is blank. `busy` puts it in `loading` (spinner, `aria-busy`, press refused, focus kept) and shows `busyLabel` beside the spinner; the right edge stays put, a label widens it to the left.
+Send button: a 32px `ds-button` with an arrow, named by `DS_INTL.composer.send`, disabled while the text is blank. `busy` puts it in `loading` (spinner, `aria-busy`, press refused, focus kept). `layout: ComposerLayout = 'status-bar'` places the `busyLabel` step: `'status-bar'` beside the fixed square button, `'status-above'` on a reserved line above the box, `'labelled'` inside the button ("Send" or the step, `--ds-composer-send-min-width`), `'outside'` buttons right of the box, step above.
 Output: `(filesPasted): File[]` — the image files of a paste; the paste inserts no text when it carries images. The value is NOT cleared on submit: set `value` to `''` once the message is accepted.
 Methods: `submit()`, `focus(options?)`; `canSubmit` signal. Text area name: `ariaLabel`, else `DS_INTL.composer.label`.
-Tokens: `--ds-composer-bg-color`, `--ds-composer-radius`, `--ds-composer-padding`; border, hover and focus follow the `--ds-field-*` set.
+Tokens: `--ds-composer-bg-color`, `--ds-composer-radius`, `--ds-composer-padding`, `--ds-composer-send-min-width`; border, hover and focus follow the `--ds-field-*` set.
 
 <!-- inputs:ds-composer -->
-All inputs: `value: string = ''`, `placeholder: string = ''`, `ariaLabel: string | null = null`, `minRows: number = 1`, `maxRows: number = 8`, `disabled: boolean = false`, `busy: boolean = false`, `busyLabel: string = ''`
+All inputs: `value: string = ''`, `placeholder: string = ''`, `ariaLabel: string | null = null`, `minRows: number = 1`, `maxRows: number = 8`, `disabled: boolean = false`, `busy: boolean = false`, `busyLabel: string = ''`, `layout: 'status-bar' | 'status-above' | 'labelled' | 'outside' = 'status-bar'`
 <!-- /inputs -->

@@ -16,6 +16,7 @@ import {
 import { ButtonComponent } from '@ids-group-ltd/ids-design-system/components/button';
 import { TextareaComponent } from '@ids-group-ltd/ids-design-system/components/textarea';
 import { FieldClickFocusDirective } from '@ids-group-ltd/ids-design-system/components';
+import type { ComposerLayout } from './composer.types';
 
 /**
  * Message box for a chat or an instruction: an auto-growing text area with chips above it, actions
@@ -49,8 +50,13 @@ export class ComposerComponent {
   /** Work in flight: the send button keeps its place, shows a spinner and refuses to submit, and
    *  Enter does not submit. The text area stays editable. */
   readonly busy = input(false, { transform: booleanAttribute });
-  /** Text beside the spinner while `busy`, such as the current step. */
+  /** The current step while `busy`, such as "Rebuilding"; where it shows follows `layout`. */
   readonly busyLabel = input<string>('');
+  /** Where the buttons and the step text sit. `'status-bar'`: buttons inside, the step text in the
+   *  bar beside a fixed-size send button. `'status-above'`: the step text on a line above the box.
+   *  `'labelled'`: the send button carries "Send" or the step, at one minimum width. `'outside'`:
+   *  the buttons to the right of the box, the step text above it. */
+  readonly layout = input<ComposerLayout>('status-bar');
 
   /** The trimmed text, on Enter or the send button. Never fires for blank text, while `busy` or
    *  while `disabled`. */
@@ -71,8 +77,12 @@ export class ComposerComponent {
     () => this.ariaLabel() || this.labels().label,
   );
   protected readonly sendLabel = computed(() => this.labels().send);
-  protected readonly showBusyLabel = computed(
-    () => this.busy() && this.busyLabel() !== '',
+  protected readonly labelled = computed(() => this.layout() === 'labelled');
+  protected readonly statusAbove = computed(
+    () => this.layout() === 'status-above' || this.layout() === 'outside',
+  );
+  protected readonly statusText = computed(() =>
+    this.busy() ? this.busyLabel() : '',
   );
 
   /** Emits `submitted` when `canSubmit`; for a send button rendered in the `[send]` slot. */

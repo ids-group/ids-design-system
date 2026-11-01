@@ -135,6 +135,7 @@ export type {
   ColumnChartSeries,
 } from '@ids-group-ltd/ids-design-system/components/column-chart';
 export { ComposerComponent } from '@ids-group-ltd/ids-design-system/components/composer';
+export type { ComposerLayout } from '@ids-group-ltd/ids-design-system/components/composer';
 export { DatePickerComponent } from '@ids-group-ltd/ids-design-system/components/date-picker';
 export type {
   DatePickerMode,

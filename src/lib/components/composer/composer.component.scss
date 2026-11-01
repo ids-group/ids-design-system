@@ -17,7 +17,11 @@
 .composer {
   display: flex;
   flex-direction: column;
-  gap: var(--space-2);
+  gap: var(--space-1);
+}
+
+/* The element that draws the border: the whole frame, or only the text when the buttons sit outside. */
+@mixin box {
   padding: var(--_composer-padding);
   background-color: var(--_composer-bg-color);
   border: var(--border-width-default) solid var(--_field-border-color);
@@ -38,12 +42,55 @@
   }
 
   @include focus.owns-the-focus-ring('ds-textarea');
+}
+
+.frame {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.composer:not(.layout-outside) .frame {
+  @include box;
 
   &.disabled {
     background-color: var(--surface-disabled);
     border-color: var(--border-disabled);
     cursor: default;
   }
+}
+
+.layout-outside .frame {
+  flex-direction: row;
+  align-items: flex-end;
+  gap: var(--space-2);
+
+  .field {
+    @include box;
+
+    flex: 1;
+    min-width: 0;
+  }
+
+  &.disabled .field {
+    background-color: var(--surface-disabled);
+    border-color: var(--border-disabled);
+    cursor: default;
+  }
+
+  .bar {
+    padding-block-end: var(--space-2);
+  }
+
+  .actions {
+    flex: none;
+  }
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
 }
 
 /* The box draws the frame, so the inner field drops its own. */
@@ -91,7 +138,31 @@ ds-textarea {
   gap: var(--space-2);
 }
 
-/* Square while it shows only the arrow; a busy label widens it towards the left, the right edge stays put. */
+/* One fixed square, idle or busy, so the bar never moves. */
 .send-button.icon-only {
   --ds-button-padding-x: calc((var(--field-h-md) - var(--icon-md)) / 2 - var(--border-width-default));
+}
+
+/* "Send" and the step share one minimum width; a longer step widens it towards the left. */
+.send-button:not(.icon-only) {
+  min-width: var(--ds-composer-send-min-width, 8rem);
+}
+
+.status {
+  overflow: hidden;
+  color: var(--text-secondary);
+  font-size: var(--font-size-s);
+  line-height: var(--line-height-base);
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+/* The line is kept while idle, so the box does not move down when a step appears. */
+.status-above {
+  min-height: 1lh;
+  padding-inline: var(--space-4);
+}
+
+.status-bar {
+  min-width: 0;
 }
