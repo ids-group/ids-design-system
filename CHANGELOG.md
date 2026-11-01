@@ -30,10 +30,6 @@
 
 ### Changed
 
-- **A `ds-timeline-item` marker sits 1.5 px lower.** Its centre lines up with the middle of the
-  heading's lowercase letters instead of the middle of its line, so the heading no longer reads as
-  sitting low beside the marker. The offset is half the heading's cap height minus its x-height and
-  follows the heading font. Nothing to change in your code.
 - **A `ds-table` column resize line is visible at rest.** The line between resizable header cells
   was `--border-default`, about 1.2:1 against the header; it is `--text-tertiary` now, about 4.3:1.
   Set `--ds-table-resize-line-color` on `ds-table` to choose another colour, for example
