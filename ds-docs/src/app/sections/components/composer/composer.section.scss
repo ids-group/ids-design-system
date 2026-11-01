@@ -1,0 +1,29 @@
+.state-cell-stage {
+  align-items: stretch;
+  justify-content: stretch;
+
+  > * { flex: 1; }
+}
+
+.studio-send {
+  display: flex;
+  gap: var(--space-2);
+}
+
+.playground {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.sent {
+  margin: 0;
+  padding-left: var(--space-5);
+  color: var(--text-secondary);
+  white-space: pre-wrap;
+}
+
+.sent-empty {
+  list-style: none;
+  margin-left: calc(-1 * var(--space-5));
+}

@@ -3799,6 +3799,33 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
     ]
   },
   {
+    "component": "Composer",
+    "selector": ".composer",
+    "description": "",
+    "tokens": [
+      {
+        "name": "--ds-composer-bg-color",
+        "value": "var(--surface-default)",
+        "notes": ""
+      },
+      {
+        "name": "--ds-composer-radius",
+        "value": "var(--ds-radius-control)",
+        "notes": ""
+      },
+      {
+        "name": "--ds-composer-padding",
+        "value": "var(--space-3)",
+        "notes": ""
+      },
+      {
+        "name": "--ds-field-focus-shadow",
+        "value": "—",
+        "notes": "Field focus ring shadow — themeable (defaults to --focus-field)."
+      }
+    ]
+  },
+  {
     "component": "Date Picker",
     "selector": ".date-picker",
     "description": "",
@@ -8811,11 +8838,6 @@ export const NEW_TOKENS: readonly NewToken[] = [
   {
     "name": "--ds-control-focus-shadow-error",
     "value": "var(--focus-ring-error)",
-    "kind": "color"
-  },
-  {
-    "name": "--ds-field-focus-shadow",
-    "value": "var(--focus-field)",
     "kind": "color"
   },
   {

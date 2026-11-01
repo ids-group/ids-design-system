@@ -50,6 +50,7 @@ export const NAV: NavGroup[] = [
       { label: 'Autocomplete', anchor: 'autocomplete' },
       { label: 'Checkbox', anchor: 'checkbox' },
       { label: 'Color picker', anchor: 'color-picker' },
+      { label: 'Composer', anchor: 'composer' },
       { label: 'Date picker', anchor: 'date-picker' },
       { label: 'Dropzone', anchor: 'dropzone' },
       { label: 'Field group', anchor: 'field-group' },

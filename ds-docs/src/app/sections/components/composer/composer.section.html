@@ -1,0 +1,236 @@
+<docs-section
+  anchor="composer"
+  eyebrow="Components"
+  title="Composer">
+  <span lede>
+    Message box for a chat or an instruction: chips above an auto-growing text,
+    actions and the send button in the bar below. Enter sends, Shift+Enter
+    breaks the line.
+  </span>
+
+  <h3 class="block-title t-h4">
+    States
+  </h3>
+
+  <div class="states is-cols-2">
+    <div class="state-cell">
+      <div class="state-cell-stage">
+        <ds-composer placeholder="Describe a change…">
+          <ds-icon-button
+            actions
+            icon="paperclip"
+            ariaLabel="Attach a file" />
+        </ds-composer>
+      </div>
+
+      <div class="state-cell-label">
+        Empty · send disabled
+      </div>
+    </div>
+
+    <div class="state-cell">
+      <div class="state-cell-stage">
+        <ds-composer
+          placeholder="Describe a change…"
+          [(value)]="typed">
+          <ds-icon-button
+            actions
+            icon="paperclip"
+            ariaLabel="Attach a file" />
+        </ds-composer>
+      </div>
+
+      <div class="state-cell-label">
+        Typed · send enabled
+      </div>
+    </div>
+
+    <div class="state-cell">
+      <div class="state-cell-stage">
+        <ds-composer
+          placeholder="Describe a change…"
+          value="Align these two to the same width">
+          @for (chip of chips(); track chip) {
+            <ds-tag
+              chips
+              variant="neutral"
+              closable
+              (closed)="removeChip(chip)">
+              {{ chip }}
+            </ds-tag>
+          }
+
+          <ds-icon-button
+            actions
+            icon="paperclip"
+            ariaLabel="Attach a file" />
+        </ds-composer>
+      </div>
+
+      <div class="state-cell-label">
+        With chips
+      </div>
+    </div>
+
+    <div class="state-cell">
+      <div class="state-cell-stage">
+        <ds-composer
+          placeholder="Describe a change…"
+          busyLabel="Rebuilding"
+          busy>
+          <ds-icon-button
+            actions
+            icon="paperclip"
+            ariaLabel="Attach a file" />
+        </ds-composer>
+      </div>
+
+      <div class="state-cell-label">
+        Busy · with label
+      </div>
+    </div>
+
+    <div class="state-cell">
+      <div class="state-cell-stage">
+        <ds-composer
+          placeholder="Describe a change…"
+          busy>
+          <ds-icon-button
+            actions
+            icon="paperclip"
+            ariaLabel="Attach a file" />
+        </ds-composer>
+      </div>
+
+      <div class="state-cell-label">
+        Busy · spinner only
+      </div>
+    </div>
+
+    <div class="state-cell">
+      <div class="state-cell-stage">
+        <ds-composer
+          placeholder="Describe a change…"
+          value="Waiting for access"
+          disabled>
+          <ds-icon-button
+            actions
+            icon="paperclip"
+            ariaLabel="Attach a file"
+            disabled />
+        </ds-composer>
+      </div>
+
+      <div class="state-cell-label">
+        Disabled
+      </div>
+    </div>
+  </div>
+
+  <h3 class="block-title t-h4">
+    Your own send area
+  </h3>
+
+  <p class="block-desc t-s">
+    An element marked
+    <code class="t-mono-inline">
+      send
+    </code>
+    replaces the default button. Here, while an agent is busy and text is typed,
+    the box offers to queue the message, redirect the agent or stop it.
+  </p>
+
+  <ds-composer
+    placeholder="Describe a change…"
+    busy
+    [(value)]="studioText">
+    <ds-tag
+      chips
+      variant="neutral"
+      closable>
+      Hero banner
+    </ds-tag>
+
+    <ds-icon-button
+      actions
+      icon="paperclip"
+      ariaLabel="Attach a file" />
+
+    <div
+      send
+      class="studio-send">
+      <ds-button
+        size="sm"
+        variant="outline"
+        [disabled]="!studioText().trim()">
+        Queue
+      </ds-button>
+
+      <ds-button
+        size="sm"
+        variant="tonal"
+        [disabled]="!studioText().trim()">
+        Redirect now
+      </ds-button>
+
+      <ds-button
+        size="sm"
+        color="error"
+        variant="outline">
+        Stop
+      </ds-button>
+    </div>
+  </ds-composer>
+
+  <h3 class="block-title t-h4">
+    Try it
+  </h3>
+
+  <p class="block-desc t-s">
+    Type and press Enter to send, Shift+Enter for a new line, paste an image to
+    see it become a chip. Toggle busy to watch the button keep its place.
+  </p>
+
+  <div class="playground">
+    <ds-switch
+      label="Busy"
+      [(checked)]="busy" />
+
+    <ds-composer
+      placeholder="Describe a change…"
+      busyLabel="Rebuilding"
+      [busy]="busy()"
+      [(value)]="draft"
+      (submitted)="send($event)"
+      (filesPasted)="addPasted($event)">
+      @for (name of pasted(); track name) {
+        <ds-tag
+          chips
+          variant="neutral"
+          closable
+          (closed)="removePasted(name)">
+          {{ name }}
+        </ds-tag>
+      }
+
+      <ds-icon-button
+        actions
+        icon="paperclip"
+        ariaLabel="Attach a file" />
+    </ds-composer>
+
+    <ol
+      class="sent t-s"
+      aria-label="Sent messages">
+      @for (message of log(); track $index) {
+        <li class="sent-item">
+          {{ message }}
+        </li>
+      } @empty {
+        <li class="sent-empty">
+          Nothing sent yet.
+        </li>
+      }
+    </ol>
+  </div>
+</docs-section>
