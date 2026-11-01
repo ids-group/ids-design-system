@@ -24,6 +24,7 @@
     }
   ],
   "informational": [
+    "New component `ds-composer` (`ComposerComponent`): an auto-growing message box with `[chips]`, `[actions]` and `[send]` slots, Enter to submit, `busy` / `busyLabel` and `(filesPasted)`. Adds the optional `DsIntl.composer` keys `label` and `send`. Nothing to change in your code.",
     {
       "text": "A focused `ds-table` resize handle draws no outline; its line becomes `--focus-ring-width` wide in `--focus-ring-color`, inset `--space-1` from the cell's top and bottom. Forced-colours mode keeps the outline.",
       "verify": "Tab to a column resize handle: the line at the column edge turns the focus colour and wider, with no ring around the handle."

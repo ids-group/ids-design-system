@@ -1,0 +1,45 @@
+<div
+  class="composer"
+  dsFieldClickFocus
+  [class.disabled]="disabled()">
+  <div class="chips">
+    <ng-content select="[chips]" />
+  </div>
+
+  <ds-textarea
+    autosize
+    resize="none"
+    [rows]="minRows()"
+    [minRows]="minRows()"
+    [maxRows]="maxRows()"
+    [placeholder]="placeholder()"
+    [ariaLabel]="textareaLabel()"
+    [disabled]="disabled()"
+    [(value)]="value"
+    (keydown)="onKeydown($event)"
+    (paste)="onPaste($event)" />
+
+  <div class="bar">
+    <div class="actions">
+      <ng-content select="[actions]" />
+    </div>
+
+    <div class="send">
+      <ng-content select="[send]">
+        <ds-button
+          icon="arrowUp"
+          class="send-button"
+          loadingMode="icon"
+          [class.icon-only]="!showBusyLabel()"
+          [ariaLabel]="showBusyLabel() ? null : sendLabel()"
+          [disabled]="!busy() && !canSubmit()"
+          [loading]="busy()"
+          (pressed)="submit()">
+          @if (showBusyLabel()) {
+            {{ busyLabel() }}
+          }
+        </ds-button>
+      </ng-content>
+    </div>
+  </div>
+</div>

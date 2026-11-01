@@ -17,6 +17,17 @@
   `occurrenceClosed`, `ToastRegionComponent.stackFor(key)` and `DsConfig.toast.groupDuplicates`
   (default `false`). `DsIntl.toast` takes the optional
   `showAll`, `hide`, `dismissAll` and `repeated(message, count)`.
+- **`ds-composer`, a message box for a chat or an instruction.** An auto-growing text area
+  (`minRows`, default `1`; `maxRows`, default `8`) with a two-way `value`, `placeholder`, `ariaLabel`
+  and `disabled`. Enter emits `(submitted)` with the trimmed text and Shift+Enter breaks the line; an
+  Enter that commits an IME composition, blank text, `busy` and `disabled` never submit. Elements
+  marked `chips` sit above the text, `actions` on the left of the bottom bar, and `send` replaces the
+  default send button on the right. That button is disabled while the text is blank; with `busy` it
+  keeps its place, shows a spinner and `busyLabel`, and refuses the press. `(filesPasted)` emits the
+  image files of a paste, which then inserts no text. `submit()`, `focus()` and `canSubmit` serve a
+  custom send area. The text is not cleared on submit: clear `value` once the message is accepted.
+  New optional `DsIntl.composer` keys `label` (`'Message'`) and `send` (`'Send'`), and CSS hooks
+  `--ds-composer-bg-color`, `--ds-composer-radius` and `--ds-composer-padding`.
 
 ### Changed
 

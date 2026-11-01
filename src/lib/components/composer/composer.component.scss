@@ -1,0 +1,94 @@
+@use '../../styles/field-box' as field-box;
+@use '../../styles/component-base' as component-base;
+@include component-base.rules;
+
+/* The border, hover and focus follow the `--ds-field-*` set, so a retuned field retunes the composer too. */
+:host {
+  @include field-box.field-box-tokens;
+
+  --_composer-bg-color: var(--ds-composer-bg-color, var(--surface-default));
+  --_composer-radius: var(--ds-composer-radius, var(--ds-radius-control));
+  --_composer-padding: var(--ds-composer-padding, var(--space-3));
+
+  display: block;
+}
+
+.composer {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding: var(--_composer-padding);
+  background-color: var(--_composer-bg-color);
+  border: var(--border-width-default) solid var(--_field-border-color);
+  border-radius: var(--_composer-radius);
+  cursor: text;
+  transition:
+    border-color var(--duration-fast) var(--ease-standard),
+    box-shadow var(--duration-fast) var(--ease-standard);
+
+  &:hover {
+    border-color: var(--_field-border-color-hover);
+  }
+
+  /* Only the text area lights the box: a focused chip or button draws its own ring. */
+  &:has(ds-textarea:focus-within) {
+    border-color: var(--_field-border-color-focus);
+    box-shadow: var(--ds-field-focus-shadow);
+  }
+
+  &.disabled {
+    background-color: var(--surface-disabled);
+    border-color: var(--border-disabled);
+    cursor: default;
+  }
+}
+
+/* The box draws the frame, so the inner field drops its own. */
+ds-textarea {
+  --ds-input-bg-color: transparent;
+  --ds-input-bg-color-disabled: transparent;
+  --ds-input-border: transparent;
+  --ds-input-border-hover: transparent;
+  --ds-input-border-focus: transparent;
+  --ds-input-focus-shadow: none;
+  --ds-input-padding-x: 0;
+  --ds-input-padding-y: 0;
+
+  // A disabled field paints `--border-disabled` straight, with no `--ds-input-*` hook in between.
+  --border-disabled: transparent;
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+
+  &:empty {
+    display: none;
+  }
+}
+
+.bar {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.actions {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  gap: var(--space-1);
+  min-width: 0;
+}
+
+.send {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+/* Square while it shows only the arrow; a busy label widens it towards the left, the right edge stays put. */
+.send-button.icon-only {
+  --ds-button-padding-x: calc((var(--field-h-md) - var(--icon-md)) / 2 - var(--border-width-default));
+}

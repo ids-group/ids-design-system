@@ -67,6 +67,7 @@ export const DS_INTL_DEFAULTS: DsIntl & {
     readonly field: Required<DsIntl['field']>;
     readonly chart: Required<DsIntl['chart']>;
     readonly toast: Required<DsIntl['toast']>;
+    readonly composer: Required<NonNullable<DsIntl['composer']>>;
 };
 
 export interface DsConfig {
@@ -289,6 +290,10 @@ export interface DsIntl {
         readonly hide?: string;
         readonly dismissAll?: string;
         readonly repeated?: (message: string, count: number) => string;
+    };
+    readonly composer?: {
+        readonly label?: string;
+        readonly send?: string;
     };
     readonly spinner: {
         readonly label: string;
