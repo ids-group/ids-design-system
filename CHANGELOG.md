@@ -25,8 +25,10 @@
   default send button on the right. That button is disabled while the text is blank; with `busy` it
   shows a spinner and refuses the press. `layout` (`ComposerLayout`, default `'status-bar'`) places
   the buttons and the `busyLabel` step: `'status-bar'` keeps a 32px square send button and shows the
-  step beside it, `'status-above'` shows the step on a line above the box, and `'outside'` puts the
-  buttons to the right of the box with the step above it. `(filesPasted)` emits the
+  step beside it, `'status-above'` shows the step on a line above the box, `'split'` puts attach outside on
+  the left and send outside on the right with the step above, `'send-outside'` keeps attach and the
+  step inside and puts a round 40px send button outside on the right, and `'toolbar'` puts attach,
+  the step and send in a row under the box. `(filesPasted)` emits the
   image files of a paste, which then inserts no text. `submit()`, `focus()` and `canSubmit` serve a
   custom send area. The text is not cleared on submit: clear `value` once the message is accepted.
   New optional `DsIntl.composer` keys `label` (`'Message'`) and `send` (`'Send'`), and CSS hooks

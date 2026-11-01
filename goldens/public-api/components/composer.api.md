@@ -30,7 +30,7 @@ export class ComposerComponent {
     public readonly value = model<string>('');
 }
 
-export type ComposerLayout = 'status-bar' | 'status-above' | 'outside';
+export type ComposerLayout = 'status-bar' | 'status-above' | 'split' | 'send-outside' | 'toolbar';
 ```
 
 ## CSS hooks

@@ -3660,11 +3660,13 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": [
           "status-bar",
           "status-above",
-          "outside"
+          "split",
+          "send-outside",
+          "toolbar"
         ],
         "default": "'status-bar'",
         "required": false,
-        "description": "Where the buttons and the step text sit. `'status-bar'`: buttons inside, the step text in the bar beside a fixed-size send button. `'status-above'`: the step text on a line above the box. `'outside'`: the buttons to the right of the box, the step text above it."
+        "description": "Where the buttons and the step text sit. `'status-bar'`: buttons inside, the step text in the bar beside a fixed-size send button. `'status-above'`: the step text on a line above the box. `'split'`: attach outside on the left, send outside on the right, the step text above. `'send-outside'`: attach and the step inside, a round send button outside on the right. `'toolbar'`: the box holds the text, attach, the step and send sit in a row under it."
       }
     ],
     "outputs": [

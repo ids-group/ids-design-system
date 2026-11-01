@@ -11,51 +11,49 @@
     class="frame"
     dsFieldClickFocus
     [class.disabled]="disabled()">
-    <div class="field">
-      <div class="chips">
-        <ng-content select="[chips]" />
-      </div>
+    <div class="box"></div>
 
-      <ds-textarea
-        autosize
-        resize="none"
-        [rows]="minRows()"
-        [minRows]="minRows()"
-        [maxRows]="maxRows()"
-        [placeholder]="placeholder()"
-        [ariaLabel]="textareaLabel()"
-        [disabled]="disabled()"
-        [(value)]="value"
-        (keydown)="onKeydown($event)"
-        (paste)="onPaste($event)" />
+    <div class="chips">
+      <ng-content select="[chips]" />
     </div>
 
-    <div class="bar">
-      <div class="actions">
-        <ng-content select="[actions]" />
-      </div>
+    <ds-textarea
+      autosize
+      resize="none"
+      [rows]="minRows()"
+      [minRows]="minRows()"
+      [maxRows]="maxRows()"
+      [placeholder]="placeholder()"
+      [ariaLabel]="textareaLabel()"
+      [disabled]="disabled()"
+      [(value)]="value"
+      (keydown)="onKeydown($event)"
+      (paste)="onPaste($event)" />
 
-      @if (layout() === 'status-bar') {
-        <span
-          class="status status-bar"
-          aria-live="polite">
-          {{ statusText() }}
-        </span>
-      }
+    <div class="actions">
+      <ng-content select="[actions]" />
+    </div>
 
-      <div class="send">
-        <ng-content select="[send]">
-          <ds-button
-            icon="arrowUp"
-            size="sm"
-            class="send-button"
-            loadingMode="icon"
-            [ariaLabel]="sendLabel()"
-            [disabled]="!busy() && !canSubmit()"
-            [loading]="busy()"
-            (pressed)="submit()" />
-        </ng-content>
-      </div>
+    @if (!statusAbove()) {
+      <span
+        class="status status-bar"
+        aria-live="polite">
+        {{ statusText() }}
+      </span>
+    }
+
+    <div class="send">
+      <ng-content select="[send]">
+        <ds-button
+          icon="arrowUp"
+          size="sm"
+          class="send-button"
+          loadingMode="icon"
+          [ariaLabel]="sendLabel()"
+          [disabled]="!busy() && !canSubmit()"
+          [loading]="busy()"
+          (pressed)="submit()" />
+      </ng-content>
     </div>
   </div>
 </div>

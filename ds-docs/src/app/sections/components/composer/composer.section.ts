@@ -26,7 +26,9 @@ export class ComposerSection {
   protected readonly layouts: readonly ComposerLayout[] = [
     'status-bar',
     'status-above',
-    'outside',
+    'split',
+    'send-outside',
+    'toolbar',
   ];
   protected readonly typed = signal('Make the header sticky on scroll');
   protected readonly chips = signal(['Header', 'Pricing card']);
