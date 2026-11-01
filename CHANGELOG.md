@@ -26,7 +26,7 @@
   shows a spinner and refuses the press. `layout` (`ComposerLayout`, default `'status-bar'`) places
   the buttons and the `busyLabel` step: `'status-bar'` keeps a 32px square send button and shows the
   step beside it, `'status-above'` shows the step on a line above the box, `'labelled'` puts "Send"
-  or the step in the button at `--ds-composer-send-min-width` (default `8rem`), and `'outside'` puts
+  or the step in the button at `--ds-composer-send-min-width` (default `9rem`), and `'outside'` puts
   the buttons to the right of the box with the step above it. `(filesPasted)` emits the
   image files of a paste, which then inserts no text. `submit()`, `focus()` and `canSubmit` serve a
   custom send area. The text is not cleared on submit: clear `value` once the message is accepted.

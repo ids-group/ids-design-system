@@ -148,7 +148,7 @@ ds-textarea {
 
 /* "Send" and the step share one minimum width; a longer step widens it towards the left. */
 .send-button:not(.icon-only) {
-  min-width: var(--ds-composer-send-min-width, 8rem);
+  min-width: var(--ds-composer-send-min-width, 9rem);
 }
 
 .status {
