@@ -194,6 +194,34 @@ error TS2322: Type 'string' is not assignable to type 'number'.
     <div class="state-cell">
       <div class="state-cell-stage chat-stage">
         <ds-chat-thread
+          workingLabel="Running the build"
+          [working]="true">
+          <ds-chat-message role="user">
+            Fix the build.
+          </ds-chat-message>
+
+          <ds-chat-message>
+            <ds-timeline steps>
+              <ds-timeline-item
+                heading="Read the page"
+                status="done" />
+
+              <ds-timeline-item
+                heading="Run the build"
+                status="running" />
+            </ds-timeline>
+          </ds-chat-message>
+        </ds-chat-thread>
+      </div>
+
+      <div class="state-cell-label">
+        Steps only, while working
+      </div>
+    </div>
+
+    <div class="state-cell">
+      <div class="state-cell-stage chat-stage">
+        <ds-chat-thread
           workingLabel="Rebuilding"
           [working]="true">
           <ds-chat-message role="user">
