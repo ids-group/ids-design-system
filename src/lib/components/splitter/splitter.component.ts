@@ -284,12 +284,13 @@ export class SplitterComponent implements OnInit, OnDestroy {
     );
   }
 
-  // At a limit the cursor shows the one direction the handle can still move.
+  // At a limit the cursor shows the one direction the handle can still move. `ew-resize`, not
+  // `col-resize`: Windows draws `ew`, `e` and `w-resize` alike, so the cursor keeps its shape there.
   private cursorFor(size: number): string {
     const horizontal = this.orientation() === 'horizontal';
     const atMin = size <= this.min();
     if (!atMin && size < this.max()) {
-      return horizontal ? 'col-resize' : 'row-resize';
+      return horizontal ? 'ew-resize' : 'ns-resize';
     }
     const towardsEnd = this.pane() === 'start' ? atMin : !atMin;
     if (horizontal) {
