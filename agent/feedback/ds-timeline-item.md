@@ -3,6 +3,8 @@
 
 Group: Display & feedback
 
+Slots: default content below the heading; `[trailing]` at the end of the heading row (Undo, Stop, Retry); `[details]` behind a chevron toggle, closed by default, open state two-way as `expanded`. `status` draws the marker and is spoken before the heading; while set, `icon` and `tone` are ignored. Place items inside `<ds-timeline>`, at any depth: it marks the last item, which draws no connector.
+
 <!-- inputs:ds-timeline-item -->
-All inputs: `heading: string = ''`, `time: string = ''`, `icon: IconName | null = null`, `tone: TimelineTone = 'default'`
+All inputs: `heading: string = ''`, `time: string = ''`, `icon: IconName | null = null`, `tone: TimelineTone = 'default'`, `status: 'done' | 'running' | 'pending' | 'error' = null`, `expanded: boolean = false`
 <!-- /inputs -->

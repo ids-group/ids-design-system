@@ -6,6 +6,7 @@ export const DS_INTL_DEFAULTS: DsIntl & {
   readonly field: Required<DsIntl['field']>;
   readonly chart: Required<DsIntl['chart']>;
   readonly toast: Required<DsIntl['toast']>;
+  readonly timeline: Required<NonNullable<DsIntl['timeline']>>;
 } = {
   field: {
     optional: '(optional)',
@@ -173,6 +174,13 @@ export const DS_INTL_DEFAULTS: DsIntl & {
   stepper: {
     label: 'Progress',
     step: (position, label, state) => `Step ${position}: ${label} (${state})`,
+  },
+  timeline: {
+    done: 'Done',
+    running: 'In progress',
+    pending: 'Not started',
+    error: 'Failed',
+    details: (heading) => (heading ? `Details: ${heading}` : 'Details'),
   },
   tabs: {
     close: (label) => `Close ${label}`,

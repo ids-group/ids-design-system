@@ -17,6 +17,16 @@
   `occurrenceClosed`, `ToastRegionComponent.stackFor(key)` and `DsConfig.toast.groupDuplicates`
   (default `false`). `DsIntl.toast` takes the optional
   `showAll`, `hide`, `dismissAll` and `repeated(message, count)`.
+- **`ds-timeline-item` draws the steps of a process.** `status`
+  (`'done' | 'running' | 'pending' | 'error'`, default `null`) draws the marker: a check, a spinner,
+  an empty ring or a cross, and a screen reader hears it before the heading ("Failed: Send to
+  reviewers"). While `status` is set it decides the marker and `icon` and `tone` are ignored; with
+  `null` the item renders as before. An element marked `trailing` sits at the end of the heading
+  row, for an Undo, Stop or Retry button. An element marked `details` is hidden behind a chevron
+  button at the end of that row, closed by default; `expanded` binds its open state two-way. New
+  type `TimelineStatus`, CSS hooks `--ds-timeline-toggle-icon-color` and
+  `--ds-timeline-toggle-icon-color-hover`, and the optional `DsIntl.timeline` keys `done`,
+  `running`, `pending`, `error` and `details(heading)`.
 
 ### Changed
 

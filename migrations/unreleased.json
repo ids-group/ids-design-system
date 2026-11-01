@@ -33,6 +33,7 @@
       "text": "Under `data-theme=\"dark\"`, `--shadow-1` to `--shadow-4` and every `--shadow-*` and `--ds-elevation-*` alias built on them are near-black at 30% to 60% alpha instead of a light glow, `--shadow-4` adds a 1px light hairline at 8% alpha, and `--shadow-tint-l` is `3%`.",
       "verify": "In the dark theme open a modal and a popover and read their computed box-shadow: every layer is a dark rgba, and the modal's first layer is `0 0 0 1px` at 0.08 alpha."
     },
+    "`ds-timeline-item` takes `status` (`TimelineStatus`: done, running, pending, error), a `[trailing]` slot at the end of the heading row, and a `[details]` slot behind a chevron toggle with a two-way `expanded`. Adds the optional `DsIntl.timeline` keys `done`, `running`, `pending`, `error` and `details`, and `TimelineComponent.lastItem`. Nothing to change in your code.",
     {
       "text": "A `ds-timeline-item` wrapped in its own element inside `ds-timeline` draws its connector to the next item; only the last item of the timeline draws none.",
       "verify": "Wrap each `ds-timeline-item` of a `ds-timeline` in a `div`: every item but the last shows the vertical line under its marker."

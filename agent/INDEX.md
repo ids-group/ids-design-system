@@ -60,7 +60,7 @@ and token names.** These leaves are for orientation and usage.
 - [<ds-list> — ListComponent](feedback/ds-list.md) — <!-- inputs:ds-list -->
 - [<ds-list-item> — ListItemComponent](feedback/ds-list-item.md) — <!-- inputs:ds-list-item -->
 - [<ds-loading-overlay> — LoadingOverlayComponent](feedback/ds-loading-overlay.md) — <!-- inputs:ds-loading-overlay -->
-- [<ds-timeline-item> — TimelineItemComponent](feedback/ds-timeline-item.md) — <!-- inputs:ds-timeline-item -->
+- [<ds-timeline-item> — TimelineItemComponent](feedback/ds-timeline-item.md) — Slots: default content below the heading; [trailing] at the end of the heading row (Undo, Stop, Retry); [detai
 - [<ds-toast-region> — ToastRegionComponent](feedback/ds-toast-region.md) — <!-- inputs:ds-toast-region -->
 - [<ds-tree> — TreeComponent](feedback/ds-tree.md) — <!-- inputs:ds-tree -->
 - [<ds-description-list> — DescriptionListComponent](feedback/ds-description-list.md) — **A horizontal list stacks when a value would get too narrow.** Each item is a wrapping flex row: once the lis

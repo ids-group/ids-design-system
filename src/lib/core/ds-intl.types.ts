@@ -204,6 +204,18 @@ export interface DsIntl {
       state: DsIntlStepState,
     ) => string;
   };
+  readonly timeline?: {
+    /** `'Done'` - spoken before the heading of a `ds-timeline-item` with `status="done"`. */
+    readonly done?: string;
+    /** `'In progress'` - `status="running"`. */
+    readonly running?: string;
+    /** `'Not started'` - `status="pending"`. */
+    readonly pending?: string;
+    /** `'Failed'` - `status="error"`. */
+    readonly error?: string;
+    /** `` `Details: ${heading}` `` - the toggle of the `[details]` area; `'Details'` without a heading. */
+    readonly details?: (heading: string) => string;
+  };
   readonly tabs: {
     readonly close: (label: string) => string;
   };
