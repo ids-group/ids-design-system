@@ -335,6 +335,7 @@ export { ToastPromiseMessages } from '@ids-group-ltd/ids-design-system/component
 export { ToastRef } from '@ids-group-ltd/ids-design-system/components/toast'; // interface
 export { ToastRegionComponent } from '@ids-group-ltd/ids-design-system/components/toast'; // component
 export { ToastService } from '@ids-group-ltd/ids-design-system/components/toast'; // injectable
+export { ToastUpdate } from '@ids-group-ltd/ids-design-system/components/toast'; // type
 export { ToastVariant } from '@ids-group-ltd/ids-design-system/components/toast'; // type
 export { ToggleButtonComponent } from '@ids-group-ltd/ids-design-system/components/toggle-button'; // component
 export { TooltipDirective } from '@ids-group-ltd/ids-design-system/components/tooltip'; // directive

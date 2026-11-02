@@ -14,13 +14,19 @@ import {
 } from '@ids-group-ltd/ids-design-system/core';
 import { ToastRegionComponent } from './toast-region.component';
 import { DS_TOAST_POSITION_DEFAULT } from './toast.config';
-import { toastGroupKey, toastRepeatPatch } from './toast-group';
+import {
+  TOAST_DEFAULT_DURATION_MS,
+  toastGroupKey,
+  toastRepeatPatch,
+  toastUpdatePatch,
+} from './toast-group';
 import type {
   ToastEntry,
   ToastVariant,
   ToastOptions,
   ToastPromiseMessages,
   ToastRef,
+  ToastUpdate,
 } from './toast.types';
 
 const SETTLED_SUCCESS_MS = 4000;
@@ -94,15 +100,14 @@ export class ToastService {
         groupKey,
       );
 
-      return {
-        id: stack.id,
-        dismiss: () => this.regionRef?.instance.remove(stack.id),
-      };
+      return this.refFor(stack.id);
     }
     // An `action` toast cannot expire: the region is the last child of `body`, so a
     // keyboard user cannot reach the button in time.
     const durationMs =
-      variant === 'loading' || opts.action ? 0 : (opts.durationMs ?? 5000);
+      variant === 'loading' || opts.action
+        ? 0
+        : (opts.durationMs ?? TOAST_DEFAULT_DURATION_MS);
     const entry: ToastEntry = {
       id,
       title: opts.title,
@@ -120,10 +125,29 @@ export class ToastService {
     this.regionRef!.instance.add(entry);
     this.announce(variant, entry.body, entry.title, groupKey);
 
+    return this.refFor(id);
+  }
+
+  private refFor(id: number): ToastRef {
     return {
       id,
       dismiss: () => this.regionRef?.instance.remove(id),
+      update: (patch) => this.updateToast(id, patch),
     };
+  }
+
+  private updateToast(id: number, update: ToastUpdate): void {
+    const region = this.regionRef?.instance;
+    const current = region?.entryFor(id);
+    const planned = toastUpdatePatch(current, update);
+    if (!region || !current || !planned) {
+      return;
+    }
+    region.update(id, planned.patch);
+    if (planned.announce) {
+      const next = { ...current, ...planned.patch };
+      this.announce(next.variant, next.body, next.title);
+    }
   }
 
   /** Shows a loading toast for the duration of `source`; resolution and rejection turn the
@@ -146,26 +170,22 @@ export class ToastService {
           typeof messages.success === 'function'
             ? messages.success(value)
             : messages.success;
-        this.regionRef?.instance.update(ref.id, {
+        ref.update({
           body: successBody,
           variant: 'success',
-          dismissible: true,
           durationMs: SETTLED_SUCCESS_MS,
         });
-        this.announce('success', successBody);
       },
       (reason: unknown) => {
         const errorBody =
           typeof messages.error === 'function'
             ? messages.error(reason)
             : messages.error;
-        this.regionRef?.instance.update(ref.id, {
+        ref.update({
           body: errorBody,
           variant: 'error',
-          dismissible: true,
           durationMs: SETTLED_ERROR_MS,
         });
-        this.announce('error', errorBody);
       },
     );
 

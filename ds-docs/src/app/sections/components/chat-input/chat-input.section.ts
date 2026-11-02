@@ -20,10 +20,7 @@ import { DocsSectionComponent } from '../../../shared/docs-section.component';
   ],
   encapsulation: ViewEncapsulation.Emulated,
   templateUrl: './chat-input.section.html',
-  styleUrls: [
-    '../../../shared/section-demo.scss',
-    './chat-input.section.scss',
-  ],
+  styleUrls: ['../../../shared/section-demo.scss', './chat-input.section.scss'],
 })
 export class ChatInputSection {
   protected readonly layouts: readonly ChatInputLayout[] = [

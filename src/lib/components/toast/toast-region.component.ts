@@ -282,6 +282,7 @@ export class ToastRegionComponent {
         | 'action'
         | 'durationMs'
         | 'occurrences'
+        | 'groupKey'
       >
     >,
   ): void {
@@ -301,6 +302,13 @@ export class ToastRegionComponent {
     }
     this.pendingQueue.update((queue) =>
       queue.map((entry) => (entry.id === id ? { ...entry, ...patch } : entry)),
+    );
+  }
+
+  /** The visible or queued toast with this id; one already leaving is gone. */
+  entryFor(id: number): ToastEntry | undefined {
+    return [...this.visibleEntries(), ...this.pendingQueue()].find(
+      (entry) => entry.id === id && !this.isLeaving(id),
     );
   }
 

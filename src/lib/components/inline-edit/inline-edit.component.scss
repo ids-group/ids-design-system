@@ -8,7 +8,7 @@
    them moves no glyph. A negative margin puts the text where it would sit without the box. */
 :host {
   --_inline-edit-pad: var(--ds-inline-edit-padding, var(--space-1));
-  --_inline-edit-hover-bg: var(--ds-inline-edit-hover-bg, var(--surface-muted));
+  --_inline-edit-hover-bg-color: var(--ds-inline-edit-hover-bg-color, var(--surface-muted));
   --_inline-edit-border-color: var(--ds-inline-edit-border-color, var(--primary));
   --_inline-edit-radius: var(--ds-inline-edit-radius, var(--radius-sm));
 
@@ -44,7 +44,7 @@ button.display {
   cursor: text;
 
   &:hover {
-    background-color: var(--_inline-edit-hover-bg);
+    background-color: var(--_inline-edit-hover-bg-color);
   }
 }
 

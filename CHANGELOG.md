@@ -8,7 +8,7 @@
   text and shows a pencil, with a "Rename" tooltip. Two-way `value`, `(saved)` with the trimmed new
   value, `placeholder`, `maxLength`, `disabled`, `ariaLabel` and `edit()`. New optional
   `DsIntl.inlineEdit` keys `rename` (`'Rename'`) and `saved` (`'Saved'`, announced after a save), and
-  CSS hooks `--ds-inline-edit-padding`, `--ds-inline-edit-hover-bg`, `--ds-inline-edit-border-color`
+  CSS hooks `--ds-inline-edit-padding`, `--ds-inline-edit-hover-bg-color`, `--ds-inline-edit-border-color`
   and `--ds-inline-edit-radius`.
 - **Repeated toasts can fold into one `×N` stack.** With
   `provideDsConfig({ toast: { groupDuplicates: true } })`, a `ToastService.show()` whose `variant`,
@@ -25,6 +25,15 @@
   `occurrenceClosed`, `ToastRegionComponent.stackFor(key)` and `DsConfig.toast.groupDuplicates`
   (default `false`). `DsIntl.toast` takes the optional
   `showAll`, `hide`, `dismissAll` and `repeated(message, count)`.
+- **A toast that is showing changes its text in place.** `ToastRef.update(patch)` takes any of
+  `title`, `body`, `variant`, `durationMs` and `dismissible` (new type `ToastUpdate`) and changes the
+  toast on screen or in the queue; after the toast is dismissed or expired it does nothing. A screen
+  reader hears the change only when `variant` turns `success` or `error`, so a progress count can
+  change on every step without being read out. `durationMs` restarts the countdown; a toast leaving
+  `loading` without one counts down 5000 ms, as `show()` does. A `loading` toast, or one with an
+  `action`, never expires and stays dismissible. On a folded stack the ref changes the stack. New
+  `ToastRegionComponent.entryFor(id)` returns the toast with that id while it is on screen or queued.
+  A `ToastRef` object you build yourself, such as a test double, needs an `update` member.
 - **`ds-tree` draws content at the end of a row, reports hover and selects several rows.**
   `<ng-template dsTreeTrailing let-node>` renders at the end of every row, for a badge, a count or
   a small icon button; a click inside it neither selects nor toggles the row, and its controls are
@@ -158,6 +167,8 @@
 
 ### Changed
 
+- **A `ToastService.promise()` toast closed before the promise settles stays silent.** The outcome
+  is announced only while the toast is on screen or queued. Nothing to change in your code.
 - **A `ds-tree` row is a `div role="treeitem"` instead of a `button`.** It renders the same. A
   disabled row is reached by the arrow keys, shows the focus ring and is announced as disabled;
   Enter and Space on it select nothing. A style that selects the row as a `button` matches nothing.

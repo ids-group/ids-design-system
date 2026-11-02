@@ -74,6 +74,27 @@
       "appliesWhen": "A `ds-timeline-item` with no `status` and the default or `muted` tone. Items with a `status` or another tone draw their own ring.",
       "restore": "ds-timeline-item { --ds-timeline-node-border-color: var(--border-strong); }",
       "verify": "A `ds-timeline-item` with no `status` and the default tone draws its marker ring in `--text-tertiary`, unless `--ds-timeline-node-border-color` is set."
+    },
+    {
+      "id": "toast-ref-update-member",
+      "kind": "behavior",
+      "old": "ToastRef",
+      "new": null,
+      "surface": [
+        "typescript"
+      ],
+      "searchHints": [
+        "ToastRef"
+      ],
+      "detect": [
+        ": ToastRef = {",
+        "as ToastRef",
+        "implements ToastRef"
+      ],
+      "action": "None, unless the app builds a `ToastRef` object itself: give it an `update` member, for example `update: () => {}`.",
+      "appliesWhen": "An object literal or class typed as `ToastRef` in the app, usually a test double standing in for `ToastService.show()`. A ref returned by `ToastService` already has `update`.",
+      "verify": "Every object the app types as `ToastRef` has an `update` member, and the app compiles.",
+      "restore": null
     }
   ],
   "informational": [
