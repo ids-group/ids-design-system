@@ -129,6 +129,10 @@
   align-items: center;
   margin-bottom: var(--space-1-5);
 
+  // Open or closed alike, so opening still moves nothing: the open card hugs the item, and this keeps
+  // the action clear of its top edge.
+  padding-top: var(--space-2);
+
   .trailing {
     height: auto;
   }
