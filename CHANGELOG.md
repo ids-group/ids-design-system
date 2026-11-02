@@ -54,8 +54,8 @@
   `--ds-splitter-drag-color`, `--ds-splitter-grip-color` and `--ds-splitter-overdrag-line-scale`.
 
 - **`ds-timeline-item` draws the steps of a process.** `status`
-  (`'done' | 'running' | 'pending' | 'error'`, default `null`) draws the marker: a check, a spinner,
-  an empty ring or a cross, and a screen reader hears it before the heading ("Failed: Send to
+  (`'done' | 'running' | 'pending' | 'waiting' | 'error'`, default `null`) draws the marker: a check,
+  a spinner, an empty ring, a grey disc with a pause glyph or a cross, and a screen reader hears it before the heading ("Failed: Send to
   reviewers"). While `status` is set it decides the marker and `icon` and `tone` are ignored; with
   `null` the item renders as before. An element marked `trailing` sits at the end of the heading
   row, for an Undo, Stop or Retry button. An element marked `details` is hidden behind a chevron
@@ -64,13 +64,14 @@
   transition, closed details are out of the tab order and the accessibility tree, and an open item
   sits on a tinted card behind its marker, text and details (`--ds-timeline-open-bg-color`, default
   `--surface-secondary`), which moves neither the heading nor the marker. A `pending` step has a
-  dashed ring in `--text-tertiary`, which stands out from the surface at 3:1 or more in both themes, and muted text. `ds-timeline` takes `density` (`TimelineDensity`, `'default'` or
+  dashed ring in `--text-tertiary`, which stands out from the surface at 3:1 or more in both themes, and muted text. A `waiting` step needs the reader's answer, such as Approve buttons under its
+  heading; its marker stays beside the heading however tall the row grows. `ds-timeline` takes `density` (`TimelineDensity`, `'default'` or
   `'compact'`): compact sets 16px markers, the smaller text size and 4px rows with no connector, for
   an agent's steps beside a chat message; `--ds-timeline-node-size` and `--ds-timeline-gap` still
   override both densities. New types `TimelineStatus` and `TimelineDensity`, CSS hooks
   `--ds-timeline-toggle-icon-color`, `--ds-timeline-toggle-icon-color-hover` and
   `--ds-timeline-open-bg-color`, and the optional `DsIntl.timeline` keys `done`,
-  `running`, `pending`, `error` and `details(heading)`.
+  `running`, `pending`, `waiting`, `error` and `details(heading)`.
 - **`ds-message-input`, a message box for a chat or an instruction.** An auto-growing text area
   (`minRows`, default `1`; `maxRows`, default `8`) with a two-way `value`, `placeholder`, `ariaLabel`
   and `disabled`. Enter emits `(submitted)` with the trimmed text and Shift+Enter breaks the line; an
@@ -170,6 +171,9 @@
 
 ### Fixed
 
+- **The icon of a `ds-timeline-item` marker sits in the middle of the marker.** At the default
+  density the icon is 16px instead of 15px, so it is centred in the 24px inside the marker's ring;
+  at 15px the browser snapped it half a pixel right and down. Compact markers are unchanged.
 - **The ring of a `ds-timeline-item` marker without a status and of an upcoming `ds-stepper` step
   stands out from the surface.** Both rings are drawn in `--text-tertiary` instead of
   `--border-strong`, at 4.74:1 against the surface in the light theme and 5.58:1 in the dark, where

@@ -23,10 +23,16 @@ export type TimelineTone =
   | 'error'
   | 'muted';
 
-export type TimelineStatus = 'done' | 'running' | 'pending' | 'error';
+export type TimelineStatus =
+  | 'done'
+  | 'running'
+  | 'pending'
+  | 'waiting'
+  | 'error';
 
 const STATUS_ICONS: Partial<Record<TimelineStatus, IconName>> = {
   done: 'check',
+  waiting: 'pause',
   error: 'x',
 };
 

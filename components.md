@@ -607,10 +607,10 @@ All inputs: `density: 'default' | 'compact' = 'default'`
 
 #### `<ds-timeline-item>` — `TimelineItemComponent`
 
-Slots: default content below the heading; `[trailing]` at the end of the heading row (Undo, Stop, Retry); `[details]` behind a chevron toggle (down while closed, up while open), closed by default, open state two-way as `expanded`; it opens with a height transition, and an open item sits on a tinted card behind its marker, text and details (`--ds-timeline-open-bg-color`, default `--surface-secondary`). `status` draws the marker and is spoken before the heading; while set, `icon` and `tone` are ignored. Place items inside `<ds-timeline>`, at any depth: it marks the last item, which draws no connector. A `pending` step draws a dashed ring and muted text (a planned step not reached yet). `<ds-timeline density="compact">` (`TimelineDensity`) sets 16px markers, the smaller text size and 4px rows with no connector, for an agent's steps beside a chat message.
+Slots: default content below the heading; `[trailing]` at the end of the heading row (Undo, Stop, Retry); `[details]` behind a chevron toggle (down while closed, up while open), closed by default, open state two-way as `expanded`; it opens with a height transition, and an open item sits on a tinted card behind its marker, text and details (`--ds-timeline-open-bg-color`, default `--surface-secondary`). `status` draws the marker and is spoken before the heading; while set, `icon` and `tone` are ignored. Place items inside `<ds-timeline>`, at any depth: it marks the last item, which draws no connector. A `pending` step draws a dashed ring and muted text (a planned step not reached yet). A `waiting` step draws a grey disc with a pause glyph and is spoken "Waiting for your approval"; put the reader's answer buttons under its heading, and the marker stays beside the heading. `<ds-timeline density="compact">` (`TimelineDensity`) sets 16px markers, the smaller text size and 4px rows with no connector, for an agent's steps beside a chat message.
 
 <!-- inputs:ds-timeline-item -->
-All inputs: `heading: string = ''`, `time: string = ''`, `icon: IconName | null = null`, `tone: TimelineTone = 'default'`, `status: 'done' | 'running' | 'pending' | 'error' = null`, `expanded: boolean = false`
+All inputs: `heading: string = ''`, `time: string = ''`, `icon: IconName | null = null`, `tone: TimelineTone = 'default'`, `status: 'done' | 'running' | 'pending' | 'waiting' | 'error' = null`, `expanded: boolean = false`
 <!-- /inputs -->
 
 #### `<ds-chat-message>` — `ChatMessageComponent`

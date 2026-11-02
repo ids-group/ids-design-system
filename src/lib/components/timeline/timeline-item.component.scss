@@ -271,6 +271,11 @@
   --_timeline-node-color: var(--text-tertiary);
   --_timeline-node-border-color: var(--text-tertiary);
 }
+:host([data-status='waiting']) {
+  --_timeline-node-bg-color: var(--text-secondary);
+  --_timeline-node-color: var(--surface-default);
+  --_timeline-node-border-color: var(--text-secondary);
+}
 :host([data-status='error']) {
   --_timeline-node-bg-color: var(--error);
   --_timeline-node-color: var(--text-on-error);
@@ -288,6 +293,26 @@
     color: var(--text-tertiary);
     font-weight: var(--font-weight-regular);
   }
+}
+
+// A waiting step carries the reader's answer (Approve, Not now) under its heading, so its marker
+// stays beside the heading instead of centring on the taller row.
+:host([data-status='waiting']) {
+  --_timeline-heading-line: calc(var(--font-size-s) * var(--line-height-base));
+
+  .text {
+    align-self: start;
+    padding-top: max(0px, var(--_timeline-node-size) / 2 + var(--space-1) - var(--_timeline-heading-line) / 2);
+  }
+
+  .lead {
+    flex: none;
+    height: max(0px, var(--_timeline-heading-line) / 2 - var(--_timeline-node-size) / 2 - var(--space-1));
+  }
+}
+
+:host([data-status='waiting'].is-compact) {
+  --_timeline-heading-line: calc(var(--font-size-xs) * var(--line-height-base));
 }
 
 // Compact: small markers, the smaller text size and tight rows with no connector.

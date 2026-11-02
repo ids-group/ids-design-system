@@ -239,6 +239,8 @@ export interface DsIntl {
     readonly running?: string;
     /** `'Not started'` - `status="pending"`. */
     readonly pending?: string;
+    /** `'Waiting for your approval'` - `status="waiting"`. */
+    readonly waiting?: string;
     /** `'Failed'` - `status="error"`. */
     readonly error?: string;
     /** `` `Details: ${heading}` `` - the toggle of the `[details]` area; `'Details'` without a heading. */

@@ -34,7 +34,7 @@ export class TimelineItemComponent {
     private readonly wording;
 }
 
-export type TimelineStatus = 'done' | 'running' | 'pending' | 'error';
+export type TimelineStatus = 'done' | 'running' | 'pending' | 'waiting' | 'error';
 
 export type TimelineTone = 'default' | 'primary' | 'success' | 'warning' | 'error' | 'muted';
 ```
