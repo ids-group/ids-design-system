@@ -264,7 +264,7 @@ export interface DsIntl {
     readonly yesterday?: string;
     /** `'Sending'` - under a message with `status="sending"`. */
     readonly sending?: string;
-    /** `'Sent'` - under a message with `status="sent"`. */
+    /** `'Sent'` - spoken, not shown, for a message with `status="sent"`. */
     readonly sent?: string;
     /** `'Not sent'` - under a message with `status="failed"`. */
     readonly notSent?: string;

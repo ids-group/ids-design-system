@@ -257,26 +257,40 @@ error TS2322: Type 'string' is not assignable to type 'number'.
         <ds-chat-thread>
           <ds-chat-message
             role="user"
-            status="sent">
+            status="sent"
+            time="13:02">
             Rename the page to Pricing.
           </ds-chat-message>
 
           <ds-chat-message
             role="user"
-            status="sending">
+            status="sent"
+            time="13:02">
             And move it first in the menu.
+          </ds-chat-message>
+
+          <ds-chat-message time="13:03">
+            Renamed the page and moved it first.
           </ds-chat-message>
 
           <ds-chat-message
             role="user"
-            status="failed">
+            status="sending"
+            time="13:04">
             Add a FAQ section under it.
+          </ds-chat-message>
+
+          <ds-chat-message
+            role="user"
+            status="failed"
+            time="13:04">
+            With five questions.
           </ds-chat-message>
         </ds-chat-thread>
       </div>
 
       <div class="state-cell-label">
-        Sent, sending, failed with Retry
+        Time under a run; sending, failed with Retry
       </div>
     </div>
 

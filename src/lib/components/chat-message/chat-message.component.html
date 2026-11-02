@@ -12,12 +12,6 @@
     [class.visually-hidden]="!author() || isGrouped()">
     {{ speaker() }}
   </span>
-
-  @if (time()) {
-    <span class="time">
-      {{ time() }}
-    </span>
-  }
 </div>
 
 <div class="steps">
@@ -79,16 +73,6 @@
       {{ wording().sending }}
     </div>
   }
-  @case ('sent') {
-    <div
-      class="status"
-      role="status">
-      <ds-icon
-        name="check"
-        [size]="12" />
-      {{ wording().sent }}
-    </div>
-  }
   @case ('failed') {
     <div
       class="status is-failed"
@@ -104,6 +88,21 @@
         {{ wording().retry }}
       </ds-button>
     </div>
+  }
+  @default {
+    @if (status() === 'sent') {
+      <span
+        class="visually-hidden"
+        role="status">
+        {{ wording().sent }}
+      </span>
+    }
+
+    @if (time() && !isContinued()) {
+      <div class="status time">
+        {{ time() }}
+      </div>
+    }
   }
 }
 

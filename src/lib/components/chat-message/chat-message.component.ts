@@ -59,14 +59,15 @@ export class ChatMessageComponent {
   readonly role = input<ChatMessageRole>('assistant');
   /** Name shown above the bubble. Without it the role is spoken (`DS_INTL.chat.user` / `assistant`). */
   readonly author = input<string>('');
-  /** Time label shown above the bubble, already formatted. */
+  /** Time label, already formatted, shown under the bubble. In a `ds-chat-thread` only the last message
+   *  of a run shows it. */
   readonly time = input<string>('');
   /** When it was sent. Inside a `ds-chat-thread` it splits a run by time and dates the divider. */
   readonly sentAt = input<Date | string | number | null>(null);
   /** The text is still arriving: a caret blinks after it and `[actions]` stay hidden until it is done. */
   readonly streaming = input(false, { transform: booleanAttribute });
-  /** Delivery of a message the reader sent: `'sending'` dims it, `'sent'` marks it, `'failed'` says it
-   *  was not sent and offers Retry. `null` shows nothing. */
+  /** Delivery of a message the reader sent: `'sending'` dims it and `'failed'` says it was not sent and
+   *  offers Retry, both in place of `time`. `'sent'` shows nothing and is only spoken. */
   readonly status = input<ChatMessageStatus | null>(null);
 
   /** The `[steps]` fold into a chip at the top of the bubble, which opens them again; two-way bound.

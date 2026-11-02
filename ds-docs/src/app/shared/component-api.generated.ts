@@ -3004,7 +3004,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "''",
         "required": false,
-        "description": "Time label shown above the bubble, already formatted."
+        "description": "Time label, already formatted, shown under the bubble. In a `ds-chat-thread` only the last message of a run shows it."
       },
       {
         "name": "sentAt",
@@ -3035,7 +3035,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         ],
         "default": "null",
         "required": false,
-        "description": "Delivery of a message the reader sent: `'sending'` dims it, `'sent'` marks it, `'failed'` says it was not sent and offers Retry. `null` shows nothing."
+        "description": "Delivery of a message the reader sent: `'sending'` dims it and `'failed'` says it was not sent and offers Retry, both in place of `time`. `'sent'` shows nothing and is only spoken."
       },
       {
         "name": "stepsFolded",
