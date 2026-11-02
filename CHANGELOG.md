@@ -51,9 +51,17 @@
   reviewers"). While `status` is set it decides the marker and `icon` and `tone` are ignored; with
   `null` the item renders as before. An element marked `trailing` sits at the end of the heading
   row, for an Undo, Stop or Retry button. An element marked `details` is hidden behind a chevron
-  button at the end of that row, closed by default; `expanded` binds its open state two-way. New
-  type `TimelineStatus`, CSS hooks `--ds-timeline-toggle-icon-color` and
-  `--ds-timeline-toggle-icon-color-hover`, and the optional `DsIntl.timeline` keys `done`,
+  button at the end of that row, closed by default; `expanded` binds its open state two-way. The
+  chevron points down while closed and up while open, the details open and close with a height
+  transition, closed details are out of the tab order and the accessibility tree, and an open item
+  sits on a tinted card behind its marker, text and details (`--ds-timeline-open-bg-color`, default
+  `--surface-secondary`), which moves neither the heading nor the marker. A `pending` step has a
+  dashed ring and muted text. `ds-timeline` takes `density` (`TimelineDensity`, `'default'` or
+  `'compact'`): compact sets 16px markers, the smaller text size and 4px rows with no connector, for
+  an agent's steps beside a chat message; `--ds-timeline-node-size` and `--ds-timeline-gap` still
+  override both densities. New types `TimelineStatus` and `TimelineDensity`, CSS hooks
+  `--ds-timeline-toggle-icon-color`, `--ds-timeline-toggle-icon-color-hover` and
+  `--ds-timeline-open-bg-color`, and the optional `DsIntl.timeline` keys `done`,
   `running`, `pending`, `error` and `details(heading)`.
 - **`ds-message-input`, a message box for a chat or an instruction.** An auto-growing text area
   (`minRows`, default `1`; `maxRows`, default `8`) with a two-way `value`, `placeholder`, `ariaLabel`

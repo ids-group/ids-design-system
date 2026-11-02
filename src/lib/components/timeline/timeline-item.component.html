@@ -5,11 +5,11 @@
 
   <span class="node">
     @if (status() === 'running') {
-      <ds-spinner />
+      <ds-spinner [size]="compact() ? 'sm' : 'md'" />
     } @else if (nodeIcon(); as name) {
       <ds-icon
         [name]="name"
-        [size]="15" />
+        [size]="compact() ? 10 : 15" />
     }
   </span>
 
@@ -42,7 +42,7 @@
         (click)="toggle()">
         <ds-icon
           class="chev"
-          name="chevronRight"
+          name="chevronDown"
           [size]="16" />
       </button>
     </span>
@@ -66,7 +66,11 @@
   <div
     class="details"
     [id]="detailsId"
-    [hidden]="!expanded()">
-    <ng-content select="[details]"></ng-content>
+    [attr.inert]="expanded() ? null : ''">
+    <div class="details-content">
+      <div class="details-body">
+        <ng-content select="[details]"></ng-content>
+      </div>
+    </div>
   </div>
 </div>

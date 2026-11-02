@@ -318,6 +318,7 @@ export { TimePickerValue } from '@ids-group-ltd/ids-design-system/components/tim
 export { TimeRangeValue } from '@ids-group-ltd/ids-design-system/components/time-picker'; // type
 export { TimeValue } from '@ids-group-ltd/ids-design-system/components/time-picker'; // type
 export { TimelineComponent } from '@ids-group-ltd/ids-design-system/components/timeline'; // component
+export { TimelineDensity } from '@ids-group-ltd/ids-design-system/components/timeline'; // type
 export { TimelineItemComponent } from '@ids-group-ltd/ids-design-system/components/timeline'; // component
 export { TimelineStatus } from '@ids-group-ltd/ids-design-system/components/timeline'; // type
 export { TimelineTone } from '@ids-group-ltd/ids-design-system/components/timeline'; // type

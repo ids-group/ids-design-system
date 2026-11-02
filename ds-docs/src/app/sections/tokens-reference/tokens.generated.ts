@@ -8291,6 +8291,11 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "notes": ""
       },
       {
+        "name": "--ds-timeline-open-bg-color",
+        "value": "var(--surface-secondary)",
+        "notes": ""
+      },
+      {
         "name": "--timeline-node-size",
         "value": "var(--hit-sm)",
         "notes": "Timeline event node size (var(--hit-sm), 28px)."
@@ -8304,6 +8309,16 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "name": "--timeline-gap",
         "value": "var(--space-5)",
         "notes": "Timeline item spacing (var(--space-5))."
+      },
+      {
+        "name": "--timeline-node-size-compact",
+        "value": "var(--spinner-md)",
+        "notes": ""
+      },
+      {
+        "name": "--timeline-gap-compact",
+        "value": "var(--space-1)",
+        "notes": ""
       }
     ]
   },
