@@ -427,6 +427,7 @@ export type {
   ToastOptions,
   ToastPromiseMessages,
   ToastRef,
+  ToastUpdate,
   ToastVariant,
 } from '@ids-group-ltd/ids-design-system/components/toast';
 export { ToggleButtonComponent } from '@ids-group-ltd/ids-design-system/components/toggle-button';
