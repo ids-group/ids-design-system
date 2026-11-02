@@ -98,7 +98,7 @@
       </span>
     }
 
-    @if (time() && !isContinued()) {
+    @if (time() && !isContinued() && !streaming()) {
       <div class="status time">
         {{ time() }}
       </div>
