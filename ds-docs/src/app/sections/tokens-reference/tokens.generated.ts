@@ -4850,6 +4850,43 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
     ]
   },
   {
+    "component": "Inline Edit",
+    "selector": ".inline-edit",
+    "description": "",
+    "tokens": [
+      {
+        "name": "--ds-inline-edit-padding",
+        "value": "var(--space-1)",
+        "notes": ""
+      },
+      {
+        "name": "--ds-inline-edit-hover-bg",
+        "value": "var(--surface-muted)",
+        "notes": ""
+      },
+      {
+        "name": "--ds-inline-edit-border-color",
+        "value": "var(--primary)",
+        "notes": ""
+      },
+      {
+        "name": "--ds-inline-edit-radius",
+        "value": "var(--radius-sm)",
+        "notes": ""
+      },
+      {
+        "name": "--inline-edit-input-minw",
+        "value": "var(--space-20)",
+        "notes": "80px — inline-edit input minimum width."
+      },
+      {
+        "name": "--inline-edit-btn-size",
+        "value": "var(--hit-xs)",
+        "notes": "Inline-edit confirm/cancel button size (defaults to --hit-xs, 24px)."
+      }
+    ]
+  },
+  {
     "component": "Input",
     "selector": ".input",
     "description": "",
@@ -9170,16 +9207,6 @@ export const NEW_TOKENS: readonly NewToken[] = [
     "name": "--icon-strong",
     "value": "var(--neutral-700)",
     "kind": "color"
-  },
-  {
-    "name": "--inline-edit-btn-size",
-    "value": "var(--hit-xs)",
-    "kind": "length"
-  },
-  {
-    "name": "--inline-edit-input-minw",
-    "value": "var(--space-20)",
-    "kind": "length"
   },
   {
     "name": "--kbd-pad-x",

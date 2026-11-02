@@ -1,0 +1,46 @@
+@if (editing()) {
+  <input
+    #field
+    class="box field"
+    type="text"
+    [value]="value()"
+    [attr.maxlength]="maxLength()"
+    [attr.placeholder]="placeholder() || null"
+    [attr.aria-label]="label()"
+    (keydown)="onFieldKeydown($event)"
+    (blur)="onFieldBlur()" />
+} @else if (disabled()) {
+  <span
+    class="box display"
+    [class.empty]="!value()">
+    <span class="text">
+      {{ shown() }}
+    </span>
+  </span>
+} @else {
+  <button
+    #display
+    type="button"
+    class="box display"
+    [class.empty]="!value()"
+    [attr.aria-label]="label() + ': ' + shown()"
+    [dsTooltip]="hint()"
+    (click)="edit()"
+    (keydown)="onDisplayKeydown($event)">
+    <span class="text">
+      {{ shown() }}
+    </span>
+
+    <ds-icon
+      class="pencil"
+      name="edit"
+      aria-hidden="true"
+      [size]="14" />
+  </button>
+}
+
+<span
+  class="live"
+  aria-live="polite">
+  {{ announcement() }}
+</span>

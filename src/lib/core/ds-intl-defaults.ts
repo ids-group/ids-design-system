@@ -8,6 +8,7 @@ export const DS_INTL_DEFAULTS: DsIntl & {
   readonly toast: Required<DsIntl['toast']>;
   readonly timeline: Required<NonNullable<DsIntl['timeline']>>;
   readonly splitter: Required<NonNullable<DsIntl['splitter']>>;
+  readonly inlineEdit: Required<NonNullable<DsIntl['inlineEdit']>>;
   readonly messageInput: Required<NonNullable<DsIntl['messageInput']>>;
   readonly attachment: Required<NonNullable<DsIntl['attachment']>>;
   readonly chat: Required<NonNullable<DsIntl['chat']>>;
@@ -160,6 +161,10 @@ export const DS_INTL_DEFAULTS: DsIntl & {
   },
   splitter: {
     label: 'Resize panes',
+  },
+  inlineEdit: {
+    rename: 'Rename',
+    saved: 'Saved',
   },
   breadcrumbs: {
     label: 'Breadcrumb',

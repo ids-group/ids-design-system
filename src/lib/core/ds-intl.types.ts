@@ -189,6 +189,12 @@ export interface DsIntl {
     /** `'Resize panes'` - accessible name of the `ds-splitter` handle when `ariaLabel` is unset. */
     readonly label?: string;
   };
+  readonly inlineEdit?: {
+    /** `'Rename'` - the tooltip of the `ds-inline-edit` text, and its name when `ariaLabel` is unset. */
+    readonly rename?: string;
+    /** `'Saved'` - announced once a changed value is saved. */
+    readonly saved?: string;
+  };
   readonly breadcrumbs: {
     readonly label: string;
   };

@@ -24,6 +24,7 @@
     }
   ],
   "informational": [
+    "New component `ds-inline-edit` (`InlineEditComponent`): text renamed in place, with a two-way `value`, `(saved)`, `placeholder`, `maxLength`, `disabled` and `ariaLabel`. Adds the optional `DsIntl.inlineEdit` keys `rename` and `saved`. Nothing to change in your code.",
     "New component `ds-splitter` (`SplitterComponent`, `SplitterOrientation`, `SplitterOverscroll`, `SplitterPane`): two projected panes with a draggable, keyboard-operable handle, a two-way `size` in px, `min` / `max`, `orientation`, `pane`, `overscroll` and `persistKey`. Adds the optional `DsIntl.splitter.label`. Nothing to change in your code.",
     "New components `ds-chat-message`, `ds-chat-thread` and `ds-chat-attachment` (`ChatMessageComponent`, `ChatThreadComponent`, `ChatAttachmentComponent`, type `ChatMessageRole`): chat bubbles with `[steps]`, `[attachments]` and `[actions]` slots, and a list that stays at the newest message unless the reader scrolled up, groups runs and splits them by time. Adds the optional `DsIntl.chat` keys. Nothing to change in your code.",
     {

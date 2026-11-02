@@ -188,6 +188,17 @@ Tokens: `--ds-icon-button-bg-color`, `--ds-icon-button-icon-color`, `--ds-icon-b
 All inputs: `icon: required IconName`, `ariaLabel: required string`, `ariaDescribedBy: string | null = null`, `variant: 'standard' | 'filled' | 'tonal' | 'outlined' = 'standard'`, `color: ButtonColor = 'primary'`, `size: 'sm' | 'md' | 'lg' = null`, `type: 'button' | 'submit' | 'reset' = 'button'`, `disabled: boolean = false`, `selected: boolean | null = null`, `ariaHasPopup: 'true' | 'menu' | 'listbox' | 'tree' | 'grid' | 'dialog' = null`, `ariaExpanded: boolean | null = null`, `ariaControls: string | null = null`
 <!-- /inputs -->
 
+#### `<ds-inline-edit>` — `InlineEditComponent`
+Text that turns into a field of the same font and size when clicked, to rename it in place: a chat or document title, a layer, a list name. Put it inside the element that gives the text its role and type, such as a heading; it inherits the font, and the text keeps its place when the field replaces it.
+At rest it is plain text. Hover shows a tinted background behind the text and a pencil at its end; keyboard focus adds the focus ring; the tooltip reads `DS_INTL.inlineEdit.rename` ("Rename"). Long text truncates with an ellipsis.
+Keyboard: the text is a button, so Enter, Space, a click or F2 edits, with the text selected. Enter or leaving the field saves; Escape cancels (and does not reach a dialog around it). Enter and Escape return focus to the text. A blank or unchanged value saves nothing.
+Value: `value: model<string>` two-way; `(saved): string` emits the trimmed new value after a save that changed it, and `DS_INTL.inlineEdit.saved` ("Saved") is announced. Inputs: `placeholder` (shown muted while empty), `maxLength`, `disabled` (plain text, no affordance), `ariaLabel` (what the text is, e.g. "Chat title"; the text is announced as "Chat title: <value>"). Method: `edit()`.
+Tokens: `--ds-inline-edit-padding`, `--ds-inline-edit-hover-bg`, `--ds-inline-edit-border-color`, `--ds-inline-edit-radius`.
+
+<!-- inputs:ds-inline-edit -->
+All inputs: `value: string = ''`, `placeholder: string = ''`, `maxLength: number | null = null`, `disabled: boolean = false`, `ariaLabel: string | null = null`
+<!-- /inputs -->
+
 #### `<ds-input>` — `InputComponent`
 Inputs: `value: model<string>`, `type: InputType = 'text'` (`'text' | 'email' | 'password' | 'number' | 'tel' | 'url' | 'search'`), `size: 'sm' | 'md' | 'lg' = 'md'`, `label: string = ''`, `hint: string = ''`, `placeholder: string = ''`, `disabled: boolean = false`, `invalid: boolean = false`, `required: boolean = false`, `optional: boolean = false`, `name: string | null = null`, `clearable: boolean | null = null` (inline clear (×) button; `null` resolves to `true` for `type="search"` and `false` otherwise)
 Content slots — addon attributes apply to any child element:

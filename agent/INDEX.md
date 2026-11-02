@@ -74,6 +74,7 @@ and token names.** These leaves are for orientation and usage.
 
 - [<ds-button> — ButtonComponent](forms/ds-button.md) — Axis meaning: **variant is loudness** (solid > tonal > outline/ghost/text), **color is hue** — every pair rend
 - [<ds-icon-button> — IconButtonComponent](forms/ds-icon-button.md) — Icon-only action with its own taxonomy, distinct from ds-button. ariaLabel is required (icon-only must be labe
+- [<ds-inline-edit> — InlineEditComponent](forms/ds-inline-edit.md) — Text that turns into a field of the same font and size when clicked, to rename it in place: a chat or document
 - [<ds-input> — InputComponent](forms/ds-input.md) — Content slots — addon attributes apply to any child element:
 - [<ds-textarea> — TextareaComponent](forms/ds-textarea.md) — Multi-line counterpart to <ds-input> — same wrapper/states, reuses the --ds-input-* token family. No prefix/su
 - [<ds-message-input> — MessageInputComponent](forms/ds-message-input.md) — Message box for a chat or an instruction: chips above an auto-growing text area, a bottom bar with actions on 
