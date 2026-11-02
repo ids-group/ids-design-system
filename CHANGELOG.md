@@ -106,7 +106,7 @@
   `ds-attachment`, imports from `@ids-group-ltd/ids-design-system/components/chat`. `ds-chat-message` takes `role` (`ChatMessageRole`, `'user'` or `'assistant'`, default
   `'assistant'`): a user message is a filled bubble on the right, an assistant message a subtle one
   on the left. Optional `author` shows above the bubble; without it the role is spoken. Optional `time`
-  (already formatted) shows under the bubble, and in a thread only under the last message of a run. The default slot is the text, rendered by your app; `[steps]` sits above the bubble on
+  (already formatted) shows under the bubble, and in a thread only under the last message of a run, and not while `streaming`. The default slot is the text, rendered by your app; `[steps]` sits above the bubble on
   the thread's surface (a `ds-chat-steps`; a message with only steps draws no bubble),
   `[attachments]` under the text, and `[actions]` under the bubble, shown on hover or
   focus. The text is selectable and long words and addresses wrap. `ds-chat-thread` scrolls its
