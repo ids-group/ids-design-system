@@ -7,6 +7,7 @@ export const DS_INTL_DEFAULTS: DsIntl & {
   readonly chart: Required<DsIntl['chart']>;
   readonly toast: Required<DsIntl['toast']>;
   readonly timeline: Required<NonNullable<DsIntl['timeline']>>;
+  readonly splitter: Required<NonNullable<DsIntl['splitter']>>;
 } = {
   field: {
     optional: '(optional)',
@@ -142,6 +143,9 @@ export const DS_INTL_DEFAULTS: DsIntl & {
   },
   spinner: {
     label: 'Loading',
+  },
+  splitter: {
+    label: 'Resize panes',
   },
   breadcrumbs: {
     label: 'Breadcrumb',

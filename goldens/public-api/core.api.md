@@ -68,6 +68,7 @@ export const DS_INTL_DEFAULTS: DsIntl & {
     readonly chart: Required<DsIntl['chart']>;
     readonly toast: Required<DsIntl['toast']>;
     readonly timeline: Required<NonNullable<DsIntl['timeline']>>;
+    readonly splitter: Required<NonNullable<DsIntl['splitter']>>;
 };
 
 export interface DsConfig {
@@ -293,6 +294,9 @@ export interface DsIntl {
     };
     readonly spinner: {
         readonly label: string;
+    };
+    readonly splitter?: {
+        readonly label?: string;
     };
     readonly breadcrumbs: {
         readonly label: string;

@@ -167,6 +167,10 @@ export interface DsIntl {
   readonly spinner: {
     readonly label: string;
   };
+  readonly splitter?: {
+    /** `'Resize panes'` - accessible name of the `ds-splitter` handle when `ariaLabel` is unset. */
+    readonly label?: string;
+  };
   readonly breadcrumbs: {
     readonly label: string;
   };

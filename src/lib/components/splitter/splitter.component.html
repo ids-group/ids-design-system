@@ -1,0 +1,31 @@
+<div
+  class="pane"
+  [id]="startId">
+  <ng-content select="[start]" />
+</div>
+
+<div
+  #handle
+  class="handle"
+  role="separator"
+  tabindex="0"
+  [class.dragging]="dragging()"
+  [style.cursor]="cursor()"
+  [attr.aria-orientation]="lineOrientation()"
+  [attr.aria-label]="label()"
+  [attr.aria-controls]="pane() === 'start' ? startId : endId"
+  [attr.aria-valuenow]="current()"
+  [attr.aria-valuemin]="min()"
+  [attr.aria-valuemax]="max()"
+  (pointerdown)="onPointerDown($event)"
+  (pointerup)="onPointerUp($event)"
+  (pointercancel)="onPointerUp($event)"
+  (dblclick)="reset()"
+  (keydown)="onKeydown($event)">
+</div>
+
+<div
+  class="pane"
+  [id]="endId">
+  <ng-content select="[end]" />
+</div>

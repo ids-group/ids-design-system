@@ -80,6 +80,7 @@ export const NAV: NavGroup[] = [
       { label: 'Menu', anchor: 'menu' },
       { label: 'Pagination', anchor: 'pagination' },
       { label: 'Sidenav', anchor: 'sidenav' },
+      { label: 'Splitter', anchor: 'splitter' },
       { label: 'Stepper', anchor: 'stepper' },
       { label: 'Tabs', anchor: 'tabs' },
       { label: 'Top bar', anchor: 'topbar' },

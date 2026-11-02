@@ -24,6 +24,7 @@
     }
   ],
   "informational": [
+    "New component `ds-splitter` (`SplitterComponent`, `SplitterOrientation`, `SplitterPane`): two projected panes with a draggable, keyboard-operable handle, a two-way `size` in px, `min` / `max`, `orientation`, `pane` and `persistKey`. Adds the optional `DsIntl.splitter.label`. Nothing to change in your code.",
     {
       "text": "`ds-tree` takes `<ng-template dsTreeTrailing let-node>` (`TreeTrailingDirective`, `TreeTrailingContext`) drawn at the end of every row, a `(nodeHover)` output, and `selection: 'single' | 'multiple'` (`TreeSelection`) with a two-way `selectedIds` in multiple mode. Each row is a focusable `div role=\"treeitem\"` instead of a `button`, and a disabled row is reached by the arrow keys and announced as disabled. Nothing to change in your code unless your styles select the row as a `button`.",
       "verify": "Open a `ds-tree` with a disabled node: rows look as before, ArrowDown stops on the disabled row with a focus ring, and Enter on it selects nothing."
