@@ -586,6 +586,14 @@ Tokens: `--ds-loading-overlay-radius` (default `0`) rounds the scrim's corners; 
 All inputs: `loading: boolean = false`, `label: string = ''`, `blur: boolean = true`, `spinnerSize: 'sm' | 'md' | 'lg' = 'md'`, `insetTop: string = '0'`, `inertContent: boolean = true`
 <!-- /inputs -->
 
+#### `<ds-timeline>` — `TimelineComponent`
+
+The list that holds `ds-timeline-item`s, at any depth: it marks the first and last item so the connector stops at both ends. `density: TimelineDensity = 'default'`; `'compact'` sets 16px markers, the smaller text size and 4px rows with no connector, for an agent's steps beside a chat message.
+
+<!-- inputs:ds-timeline -->
+All inputs: `density: 'default' | 'compact' = 'default'`
+<!-- /inputs -->
+
 #### `<ds-timeline-item>` — `TimelineItemComponent`
 
 Slots: default content below the heading; `[trailing]` at the end of the heading row (Undo, Stop, Retry); `[details]` behind a chevron toggle (down while closed, up while open), closed by default, open state two-way as `expanded`; it opens with a height transition, and an open item sits on a tinted card behind its marker, text and details (`--ds-timeline-open-bg-color`, default `--surface-secondary`). `status` draws the marker and is spoken before the heading; while set, `icon` and `tone` are ignored. Place items inside `<ds-timeline>`, at any depth: it marks the last item, which draws no connector. A `pending` step draws a dashed ring and muted text (a planned step not reached yet). `<ds-timeline density="compact">` (`TimelineDensity`) sets 16px markers, the smaller text size and 4px rows with no connector, for an agent's steps beside a chat message.
