@@ -12916,6 +12916,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
           "done",
           "running",
           "pending",
+          "waiting",
           "error"
         ],
         "default": "null",

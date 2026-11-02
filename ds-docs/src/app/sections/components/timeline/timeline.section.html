@@ -218,6 +218,93 @@
     data-claude-design
     class="block-title t-h4"
     data-for="timeline-item">
+    Waiting for the reader
+  </h3>
+
+  <p class="block-desc t-s">
+    <code>waiting</code> is a step that needs the reader's answer before it
+    goes on: a grey filled marker with a pause glyph, spoken as "Waiting for
+    your approval". Put the answer buttons under its heading; the marker stays
+    beside the heading.
+  </p>
+
+  <div class="states is-cols-2">
+    <div class="state-cell">
+      <div class="state-cell-stage">
+        <ds-timeline>
+          <ds-timeline-item
+            heading="Generate screens"
+            time="09:42"
+            status="done" />
+
+          <ds-timeline-item
+            heading="Publish the prototype"
+            status="waiting">
+            <div class="demo-actions">
+              <ds-button size="sm">
+                Approve
+              </ds-button>
+
+              <ds-button
+                size="sm"
+                variant="outline"
+                color="neutral">
+                Not now
+              </ds-button>
+            </div>
+          </ds-timeline-item>
+
+          <ds-timeline-item
+            heading="Send to reviewers"
+            status="pending" />
+        </ds-timeline>
+      </div>
+
+      <div class="state-cell-label">
+        waiting, then planned
+      </div>
+    </div>
+
+    <div class="state-cell">
+      <div class="state-cell-stage">
+        <ds-timeline density="compact">
+          <ds-timeline-item
+            heading="Generate screens"
+            status="done" />
+
+          <ds-timeline-item
+            heading="Publish the prototype"
+            status="waiting">
+            <div class="demo-actions">
+              <ds-button size="sm">
+                Approve
+              </ds-button>
+
+              <ds-button
+                size="sm"
+                variant="outline"
+                color="neutral">
+                Not now
+              </ds-button>
+            </div>
+          </ds-timeline-item>
+
+          <ds-timeline-item
+            heading="Send to reviewers"
+            status="pending" />
+        </ds-timeline>
+      </div>
+
+      <div class="state-cell-label">
+        compact
+      </div>
+    </div>
+  </div>
+
+  <h3
+    data-claude-design
+    class="block-title t-h4"
+    data-for="timeline-item">
     Trailing action
   </h3>
 
