@@ -6,10 +6,6 @@ export interface TimelineContract {
   readonly firstItem: Signal<object | undefined>;
   /** The item that draws no connector below it. */
   readonly lastItem: Signal<object | undefined>;
-  /** How tightly the items are set. */
-  readonly density: Signal<TimelineDensity>;
 }
-
-export type TimelineDensity = 'default' | 'compact';
 
 export const TIMELINE = new InjectionToken<TimelineContract>('TIMELINE');

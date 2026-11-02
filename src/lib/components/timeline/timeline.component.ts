@@ -4,9 +4,8 @@ import {
   computed,
   contentChildren,
   forwardRef,
-  input,
 } from '@angular/core';
-import { TIMELINE, type TimelineDensity } from './timeline.token';
+import { TIMELINE } from './timeline.token';
 import { TimelineItemComponent } from './timeline-item.component';
 
 @Component({
@@ -17,7 +16,6 @@ import { TimelineItemComponent } from './timeline-item.component';
   encapsulation: ViewEncapsulation.Emulated,
   host: {
     role: 'list',
-    '[attr.data-density]': 'density()',
   },
   providers: [
     {
@@ -27,10 +25,6 @@ import { TimelineItemComponent } from './timeline-item.component';
   ],
 })
 export class TimelineComponent {
-  /** `'compact'` sets small markers, smaller text and tight rows with no connector, for the steps
-   *  of an agent beside a chat message. */
-  readonly density = input<TimelineDensity>('default');
-
   // Descendants, so an item inside a wrapper element or an @for block still counts.
   private readonly items = contentChildren(TimelineItemComponent, {
     descendants: true,

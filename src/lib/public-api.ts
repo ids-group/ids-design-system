@@ -408,7 +408,6 @@ export {
   TimelineItemComponent,
 } from '@ids-group-ltd/ids-design-system/components/timeline';
 export type {
-  TimelineDensity,
   TimelineStatus,
   TimelineTone,
 } from '@ids-group-ltd/ids-design-system/components/timeline';

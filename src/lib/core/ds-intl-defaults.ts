@@ -202,7 +202,6 @@ export const DS_INTL_DEFAULTS: DsIntl & {
     done: 'Done',
     running: 'In progress',
     pending: 'Not started',
-    waiting: 'Waiting for your approval',
     error: 'Failed',
     details: (heading) => (heading ? `Details: ${heading}` : 'Details'),
   },

@@ -23,16 +23,10 @@ export type TimelineTone =
   | 'error'
   | 'muted';
 
-export type TimelineStatus =
-  | 'done'
-  | 'running'
-  | 'pending'
-  | 'waiting'
-  | 'error';
+export type TimelineStatus = 'done' | 'running' | 'pending' | 'error';
 
 const STATUS_ICONS: Partial<Record<TimelineStatus, IconName>> = {
   done: 'check',
-  waiting: 'pause',
   error: 'x',
 };
 
@@ -52,7 +46,6 @@ let nextId = 0;
     '[class.is-first]': 'isFirst()',
     '[class.is-last]': 'isLast()',
     '[class.is-expanded]': 'expanded()',
-    '[class.is-compact]': 'compact()',
     '[class.outside-timeline]': '!timeline',
   },
 })
@@ -74,10 +67,6 @@ export class TimelineItemComponent {
   protected readonly timeline = inject(TIMELINE, { optional: true });
 
   protected readonly detailsId = `ds-timeline-item-${++nextId}-details`;
-
-  protected readonly compact = computed(
-    () => this.timeline?.density() === 'compact',
-  );
 
   protected readonly isFirst = computed(
     () => this.timeline?.firstItem() === this,
