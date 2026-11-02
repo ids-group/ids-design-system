@@ -37,7 +37,11 @@
   chevron points down while closed and up while open, the details open and close with a height
   transition, closed details are out of the tab order and the accessibility tree, and an open item
   sits on a tinted card behind its marker, text and details (`--ds-timeline-open-bg-color`, default
-  `--surface-secondary`), which moves neither the heading nor the marker. New type `TimelineStatus`, CSS hooks
+  `--surface-secondary`), which moves neither the heading nor the marker. A `pending` step has a
+  dashed ring and muted text. `ds-timeline` takes `density` (`TimelineDensity`, `'default'` or
+  `'compact'`): compact sets 16px markers, the smaller text size and 4px rows with no connector, for
+  an agent's steps beside a chat message; `--ds-timeline-node-size` and `--ds-timeline-gap` still
+  override both densities. New types `TimelineStatus` and `TimelineDensity`, CSS hooks
   `--ds-timeline-toggle-icon-color`, `--ds-timeline-toggle-icon-color-hover` and
   `--ds-timeline-open-bg-color`, and the optional `DsIntl.timeline` keys `done`,
   `running`, `pending`, `error` and `details(heading)`.

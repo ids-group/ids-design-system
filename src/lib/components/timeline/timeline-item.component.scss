@@ -260,3 +260,41 @@
   --_timeline-node-color: var(--text-on-error);
   --_timeline-node-border-color: var(--error);
 }
+
+// A step that is known but not reached yet: a dashed ring and muted text, apart from the spinner of
+// the running step and the solid ring of an item with no status.
+:host([data-status='pending']) {
+  .node {
+    border-style: dashed;
+  }
+
+  .heading {
+    color: var(--text-tertiary);
+    font-weight: var(--font-weight-regular);
+  }
+}
+
+// Compact: small markers, the smaller text size and tight rows with no connector.
+:host(.is-compact) {
+  --_timeline-node-size: var(--ds-timeline-node-size, var(--timeline-node-size-compact));
+  --_timeline-gap: var(--ds-timeline-gap, var(--timeline-gap-compact));
+
+  column-gap: var(--space-2);
+
+  .spine {
+    visibility: hidden;
+  }
+
+  .node {
+    border-width: var(--border-width-default);
+  }
+
+  .heading {
+    font-weight: var(--font-weight-regular);
+    font-size: var(--font-size-xs);
+  }
+
+  .trailing {
+    height: calc(var(--font-size-xs) * var(--line-height-base));
+  }
+}

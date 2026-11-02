@@ -5,11 +5,11 @@
 
   <span class="node">
     @if (status() === 'running') {
-      <ds-spinner />
+      <ds-spinner [size]="compact() ? 'sm' : 'md'" />
     } @else if (nodeIcon(); as name) {
       <ds-icon
         [name]="name"
-        [size]="15" />
+        [size]="compact() ? 10 : 15" />
     }
   </span>
 
