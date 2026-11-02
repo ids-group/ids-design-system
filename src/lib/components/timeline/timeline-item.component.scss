@@ -147,22 +147,19 @@
   display: none;
 }
 
-// The open item sits on a tinted backdrop behind its text and details. It reaches into the column
-// gap and the gap below rather than padding the text, so opening never moves the heading.
+// The open item sits on a tinted card behind its marker, text and details. The card reaches past
+// the item into the gaps around it rather than padding the item, so opening never moves the
+// heading or the marker; the chevron keeps the same room to the edge as the marker.
 :host(.is-expanded) {
   isolation: isolate;
 
   &::before {
     content: '';
-    grid-area: 1 / 2 / 3 / 3;
+    grid-area: 1 / 1 / 3 / 3;
     z-index: -1;
-    margin: calc(-1 * var(--space-2)) 0 calc(var(--_timeline-gap) - var(--space-2)) calc(-1 * var(--space-3));
+    margin: calc(-1 * var(--space-2)) calc(-1 * var(--space-2)) calc(var(--_timeline-gap) - var(--space-2));
     border-radius: var(--ds-radius-control);
     background-color: var(--_timeline-open-bg-color);
-  }
-
-  .details-body {
-    padding-inline-end: var(--space-2);
   }
 }
 

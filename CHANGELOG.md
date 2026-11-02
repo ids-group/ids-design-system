@@ -36,8 +36,8 @@
   button at the end of that row, closed by default; `expanded` binds its open state two-way. The
   chevron points down while closed and up while open, the details open and close with a height
   transition, closed details are out of the tab order and the accessibility tree, and an open item
-  sits on a tinted backdrop behind its text and details (`--ds-timeline-open-bg-color`, default
-  `--surface-secondary`), which does not move the heading. New type `TimelineStatus`, CSS hooks
+  sits on a tinted card behind its marker, text and details (`--ds-timeline-open-bg-color`, default
+  `--surface-secondary`), which moves neither the heading nor the marker. New type `TimelineStatus`, CSS hooks
   `--ds-timeline-toggle-icon-color`, `--ds-timeline-toggle-icon-color-hover` and
   `--ds-timeline-open-bg-color`, and the optional `DsIntl.timeline` keys `done`,
   `running`, `pending`, `error` and `details(heading)`.
