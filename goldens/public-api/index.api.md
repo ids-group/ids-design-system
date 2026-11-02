@@ -429,7 +429,7 @@ styles/_clear-button.scss {
 }
 
 styles/_dropdown-overlay.scss {
-    --ds-dropdown-empty-color: var(--text-tertiary);
+    --ds-dropdown-empty-color: var(--text-tertiary-overlay);
     --ds-dropdown-empty-font-size: inherit;
     --ds-dropdown-panel-bg-color: var(--surface-overlay-raised);
     --ds-dropdown-panel-border-color: var(--border-overlay);

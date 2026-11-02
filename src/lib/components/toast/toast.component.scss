@@ -104,7 +104,7 @@
     color: var(--_toast-count-text-color);
     font: var(--font-weight-semibold) var(--font-size-xs) / var(--line-height-base) var(--font-sans);
   }
-  .time { margin-inline-start: var(--space-1); color: var(--text-tertiary); font-size: var(--font-size-xs); }
+  .time { margin-inline-start: var(--space-1); color: var(--text-tertiary-overlay); font-size: var(--font-size-xs); }
   .more {
     display: block;
     margin-block-start: var(--space-1);

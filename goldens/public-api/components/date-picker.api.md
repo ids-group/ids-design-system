@@ -188,7 +188,7 @@ ds-date-picker {
     --ds-date-picker-value-font-family: var(--font-mono);
     --ds-date-picker-value-font-size: var(--font-size-s);
     --ds-date-picker-value-font-weight: var(--font-weight-regular);
-    --ds-date-picker-weekday-color: var(--text-tertiary);
+    --ds-date-picker-weekday-color: var(--text-tertiary-overlay);
     --ds-date-picker-width: var(--date-picker-w);
     --ds-radius-inner: (none);
 }

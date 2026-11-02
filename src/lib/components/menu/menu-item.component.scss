@@ -20,6 +20,12 @@
   display: block;
 }
 
+// A standalone ds-menu sits on --surface-default; the overlay value is for a menu inside a popover or submenu.
+:host-context(.popover),
+:host-context(.ds-overlay-pane) {
+  --_menu-item-description-color: var(--ds-menu-item-description-color, var(--text-tertiary-overlay));
+}
+
 .menu-item-body {
   display: flex;
   flex-direction: column;

@@ -79,7 +79,7 @@ ds-menu-divider {
 }
 
 ds-menu-item {
-    --ds-menu-item-description-color: var(--text-tertiary);
+    --ds-menu-item-description-color: var(--text-tertiary) | var(--text-tertiary-overlay);
     --ds-menu-item-description-font-size: var(--font-size-2xs);
     --ds-menu-item-description-max-width: 14rem;
     --ds-menu-item-error-label-color: var(--error-text);
