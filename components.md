@@ -193,7 +193,7 @@ Text that turns into a field of the same font and size when clicked, to rename i
 At rest it is plain text. Hover shows a tinted background behind the text and a pencil at its end; keyboard focus adds the focus ring; the tooltip reads `DS_INTL.inlineEdit.rename` ("Rename"). Long text truncates with an ellipsis.
 Keyboard: the text is a button, so Enter, Space, a click or F2 edits, with the text selected. Enter or leaving the field saves; Escape cancels (and does not reach a dialog around it). Enter and Escape return focus to the text. A blank or unchanged value saves nothing.
 Value: `value: model<string>` two-way; `(saved): string` emits the trimmed new value after a save that changed it, and `DS_INTL.inlineEdit.saved` ("Saved") is announced. Inputs: `placeholder` (shown muted while empty), `maxLength`, `disabled` (plain text, no affordance), `ariaLabel` (what the text is, e.g. "Chat title"; the text is announced as "Chat title: <value>"). Method: `edit()`.
-Tokens: `--ds-inline-edit-padding`, `--ds-inline-edit-hover-bg`, `--ds-inline-edit-border-color`, `--ds-inline-edit-radius`.
+Tokens: `--ds-inline-edit-padding`, `--ds-inline-edit-hover-bg-color`, `--ds-inline-edit-border-color`, `--ds-inline-edit-radius`.
 
 <!-- inputs:ds-inline-edit -->
 All inputs: `value: string = ''`, `placeholder: string = ''`, `maxLength: number | null = null`, `disabled: boolean = false`, `ariaLabel: string | null = null`
