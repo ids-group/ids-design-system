@@ -1,7 +1,6 @@
 import {
   Component,
   ElementRef,
-  Injector,
   ViewEncapsulation,
   afterNextRender,
   booleanAttribute,
@@ -23,7 +22,11 @@ import { ButtonComponent } from '@ids-group-ltd/ids-design-system/components/but
 import { IconComponent } from '@ids-group-ltd/ids-design-system/icons';
 import { TimelineItemComponent } from '@ids-group-ltd/ids-design-system/components/timeline';
 import { CHAT_THREAD } from './chat.token';
-import type { ChatMessageRole, ChatMessageStatus } from './chat.types';
+import type {
+  ChatMessageRole,
+  ChatMessageStatus,
+  ChatStepsEnter,
+} from './chat.types';
 
 /**
  * One message of a conversation: a bubble on the right for the user, on the left for the
@@ -70,6 +73,9 @@ export class ChatMessageComponent {
    *  Inside a `ds-chat-thread` the steps of the reply before a new user message fold on their own
    *  (`foldStepsOnSend`). Folds only steps given as `ds-timeline-item`s. */
   readonly stepsFolded = model<boolean>(false);
+  /** How steps that arrive together (a plan given at once) come in: `'together'` grows them in as
+   *  one block, `'stagger'` one after another. Steps that arrive one at a time grow in either way. */
+  readonly stepsEnter = input<ChatStepsEnter>('together');
 
   /** Retry was pressed on a `'failed'` message. Send it again and move `status` back to `'sending'`. */
   readonly retry = output<void>();
@@ -146,8 +152,14 @@ export class ChatMessageComponent {
     afterNextRender(() => {
       rendered = true;
       this.applyFold(this.folded(), false);
-      if (this.thread?.live()) {
-        this.growIn([this.host.nativeElement]);
+      if (this.thread?.appendedAfterRender(this)) {
+        const steps = this.stepElements().map((step) => step.nativeElement);
+        // A plan given at once: the steps grow in one after another, or the message as one block.
+        if (this.stepsEnter() === 'stagger' && steps.length) {
+          this.growIn(steps, 70);
+        } else {
+          this.growIn([this.host.nativeElement]);
+        }
       }
     });
     effect(() => {
@@ -173,6 +185,12 @@ export class ChatMessageComponent {
         }
       }
     });
+    // A step that fails while folded opens the steps again, so a failure is never hidden.
+    effect(() => {
+      if (this.stepsFolded() && this.unopenedFailedStepCount() > 0) {
+        untracked(() => this.stepsFolded.set(false));
+      }
+    });
     // Steps that arrive into a message already on screen grow in, one after another.
     let knownSteps = new Set<TimelineItemComponent>();
     effect(() => {
@@ -180,24 +198,17 @@ export class ChatMessageComponent {
       untracked(() => {
         const added = items.filter((item) => !knownSteps.has(item));
         knownSteps = new Set(items);
+        // Started here, before the frame paints, so a step never shows at full height first.
         if (rendered && added.length) {
-          afterNextRender(
-            () => {
-              const elements = this.stepElements();
-              this.growIn(
-                added.map(
-                  (item) => elements[items.indexOf(item)].nativeElement,
-                ),
-              );
-            },
-            { injector: this.injector },
+          const elements = this.stepElements();
+          this.growIn(
+            added.map((item) => elements[items.indexOf(item)].nativeElement),
+            this.stepsEnter() === 'stagger' ? 70 : 0,
           );
         }
       });
     });
   }
-
-  private readonly injector = inject(Injector);
 
   protected toggleSteps(): void {
     this.stepsFolded.set(!this.stepsFolded());
@@ -215,12 +226,12 @@ export class ChatMessageComponent {
 
   // Height, not a transform, so the thread's layout follows every frame and a pinned thread keeps
   // its bottom still.
-  private growIn(elements: readonly HTMLElement[]): void {
+  private growIn(elements: readonly HTMLElement[], stagger = 0): void {
     if (!this.motion()) {
       return;
     }
+    // To `auto` (interpolate-size), so nothing is measured and it can start before the first paint.
     elements.forEach((element, index) => {
-      const height = element.getBoundingClientRect().height;
       element.animate(
         [
           {
@@ -230,7 +241,7 @@ export class ChatMessageComponent {
             overflow: 'hidden',
           },
           {
-            height: `${height}px`,
+            height: 'auto',
             opacity: 1,
             transform: 'none',
             overflow: 'hidden',
@@ -238,7 +249,7 @@ export class ChatMessageComponent {
         ],
         {
           duration: 200,
-          delay: index * 60,
+          delay: index * stagger,
           easing: 'cubic-bezier(0.2, 0, 0, 1)',
           fill: 'backwards',
         },

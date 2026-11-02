@@ -22,7 +22,6 @@ export class ChatMessageComponent {
     protected readonly folded = computed(…);
     private growIn;
     private readonly host;
-    private readonly injector;
     private readonly intl;
     protected readonly isContinued = computed(…);
     protected readonly isFirst = computed(…);
@@ -39,6 +38,7 @@ export class ChatMessageComponent {
     public readonly stepCount = computed(…);
     private readonly stepElements;
     private readonly steps;
+    public readonly stepsEnter = input<ChatStepsEnter>('together');
     public readonly stepsFolded = model<boolean>(false);
     public readonly streaming = input(false, { transform: booleanAttribute });
     protected readonly thread = inject(…);
@@ -53,6 +53,8 @@ export type ChatMessageRole = 'user' | 'assistant';
 
 export type ChatMessageStatus = 'sending' | 'sent' | 'failed';
 
+export type ChatStepsEnter = 'together' | 'stagger';
+
 @Component({ selector: 'ds-chat-thread' })
 export class ChatThreadComponent {
     public constructor();
@@ -61,6 +63,8 @@ export class ChatThreadComponent {
     private announce;
     private announceLastReply;
     protected readonly announcement = signal(…);
+    private readonly appended;
+    public appendedAfterRender(message: object): boolean;
     public readonly ariaLabel = input<string | null>(null);
     private readonly content;
     public readonly continuedMessages = computed<ReadonlySet<object>>(…);
@@ -77,6 +81,7 @@ export class ChatThreadComponent {
     private readonly intl;
     protected readonly jumpLabel = computed(…);
     protected readonly label = computed(…);
+    private lastScrollTop;
     public readonly live = signal(…);
     public readonly loadOlder = output<void>();
     public readonly loadingOlder = input(false, { transform: booleanAttribute });

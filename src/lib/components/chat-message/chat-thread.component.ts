@@ -145,6 +145,13 @@ export class ChatThreadComponent {
     () => this.workingLabel() || this.wording().working,
   );
 
+  private readonly appended = new WeakSet<object>();
+
+  /** @internal */
+  appendedAfterRender(message: object): boolean {
+    return this.appended.has(message);
+  }
+
   /** True once the thread has rendered. @internal */
   readonly live = signal(false);
 
@@ -188,6 +195,15 @@ export class ChatThreadComponent {
         const previousLast = lastMessage;
         const added =
           previous > 0 ? list.filter((message) => !known.has(message)) : [];
+        const lastKnown =
+          previous > 0
+            ? list.indexOf(previousLast as ChatMessageComponent)
+            : -1;
+        for (const message of added) {
+          if (list.indexOf(message) > lastKnown) {
+            this.appended.add(message);
+          }
+        }
         known = new Set(list);
         seen = list.length;
         lastMessage = list.at(-1);

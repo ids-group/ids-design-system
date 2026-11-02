@@ -10,8 +10,11 @@ export interface ChatThreadContract {
   readonly continuedMessages: Signal<ReadonlySet<object>>;
   /** Messages that open a time section, with the divider text shown above them. */
   readonly timeBreaks: Signal<ReadonlyMap<object, string>>;
-  /** True once the thread has rendered: messages and steps that arrive after it grow in. */
+  /** True once the thread has rendered: steps that arrive after it grow in. */
   readonly live: Signal<boolean>;
+  /** Whether the message arrived after the thread rendered and below the messages already there; it
+   *  grows in. Older messages prepended above do not, so the reader's place holds. */
+  appendedAfterRender(message: object): boolean;
 }
 
 export const CHAT_THREAD = new InjectionToken<ChatThreadContract>(
