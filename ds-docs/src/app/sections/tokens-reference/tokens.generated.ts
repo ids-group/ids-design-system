@@ -8153,6 +8153,11 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "notes": ""
       },
       {
+        "name": "--ds-timeline-open-bg-color",
+        "value": "var(--surface-secondary)",
+        "notes": ""
+      },
+      {
         "name": "--timeline-node-size",
         "value": "var(--hit-sm)",
         "notes": "Timeline event node size (var(--hit-sm), 28px)."

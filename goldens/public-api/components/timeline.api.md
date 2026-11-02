@@ -39,11 +39,13 @@ export type TimelineTone = 'default' | 'primary' | 'success' | 'warning' | 'erro
 
 ```css
 ds-timeline-item {
+    --ds-radius-control: (none);
     --ds-timeline-gap: var(--timeline-gap);
     --ds-timeline-node-bg-color: var(--surface-secondary);
     --ds-timeline-node-border-color: var(--border-strong);
     --ds-timeline-node-color: var(--text-tertiary);
     --ds-timeline-node-size: var(--timeline-node-size);
+    --ds-timeline-open-bg-color: var(--surface-secondary);
     --ds-timeline-spine-color: var(--border-divider);
     --ds-timeline-spine-width: var(--timeline-spine-w);
     --ds-timeline-toggle-icon-color: var(--icon-default);

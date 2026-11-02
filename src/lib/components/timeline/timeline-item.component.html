@@ -42,7 +42,7 @@
         (click)="toggle()">
         <ds-icon
           class="chev"
-          name="chevronRight"
+          name="chevronDown"
           [size]="16" />
       </button>
     </span>
@@ -66,7 +66,9 @@
   <div
     class="details"
     [id]="detailsId"
-    [hidden]="!expanded()">
-    <ng-content select="[details]"></ng-content>
+    [attr.inert]="expanded() ? null : ''">
+    <div class="details-content">
+      <ng-content select="[details]"></ng-content>
+    </div>
   </div>
 </div>

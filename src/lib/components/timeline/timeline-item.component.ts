@@ -45,6 +45,7 @@ let nextId = 0;
     '[attr.data-status]': 'status()',
     '[class.is-first]': 'isFirst()',
     '[class.is-last]': 'isLast()',
+    '[class.is-expanded]': 'expanded()',
     '[class.outside-timeline]': '!timeline',
   },
 })

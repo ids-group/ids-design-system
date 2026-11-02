@@ -15,6 +15,7 @@
   --_timeline-spine-color: var(--ds-timeline-spine-color, var(--border-divider));
   --_timeline-toggle-icon-color: var(--ds-timeline-toggle-icon-color, var(--icon-default));
   --_timeline-toggle-icon-color-hover: var(--ds-timeline-toggle-icon-color-hover, var(--icon-strong));
+  --_timeline-open-bg-color: var(--ds-timeline-open-bg-color, var(--surface-secondary));
 
   // Row 1 holds the marker and the text (heading, content, time); row 2 holds the details and the
   // gap to the next item. The marker centres on the text, or the text on the marker when the text
@@ -24,7 +25,9 @@
   column-gap: var(--space-4);
 }
 
+// Every part is placed, so the open item's backdrop can share the text column with them.
 .node-col {
+  grid-area: 1 / 1;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -57,11 +60,13 @@
 }
 
 .tail {
+  grid-area: 2 / 1;
   justify-self: center;
   margin-top: 0;
 }
 
 .text {
+  grid-area: 1 / 2;
   display: flex;
   flex-direction: column;
   align-self: center;
@@ -70,6 +75,7 @@
 }
 
 .rest {
+  grid-area: 2 / 2;
   padding-bottom: var(--_timeline-gap);
   min-width: 0;
 }
@@ -132,22 +138,64 @@
   }
 
   &[aria-expanded='true'] .chev {
-    transform: rotate(90deg);
+    transform: rotate(180deg);
   }
 }
 
 // The toggle exists only while something is projected into [details].
-:host:not(:has(.details > *)) .toggle {
+:host:not(:has(.details-content > *)) .toggle {
   display: none;
 }
 
-.details {
-  padding-top: var(--space-1);
-  min-width: 0;
+// The open item sits on a tinted backdrop behind its text and details. It reaches into the column
+// gap and the gap below rather than padding the text, so opening never moves the heading.
+:host(.is-expanded) {
+  isolation: isolate;
 
-  &:not(:has(*)) {
+  &::before {
+    content: '';
+    grid-area: 1 / 2 / 3 / 3;
+    z-index: -1;
+    margin: calc(-1 * var(--space-2)) 0 calc(var(--_timeline-gap) - var(--space-2)) calc(-1 * var(--space-3));
+    border-radius: var(--ds-radius-control);
+    background-color: var(--_timeline-open-bg-color);
+  }
+
+  .details-content {
+    padding-inline-end: var(--space-2);
+  }
+}
+
+:host(.is-expanded.is-last)::before,
+:host(.is-expanded.outside-timeline:last-child)::before {
+  margin-bottom: calc(-1 * var(--space-2));
+}
+
+// Closed, the details collapse to no height and leave the accessibility tree and the tab order
+// (inert); the height animates between the two.
+.details {
+  display: grid;
+  grid-template-rows: 0fr;
+  min-width: 0;
+  visibility: hidden;
+  transition:
+    grid-template-rows var(--duration-slow) var(--ease-decelerate),
+    visibility var(--duration-slow) allow-discrete;
+
+  &:not(:has(.details-content > *)) {
     display: none;
   }
+}
+
+:host(.is-expanded) .details {
+  grid-template-rows: 1fr;
+  visibility: visible;
+}
+
+.details-content {
+  min-height: 0;
+  overflow: hidden;
+  padding-top: var(--space-1);
 }
 
 .heading {
