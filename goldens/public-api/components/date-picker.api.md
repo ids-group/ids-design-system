@@ -160,8 +160,8 @@ export type DateValue = Date | null;
 
 ```css
 ds-date-picker {
-    --ds-date-picker-bg-color: var(--surface-overlay);
-    --ds-date-picker-border: var(--border-default);
+    --ds-date-picker-bg-color: var(--surface-overlay-raised);
+    --ds-date-picker-border: var(--border-overlay);
     --ds-date-picker-day-disabled-label-color: var(--text-disabled);
     --ds-date-picker-day-hover-bg-color: var(--surface-secondary);
     --ds-date-picker-day-label-color: var(--text-primary);

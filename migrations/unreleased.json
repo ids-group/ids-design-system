@@ -21,6 +21,38 @@
       "appliesWhen": "A `ds-table` with `dsTableResize`. A table without it draws no resize line.",
       "restore": "ds-table { --ds-table-resize-line-color: var(--border-default); }",
       "verify": "At rest, a resizable `ds-table` header shows a `--text-tertiary` line at each column edge, unless `--ds-table-resize-line-color` is set."
+    },
+    {
+      "id": "dark-surface-overlay-one-step-lighter",
+      "kind": "behavior",
+      "old": "--surface-overlay",
+      "new": null,
+      "surface": [
+        "style"
+      ],
+      "searchHints": [
+        "--surface-overlay",
+        "--surface-secondary",
+        "--surface-muted",
+        "--border-default",
+        "--tooltip-bg-color"
+      ],
+      "detect": [
+        "var(--surface-overlay)"
+      ],
+      "action": "None, unless a panel of your own is painted with `--surface-overlay` and fills a hover, pressed or selected state with `--surface-secondary` or `--surface-muted`: declare `--surface-secondary: var(--surface-overlay-secondary)` and `--surface-muted: var(--surface-overlay-muted)` on that panel. A panel that floats over other content like a popover takes `--surface-overlay-raised` as its fill and `--surface-overlay-raised-secondary` / `--surface-overlay-raised-muted` in those two declarations.",
+      "appliesWhen": "The dark theme (`data-theme=\"dark\"`) only: `--surface-overlay` is `--neutral-100` there, the value `--surface-secondary` has, so a hover in that colour on your own overlay no longer shows. `ds-modal`, `ds-drawer` and the `ds-app-layout` rail below `lg` paint `--surface-overlay`; `ds-popover`, `ds-menu` in it, the dropdown panels of `ds-select`, `ds-multi-select` and `ds-autocomplete`, `ds-date-picker`, `ds-time-picker`, `ds-color-picker`, `ds-tooltip-panel` and `ds-toast` paint `--surface-overlay-raised` (`--neutral-150`). Each sets its level's tokens itself. Light values are unchanged.",
+      "pitfall": "A dark-theme `--surface-secondary` or `--surface-muted` override on `:root` no longer reaches inside the library overlays, which read `--surface-overlay-secondary`, `--surface-overlay-muted`, `--surface-overlay-raised-secondary` and `--surface-overlay-raised-muted` there; override those as well.",
+      "restore": ":root[data-theme='dark'] { --surface-overlay: var(--neutral-0); --surface-overlay-secondary: var(--neutral-100); --surface-overlay-muted: var(--neutral-150); --surface-overlay-raised: var(--neutral-0); --surface-overlay-raised-secondary: var(--neutral-100); --surface-overlay-raised-muted: var(--neutral-150); --border-overlay: var(--border-default); }",
+      "verify": "In the dark theme open a `ds-select` inside a `ds-modal`: the modal is lighter than the page, the panel lighter than the modal, and a hovered option lighter than the panel; a panel of your own painted with `--surface-overlay` shows its hovered row lighter than itself.",
+      "evidence": [
+        "tokens:--surface-overlay-secondary",
+        "tokens:--surface-overlay-muted",
+        "tokens:--surface-overlay-raised",
+        "tokens:--surface-overlay-raised-secondary",
+        "tokens:--surface-overlay-raised-muted",
+        "tokens:--border-overlay"
+      ]
     }
   ],
   "informational": [
@@ -46,6 +78,14 @@
     {
       "text": "A `ds-timeline-item` wrapped in its own element inside `ds-timeline` draws its connector to the next item; only the last item of the timeline draws none.",
       "verify": "Wrap each `ds-timeline-item` of a `ds-timeline` in a `div`: every item but the last shows the vertical line under its marker."
+    },
+    {
+      "text": "Under `data-theme=\"dark\"` the border of `ds-popover`, the dropdown panels, the `ds-date-picker`, `ds-time-picker` and `ds-color-picker` panels, `ds-tooltip-panel` and `ds-toast` is `--border-overlay`, which is `--border-strong` in dark and `--border-default` in light. `--ds-popover-border-color`, `--ds-dropdown-panel-border-color`, `--ds-date-picker-border`, `--ds-time-picker-border`, `--ds-toast-border-color`, `--ds-toast-border-color-info`, `--ds-toast-border-color-success`, `--ds-toast-border-color-warning`, `--ds-toast-border-color-error` and `--tooltip-border-color` default to it instead of `--border-default`; set one to `var(--border-default)` for the previous border; a value you set on them still wins.",
+      "verify": "In the dark theme open a `ds-select` and read the computed border colour of its panel: it equals `--border-strong`."
+    },
+    {
+      "text": "`--ds-popover-bg-color`, `--ds-dropdown-panel-bg-color`, `--ds-date-picker-bg-color`, `--ds-time-picker-bg-color`, `--ds-toast-bg-color`, `--ds-toast-bg-color-info`, `--ds-toast-bg-color-success`, `--ds-toast-bg-color-warning`, `--ds-toast-bg-color-error`, `--ds-toast-queue-bg-color` and `--tooltip-bg-color` default to `--surface-overlay-raised` instead of `--surface-overlay`; the two are equal in light. Set one to `var(--surface-overlay)` to paint that overlay at the modal's level.",
+      "verify": "In the dark theme open a `ds-popover` and read its computed background: it equals `--neutral-150`."
     }
   ],
   "deleteList": []

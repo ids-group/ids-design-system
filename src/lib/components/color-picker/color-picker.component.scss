@@ -95,10 +95,12 @@
   gap: var(--space-3);
   width: var(--_color-picker-panel-width);
   padding: var(--space-4);
-  background-color: var(--surface-overlay);
-  border: var(--border-width-default) solid var(--border-default);
+  background-color: var(--surface-overlay-raised);
+  border: var(--border-width-default) solid var(--border-overlay);
   border-radius: var(--radius-md);
   box-shadow: var(--shadow-popover);
+  --surface-secondary: var(--surface-overlay-raised-secondary);
+  --surface-muted: var(--surface-overlay-raised-muted);
 }
 
 .sv-plane {
@@ -236,7 +238,7 @@
 
   &.selected {
     box-shadow:
-      0 0 0 var(--border-width-default) var(--surface-overlay),
+      0 0 0 var(--border-width-default) var(--surface-overlay-raised),
       0 0 0 var(--border-width-strong) var(--accent);
   }
 
