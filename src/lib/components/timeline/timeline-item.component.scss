@@ -118,9 +118,20 @@
   margin-left: auto;
   flex: none;
 
-  // One heading line tall, so a button here does not push the time and content down; it overflows
-  // the line evenly above and below.
+  // One heading line tall while it holds only the chevron, so the rows keep their rhythm.
   height: calc(var(--font-size-s) * var(--line-height-base));
+}
+
+// A projected action (Retry, Undo) is taller than the heading line: the row grows to hold it and
+// keeps the row gap to the content under it, instead of the button overlapping the text and the
+// open card's edge.
+.head:has(.trailing > :not(.toggle)) {
+  align-items: center;
+  margin-bottom: var(--space-1-5);
+
+  .trailing {
+    height: auto;
+  }
 }
 
 .toggle {
