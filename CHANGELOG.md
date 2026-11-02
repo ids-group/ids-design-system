@@ -193,6 +193,13 @@
 - **The icon of a `ds-timeline-item` marker sits in the middle of the marker.** At the default
   density the icon is 16px instead of 15px, so it is centred in the 24px inside the marker's ring;
   at 15px the browser snapped it half a pixel right and down. Compact markers are unchanged.
+- **The ring of a `ds-timeline-item` marker without a status and of an upcoming `ds-stepper` step
+  stands out from the surface.** Both rings are drawn in `--text-tertiary` instead of
+  `--border-strong`, at 4.74:1 against the surface in the light theme and 5.58:1 in the dark, where
+  `--border-strong` gave 1.66:1 and 1.71:1, under the 3:1 WCAG 1.4.11 asks of a marker. This covers
+  the default and `muted` tones of `ds-timeline-item`; `--ds-timeline-node-border-color` still
+  overrides it. Every marker icon draws its line as thick as the ring: 2px at the default density, 1px
+  compact (`stroke` 3 and 2.4 on the 24-unit icon grid, was 1.75). Nothing to change in your code.
 - **A `ds-timeline-item` inside a wrapper element keeps its connector.** The line to the next item
   disappeared from every item wrapped in its own element, because each one was the last child of its
   wrapper. `ds-timeline` now finds its items at any depth and only the last one draws no line.

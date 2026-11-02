@@ -53,6 +53,27 @@
         "tokens:--surface-overlay-raised-muted",
         "tokens:--border-overlay"
       ]
+    },
+    {
+      "id": "timeline-node-border-default-color",
+      "kind": "behavior",
+      "old": "--border-strong",
+      "new": null,
+      "surface": [
+        "template",
+        "style"
+      ],
+      "searchHints": [
+        "ds-timeline-item",
+        "--ds-timeline-node-border-color"
+      ],
+      "detect": [
+        "ds-timeline-item"
+      ],
+      "action": "None, unless a timeline must keep the faint ring it had: was `--border-strong`, now `--text-tertiary`; set `--ds-timeline-node-border-color: var(--border-strong)` on that `ds-timeline-item`.",
+      "appliesWhen": "A `ds-timeline-item` with no `status` and the default or `muted` tone. Items with a `status` or another tone draw their own ring.",
+      "restore": "ds-timeline-item { --ds-timeline-node-border-color: var(--border-strong); }",
+      "verify": "A `ds-timeline-item` with no `status` and the default tone draws its marker ring in `--text-tertiary`, unless `--ds-timeline-node-border-color` is set."
     }
   ],
   "informational": [
@@ -86,7 +107,8 @@
     {
       "text": "`--ds-popover-bg-color`, `--ds-dropdown-panel-bg-color`, `--ds-date-picker-bg-color`, `--ds-time-picker-bg-color`, `--ds-toast-bg-color`, `--ds-toast-bg-color-info`, `--ds-toast-bg-color-success`, `--ds-toast-bg-color-warning`, `--ds-toast-bg-color-error`, `--ds-toast-queue-bg-color` and `--tooltip-bg-color` default to `--surface-overlay-raised` instead of `--surface-overlay`; the two are equal in light. Set one to `var(--surface-overlay)` to paint that overlay at the modal's level.",
       "verify": "In the dark theme open a `ds-popover` and read its computed background: it equals `--neutral-150`."
-    }
+    },
+    "The ring of an upcoming `ds-stepper` step is drawn in `--text-tertiary` instead of `--border-strong`, so it reaches 3:1 against the surface. Visual only. Nothing to change in your code."
   ],
   "deleteList": []
 }

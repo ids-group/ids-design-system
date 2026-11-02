@@ -11,7 +11,7 @@
 
   --_timeline-node-bg-color: var(--ds-timeline-node-bg-color, var(--surface-secondary));
   --_timeline-node-color: var(--ds-timeline-node-color, var(--text-tertiary));
-  --_timeline-node-border-color: var(--ds-timeline-node-border-color, var(--border-strong));
+  --_timeline-node-border-color: var(--ds-timeline-node-border-color, var(--text-tertiary));
   --_timeline-spine-color: var(--ds-timeline-spine-color, var(--border-divider));
   --_timeline-toggle-icon-color: var(--ds-timeline-toggle-icon-color, var(--icon-default));
   --_timeline-toggle-icon-color-hover: var(--ds-timeline-toggle-icon-color-hover, var(--icon-strong));
@@ -252,7 +252,7 @@
 :host([data-tone='muted']) {
   --_timeline-node-bg-color: var(--surface-secondary);
   --_timeline-node-color: var(--text-tertiary);
-  --_timeline-node-border-color: var(--border-strong);
+  --_timeline-node-border-color: var(--text-tertiary);
 }
 
 // status decides the marker over tone.
