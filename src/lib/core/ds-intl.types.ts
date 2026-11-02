@@ -176,8 +176,8 @@ export interface DsIntl {
     /** `'File'` - `kind="file"`. */
     readonly file?: string;
   };
-  readonly messageInput?: {
-    /** `'Message'` - accessible name of the `ds-message-input` text area when `ariaLabel` is unset. */
+  readonly chatInput?: {
+    /** `'Message'` - accessible name of the `ds-chat-input` text area when `ariaLabel` is unset. */
     readonly label?: string;
     /** `'Send'` - its default send button. */
     readonly send?: string;

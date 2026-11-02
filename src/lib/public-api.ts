@@ -42,8 +42,8 @@ export {
   RailTriggerDirective,
 } from '@ids-group-ltd/ids-design-system/components/app-layout';
 export type { DsAppLayoutScrollReset } from '@ids-group-ltd/ids-design-system/components/app-layout';
-export { AttachmentComponent } from '@ids-group-ltd/ids-design-system/components/attachment';
-export type { AttachmentKind } from '@ids-group-ltd/ids-design-system/components/attachment';
+export { AttachmentComponent } from '@ids-group-ltd/ids-design-system/components/chat';
+export type { AttachmentKind } from '@ids-group-ltd/ids-design-system/components/chat';
 export { AuthLayoutComponent } from '@ids-group-ltd/ids-design-system/components/auth-layout';
 export { AutocompleteComponent } from '@ids-group-ltd/ids-design-system/components/autocomplete';
 export type {
@@ -133,12 +133,12 @@ export {
   ChatAttachmentComponent,
   ChatMessageComponent,
   ChatThreadComponent,
-} from '@ids-group-ltd/ids-design-system/components/chat-message';
+} from '@ids-group-ltd/ids-design-system/components/chat';
 export type {
   ChatMessageRole,
   ChatMessageStatus,
   ChatStepsEnter,
-} from '@ids-group-ltd/ids-design-system/components/chat-message';
+} from '@ids-group-ltd/ids-design-system/components/chat';
 export { CheckboxComponent } from '@ids-group-ltd/ids-design-system/components/checkbox';
 export { ColorPickerComponent } from '@ids-group-ltd/ids-design-system/components/color-picker';
 export { ColumnChartComponent } from '@ids-group-ltd/ids-design-system/components/column-chart';
@@ -233,8 +233,8 @@ export {
   MenuDividerComponent,
   MenuItemComponent,
 } from '@ids-group-ltd/ids-design-system/components/menu';
-export { MessageInputComponent } from '@ids-group-ltd/ids-design-system/components/message-input';
-export type { MessageInputLayout } from '@ids-group-ltd/ids-design-system/components/message-input';
+export { ChatInputComponent } from '@ids-group-ltd/ids-design-system/components/chat';
+export type { ChatInputLayout } from '@ids-group-ltd/ids-design-system/components/chat';
 export {
   ModalCardComponent,
   ModalComponent,

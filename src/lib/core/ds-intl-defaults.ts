@@ -9,7 +9,7 @@ export const DS_INTL_DEFAULTS: DsIntl & {
   readonly timeline: Required<NonNullable<DsIntl['timeline']>>;
   readonly splitter: Required<NonNullable<DsIntl['splitter']>>;
   readonly inlineEdit: Required<NonNullable<DsIntl['inlineEdit']>>;
-  readonly messageInput: Required<NonNullable<DsIntl['messageInput']>>;
+  readonly chatInput: Required<NonNullable<DsIntl['chatInput']>>;
   readonly attachment: Required<NonNullable<DsIntl['attachment']>>;
   readonly chat: Required<NonNullable<DsIntl['chat']>>;
 } = {
@@ -152,7 +152,7 @@ export const DS_INTL_DEFAULTS: DsIntl & {
     image: 'Image',
     file: 'File',
   },
-  messageInput: {
+  chatInput: {
     label: 'Message',
     send: 'Send',
   },
