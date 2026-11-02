@@ -278,6 +278,18 @@ export interface DsIntl {
     readonly stepsFailed?: (count: number) => string;
     /** `` `Steps folded, ${count}` ``, then `` `, ${failed} failed` `` - the chip's accessible name. */
     readonly stepsFolded?: (count: number, failed: number) => string;
+    /** `'Done'` - spoken before the heading of a `ds-chat-step` with `status="done"`. */
+    readonly stepDone?: string;
+    /** `'In progress'` - `status="running"`. */
+    readonly stepRunning?: string;
+    /** `'Not started'` - `status="pending"`. */
+    readonly stepPending?: string;
+    /** `'Waiting for your approval'` - `status="waiting"`. */
+    readonly stepWaiting?: string;
+    /** `'Failed'` - `status="error"`. */
+    readonly stepFailed?: string;
+    /** `` `Details: ${heading}` `` - the toggle of a step's `[details]` area; `'Details'` without a heading. */
+    readonly stepDetails?: (heading: string) => string;
   };
   readonly tabs: {
     readonly close: (label: string) => string;

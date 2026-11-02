@@ -226,6 +226,12 @@ export const DS_INTL_DEFAULTS: DsIntl & {
       failed
         ? `Steps folded, ${count}, ${failed} failed`
         : `Steps folded, ${count}`,
+    stepDone: 'Done',
+    stepRunning: 'In progress',
+    stepPending: 'Not started',
+    stepWaiting: 'Waiting for your approval',
+    stepFailed: 'Failed',
+    stepDetails: (heading) => (heading ? `Details: ${heading}` : 'Details'),
   },
   tabs: {
     close: (label) => `Close ${label}`,

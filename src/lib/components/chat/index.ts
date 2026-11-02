@@ -1,11 +1,14 @@
 export { ChatMessageComponent } from './chat-message.component';
 export { ChatThreadComponent } from './chat-thread.component';
 export { ChatAttachmentComponent } from './chat-attachment.component';
+export { ChatStepsComponent } from './chat-steps.component';
+export { ChatStepComponent } from './chat-step.component';
 export { ChatInputComponent } from './chat-input.component';
 export { AttachmentComponent } from './attachment.component';
 export type {
   ChatMessageRole,
   ChatMessageStatus,
+  ChatStepStatus,
   ChatStepsEnter,
 } from './chat.types';
 export type { ChatInputLayout } from './chat-input.types';

@@ -42,8 +42,6 @@ export {
   RailTriggerDirective,
 } from '@ids-group-ltd/ids-design-system/components/app-layout';
 export type { DsAppLayoutScrollReset } from '@ids-group-ltd/ids-design-system/components/app-layout';
-export { AttachmentComponent } from '@ids-group-ltd/ids-design-system/components/chat';
-export type { AttachmentKind } from '@ids-group-ltd/ids-design-system/components/chat';
 export { AuthLayoutComponent } from '@ids-group-ltd/ids-design-system/components/auth-layout';
 export { AutocompleteComponent } from '@ids-group-ltd/ids-design-system/components/autocomplete';
 export type {
@@ -130,13 +128,20 @@ export type {
   ChartTooltipTrigger,
 } from '@ids-group-ltd/ids-design-system/components/chart-tooltip';
 export {
+  AttachmentComponent,
   ChatAttachmentComponent,
+  ChatInputComponent,
   ChatMessageComponent,
+  ChatStepComponent,
+  ChatStepsComponent,
   ChatThreadComponent,
 } from '@ids-group-ltd/ids-design-system/components/chat';
 export type {
+  AttachmentKind,
+  ChatInputLayout,
   ChatMessageRole,
   ChatMessageStatus,
+  ChatStepStatus,
   ChatStepsEnter,
 } from '@ids-group-ltd/ids-design-system/components/chat';
 export { CheckboxComponent } from '@ids-group-ltd/ids-design-system/components/checkbox';
@@ -233,8 +238,6 @@ export {
   MenuDividerComponent,
   MenuItemComponent,
 } from '@ids-group-ltd/ids-design-system/components/menu';
-export { ChatInputComponent } from '@ids-group-ltd/ids-design-system/components/chat';
-export type { ChatInputLayout } from '@ids-group-ltd/ids-design-system/components/chat';
 export {
   ModalCardComponent,
   ModalComponent,
