@@ -6,4 +6,4 @@ export type SplitterPane = 'start' | 'end';
 
 /** `'elastic'`: dragged past `min` or `max`, the handle follows with growing resistance and springs
  *  back on release. `'none'`: it stops at the limit. */
-export type SplitterOverscroll = 'elastic' | 'none';
+export type SplitterOverdrag = 'elastic' | 'none';

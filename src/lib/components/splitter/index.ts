@@ -1,6 +1,6 @@
 export { SplitterComponent } from './splitter.component';
 export type {
   SplitterOrientation,
-  SplitterOverscroll,
+  SplitterOverdrag,
   SplitterPane,
 } from './splitter.types';

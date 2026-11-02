@@ -23,7 +23,7 @@ import {
 import { SplitterDraggingStylesComponent } from './splitter-dragging-styles.component';
 import type {
   SplitterOrientation,
-  SplitterOverscroll,
+  SplitterOverdrag,
   SplitterPane,
 } from './splitter.types';
 
@@ -31,8 +31,8 @@ const STEP = 16;
 const LARGE_STEP = 64;
 // The farthest the rubber band pulls past a limit, approached and never reached: 100px, and never more
 // than a third of the pane it squashes, whose content would otherwise read as distorted.
-const OVERSCROLL_CAP = 100;
-const OVERSCROLL_SQUASH = 1 / 3;
+const OVERDRAG_CAP = 100;
+const OVERDRAG_SQUASH = 1 / 3;
 
 /**
  * Two panes with a handle between them that resizes one of them. Slots: `[start]` and `[end]`.
@@ -79,7 +79,7 @@ export class SplitterComponent implements OnInit, OnDestroy {
   readonly ariaLabel = input<string | null>(null);
   /** Dragged past `min` or `max`: `'elastic'` follows the pointer with growing resistance and springs
    *  back on release, `'none'` stops at the limit. Off under `prefers-reduced-motion: reduce`. */
-  readonly overscroll = input<SplitterOverscroll>('elastic');
+  readonly overdrag = input<SplitterOverdrag>('elastic');
 
   protected readonly startId = nextControlId('ds-splitter-pane');
   protected readonly endId = nextControlId('ds-splitter-pane');
@@ -152,7 +152,7 @@ export class SplitterComponent implements OnInit, OnDestroy {
       size: this.current(),
       box: this.panesBox(),
       elastic:
-        this.overscroll() === 'elastic' &&
+        this.overdrag() === 'elastic' &&
         !this.document.defaultView?.matchMedia(
           '(prefers-reduced-motion: reduce)',
         ).matches,
@@ -220,7 +220,7 @@ export class SplitterComponent implements OnInit, OnDestroy {
     const extent = (element: HTMLElement) =>
       horizontal ? element.offsetWidth : element.offsetHeight;
     const squashed = excess > 0 ? other : measured;
-    const cap = Math.min(OVERSCROLL_CAP, extent(squashed) * OVERSCROLL_SQUASH);
+    const cap = Math.min(OVERDRAG_CAP, extent(squashed) * OVERDRAG_SQUASH);
     const pull =
       cap > 0
         ? Math.sign(excess) * cap * (1 - 1 / (Math.abs(excess) / cap + 1))

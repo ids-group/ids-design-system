@@ -36,14 +36,14 @@
   PageUp / PageDown by 64px, Home / End to the limits, and a double click returns to `defaultSize`.
   At a limit the cursor shows the one direction left. Dragged past `min` or `max`, the handle follows
   the pointer with growing resistance, up to 100px and at most a third of the pane it squashes, its
-  line thickening on the same curve up to `--ds-splitter-overscroll-line-scale` times (default `3`),
-  and springs back on release; `overscroll="none"` stops it at the limit instead, and `prefers-reduced-motion: reduce` turns the effect off. At rest the handle shows a three-dot grip and
+  line thickening on the same curve up to `--ds-splitter-overdrag-line-scale` times (default `3`),
+  and springs back on release; `overdrag="none"` stops it at the limit instead, and `prefers-reduced-motion: reduce` turns the effect off. At rest the handle shows a three-dot grip and
   no line; hover and drag show a neutral line, keyboard focus a line in the focus colour. The handle
   fills the gap between the panes, `--ds-splitter-gap` wide. `persistKey` keeps the size in `localStorage`
   under `ds-splitter:<key>`. Name the handle with `ariaLabel`; the new optional `DsIntl.splitter.label`
   (`'Resize panes'`) is the fallback. New exports `SplitterComponent`, `SplitterOrientation`,
-  `SplitterOverscroll` and `SplitterPane`, and CSS hooks `--ds-splitter-gap`, `--ds-splitter-line-color`,
-  `--ds-splitter-drag-color`, `--ds-splitter-grip-color` and `--ds-splitter-overscroll-line-scale`.
+  `SplitterOverdrag` and `SplitterPane`, and CSS hooks `--ds-splitter-gap`, `--ds-splitter-line-color`,
+  `--ds-splitter-drag-color`, `--ds-splitter-grip-color` and `--ds-splitter-overdrag-line-scale`.
 
 - **`ds-timeline-item` draws the steps of a process.** `status`
   (`'done' | 'running' | 'pending' | 'error'`, default `null`) draws the marker: a check, a spinner,

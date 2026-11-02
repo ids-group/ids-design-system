@@ -10584,9 +10584,9 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Accessible name of the handle; unset falls back to `DS_INTL.splitter.label`. Name what it resizes."
       },
       {
-        "name": "overscroll",
+        "name": "overdrag",
         "kind": "input",
-        "type": "SplitterOverscroll",
+        "type": "SplitterOverdrag",
         "union": [
           "elastic",
           "none"
