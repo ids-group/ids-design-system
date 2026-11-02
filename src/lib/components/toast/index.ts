@@ -8,6 +8,7 @@ export type {
   ToastOptions,
   ToastOccurrence,
   ToastRef,
+  ToastUpdate,
   ToastEntry,
   ToastPromiseMessages,
   DsToastPosition,
