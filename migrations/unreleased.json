@@ -21,6 +21,27 @@
       "appliesWhen": "A `ds-table` with `dsTableResize`. A table without it draws no resize line.",
       "restore": "ds-table { --ds-table-resize-line-color: var(--border-default); }",
       "verify": "At rest, a resizable `ds-table` header shows a `--text-tertiary` line at each column edge, unless `--ds-table-resize-line-color` is set."
+    },
+    {
+      "id": "timeline-node-border-default-color",
+      "kind": "behavior",
+      "old": "--border-strong",
+      "new": null,
+      "surface": [
+        "template",
+        "style"
+      ],
+      "searchHints": [
+        "ds-timeline-item",
+        "--ds-timeline-node-border-color"
+      ],
+      "detect": [
+        "ds-timeline-item"
+      ],
+      "action": "None, unless a timeline must keep the faint ring it had: was `--border-strong`, now `--text-tertiary`; set `--ds-timeline-node-border-color: var(--border-strong)` on that `ds-timeline-item`.",
+      "appliesWhen": "A `ds-timeline-item` with no `status` and the default or `muted` tone. Items with a `status` or another tone draw their own ring.",
+      "restore": "ds-timeline-item { --ds-timeline-node-border-color: var(--border-strong); }",
+      "verify": "A `ds-timeline-item` with no `status` and the default tone draws its marker ring in `--text-tertiary`, unless `--ds-timeline-node-border-color` is set."
     }
   ],
   "informational": [
@@ -46,7 +67,8 @@
     {
       "text": "A `ds-timeline-item` wrapped in its own element inside `ds-timeline` draws its connector to the next item; only the last item of the timeline draws none.",
       "verify": "Wrap each `ds-timeline-item` of a `ds-timeline` in a `div`: every item but the last shows the vertical line under its marker."
-    }
+    },
+    "The ring of an upcoming `ds-stepper` step is drawn in `--text-tertiary` instead of `--border-strong`, so it reaches 3:1 against the surface. Visual only. Nothing to change in your code."
   ],
   "deleteList": []
 }
