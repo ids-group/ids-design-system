@@ -241,17 +241,17 @@ Methods: `focus(options?)`, `selectionStart` / `selectionEnd` (reads), `setSelec
 All inputs: `hint: string = ''`, `error: string = ''`, `warning: string = ''`, `reserveMessage: boolean | null = null`, `messageIcon: IconName | false | null = null`, `errors: readonly DsFieldError[] = []`, `invalid: boolean = false`, `touched: boolean = false`, `pending: boolean = false`, `dirty: boolean = false`, `showDirty: boolean | null = null`, `hidden: boolean = false`, `value: string = ''`, `size: 'sm' | 'md' | 'lg' = null`, `label: string = ''`, `placeholder: string = ''`, `disabled: boolean = false`, `readOnly: boolean = false`, `readonly: boolean = false`, `success: string = ''`, `required: boolean = false`, `optional: boolean = false`, `rows: number = 3`, `name: string | null = null`, `autosize: boolean = false`, `minRows: number | null = null`, `maxRows: number | null = null`, `resize: 'none' | 'vertical' | 'horizontal' | 'both' = 'vertical'`, `ariaLabel: string | null = null`, `maxLength: number | null = null`, `maxLengthMode: 'hard' | 'soft' = 'hard'`, `countTrimmed: boolean = false`, `minLength: number | null = null`, `pattern: readonly RegExp[] = []`
 <!-- /inputs -->
 
-#### `<ds-message-input>` — `MessageInputComponent`
+#### `<ds-chat-input>` — `ChatInputComponent`
 Message box for a chat or an instruction: chips above an auto-growing text area, a bottom bar with actions on the left and the send button on the right. Use it instead of a `ds-textarea` beside icon buttons, or a `ds-search` standing in for a message box.
 Slots: `[attachments]` on the page above the frame (the app's own card for a picked element and its snapshot; hidden while empty), `[chips]` above the text inside the frame (project `ds-tag`s for attachments and picked elements; hidden while empty), `[actions]` on the left of the bar (an attach `ds-icon-button`), `[send]` replaces the default send button (render your own states, e.g. Queue / Stop while `busy`; call `submit()` or read `canSubmit`).
 Keyboard: Enter emits `(submitted): string` with the trimmed text; Shift+Enter breaks the line; an Enter that commits an IME composition never submits; blank text, `busy` and `disabled` never submit. Enter on blank text inserts nothing.
-Send button: a 32px `ds-button` with an arrow, named by `DS_INTL.messageInput.send`, disabled while the text is blank. `busy` puts it in `loading` (spinner, `aria-busy`, press refused, focus kept). `layout: MessageInputLayout = 'status-bar'` places the `busyLabel` step: `'status-bar'` beside the fixed square button, `'status-above'` on a reserved line above the box, `'split'` attach outside left and send outside right with the step above, `'send-outside'` a round 40px send outside right, `'toolbar'` attach, step and send in a row under the box.
+Send button: a 32px `ds-button` with an arrow, named by `DS_INTL.chatInput.send`, disabled while the text is blank. `busy` puts it in `loading` (spinner, `aria-busy`, press refused, focus kept). `layout: ChatInputLayout = 'status-bar'` places the `busyLabel` step: `'status-bar'` beside the fixed square button, `'status-above'` on a reserved line above the box, `'split'` attach outside left and send outside right with the step above, `'send-outside'` a round 40px send outside right, `'toolbar'` attach, step and send in a row under the box.
 Output: `(filesPasted): File[]` — the image files of a paste; the paste inserts no text when it carries images. The value is NOT cleared on submit: set `value` to `''` once the message is accepted.
-Methods: `submit()`, `focus(options?)`; `canSubmit` signal. Text area name: `ariaLabel`, else `DS_INTL.messageInput.label`.
-Tokens: `--ds-message-input-bg-color`, `--ds-message-input-radius`, `--ds-message-input-padding`; border, hover and focus follow the `--ds-field-*` set.
+Methods: `submit()`, `focus(options?)`; `canSubmit` signal. Text area name: `ariaLabel`, else `DS_INTL.chatInput.label`.
+Tokens: `--ds-chat-input-bg-color`, `--ds-chat-input-radius`, `--ds-chat-input-padding`; border, hover and focus follow the `--ds-field-*` set.
 
-<!-- inputs:ds-message-input -->
-All inputs: `value: string = ''`, `placeholder: string = ''`, `ariaLabel: string | null = null`, `minRows: number = 1`, `maxRows: number = 8`, `disabled: boolean = false`, `busy: boolean = false`, `busyLabel: string = ''`, `layout: MessageInputLayout = 'status-bar'`
+<!-- inputs:ds-chat-input -->
+All inputs: `value: string = ''`, `placeholder: string = ''`, `ariaLabel: string | null = null`, `minRows: number = 1`, `maxRows: number = 8`, `disabled: boolean = false`, `busy: boolean = false`, `busyLabel: string = ''`, `layout: ChatInputLayout = 'status-bar'`
 <!-- /inputs -->
 
 #### `<ds-number-stepper>` — `NumberStepperComponent`
@@ -461,7 +461,7 @@ All inputs: `status: DsStatusKey`, `ariaLabel: string | null = null`
 <!-- /inputs -->
 
 #### `<ds-attachment>` — `AttachmentComponent`
-A file attached to a message, for the `[chips]` slot of `<ds-message-input>`: a 24px type tile (PDF, DOC, IMG, FILE) or an image preview, the file name in bold and a muted second line.
+A file attached to a message, for the `[chips]` slot of `<ds-chat-input>`: a 24px type tile (PDF, DOC, IMG, FILE) or an image preview, the file name in bold and a muted second line.
 Inputs: `name: required string`, `meta: string = ''` (e.g. `'PDF · 240 KB'`), `kind: AttachmentKind = 'file'` (`'pdf' | 'doc' | 'image' | 'file'`), `previewUrl: string | null = null` (used when `kind` is `'image'`), `removable: boolean = false`. Output: `(removed): void`.
 Accessibility: the remove button is named `DS_INTL.attachment.remove(name)` ("Remove Brief.pdf"), the kind ("PDF document") is announced before `meta`, an image preview takes `name` as alt text.
 
@@ -599,27 +599,26 @@ All inputs: `loading: boolean = false`, `label: string = ''`, `blur: boolean = t
 
 #### `<ds-timeline>` — `TimelineComponent`
 
-The list that holds `ds-timeline-item`s, at any depth: it marks the first and last item so the connector stops at both ends. `density: TimelineDensity = 'default'`; `'compact'` sets 16px markers, the smaller text size and 4px rows with no connector, for an agent's steps beside a chat message.
+The list that holds `ds-timeline-item`s, at any depth: it marks the first and last item so the connector stops at both ends. For an agent's steps beside a chat message use `ds-chat-steps`.
 
 <!-- inputs:ds-timeline -->
-All inputs: `density: 'default' | 'compact' = 'default'`
 <!-- /inputs -->
 
 #### `<ds-timeline-item>` — `TimelineItemComponent`
 
-Slots: default content below the heading; `[trailing]` at the end of the heading row (Undo, Stop, Retry); `[details]` behind a chevron toggle (down while closed, up while open), closed by default, open state two-way as `expanded`; it opens with a height transition, and an open item sits on a tinted card behind its marker, text and details (`--ds-timeline-open-bg-color`, default `--surface-secondary`). `status` draws the marker and is spoken before the heading; while set, `icon` and `tone` are ignored. Place items inside `<ds-timeline>`, at any depth: it marks the last item, which draws no connector. A `pending` step draws a dashed ring and muted text (a planned step not reached yet). A `waiting` step draws a grey disc with a pause glyph and is spoken "Waiting for your approval"; put the reader's answer buttons under its heading, and the marker stays beside the heading. `<ds-timeline density="compact">` (`TimelineDensity`) sets 16px markers, the smaller text size and 4px rows with no connector, for an agent's steps beside a chat message.
+Slots: default content below the heading; `[trailing]` at the end of the heading row (Undo, Stop, Retry); `[details]` behind a chevron toggle (down while closed, up while open), closed by default, open state two-way as `expanded`; it opens with a height transition, and an open item sits on a tinted card behind its marker, text and details (`--ds-timeline-open-bg-color`, default `--surface-secondary`). `status` draws the marker and is spoken before the heading; while set, `icon` and `tone` are ignored. Place items inside `<ds-timeline>`, at any depth: it marks the last item, which draws no connector. A `pending` step draws a dashed ring and muted text (a planned step not reached yet).
 
 <!-- inputs:ds-timeline-item -->
-All inputs: `heading: string = ''`, `time: string = ''`, `icon: IconName | null = null`, `tone: TimelineTone = 'default'`, `status: 'done' | 'running' | 'pending' | 'waiting' | 'error' = null`, `expanded: boolean = false`
+All inputs: `heading: string = ''`, `time: string = ''`, `icon: IconName | null = null`, `tone: TimelineTone = 'default'`, `status: 'done' | 'running' | 'pending' | 'error' = null`, `expanded: boolean = false`
 <!-- /inputs -->
 
 #### `<ds-chat-message>` — `ChatMessageComponent`
 
-One message of a chat: `role: ChatMessageRole = 'assistant'` puts a filled bubble on the right (`'user'`) or a subtle one on the left (`'assistant'`). `author` shows above the bubble; `time` (already formatted) under it, in a thread only under the last message of a run; `sentAt: Date | string | number | null` lets a thread split runs by time; without `author` the role is spoken (`DS_INTL.chat.user` / `assistant`). Slots: default (the text, or the markdown your app renders; a user message keeps its line breaks), `[steps]` above the bubble, on the thread's surface (a `ds-timeline` of the agent's steps; a message with only steps draws no bubble), `[attachments]` under the text (`ds-chat-attachment` for something to open, `ds-tag` for a plain file), `[actions]` under the bubble (copy, retry), shown on hover or focus and always without hover. Text is selectable and long words and URLs wrap. The window, tabs, composer and question cards around it stay in the app. `streaming` marks a reply still arriving (caret after the text, `aria-busy`, `[actions]` hidden; the thread reads it when it completes). `status: ChatMessageStatus | null` is the delivery of a sent message, under it in place of the time: `'sending'` (dimmed), `'failed'` with a Retry button emitting `(retry)`; `'sent'` shows nothing and is only spoken; the app resends and sets `status` back. `stepsFolded` (two-way) folds the `[steps]` into a chip at the top of the bubble with the step count and the failed count; the chip toggles them (`aria-expanded`), and stays once shown. Steps are counted from their `ds-timeline-item`s. `stepsEnter: ChatStepsEnter = 'together'` brings steps that arrive at once (a plan given up front) in as one block, or `'stagger'` one after another; a step that fails while folded opens the steps again.
+One message of a chat: `role: ChatMessageRole = 'assistant'` puts a filled bubble on the right (`'user'`) or a subtle one on the left (`'assistant'`). `author` shows above the bubble; `time` (already formatted) under it, in a thread only under the last message of a run; `sentAt: Date | string | number | null` lets a thread split runs by time; without `author` the role is spoken (`DS_INTL.chat.user` / `assistant`). Slots: default (the text, or the markdown your app renders; a user message keeps its line breaks), `[steps]` above the bubble, on the thread's surface (a `ds-chat-steps` of the agent's steps; a message with only steps draws no bubble), `[attachments]` under the text (`ds-chat-attachment` for something to open, `ds-tag` for a plain file), `[actions]` under the bubble (copy, retry), shown on hover or focus and always without hover. Text is selectable and long words and URLs wrap. The window, tabs, composer and question cards around it stay in the app. `streaming` marks a reply still arriving (caret after the text, `aria-busy`, `[actions]` hidden; the thread reads it when it completes). `status: ChatMessageStatus | null` is the delivery of a sent message, under it in place of the time: `'sending'` (dimmed), `'failed'` with a Retry button emitting `(retry)`; `'sent'` shows nothing and is only spoken; the app resends and sets `status` back. `stepsFolded` (two-way) folds the `[steps]` into a chip at the top of the bubble with the step count and the failed count; the chip toggles them (`aria-expanded`), and stays once shown. Steps are counted from their `ds-chat-step`s; a step that fails while folded opens the steps again.
 Tokens: `--ds-chat-message-max-width` (default `85%`), `--ds-chat-message-radius`, `--ds-chat-message-padding`, `--ds-chat-message-user-bg-color` / `-user-color`, `--ds-chat-message-assistant-bg-color` / `-assistant-color`.
 
 <!-- inputs:ds-chat-message -->
-All inputs: `role: 'user' | 'assistant' = 'assistant'`, `author: string = ''`, `time: string = ''`, `sentAt: Date | string | number | null = null`, `streaming: boolean = false`, `status: 'sending' | 'sent' | 'failed' = null`, `stepsFolded: boolean = false`, `stepsEnter: 'together' | 'stagger' = 'together'`
+All inputs: `role: 'user' | 'assistant' = 'assistant'`, `author: string = ''`, `time: string = ''`, `sentAt: Date | string | number | null = null`, `streaming: boolean = false`, `status: 'sending' | 'sent' | 'failed' = null`, `stepsFolded: boolean = false`
 <!-- /inputs -->
 
 #### `<ds-chat-thread>` — `ChatThreadComponent`
@@ -637,6 +636,22 @@ Chip in a message's `[attachments]` slot (`label` required, `source` muted after
 
 <!-- inputs:ds-chat-attachment -->
 All inputs: `label: required string`, `source: string = ''`, `icon: IconName | null = 'paperclip'`, `expanded: boolean = false`
+<!-- /inputs -->
+
+#### `<ds-chat-steps>` — `ChatStepsComponent`
+
+The steps of an agent's work, in the `[steps]` slot of a `ds-chat-message`: `ds-chat-step`s in order, at any depth, with 16px markers, the smaller text size and 4px rows with no connector. Import from `@ids-group-ltd/ids-design-system/components/chat` with the rest of the chat family. `enter: ChatStepsEnter = 'together'` brings steps that arrive at once (a plan given up front) into a message as one block, or `'stagger'` one after another; steps that arrive one at a time grow in either way.
+
+<!-- inputs:ds-chat-steps -->
+All inputs: `enter: 'together' | 'stagger' = 'together'`
+<!-- /inputs -->
+
+#### `<ds-chat-step>` — `ChatStepComponent`
+
+One step: `heading`, optional `time`, and `status: ChatStepStatus | null` (`'done' | 'running' | 'pending' | 'waiting' | 'error'`), which draws the marker (a check, a spinner, a dashed ring with muted text, a grey disc with a pause glyph, a cross) and is spoken before the heading (`DS_INTL.chat.stepDone`, `stepRunning`, `stepPending`, `stepWaiting` "Waiting for your approval", `stepFailed`). Slots: default content under the heading (the reader's answer buttons on a `waiting` step, whose marker stays beside the heading); `[trailing]` at the end of the heading row (Stop, Retry); `[details]` behind a chevron toggle (`DS_INTL.chat.stepDetails(heading)`), closed by default, open state two-way as `expanded`; it opens with a height transition on a tinted card. A failed step the reader has not opened keeps its message's steps unfolded.
+
+<!-- inputs:ds-chat-step -->
+All inputs: `heading: string = ''`, `time: string = ''`, `status: 'done' | 'running' | 'pending' | 'waiting' | 'error' = null`, `expanded: boolean = false`
 <!-- /inputs -->
 
 #### `<ds-toast-region>` — `ToastRegionComponent`

@@ -5,6 +5,7 @@ import {
   afterNextRender,
   booleanAttribute,
   computed,
+  contentChild,
   contentChildren,
   effect,
   inject,
@@ -20,17 +21,14 @@ import {
 } from '@ids-group-ltd/ids-design-system/core';
 import { ButtonComponent } from '@ids-group-ltd/ids-design-system/components/button';
 import { IconComponent } from '@ids-group-ltd/ids-design-system/icons';
-import { TimelineItemComponent } from '@ids-group-ltd/ids-design-system/components/timeline';
 import { CHAT_THREAD } from './chat.token';
-import type {
-  ChatMessageRole,
-  ChatMessageStatus,
-  ChatStepsEnter,
-} from './chat.types';
+import { ChatStepComponent } from './chat-step.component';
+import { ChatStepsComponent } from './chat-steps.component';
+import type { ChatMessageRole, ChatMessageStatus } from './chat.types';
 
 /**
  * One message of a conversation: a bubble on the right for the user, on the left for the
- * assistant. Slots: default (the text or rendered markdown), `[steps]` (a `ds-timeline` of the
+ * assistant. Slots: default (the text or rendered markdown), `[steps]` (a `ds-chat-steps` of the
  * agent's steps, above the bubble), `[attachments]` (under the text), `[actions]` (under the bubble).
  * With `stepsFolded` the steps fold into a chip at the top of the bubble that opens them again.
  */
@@ -72,29 +70,29 @@ export class ChatMessageComponent {
 
   /** The `[steps]` fold into a chip at the top of the bubble, which opens them again; two-way bound.
    *  Inside a `ds-chat-thread` the steps of the reply before a new user message fold on their own
-   *  (`foldStepsOnSend`). Folds only steps given as `ds-timeline-item`s. */
+   *  (`foldStepsOnSend`). Folds only steps given as `ds-chat-step`s. */
   readonly stepsFolded = model<boolean>(false);
-  /** How steps that arrive together (a plan given at once) come in: `'together'` grows them in as
-   *  one block, `'stagger'` one after another. Steps that arrive one at a time grow in either way. */
-  readonly stepsEnter = input<ChatStepsEnter>('together');
 
   /** Retry was pressed on a `'failed'` message. Send it again and move `status` back to `'sending'`. */
   readonly retry = output<void>();
 
-  private readonly steps = contentChildren(TimelineItemComponent, {
+  private readonly stepList = contentChild(ChatStepsComponent, {
     descendants: true,
   });
-  private readonly stepElements = contentChildren(TimelineItemComponent, {
+  private readonly steps = contentChildren(ChatStepComponent, {
+    descendants: true,
+  });
+  private readonly stepElements = contentChildren(ChatStepComponent, {
     descendants: true,
     read: ElementRef<HTMLElement>,
   });
-  /** How many `ds-timeline-item`s the `[steps]` hold. @internal */
+  /** How many `ds-chat-step`s the `[steps]` hold. @internal */
   readonly stepCount = computed(() => this.steps().length);
   /** How many of them have `status="error"`. @internal */
   readonly failedStepCount = computed(
     () => this.steps().filter((step) => step.status() === 'error').length,
   );
-  private readonly openedFailures = new Set<TimelineItemComponent>();
+  private readonly openedFailures = new Set<ChatStepComponent>();
   private readonly openedFailuresVersion = signal(0);
   /** Failed steps the reader has not opened yet; while any remain the thread does not fold them.
    *  @internal */
@@ -105,6 +103,9 @@ export class ChatMessageComponent {
       (step) => step.status() === 'error' && !this.openedFailures.has(step),
     ).length;
   });
+  private readonly stagger = computed(
+    () => this.stepList()?.enter() === 'stagger',
+  );
   protected readonly folded = computed(
     () => this.stepsFolded() && this.stepCount() > 0,
   );
@@ -156,7 +157,7 @@ export class ChatMessageComponent {
       if (this.thread?.appendedAfterRender(this)) {
         const steps = this.stepElements().map((step) => step.nativeElement);
         // A plan given at once: the steps grow in one after another, or the message as one block.
-        if (this.stepsEnter() === 'stagger' && steps.length) {
+        if (this.stagger() && steps.length) {
           this.growIn(steps, 70);
         } else {
           this.growIn([this.host.nativeElement]);
@@ -193,7 +194,7 @@ export class ChatMessageComponent {
       }
     });
     // Steps that arrive into a message already on screen grow in, one after another.
-    let knownSteps = new Set<TimelineItemComponent>();
+    let knownSteps = new Set<ChatStepComponent>();
     effect(() => {
       const items = this.steps();
       untracked(() => {
@@ -204,7 +205,7 @@ export class ChatMessageComponent {
           const elements = this.stepElements();
           this.growIn(
             added.map((item) => elements[items.indexOf(item)].nativeElement),
-            this.stepsEnter() === 'stagger' ? 70 : 0,
+            this.stagger() ? 70 : 0,
           );
         }
       });

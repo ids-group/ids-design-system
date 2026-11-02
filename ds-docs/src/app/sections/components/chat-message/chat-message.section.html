@@ -160,12 +160,12 @@
       <div class="state-cell-stage chat-stage">
         <ds-chat-thread>
           <ds-chat-message>
-            <ds-timeline steps>
-              <ds-timeline-item
+            <ds-chat-steps steps>
+              <ds-chat-step
                 heading="Read the page"
                 status="done" />
 
-              <ds-timeline-item
+              <ds-chat-step
                 heading="Run the build"
                 status="error"
                 [expanded]="true">
@@ -174,12 +174,12 @@
                   class="t-mono-block">
 error TS2322: Type 'string' is not assignable to type 'number'.
                 </pre>
-              </ds-timeline-item>
+              </ds-chat-step>
 
-              <ds-timeline-item
+              <ds-chat-step
                 heading="Fix the type"
                 status="done" />
-            </ds-timeline>
+            </ds-chat-steps>
             The build failed once on a type error; I fixed it and it passes now.
           </ds-chat-message>
         </ds-chat-thread>
@@ -200,15 +200,15 @@ error TS2322: Type 'string' is not assignable to type 'number'.
           </ds-chat-message>
 
           <ds-chat-message>
-            <ds-timeline steps>
-              <ds-timeline-item
+            <ds-chat-steps steps>
+              <ds-chat-step
                 heading="Read the page"
                 status="done" />
 
-              <ds-timeline-item
+              <ds-chat-step
                 heading="Run the build"
                 status="running" />
-            </ds-timeline>
+            </ds-chat-steps>
           </ds-chat-message>
         </ds-chat-thread>
       </div>
@@ -336,27 +336,27 @@ error TS2322: Type 'string' is not assignable to type 'number'.
       </ds-chat-message>
 
       @if (turn.steps.length || turn.reply) {
-      <ds-chat-message [stepsEnter]="planEnter()">
-        <ds-timeline
-          steps
-          density="compact">
-          @for (step of turn.steps; track step.heading) {
-            <ds-timeline-item
-              [status]="step.status"
-              [heading]="step.heading">
-              @if (step.status === 'error') {
-                <pre
-                  details
-                  class="t-mono-block">
+        <ds-chat-message>
+          <ds-chat-steps
+            steps
+            [enter]="planEnter()">
+            @for (step of turn.steps; track step.heading) {
+              <ds-chat-step
+                [status]="step.status"
+                [heading]="step.heading">
+                @if (step.status === 'error') {
+                  <pre
+                    details
+                    class="t-mono-block">
 HTTP 503: service unavailable
                 </pre
-                >
-              }
-            </ds-timeline-item>
-          }
-        </ds-timeline>
-        {{ turn.reply }}
-      </ds-chat-message>
+                  >
+                }
+              </ds-chat-step>
+            }
+          </ds-chat-steps>
+          {{ turn.reply }}
+        </ds-chat-message>
       }
     }
   </ds-chat-thread>
@@ -374,7 +374,9 @@ HTTP 503: service unavailable
 
     <ds-button
       variant="outline"
-      (pressed)="planEnter.set(planEnter() === 'together' ? 'stagger' : 'together')">
+      (pressed)="
+        planEnter.set(planEnter() === 'together' ? 'stagger' : 'together')
+      ">
       Plan enters: {{ planEnter() }}
     </ds-button>
 

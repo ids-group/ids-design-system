@@ -1,32 +1,32 @@
 import { Component, ViewEncapsulation, signal } from '@angular/core';
 import { ButtonComponent } from 'ds/button';
-import { MessageInputComponent } from 'ds/message-input';
-import type { MessageInputLayout } from 'ds/message-input';
+import { ChatInputComponent } from 'ds/chat';
+import type { ChatInputLayout } from 'ds/chat';
 import { IconButtonComponent } from 'ds/icon-button';
 import { SwitchComponent } from 'ds/switch';
 import { TagComponent } from 'ds/tag';
 import { DocsSectionComponent } from '../../../shared/docs-section.component';
 
 @Component({
-  selector: 'section-components-message-input',
+  selector: 'section-components-chat-input',
   standalone: true,
   imports: [
     DocsSectionComponent,
-    MessageInputComponent,
+    ChatInputComponent,
     ButtonComponent,
     IconButtonComponent,
     SwitchComponent,
     TagComponent,
   ],
   encapsulation: ViewEncapsulation.Emulated,
-  templateUrl: './message-input.section.html',
+  templateUrl: './chat-input.section.html',
   styleUrls: [
     '../../../shared/section-demo.scss',
-    './message-input.section.scss',
+    './chat-input.section.scss',
   ],
 })
-export class MessageInputSection {
-  protected readonly layouts: readonly MessageInputLayout[] = [
+export class ChatInputSection {
+  protected readonly layouts: readonly ChatInputLayout[] = [
     'status-bar',
     'status-above',
     'split',

@@ -9,7 +9,7 @@ export const DS_INTL_DEFAULTS: DsIntl & {
   readonly timeline: Required<NonNullable<DsIntl['timeline']>>;
   readonly splitter: Required<NonNullable<DsIntl['splitter']>>;
   readonly inlineEdit: Required<NonNullable<DsIntl['inlineEdit']>>;
-  readonly messageInput: Required<NonNullable<DsIntl['messageInput']>>;
+  readonly chatInput: Required<NonNullable<DsIntl['chatInput']>>;
   readonly attachment: Required<NonNullable<DsIntl['attachment']>>;
   readonly chat: Required<NonNullable<DsIntl['chat']>>;
 } = {
@@ -152,7 +152,7 @@ export const DS_INTL_DEFAULTS: DsIntl & {
     image: 'Image',
     file: 'File',
   },
-  messageInput: {
+  chatInput: {
     label: 'Message',
     send: 'Send',
   },
@@ -202,7 +202,6 @@ export const DS_INTL_DEFAULTS: DsIntl & {
     done: 'Done',
     running: 'In progress',
     pending: 'Not started',
-    waiting: 'Waiting for your approval',
     error: 'Failed',
     details: (heading) => (heading ? `Details: ${heading}` : 'Details'),
   },
@@ -226,6 +225,12 @@ export const DS_INTL_DEFAULTS: DsIntl & {
       failed
         ? `Steps folded, ${count}, ${failed} failed`
         : `Steps folded, ${count}`,
+    stepDone: 'Done',
+    stepRunning: 'In progress',
+    stepPending: 'Not started',
+    stepWaiting: 'Waiting for your approval',
+    stepFailed: 'Failed',
+    stepDetails: (heading) => (heading ? `Details: ${heading}` : 'Details'),
   },
   tabs: {
     close: (label) => `Close ${label}`,

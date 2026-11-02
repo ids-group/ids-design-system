@@ -20,3 +20,13 @@ export interface ChatThreadContract {
 export const CHAT_THREAD = new InjectionToken<ChatThreadContract>(
   'CHAT_THREAD',
 );
+
+/** Contract that ds-chat-step reads from its parent ds-chat-steps. */
+export interface ChatStepsContract {
+  /** The step that draws no gap above it. */
+  readonly firstStep: Signal<object | undefined>;
+  /** The step that draws no gap below it. */
+  readonly lastStep: Signal<object | undefined>;
+}
+
+export const CHAT_STEPS = new InjectionToken<ChatStepsContract>('CHAT_STEPS');

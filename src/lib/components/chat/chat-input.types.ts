@@ -1,4 +1,4 @@
-export type MessageInputLayout =
+export type ChatInputLayout =
   | 'status-bar'
   | 'status-above'
   | 'split'

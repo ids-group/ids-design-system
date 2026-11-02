@@ -54,8 +54,8 @@
   `--ds-splitter-drag-color`, `--ds-splitter-grip-color` and `--ds-splitter-overdrag-line-scale`.
 
 - **`ds-timeline-item` draws the steps of a process.** `status`
-  (`'done' | 'running' | 'pending' | 'waiting' | 'error'`, default `null`) draws the marker: a check,
-  a spinner, an empty ring, a grey disc with a pause glyph or a cross, and a screen reader hears it before the heading ("Failed: Send to
+  (`'done' | 'running' | 'pending' | 'error'`, default `null`) draws the marker: a check,
+  a spinner, an empty ring or a cross, and a screen reader hears it before the heading ("Failed: Send to
   reviewers"). While `status` is set it decides the marker and `icon` and `tone` are ignored; with
   `null` the item renders as before. An element marked `trailing` sits at the end of the heading
   row, for an Undo, Stop or Retry button. An element marked `details` is hidden behind a chevron
@@ -64,22 +64,18 @@
   transition, closed details are out of the tab order and the accessibility tree, and an open item
   sits on a tinted card behind its marker, text and details (`--ds-timeline-open-bg-color`, default
   `--surface-secondary`), which moves neither the heading nor the marker. A `pending` step has a
-  dashed ring in `--text-tertiary`, which stands out from the surface at 3:1 or more in both themes, and muted text. A `waiting` step needs the reader's answer, such as Approve buttons under its
-  heading; its marker stays beside the heading however tall the row grows. `ds-timeline` takes `density` (`TimelineDensity`, `'default'` or
-  `'compact'`): compact sets 16px markers, the smaller text size and 4px rows with no connector, for
-  an agent's steps beside a chat message; `--ds-timeline-node-size` and `--ds-timeline-gap` still
-  override both densities. New types `TimelineStatus` and `TimelineDensity`, CSS hooks
+  dashed ring in `--text-tertiary`, which stands out from the surface at 3:1 or more in both themes, and muted text. For an agent's steps in a chat, use `ds-chat-steps`. New type `TimelineStatus`, CSS hooks
   `--ds-timeline-toggle-icon-color`, `--ds-timeline-toggle-icon-color-hover` and
   `--ds-timeline-open-bg-color`, and the optional `DsIntl.timeline` keys `done`,
-  `running`, `pending`, `waiting`, `error` and `details(heading)`.
-- **`ds-message-input`, a message box for a chat or an instruction.** An auto-growing text area
+  `running`, `pending`, `error` and `details(heading)`.
+- **`ds-chat-input` (`ChatInputComponent`), a message box for a chat or an instruction.** An auto-growing text area
   (`minRows`, default `1`; `maxRows`, default `8`) with a two-way `value`, `placeholder`, `ariaLabel`
   and `disabled`. Enter emits `(submitted)` with the trimmed text and Shift+Enter breaks the line; an
   Enter that commits an IME composition, blank text, `busy` and `disabled` never submit. Elements
   marked `attachments` sit on the page above the frame (a picked element with its snapshot), `chips`
   above the text inside the frame, `actions` on the left of the bottom bar, and `send` replaces the
   default send button on the right. That button is disabled while the text is blank; with `busy` it
-  shows a spinner and refuses the press. `layout` (`MessageInputLayout`, default `'status-bar'`) places
+  shows a spinner and refuses the press. `layout` (`ChatInputLayout`, default `'status-bar'`) places
   the buttons and the `busyLabel` step: `'status-bar'` keeps a 32px square send button and shows the
   step beside it, `'status-above'` shows the step on a line above the box, `'split'` puts attach outside on
   the left and send outside on the right with the step above, `'send-outside'` keeps attach and the
@@ -87,21 +83,22 @@
   the step and send in a row under the box. `(filesPasted)` emits the
   image files of a paste, which then inserts no text. `submit()`, `focus()` and `canSubmit` serve a
   custom send area. The text is not cleared on submit: clear `value` once the message is accepted.
-  New optional `DsIntl.messageInput` keys `label` (`'Message'`) and `send` (`'Send'`), and CSS hooks
-  `--ds-message-input-bg-color`, `--ds-message-input-radius`, `--ds-message-input-padding` (default `--space-2`); the border, hover and
+  New optional `DsIntl.chatInput` keys `label` (`'Message'`) and `send` (`'Send'`), and CSS hooks
+  `--ds-chat-input-bg-color`, `--ds-chat-input-radius`, `--ds-chat-input-padding` (default `--space-2`); the border, hover and
   focus colours follow the `--ds-field-*` set and the focus shadow `--ds-field-focus-shadow`.
 - **`ds-attachment` (`AttachmentComponent`), a file attached to a message.** A type tile (`kind`: `'pdf' | 'doc' | 'image' |
   'file'`, default `'file'`) or, for `'image'` with `previewUrl`, the image itself, then `name` and a
   second line `meta` such as the size. `removable` shows a remove button named "Remove {name}" that
   emits `(removed)`; the kind is announced before `meta`, and an image preview takes `name` as its
-  alt text. Place it in the `[chips]` slot of `ds-message-input`. New type `AttachmentKind` and the
+  alt text. Place it in the `[chips]` slot of `ds-chat-input`. New type `AttachmentKind` and the
   optional `DsIntl.attachment` keys `remove(name)`, `pdf`, `doc`, `image` and `file`.
-- **`ds-chat-message`, `ds-chat-thread` and `ds-chat-attachment`, the bubbles and the list of a
-  chat.** `ds-chat-message` takes `role` (`ChatMessageRole`, `'user'` or `'assistant'`, default
+- **`ds-chat-message`, `ds-chat-thread`, `ds-chat-attachment` and `ds-chat-steps`, the bubbles,
+  the list and the agent's steps of a chat.** The chat family, with `ds-chat-input` and
+  `ds-attachment`, imports from `@ids-group-ltd/ids-design-system/components/chat`. `ds-chat-message` takes `role` (`ChatMessageRole`, `'user'` or `'assistant'`, default
   `'assistant'`): a user message is a filled bubble on the right, an assistant message a subtle one
   on the left. Optional `author` shows above the bubble; without it the role is spoken. Optional `time`
   (already formatted) shows under the bubble, and in a thread only under the last message of a run. The default slot is the text, rendered by your app; `[steps]` sits above the bubble on
-  the thread's surface (a `ds-timeline`; a message with only steps draws no bubble),
+  the thread's surface (a `ds-chat-steps`; a message with only steps draws no bubble),
   `[attachments]` under the text, and `[actions]` under the bubble, shown on hover or
   focus. The text is selectable and long words and addresses wrap. `ds-chat-thread` scrolls its
   messages and stays at the newest one as messages arrive or grow; once the reader scrolls up it
@@ -120,11 +117,18 @@
   steps of the replies before it, except a reply with a failed step the reader has not opened yet;
   `foldStepsOnSend` (default `true`) turns that off; a step that fails while folded opens them again.
   Messages that arrive below and steps that arrive after the thread first rendered grow in; older
-  messages prepended above do not. `stepsEnter` (`ChatStepsEnter`, default `'together'`) brings
-  steps that arrive at once, such as a plan given up front, in as one block, or `'stagger'` one
-  after another. A pinned thread keeps its bottom still through every fold and arrival, and only the
+  messages prepended above do not. `enter` on `ds-chat-steps` (`ChatStepsEnter`, default
+  `'together'`) brings steps that arrive at once, such as a plan given up front, in as one block, or
+  `'stagger'` one after another. A pinned thread keeps its bottom still through every fold and arrival, and only the
   reader scrolling up unpins it. The fold runs 380ms and nothing moves under reduced motion. Steps
-  are counted from the `ds-timeline-item`s they hold.
+  are counted from the `ds-chat-step`s they hold. `ds-chat-step` takes `heading`, `time` and
+  `status` (`ChatStepStatus`: `'done' | 'running' | 'pending' | 'waiting' | 'error'`): a check, a
+  spinner, a dashed ring with muted text, a grey disc with a pause glyph or a cross, at 16px with the
+  smaller text size and 4px rows, spoken before the heading ("Waiting for your approval: Publish").
+  A `waiting` step holds the reader's answer, such as Approve buttons, under its heading, and its
+  marker stays beside the heading. An element marked `trailing` sits at the end of the heading row
+  (Stop, Retry), and one marked `details` (the step's log) opens behind a chevron, with `expanded`
+  two-way.
   With `hasOlder`, scrolling near the start emits `(loadOlder)`; prepend the older messages and the
   thread keeps the message the reader was looking at where it was, while `loadingOlder` shows a
   spinner over the top of the list. On `ds-chat-message`, `streaming` marks a reply whose text is
@@ -140,7 +144,8 @@
   `--ds-chat-attachment-preview-max-height` (default `16rem`). `expanded` binds the open state
   two-way. A plain file is a `ds-tag`. New optional `DsIntl.chat` keys `user`, `assistant`,
   `thread`, `working`, `newMessages(count)`, `latest`, `today`, `yesterday`, `sending`, `sent`,
-  `notSent`, `retry`, `steps(count)`, `stepsFailed(count)` and `stepsFolded(count, failed)`, and
+  `notSent`, `retry`, `steps(count)`, `stepsFailed(count)`, `stepsFolded(count, failed)`, `stepDone`,
+  `stepRunning`, `stepPending`, `stepWaiting`, `stepFailed` and `stepDetails(heading)`, and
   CSS hooks
   `--ds-chat-message-max-width` (default `85%`), `--ds-chat-message-radius`,
   `--ds-chat-message-padding`, `--ds-chat-message-user-bg-color`, `--ds-chat-message-user-color`,
@@ -190,16 +195,16 @@
 
 ### Fixed
 
-- **The icon of a `ds-timeline-item` marker sits in the middle of the marker.** At the default
-  density the icon is 16px instead of 15px, so it is centred in the 24px inside the marker's ring;
-  at 15px the browser snapped it half a pixel right and down. Compact markers are unchanged.
+- **The icon of a `ds-timeline-item` marker sits in the middle of the marker.** The icon is 16px
+  instead of 15px, so it is centred in the 24px inside the marker's ring; at 15px the browser
+  snapped it half a pixel right and down.
 - **The ring of a `ds-timeline-item` marker without a status and of an upcoming `ds-stepper` step
   stands out from the surface.** Both rings are drawn in `--text-tertiary` instead of
   `--border-strong`, at 4.74:1 against the surface in the light theme and 5.58:1 in the dark, where
   `--border-strong` gave 1.66:1 and 1.71:1, under the 3:1 WCAG 1.4.11 asks of a marker. This covers
   the default and `muted` tones of `ds-timeline-item`; `--ds-timeline-node-border-color` still
-  overrides it. Every marker icon draws its line as thick as the ring: 2px at the default density, 1px
-  compact (`stroke` 3 and 2.4 on the 24-unit icon grid, was 1.75). Nothing to change in your code.
+  overrides it. Every marker icon draws its line as thick as the ring, 2px (`stroke` 3 on the 24-unit icon
+  grid, was 1.75). Nothing to change in your code.
 - **A `ds-timeline-item` inside a wrapper element keeps its connector.** The line to the next item
   disappeared from every item wrapped in its own element, because each one was the last child of its
   wrapper. `ds-timeline` now finds its items at any depth and only the last one draws no line.

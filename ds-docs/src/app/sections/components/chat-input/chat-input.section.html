@@ -1,7 +1,7 @@
 <docs-section
-  anchor="message-input"
+  anchor="chat-input"
   eyebrow="Components"
-  title="Message input">
+  title="Chat input">
   <span lede>
     Message box for a chat or an instruction: chips above an auto-growing text,
     actions and the send button in the bar below. Enter sends, Shift+Enter
@@ -15,13 +15,13 @@
   <div class="states is-cols-2">
     <div class="state-cell">
       <div class="state-cell-stage">
-        <ds-message-input placeholder="Describe a change…">
+        <ds-chat-input placeholder="Describe a change…">
           <ds-icon-button
             actions
             icon="paperclip"
             size="sm"
             ariaLabel="Attach a file" />
-        </ds-message-input>
+        </ds-chat-input>
       </div>
 
       <div class="state-cell-label">
@@ -31,7 +31,7 @@
 
     <div class="state-cell">
       <div class="state-cell-stage">
-        <ds-message-input
+        <ds-chat-input
           placeholder="Describe a change…"
           [(value)]="typed">
           <ds-icon-button
@@ -39,7 +39,7 @@
             icon="paperclip"
             size="sm"
             ariaLabel="Attach a file" />
-        </ds-message-input>
+        </ds-chat-input>
       </div>
 
       <div class="state-cell-label">
@@ -49,7 +49,7 @@
 
     <div class="state-cell">
       <div class="state-cell-stage">
-        <ds-message-input
+        <ds-chat-input
           placeholder="Describe a change…"
           value="Align these two to the same width">
           @for (chip of chips(); track chip) {
@@ -67,7 +67,7 @@
             icon="paperclip"
             size="sm"
             ariaLabel="Attach a file" />
-        </ds-message-input>
+        </ds-chat-input>
       </div>
 
       <div class="state-cell-label">
@@ -77,7 +77,7 @@
 
     <div class="state-cell">
       <div class="state-cell-stage">
-        <ds-message-input
+        <ds-chat-input
           placeholder="Describe a change…"
           value="Make it bold">
           <div
@@ -103,7 +103,7 @@
             icon="paperclip"
             size="sm"
             ariaLabel="Attach a file" />
-        </ds-message-input>
+        </ds-chat-input>
       </div>
 
       <div class="state-cell-label">
@@ -113,7 +113,7 @@
 
     <div class="state-cell">
       <div class="state-cell-stage">
-        <ds-message-input
+        <ds-chat-input
           placeholder="Describe a change…"
           busyLabel="Rebuilding"
           busy>
@@ -122,7 +122,7 @@
             icon="paperclip"
             size="sm"
             ariaLabel="Attach a file" />
-        </ds-message-input>
+        </ds-chat-input>
       </div>
 
       <div class="state-cell-label">
@@ -132,7 +132,7 @@
 
     <div class="state-cell">
       <div class="state-cell-stage">
-        <ds-message-input
+        <ds-chat-input
           placeholder="Describe a change…"
           busy>
           <ds-icon-button
@@ -140,7 +140,7 @@
             icon="paperclip"
             size="sm"
             ariaLabel="Attach a file" />
-        </ds-message-input>
+        </ds-chat-input>
       </div>
 
       <div class="state-cell-label">
@@ -150,7 +150,7 @@
 
     <div class="state-cell">
       <div class="state-cell-stage">
-        <ds-message-input
+        <ds-chat-input
           placeholder="Describe a change…"
           value="Waiting for access"
           disabled>
@@ -160,7 +160,7 @@
             size="sm"
             ariaLabel="Attach a file"
             disabled />
-        </ds-message-input>
+        </ds-chat-input>
       </div>
 
       <div class="state-cell-label">
@@ -185,7 +185,7 @@
     @for (option of layouts; track option) {
       <div class="state-cell">
         <div class="state-cell-stage">
-          <ds-message-input
+          <ds-chat-input
             placeholder="Describe a change…"
             busyLabel="Rebuilding"
             busy
@@ -195,7 +195,7 @@
               icon="paperclip"
               size="sm"
               ariaLabel="Attach a file" />
-          </ds-message-input>
+          </ds-chat-input>
         </div>
 
         <div class="state-cell-label">
@@ -218,7 +218,7 @@
     the box offers to queue the message, redirect the agent or stop it.
   </p>
 
-  <ds-message-input
+  <ds-chat-input
     placeholder="Describe a change…"
     busy
     [(value)]="studioText">
@@ -259,7 +259,7 @@
         Stop
       </ds-button>
     </div>
-  </ds-message-input>
+  </ds-chat-input>
 
   <h3 class="block-title t-h4">
     Try it
@@ -275,7 +275,7 @@
       label="Busy"
       [(checked)]="busy" />
 
-    <ds-message-input
+    <ds-chat-input
       placeholder="Describe a change…"
       busyLabel="Rebuilding"
       [busy]="busy()"
@@ -297,7 +297,7 @@
         icon="paperclip"
         size="sm"
         ariaLabel="Attach a file" />
-    </ds-message-input>
+    </ds-chat-input>
 
     <ol
       class="sent t-s"

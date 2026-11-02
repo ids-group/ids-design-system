@@ -2442,18 +2442,6 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
     ]
   },
   {
-    "component": "Attachment",
-    "selector": ".attachment",
-    "description": "",
-    "tokens": [
-      {
-        "name": "--ds-radius-inner",
-        "value": "—",
-        "notes": "Radius role for shapes INSIDE a control — the checkbox box, an option row, a tag. Defaults to --radius-sm."
-      }
-    ]
-  },
-  {
     "component": "Auth Layout",
     "selector": ".auth-layout",
     "description": "",
@@ -2594,6 +2582,11 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "name": "--ds-autocomplete-placeholder-color",
         "value": "var(--_field-placeholder-color)",
         "notes": "Placeholder colour of the filter input (default --ds-field-placeholder-color, then --text-tertiary - the same as ds-input; before this the placeholder was the browser's own grey)."
+      },
+      {
+        "name": "--ds-radius-inner",
+        "value": "—",
+        "notes": "Radius role for shapes INSIDE a control — the checkbox box, an option row, a tag. Defaults to --radius-sm."
       }
     ]
   },
@@ -3610,8 +3603,8 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
     ]
   },
   {
-    "component": "Chat Message",
-    "selector": ".chat-message",
+    "component": "Chat",
+    "selector": ".chat",
     "description": "",
     "tokens": [
       {
@@ -3633,6 +3626,26 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "name": "--ds-radius-pill",
         "value": "—",
         "notes": "Radius role for fully round shapes — avatars, badges, switch tracks. Defaults to --radius-pill."
+      },
+      {
+        "name": "--ds-chat-input-bg-color",
+        "value": "var(--surface-default)",
+        "notes": ""
+      },
+      {
+        "name": "--ds-chat-input-radius",
+        "value": "var(--ds-radius-control)",
+        "notes": ""
+      },
+      {
+        "name": "--ds-chat-input-padding",
+        "value": "var(--space-2)",
+        "notes": ""
+      },
+      {
+        "name": "--ds-field-focus-shadow",
+        "value": "—",
+        "notes": "Field focus ring shadow — themeable (defaults to --focus-field)."
       },
       {
         "name": "--ds-chat-message-max-width",
@@ -3682,6 +3695,16 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       {
         "name": "--ds-chat-thread-padding",
         "value": "var(--space-4)",
+        "notes": ""
+      },
+      {
+        "name": "--chat-step-node-size",
+        "value": "var(--spinner-md)",
+        "notes": ""
+      },
+      {
+        "name": "--chat-step-gap",
+        "value": "var(--space-1)",
         "notes": ""
       }
     ]
@@ -5462,33 +5485,6 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "name": "--menu-sep-h",
         "value": "var(--border-width-default)",
         "notes": "Menu separator line thickness (var(--border-width-default))."
-      }
-    ]
-  },
-  {
-    "component": "Message Input",
-    "selector": ".message-input",
-    "description": "",
-    "tokens": [
-      {
-        "name": "--ds-message-input-bg-color",
-        "value": "var(--surface-default)",
-        "notes": ""
-      },
-      {
-        "name": "--ds-message-input-radius",
-        "value": "var(--ds-radius-control)",
-        "notes": ""
-      },
-      {
-        "name": "--ds-message-input-padding",
-        "value": "var(--space-2)",
-        "notes": ""
-      },
-      {
-        "name": "--ds-field-focus-shadow",
-        "value": "—",
-        "notes": "Field focus ring shadow — themeable (defaults to --focus-field)."
       }
     ]
   },
@@ -8381,16 +8377,6 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "name": "--timeline-gap",
         "value": "var(--space-5)",
         "notes": "Timeline item spacing (var(--space-5))."
-      },
-      {
-        "name": "--timeline-node-size-compact",
-        "value": "var(--spinner-md)",
-        "notes": ""
-      },
-      {
-        "name": "--timeline-gap-compact",
-        "value": "var(--space-1)",
-        "notes": ""
       }
     ]
   },

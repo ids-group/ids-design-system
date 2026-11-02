@@ -16,7 +16,7 @@ import {
 import { ButtonComponent } from '@ids-group-ltd/ids-design-system/components/button';
 import { TextareaComponent } from '@ids-group-ltd/ids-design-system/components/textarea';
 import { FieldClickFocusDirective } from '@ids-group-ltd/ids-design-system/components';
-import type { MessageInputLayout } from './message-input.types';
+import type { ChatInputLayout } from './chat-input.types';
 
 /**
  * Message box for a chat or an instruction: an auto-growing text area with chips above it, actions
@@ -25,14 +25,14 @@ import type { MessageInputLayout } from './message-input.types';
  * button).
  */
 @Component({
-  selector: 'ds-message-input',
+  selector: 'ds-chat-input',
   standalone: true,
   imports: [TextareaComponent, ButtonComponent, FieldClickFocusDirective],
-  templateUrl: './message-input.component.html',
-  styleUrl: './message-input.component.scss',
+  templateUrl: './chat-input.component.html',
+  styleUrl: './chat-input.component.scss',
   encapsulation: ViewEncapsulation.Emulated,
 })
-export class MessageInputComponent {
+export class ChatInputComponent {
   private readonly intl = inject(DS_INTL);
   private readonly textarea = viewChild.required(TextareaComponent);
 
@@ -40,7 +40,7 @@ export class MessageInputComponent {
   readonly value = model<string>('');
   /** Placeholder shown when empty. */
   readonly placeholder = input<string>('');
-  /** Accessible name of the text area; unset falls back to `DS_INTL.messageInput.label`. */
+  /** Accessible name of the text area; unset falls back to `DS_INTL.chatInput.label`. */
   readonly ariaLabel = input<string | null>(null);
   /** Height in lines the text area starts at. */
   readonly minRows = input<number>(1);
@@ -58,7 +58,7 @@ export class MessageInputComponent {
    *  `'split'`: attach outside on the left, send outside on the right, the step text above.
    *  `'send-outside'`: attach and the step inside, a round send button outside on the right.
    *  `'toolbar'`: the box holds the text, attach, the step and send sit in a row under it. */
-  readonly layout = input<MessageInputLayout>('status-bar');
+  readonly layout = input<ChatInputLayout>('status-bar');
 
   /** The trimmed text, on Enter or the send button. Never fires for blank text, while `busy` or
    *  while `disabled`. */
@@ -72,8 +72,8 @@ export class MessageInputComponent {
   );
 
   private readonly labels = computed(() => ({
-    ...DS_INTL_DEFAULTS.messageInput,
-    ...this.intl().messageInput,
+    ...DS_INTL_DEFAULTS.chatInput,
+    ...this.intl().chatInput,
   }));
   protected readonly textareaLabel = computed(
     () => this.ariaLabel() || this.labels().label,

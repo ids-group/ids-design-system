@@ -42,8 +42,6 @@ export {
   RailTriggerDirective,
 } from '@ids-group-ltd/ids-design-system/components/app-layout';
 export type { DsAppLayoutScrollReset } from '@ids-group-ltd/ids-design-system/components/app-layout';
-export { AttachmentComponent } from '@ids-group-ltd/ids-design-system/components/attachment';
-export type { AttachmentKind } from '@ids-group-ltd/ids-design-system/components/attachment';
 export { AuthLayoutComponent } from '@ids-group-ltd/ids-design-system/components/auth-layout';
 export { AutocompleteComponent } from '@ids-group-ltd/ids-design-system/components/autocomplete';
 export type {
@@ -130,15 +128,22 @@ export type {
   ChartTooltipTrigger,
 } from '@ids-group-ltd/ids-design-system/components/chart-tooltip';
 export {
+  AttachmentComponent,
   ChatAttachmentComponent,
+  ChatInputComponent,
   ChatMessageComponent,
+  ChatStepComponent,
+  ChatStepsComponent,
   ChatThreadComponent,
-} from '@ids-group-ltd/ids-design-system/components/chat-message';
+} from '@ids-group-ltd/ids-design-system/components/chat';
 export type {
+  AttachmentKind,
+  ChatInputLayout,
   ChatMessageRole,
   ChatMessageStatus,
+  ChatStepStatus,
   ChatStepsEnter,
-} from '@ids-group-ltd/ids-design-system/components/chat-message';
+} from '@ids-group-ltd/ids-design-system/components/chat';
 export { CheckboxComponent } from '@ids-group-ltd/ids-design-system/components/checkbox';
 export { ColorPickerComponent } from '@ids-group-ltd/ids-design-system/components/color-picker';
 export { ColumnChartComponent } from '@ids-group-ltd/ids-design-system/components/column-chart';
@@ -233,8 +238,6 @@ export {
   MenuDividerComponent,
   MenuItemComponent,
 } from '@ids-group-ltd/ids-design-system/components/menu';
-export { MessageInputComponent } from '@ids-group-ltd/ids-design-system/components/message-input';
-export type { MessageInputLayout } from '@ids-group-ltd/ids-design-system/components/message-input';
 export {
   ModalCardComponent,
   ModalComponent,
@@ -405,7 +408,6 @@ export {
   TimelineItemComponent,
 } from '@ids-group-ltd/ids-design-system/components/timeline';
 export type {
-  TimelineDensity,
   TimelineStatus,
   TimelineTone,
 } from '@ids-group-ltd/ids-design-system/components/timeline';

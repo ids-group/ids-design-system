@@ -176,8 +176,8 @@ export interface DsIntl {
     /** `'File'` - `kind="file"`. */
     readonly file?: string;
   };
-  readonly messageInput?: {
-    /** `'Message'` - accessible name of the `ds-message-input` text area when `ariaLabel` is unset. */
+  readonly chatInput?: {
+    /** `'Message'` - accessible name of the `ds-chat-input` text area when `ariaLabel` is unset. */
     readonly label?: string;
     /** `'Send'` - its default send button. */
     readonly send?: string;
@@ -239,8 +239,6 @@ export interface DsIntl {
     readonly running?: string;
     /** `'Not started'` - `status="pending"`. */
     readonly pending?: string;
-    /** `'Waiting for your approval'` - `status="waiting"`. */
-    readonly waiting?: string;
     /** `'Failed'` - `status="error"`. */
     readonly error?: string;
     /** `` `Details: ${heading}` `` - the toggle of the `[details]` area; `'Details'` without a heading. */
@@ -278,6 +276,18 @@ export interface DsIntl {
     readonly stepsFailed?: (count: number) => string;
     /** `` `Steps folded, ${count}` ``, then `` `, ${failed} failed` `` - the chip's accessible name. */
     readonly stepsFolded?: (count: number, failed: number) => string;
+    /** `'Done'` - spoken before the heading of a `ds-chat-step` with `status="done"`. */
+    readonly stepDone?: string;
+    /** `'In progress'` - `status="running"`. */
+    readonly stepRunning?: string;
+    /** `'Not started'` - `status="pending"`. */
+    readonly stepPending?: string;
+    /** `'Waiting for your approval'` - `status="waiting"`. */
+    readonly stepWaiting?: string;
+    /** `'Failed'` - `status="error"`. */
+    readonly stepFailed?: string;
+    /** `` `Details: ${heading}` `` - the toggle of a step's `[details]` area; `'Details'` without a heading. */
+    readonly stepDetails?: (heading: string) => string;
   };
   readonly tabs: {
     readonly close: (label: string) => string;

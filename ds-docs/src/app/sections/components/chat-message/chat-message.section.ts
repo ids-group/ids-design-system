@@ -10,24 +10,22 @@ import { InputComponent } from 'ds/input';
 import { TagComponent } from 'ds/tag';
 import { IconButtonComponent } from 'ds/icon-button';
 import {
-  TimelineComponent,
-  TimelineItemComponent,
-  type TimelineStatus,
-} from 'ds/timeline';
-import {
   ChatAttachmentComponent,
   ChatMessageComponent,
+  ChatStepComponent,
+  ChatStepsComponent,
   ChatThreadComponent,
   type ChatMessageRole,
   type ChatMessageStatus,
+  type ChatStepStatus,
   type ChatStepsEnter,
-} from 'ds/chat-message';
+} from 'ds/chat';
 import { DocsSectionComponent } from '../../../shared/docs-section.component';
 
 interface FoldTurn {
   readonly id: number;
   readonly request: string;
-  readonly steps: readonly { heading: string; status: TimelineStatus }[];
+  readonly steps: readonly { heading: string; status: ChatStepStatus }[];
   readonly reply: string;
 }
 
@@ -54,8 +52,8 @@ const REPLIES = [
     ChatMessageComponent,
     ChatThreadComponent,
     ChatAttachmentComponent,
-    TimelineComponent,
-    TimelineItemComponent,
+    ChatStepsComponent,
+    ChatStepComponent,
     TagComponent,
     ButtonComponent,
     IconButtonComponent,
@@ -82,7 +80,7 @@ export class ChatMessageSection {
         'Editing the header',
         'Rebuilding',
         'Checking the screen',
-      ].map((heading) => ({ heading, status: 'done' as TimelineStatus })),
+      ].map((heading) => ({ heading, status: 'done' as ChatStepStatus })),
       reply: 'Done: the header is blue now.',
     },
   ]);
@@ -120,7 +118,7 @@ export class ChatMessageSection {
           turn.id === id ? { ...turn, ...change(turn) } : turn,
         ),
       );
-    const setStatus = (index: number, status: TimelineStatus) =>
+    const setStatus = (index: number, status: ChatStepStatus) =>
       patch((turn) => ({
         steps: turn.steps.map((step, i) =>
           i === index ? { ...step, status } : step,
@@ -134,7 +132,7 @@ export class ChatMessageSection {
           patch(() => ({
             steps: headings.map((heading) => ({
               heading,
-              status: 'pending' as TimelineStatus,
+              status: 'pending' as ChatStepStatus,
             })),
           })),
         start,
@@ -149,7 +147,7 @@ export class ChatMessageSection {
           patch((turn) => ({
             steps: [
               ...turn.steps,
-              { heading, status: 'running' as TimelineStatus },
+              { heading, status: 'running' as ChatStepStatus },
             ],
           }));
         }

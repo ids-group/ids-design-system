@@ -2,6 +2,7 @@
 @use '../../styles/target' as target;
 @use '../../styles/visually-hidden' as visually-hidden;
 @use '../../styles/component-base' as component-base;
+@use '../../styles/step-marker' as step-marker;
 @include component-base.rules;
 
 :host {
@@ -33,18 +34,7 @@
   align-items: center;
 }
 
-.node {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  flex: none;
-  width: var(--_timeline-node-size);
-  height: var(--_timeline-node-size);
-  border-radius: var(--radius-pill);
-  background-color: var(--_timeline-node-bg-color);
-  color: var(--_timeline-node-color);
-  border: var(--border-width-strong) solid var(--_timeline-node-border-color);
-}
+@include step-marker.node(timeline, var(--border-width-strong));
 
 .spine {
   flex: 1;
@@ -256,86 +246,4 @@
 }
 
 // status decides the marker over tone.
-:host([data-status='done']) {
-  --_timeline-node-bg-color: var(--success);
-  --_timeline-node-color: var(--text-on-success);
-  --_timeline-node-border-color: var(--success);
-}
-:host([data-status='running']) {
-  --_timeline-node-bg-color: var(--surface-default);
-  --_timeline-node-color: var(--accent);
-  --_timeline-node-border-color: var(--accent);
-}
-:host([data-status='pending']) {
-  --_timeline-node-bg-color: var(--surface-default);
-  --_timeline-node-color: var(--text-tertiary);
-  --_timeline-node-border-color: var(--text-tertiary);
-}
-:host([data-status='waiting']) {
-  --_timeline-node-bg-color: var(--text-secondary);
-  --_timeline-node-color: var(--surface-default);
-  --_timeline-node-border-color: var(--text-secondary);
-}
-:host([data-status='error']) {
-  --_timeline-node-bg-color: var(--error);
-  --_timeline-node-color: var(--text-on-error);
-  --_timeline-node-border-color: var(--error);
-}
-
-// A step that is known but not reached yet: a dashed ring and muted text, apart from the spinner of
-// the running step and the solid ring of an item with no status.
-:host([data-status='pending']) {
-  .node {
-    border-style: dashed;
-  }
-
-  .heading {
-    color: var(--text-tertiary);
-    font-weight: var(--font-weight-regular);
-  }
-}
-
-// A waiting step carries the reader's answer (Approve, Not now) under its heading, so its marker
-// stays beside the heading instead of centring on the taller row.
-:host([data-status='waiting']) {
-  --_timeline-heading-line: calc(var(--font-size-s) * var(--line-height-base));
-
-  .text {
-    align-self: start;
-    padding-top: max(0px, var(--_timeline-node-size) / 2 + var(--space-1) - var(--_timeline-heading-line) / 2);
-  }
-
-  .lead {
-    flex: none;
-    height: max(0px, var(--_timeline-heading-line) / 2 - var(--_timeline-node-size) / 2 - var(--space-1));
-  }
-}
-
-:host([data-status='waiting'].is-compact) {
-  --_timeline-heading-line: calc(var(--font-size-xs) * var(--line-height-base));
-}
-
-// Compact: small markers, the smaller text size and tight rows with no connector.
-:host(.is-compact) {
-  --_timeline-node-size: var(--ds-timeline-node-size, var(--timeline-node-size-compact));
-  --_timeline-gap: var(--ds-timeline-gap, var(--timeline-gap-compact));
-
-  column-gap: var(--space-2);
-
-  .spine {
-    visibility: hidden;
-  }
-
-  .node {
-    border-width: var(--border-width-default);
-  }
-
-  .heading {
-    font-weight: var(--font-weight-regular);
-    font-size: var(--font-size-xs);
-  }
-
-  .trailing {
-    height: calc(var(--font-size-xs) * var(--line-height-base));
-  }
-}
+@include step-marker.statuses(timeline);

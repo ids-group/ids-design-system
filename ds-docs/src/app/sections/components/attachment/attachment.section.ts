@@ -1,7 +1,7 @@
 import { Component, ViewEncapsulation, signal } from '@angular/core';
-import { AttachmentComponent } from 'ds/attachment';
+import { AttachmentComponent } from 'ds/chat';
 import { IconButtonComponent } from 'ds/icon-button';
-import { MessageInputComponent } from 'ds/message-input';
+import { ChatInputComponent } from 'ds/chat';
 import { DocsSectionComponent } from '../../../shared/docs-section.component';
 
 const SCREENSHOT = `data:image/svg+xml,${encodeURIComponent(
@@ -22,7 +22,7 @@ interface DemoFile {
     DocsSectionComponent,
     AttachmentComponent,
     IconButtonComponent,
-    MessageInputComponent,
+    ChatInputComponent,
   ],
   encapsulation: ViewEncapsulation.Emulated,
   templateUrl: './attachment.section.html',

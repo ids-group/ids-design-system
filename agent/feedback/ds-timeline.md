@@ -3,8 +3,7 @@
 
 Group: Display & feedback
 
-The list that holds `ds-timeline-item`s, at any depth: it marks the first and last item so the connector stops at both ends. `density: TimelineDensity = 'default'`; `'compact'` sets 16px markers, the smaller text size and 4px rows with no connector, for an agent's steps beside a chat message.
+The list that holds `ds-timeline-item`s, at any depth: it marks the first and last item so the connector stops at both ends. For an agent's steps beside a chat message use `ds-chat-steps`.
 
 <!-- inputs:ds-timeline -->
-All inputs: `density: 'default' | 'compact' = 'default'`
 <!-- /inputs -->

@@ -218,93 +218,6 @@
     data-claude-design
     class="block-title t-h4"
     data-for="timeline-item">
-    Waiting for the reader
-  </h3>
-
-  <p class="block-desc t-s">
-    <code>waiting</code> is a step that needs the reader's answer before it
-    goes on: a grey filled marker with a pause glyph, spoken as "Waiting for
-    your approval". Put the answer buttons under its heading; the marker stays
-    beside the heading.
-  </p>
-
-  <div class="states is-cols-2">
-    <div class="state-cell">
-      <div class="state-cell-stage">
-        <ds-timeline>
-          <ds-timeline-item
-            heading="Generate screens"
-            time="09:42"
-            status="done" />
-
-          <ds-timeline-item
-            heading="Publish the prototype"
-            status="waiting">
-            <div class="demo-actions">
-              <ds-button size="sm">
-                Approve
-              </ds-button>
-
-              <ds-button
-                size="sm"
-                variant="outline"
-                color="neutral">
-                Not now
-              </ds-button>
-            </div>
-          </ds-timeline-item>
-
-          <ds-timeline-item
-            heading="Send to reviewers"
-            status="pending" />
-        </ds-timeline>
-      </div>
-
-      <div class="state-cell-label">
-        waiting, then planned
-      </div>
-    </div>
-
-    <div class="state-cell">
-      <div class="state-cell-stage">
-        <ds-timeline density="compact">
-          <ds-timeline-item
-            heading="Generate screens"
-            status="done" />
-
-          <ds-timeline-item
-            heading="Publish the prototype"
-            status="waiting">
-            <div class="demo-actions">
-              <ds-button size="sm">
-                Approve
-              </ds-button>
-
-              <ds-button
-                size="sm"
-                variant="outline"
-                color="neutral">
-                Not now
-              </ds-button>
-            </div>
-          </ds-timeline-item>
-
-          <ds-timeline-item
-            heading="Send to reviewers"
-            status="pending" />
-        </ds-timeline>
-      </div>
-
-      <div class="state-cell-label">
-        compact
-      </div>
-    </div>
-  </div>
-
-  <h3
-    data-claude-design
-    class="block-title t-h4"
-    data-for="timeline-item">
     Trailing action
   </h3>
 
@@ -380,8 +293,7 @@
               class="t-mono-block">
 SMTP 421: try later
 retry 1/3 failed
-            </pre
-            >
+            </pre>
           </ds-timeline-item>
         </ds-timeline>
       </div>
@@ -413,132 +325,13 @@ retry 1/3 failed
               class="t-mono-block">
 SMTP 421: try later
 retry 1/3 failed
-            </pre
-            >
+            </pre>
           </ds-timeline-item>
         </ds-timeline>
       </div>
 
       <div class="state-cell-label">
         open
-      </div>
-    </div>
-  </div>
-
-  <h3
-    class="block-title t-h4"
-    data-for="timeline">
-    Compact
-  </h3>
-
-  <p class="block-desc t-s">
-    <code>
-      density="compact"
-    </code> sets small markers, the smaller text size and
-    tight rows with no connector, for an agent's steps beside a chat message.
-    Steps the agent has planned but not reached are <code>pending</code>: a
-    dashed ring and muted text.
-  </p>
-
-  <div class="states is-cols-2">
-    <div class="state-cell">
-      <div class="state-cell-stage">
-        <ds-timeline density="compact">
-          <ds-timeline-item
-            heading="Import the brief"
-            status="done" />
-
-          <ds-timeline-item
-            heading="Generate screens"
-            status="done" />
-
-          <ds-timeline-item
-            heading="Run the checks"
-            status="running" />
-
-          <ds-timeline-item
-            heading="Publish the prototype"
-            status="pending" />
-
-          <ds-timeline-item
-            heading="Notify the reviewers"
-            status="pending" />
-        </ds-timeline>
-      </div>
-
-      <div class="state-cell-label">
-        done, running, planned
-      </div>
-    </div>
-
-    <div class="state-cell">
-      <div class="state-cell-stage">
-        <ds-timeline density="compact">
-          <ds-timeline-item
-            heading="Import the brief"
-            status="done" />
-
-          <ds-timeline-item
-            heading="Upload failed"
-            status="error"
-            [expanded]="true">
-            <pre
-              details
-              class="t-mono-block">
-HTTP 503: service unavailable
-retry 1/3 failed
-            </pre
-            >
-          </ds-timeline-item>
-
-          <ds-timeline-item
-            heading="Retrying the upload"
-            status="pending" />
-        </ds-timeline>
-      </div>
-
-      <div class="state-cell-label">
-        failed step open
-      </div>
-    </div>
-
-    <div class="state-cell">
-      <div class="state-cell-stage">
-        <ds-timeline density="compact">
-          <ds-timeline-item
-            heading="Out for delivery"
-            icon="clock" />
-
-          <ds-timeline-item
-            heading="Delivered"
-            icon="flag"
-            tone="muted" />
-        </ds-timeline>
-      </div>
-
-      <div class="state-cell-label">
-        without a status
-      </div>
-    </div>
-
-    <div class="state-cell">
-      <div class="state-cell-stage">
-        <ds-timeline density="compact">
-          @for (step of runSteps(); track step.heading) {
-            <ds-timeline-item
-              [heading]="step.heading"
-              [status]="step.status" />
-          }
-        </ds-timeline>
-      </div>
-
-      <div class="state-cell-label">
-        <ds-button
-          variant="outline"
-          size="sm"
-          (pressed)="runPlan()">
-          Run the plan
-        </ds-button>
       </div>
     </div>
   </div>

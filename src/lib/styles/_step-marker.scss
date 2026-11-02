@@ -1,0 +1,51 @@
+// The step marker shared by ds-timeline-item and ds-chat-step, read from the host's `--_<prefix>-node-*`
+// properties: the ring, its fill and the centred glyph.
+@mixin node($prefix, $border-width) {
+  .node {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex: none;
+    width: var(--_#{$prefix}-node-size);
+    height: var(--_#{$prefix}-node-size);
+    border-radius: var(--radius-pill);
+    background-color: var(--_#{$prefix}-node-bg-color);
+    color: var(--_#{$prefix}-node-color);
+    border: $border-width solid var(--_#{$prefix}-node-border-color);
+  }
+}
+
+// The colours of each step status, and the dashed ring and muted heading of a planned step.
+@mixin statuses($prefix) {
+  :host([data-status='done']) {
+    --_#{$prefix}-node-bg-color: var(--success);
+    --_#{$prefix}-node-color: var(--text-on-success);
+    --_#{$prefix}-node-border-color: var(--success);
+  }
+  :host([data-status='running']) {
+    --_#{$prefix}-node-bg-color: var(--surface-default);
+    --_#{$prefix}-node-color: var(--accent);
+    --_#{$prefix}-node-border-color: var(--accent);
+  }
+  :host([data-status='pending']) {
+    --_#{$prefix}-node-bg-color: var(--surface-default);
+    --_#{$prefix}-node-color: var(--text-tertiary);
+    --_#{$prefix}-node-border-color: var(--text-tertiary);
+  }
+  :host([data-status='error']) {
+    --_#{$prefix}-node-bg-color: var(--error);
+    --_#{$prefix}-node-color: var(--text-on-error);
+    --_#{$prefix}-node-border-color: var(--error);
+  }
+
+  :host([data-status='pending']) {
+    .node {
+      border-style: dashed;
+    }
+
+    .heading {
+      color: var(--text-tertiary);
+      font-weight: var(--font-weight-regular);
+    }
+  }
+}

@@ -16,7 +16,7 @@ import type { AttachmentKind } from './attachment.types';
 
 /**
  * A file attached to a message: a type tile or an image preview, the file name and a second line
- * such as its size. Place it in the `[chips]` slot of `ds-message-input`.
+ * such as its size. Place it in the `[chips]` slot of `ds-chat-input`.
  */
 @Component({
   selector: 'ds-attachment',
