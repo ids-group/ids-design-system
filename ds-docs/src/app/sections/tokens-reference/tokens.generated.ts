@@ -6950,7 +6950,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--ds-splitter-overscroll-line-scale",
-        "value": "2",
+        "value": "3",
         "notes": ""
       }
     ]

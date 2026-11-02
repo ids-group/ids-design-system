@@ -36,7 +36,7 @@
   PageUp / PageDown by 64px, Home / End to the limits, and a double click returns to `defaultSize`.
   At a limit the cursor shows the one direction left. Dragged past `min` or `max`, the handle follows
   the pointer with growing resistance, up to 100px and at most a third of the pane it squashes, its
-  line thickening on the same curve up to `--ds-splitter-overscroll-line-scale` times (default `2`),
+  line thickening on the same curve up to `--ds-splitter-overscroll-line-scale` times (default `3`),
   and springs back on release; `overscroll="none"` stops it at the limit instead, and `prefers-reduced-motion: reduce` turns the effect off. At rest the handle shows a three-dot grip and
   no line; hover and drag show a neutral line, keyboard focus a line in the focus colour. The handle
   fills the gap between the panes, `--ds-splitter-gap` wide. `persistKey` keeps the size in `localStorage`
