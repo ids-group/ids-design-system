@@ -235,6 +235,11 @@ export class SplitterComponent implements OnInit, OnDestroy {
     const scale = horizontal ? 'scaleX' : 'scaleY';
     const shift = this.pane() === 'start' ? pull : -pull;
     handle.style.transform = `translate${horizontal ? 'X' : 'Y'}(${shift}px)`;
+    // The line thickens on the same resistance curve; a custom property, because the line is a pseudo-element.
+    handle.style.setProperty(
+      '--_splitter-pull-ratio',
+      String(Math.abs(pull) / cap),
+    );
     measured.style.transform = `${scale}(${(extent(measured) + pull) / extent(measured)})`;
     other.style.transform = `${scale}(${Math.max(0, extent(other) - pull) / extent(other)})`;
   }
@@ -254,6 +259,7 @@ export class SplitterComponent implements OnInit, OnDestroy {
     for (const element of this.movingParts()) {
       element.style.transform = '';
     }
+    this.handle().nativeElement.style.removeProperty('--_splitter-pull-ratio');
   }
 
   private stopSpring(): void {
