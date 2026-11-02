@@ -78,19 +78,19 @@
   ],
   "informational": [
     "New component `ds-inline-edit` (`InlineEditComponent`): text renamed in place, with a two-way `value`, `(saved)`, `placeholder`, `maxLength`, `disabled` and `ariaLabel`. Adds the optional `DsIntl.inlineEdit` keys `rename` and `saved`. Nothing to change in your code.",
-    "New component `ds-splitter` (`SplitterComponent`, `SplitterOrientation`, `SplitterOverdrag`, `SplitterPane`): two projected panes with a draggable, keyboard-operable handle, a two-way `size` in px, `min` / `max`, `orientation`, `pane`, `overdrag` and `persistKey`. Adds the optional `DsIntl.splitter.label`. Nothing to change in your code.",
-    "New components `ds-chat-message`, `ds-chat-thread`, `ds-chat-attachment`, `ds-chat-steps` and `ds-chat-step` (`ChatMessageComponent`, `ChatThreadComponent`, `ChatAttachmentComponent`, `ChatStepsComponent`, `ChatStepComponent`, types `ChatMessageRole` and `ChatStepStatus`), in the entry point `@ids-group-ltd/ids-design-system/components/chat`: chat bubbles with `[steps]`, `[attachments]` and `[actions]` slots, an agent's steps for the `[steps]` slot, and a list that stays at the newest message unless the reader scrolled up, groups runs and splits them by time. Adds the optional `DsIntl.chat` keys. Nothing to change in your code.",
+    "New component `ds-splitter` (`SplitterComponent`, `SplitterOrientation`, `SplitterOverdrag`, `SplitterPane`): two projected panes with a draggable, keyboard-operable handle, a two-way `size` in px, `defaultSize`, `min` / `max`, `orientation`, `pane`, `overdrag`, `persistKey` and `ariaLabel`. Adds the optional `DsIntl.splitter.label`. Nothing to change in your code.",
+    "New components `ds-chat-message`, `ds-chat-thread`, `ds-chat-attachment`, `ds-chat-steps` and `ds-chat-step` (`ChatMessageComponent`, `ChatThreadComponent`, `ChatAttachmentComponent`, `ChatStepsComponent`, `ChatStepComponent`, types `ChatMessageRole`, `ChatMessageStatus`, `ChatStepStatus` and `ChatStepsEnter`), in the entry point `@ids-group-ltd/ids-design-system/components/chat`: chat bubbles with `[steps]`, `[attachments]` and `[actions]` slots, an agent's steps for the `[steps]` slot, and a list that stays at the newest message unless the reader scrolled up, groups runs and splits them by time. Adds the optional `DsIntl.chat` keys. Nothing to change in your code.",
     {
       "text": "`ds-tree` takes `<ng-template dsTreeTrailing let-node>` (`TreeTrailingDirective`, `TreeTrailingContext`) drawn at the end of every row, a `(nodeHover)` output, and `selection: 'single' | 'multiple'` (`TreeSelection`) with a two-way `selectedIds` in multiple mode. Each row is a focusable `div role=\"treeitem\"` instead of a `button`, and a disabled row is reached by the arrow keys and announced as disabled. Nothing to change in your code unless your styles select the row as a `button`.",
       "verify": "Open a `ds-tree` with a disabled node: rows look as before, ArrowDown stops on the disabled row with a focus ring, and Enter on it selects nothing."
     },
     "New component `ds-attachment` (`AttachmentComponent`): a file chip with a type tile or image preview, name and size, for the `[chips]` slot of `ds-chat-input`. Adds `AttachmentKind` and the optional `DsIntl.attachment` keys. Nothing to change in your code.",
-    "New component `ds-chat-input` (`ChatInputComponent`): an auto-growing message box with `[chips]`, `[actions]` and `[send]` slots, Enter to submit, `busy` / `busyLabel` and `(filesPasted)`. Adds the optional `DsIntl.chatInput` keys `label` and `send`. Nothing to change in your code.",
+    "New component `ds-chat-input` (`ChatInputComponent`): an auto-growing message box with `[attachments]`, `[chips]`, `[actions]` and `[send]` slots, Enter to submit, `busy` / `busyLabel` and `(filesPasted)`. Adds the optional `DsIntl.chatInput` keys `label` and `send`. Nothing to change in your code.",
     {
       "text": "A focused `ds-table` resize handle draws no outline; its line becomes `--focus-ring-width` wide in `--focus-ring-color`, inset `--space-1` from the cell's top and bottom. Forced-colours mode keeps the outline.",
       "verify": "Tab to a column resize handle: the line at the column edge turns the focus colour and wider, with no ring around the handle."
     },
-    "`ToastService` can fold repeated toasts into one `×N` stack under `provideDsConfig({ toast: { groupDuplicates: true } })`, or by `ToastOptions.groupKey`; off by default. Adds `ToastOccurrence`, `ToastEntry.groupKey` and `ToastEntry.occurrences`, the `ds-toast` input `occurrences` and output `occurrenceClosed`, `ToastRegionComponent.stackFor`, and the optional `DsIntl.toast` keys `showAll`, `hide`, `dismissAll` and `repeated`. Nothing to change in your code.",
+    "`ToastService` can fold repeated toasts into one `×N` stack under `provideDsConfig({ toast: { groupDuplicates: true } })`, or by `ToastOptions.groupKey`; off by default. Adds `ToastOccurrence`, `ToastEntry.groupKey` and `ToastEntry.occurrences`, the `ds-toast` input `occurrences` and output `occurrenceClosed`, `ToastRegionComponent.stackFor`, an `occurrences` key in the patch `ToastRegionComponent.update()` accepts, and the optional `DsIntl.toast` keys `showAll`, `hide`, `dismissAll` and `repeated`. Nothing to change in your code.",
     {
       "text": "Under `data-theme=\"dark\"`, `--shadow-1` to `--shadow-4` and every `--shadow-*` and `--ds-elevation-*` alias built on them are near-black at 30% to 60% alpha instead of a light glow, `--shadow-4` adds a 1px light hairline at 8% alpha, and `--shadow-tint-l` is `3%`.",
       "verify": "In the dark theme open a modal and a popover and read their computed box-shadow: every layer is a dark rgba, and the modal's first layer is `0 0 0 1px` at 0.08 alpha."
@@ -108,7 +108,19 @@
       "text": "`--ds-popover-bg-color`, `--ds-dropdown-panel-bg-color`, `--ds-date-picker-bg-color`, `--ds-time-picker-bg-color`, `--ds-toast-bg-color`, `--ds-toast-bg-color-info`, `--ds-toast-bg-color-success`, `--ds-toast-bg-color-warning`, `--ds-toast-bg-color-error`, `--ds-toast-queue-bg-color` and `--tooltip-bg-color` default to `--surface-overlay-raised` instead of `--surface-overlay`; the two are equal in light. Set one to `var(--surface-overlay)` to paint that overlay at the modal's level.",
       "verify": "In the dark theme open a `ds-popover` and read its computed background: it equals `--neutral-150`."
     },
-    "The ring of an upcoming `ds-stepper` step is drawn in `--text-tertiary` instead of `--border-strong`, so it reaches 3:1 against the surface. Visual only. Nothing to change in your code."
+    "The ring of an upcoming `ds-stepper` step is drawn in `--text-tertiary` instead of `--border-strong`, so it reaches 3:1 against the surface. Visual only. Nothing to change in your code.",
+    {
+      "text": "The marker of a `ds-timeline-item` centres vertically on the heading, description and time together, or the text on the marker when the text is shorter; an open `[details]` area does not move it, and the connector also runs above every marker but the first.",
+      "verify": "Open a `ds-timeline` whose items have a description and a time: each marker sits at the middle of its text block and the line reaches it from the item above."
+    },
+    {
+      "text": "The icon inside a `ds-timeline-item` marker is 16px instead of 15px and draws its line at stroke 3 on the 24-unit grid instead of 1.75, as thick as the 2px ring.",
+      "verify": "Open a `ds-timeline-item` with an `icon`: the icon is centred in the ring and its line is as thick as the ring."
+    },
+    {
+      "text": "The step number inside a `ds-stepper` circle is wrapped in its own inline-block `span`, moved down by 0.033em, so it sits in the middle of the circle. Visual only.",
+      "verify": "Open a `ds-stepper` with an upcoming step and compare the number with its circle: the digit is centred vertically, not a fraction of a pixel high."
+    }
   ],
   "deleteList": []
 }

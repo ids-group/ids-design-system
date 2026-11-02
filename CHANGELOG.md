@@ -30,9 +30,9 @@
   a small icon button; a click inside it neither selects nor toggles the row, and its controls are
   tab stops on the focused row only, so Tab from that row reaches them. `(nodeHover)` emits the node
   under the pointer or newly focused, and `null` when the pointer leaves the tree.
-  `selection="multiple"` binds `[(selectedIds)]` (`string[]`): Shift-click, Ctrl-click, Shift+Space
-  or Ctrl+Space adds or removes a row, a plain click or Enter selects that row alone, and the tree
-  carries `aria-multiselectable="true"`. `selection` defaults to `'single'`, where `selectedId`
+  `selection="multiple"` binds `[(selectedIds)]` (`string[]`): a click, Enter or Space with Shift,
+  Ctrl or Cmd held adds or removes a row, a plain click, Enter or Space selects that row alone, and
+  the tree carries `aria-multiselectable="true"`. `selection` defaults to `'single'`, where `selectedId`
   works as before. New exports `TreeTrailingDirective`, `TreeTrailingContext` and `TreeSelection`.
 - **`ds-splitter`, two panes with a handle that resizes one of them.** Project `[start]` and `[end]`;
   `orientation` is `'horizontal'` (side by side, default) or `'vertical'` (stacked), and `pane`
@@ -57,7 +57,7 @@
   (`'done' | 'running' | 'pending' | 'error'`, default `null`) draws the marker: a check,
   a spinner, an empty ring or a cross, and a screen reader hears it before the heading ("Failed: Send to
   reviewers"). While `status` is set it decides the marker and `icon` and `tone` are ignored; with
-  `null` the item renders as before. An element marked `trailing` sits at the end of the heading
+  `null` `icon` and `tone` work as before. An element marked `trailing` sits at the end of the heading
   row, for an Undo, Stop or Retry button. An element marked `details` is hidden behind a chevron
   button at the end of that row, closed by default; `expanded` binds its open state two-way. The
   chevron points down while closed and up while open, the details open and close with a height
@@ -69,8 +69,8 @@
   `--ds-timeline-open-bg-color`, and the optional `DsIntl.timeline` keys `done`,
   `running`, `pending`, `error` and `details(heading)`.
 - **`ds-chat-input` (`ChatInputComponent`), a message box for a chat or an instruction.** An auto-growing text area
-  (`minRows`, default `1`; `maxRows`, default `8`) with a two-way `value`, `placeholder`, `ariaLabel`
-  and `disabled`. Enter emits `(submitted)` with the trimmed text and Shift+Enter breaks the line; an
+  (`minRows`, default `1`; `maxRows`, default `8`) with the two-way `value`, plus `placeholder`,
+  `ariaLabel` and `disabled`. Enter emits `(submitted)` with the trimmed text and Shift+Enter breaks the line; an
   Enter that commits an IME composition, blank text, `busy` and `disabled` never submit. Elements
   marked `attachments` sit on the page above the frame (a picked element with its snapshot), `chips`
   above the text inside the frame, `actions` on the left of the bottom bar, and `send` replaces the
@@ -92,8 +92,8 @@
   emits `(removed)`; the kind is announced before `meta`, and an image preview takes `name` as its
   alt text. Place it in the `[chips]` slot of `ds-chat-input`. New type `AttachmentKind` and the
   optional `DsIntl.attachment` keys `remove(name)`, `pdf`, `doc`, `image` and `file`.
-- **`ds-chat-message`, `ds-chat-thread`, `ds-chat-attachment` and `ds-chat-steps`, the bubbles,
-  the list and the agent's steps of a chat.** The chat family, with `ds-chat-input` and
+- **`ds-chat-message`, `ds-chat-thread`, `ds-chat-attachment`, `ds-chat-steps` and `ds-chat-step`,
+  the bubbles, the list and the agent's steps of a chat.** The chat family, with `ds-chat-input` and
   `ds-attachment`, imports from `@ids-group-ltd/ids-design-system/components/chat`. `ds-chat-message` takes `role` (`ChatMessageRole`, `'user'` or `'assistant'`, default
   `'assistant'`): a user message is a filled bubble on the right, an assistant message a subtle one
   on the left. Optional `author` shows above the bubble; without it the role is spoken. Optional `time`
@@ -110,7 +110,7 @@
   `15`) or more starts a new run under a centred time divider ("Today 14:32"), and the first message is dated the same way. `working` shows a row with a
   spinner and `workingLabel` at the end. A screen reader hears the working label and each finished
   reply, once: a reply that arrives while `working` is read when `working` clears, and the messages
-  present when the thread first renders are never read. `scrollToEnd()` scrolls down from code.
+  present when the thread first renders are never read. `scrollToEnd()` scrolls down from code. Name the thread with `ariaLabel`.
   `stepsFolded` (two-way) folds a message's `[steps]` into a chip at the top of its bubble that
   shows the step count and any failed count and opens them again (`aria-expanded`, Enter or
   Space); once shown, the chip folds them again. When a user message arrives, the thread folds the
@@ -153,7 +153,8 @@
   `--ds-chat-thread-gap`, `--ds-chat-thread-group-gap`, `--ds-chat-thread-padding`,
   `--ds-chat-attachment-bg-color`, `--ds-chat-attachment-preview-bg-color` and
   `--ds-chat-attachment-preview-max-height`; the attachment chip and the jump button are rounded by
-  `--ds-radius-pill`.
+  `--ds-radius-pill`. New exports `ChatMessageComponent`, `ChatThreadComponent`,
+  `ChatAttachmentComponent`, `ChatStepsComponent` and `ChatStepComponent`.
 
 ### Changed
 
@@ -196,9 +197,8 @@
 ### Fixed
 
 - **The step number of a `ds-stepper` sits in the middle of its circle.** The circle centred the
-  figure's line box, and a figure has no descender, so at 150% display scaling it sat up to 0.67px
-  high. It is now nudged down by 0.033em and sits within 0.33px; at 100% and 200% it stays within
-  0.5px, the nearest a whole device pixel allows. Nothing to change in your code.
+  figure's line box, and a figure has no descender, so the number sat slightly high; it is now
+  nudged down to the optical centre. Nothing to change in your code.
 - **The icon of a `ds-timeline-item` marker sits in the middle of the marker.** The icon is 16px
   instead of 15px, so it is centred in the 24px inside the marker's ring; at 15px the browser
   snapped it half a pixel right and down.
