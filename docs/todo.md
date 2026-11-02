@@ -151,7 +151,7 @@ is stale. Closing an item means deleting the item and nothing else.
   - In `ds-banner` and `ds-dropzone` the `ds-icon` box is 16px while its svg draws 20px
 - **Missing components (from gap analysis)**
   - Image / lightbox
-  - Splitter - built as `ds-splitter` on `feat/splitter` for its first consumer (Bandsmith, a preview | chat split); Stas: built from the best of two consumer splitters. Awaiting his review in the deck
+  - Splitter - built as `ds-splitter` on `feat/splitter`, in review
   - CascadeSelect — ASKED 2026-08-05, Stas: keep in the backlog for now (not built, not closed)
 - **Missing tokens / foundations (from gap analysis)**
   - Primary-button CTA token layer — ASKED 2026-08-05, Stas: keep in the backlog
