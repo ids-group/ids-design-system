@@ -38,7 +38,7 @@ export class SplitterComponent implements OnInit, OnDestroy {
     private readonly onPointerMove;
     protected onPointerUp(event: PointerEvent): void;
     public readonly orientation = input<SplitterOrientation>('horizontal');
-    public readonly overscroll = input<SplitterOverscroll>('elastic');
+    public readonly overdrag = input<SplitterOverdrag>('elastic');
     public readonly pane = input<SplitterPane>('start');
     private panesBox;
     private pendingMove;
@@ -58,7 +58,7 @@ export class SplitterComponent implements OnInit, OnDestroy {
 
 export type SplitterOrientation = 'horizontal' | 'vertical';
 
-export type SplitterOverscroll = 'elastic' | 'none';
+export type SplitterOverdrag = 'elastic' | 'none';
 
 export type SplitterPane = 'start' | 'end';
 ```
@@ -71,6 +71,6 @@ ds-splitter {
     --ds-splitter-gap: var(--space-2);
     --ds-splitter-grip-color: var(--text-muted);
     --ds-splitter-line-color: var(--border-strong);
-    --ds-splitter-overscroll-line-scale: 3;
+    --ds-splitter-overdrag-line-scale: 3;
 }
 ```

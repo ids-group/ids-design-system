@@ -24,7 +24,7 @@
     }
   ],
   "informational": [
-    "New component `ds-splitter` (`SplitterComponent`, `SplitterOrientation`, `SplitterOverscroll`, `SplitterPane`): two projected panes with a draggable, keyboard-operable handle, a two-way `size` in px, `min` / `max`, `orientation`, `pane`, `overscroll` and `persistKey`. Adds the optional `DsIntl.splitter.label`. Nothing to change in your code.",
+    "New component `ds-splitter` (`SplitterComponent`, `SplitterOrientation`, `SplitterOverdrag`, `SplitterPane`): two projected panes with a draggable, keyboard-operable handle, a two-way `size` in px, `min` / `max`, `orientation`, `pane`, `overdrag` and `persistKey`. Adds the optional `DsIntl.splitter.label`. Nothing to change in your code.",
     "New components `ds-chat-message`, `ds-chat-thread` and `ds-chat-attachment` (`ChatMessageComponent`, `ChatThreadComponent`, `ChatAttachmentComponent`, type `ChatMessageRole`): chat bubbles with `[steps]`, `[attachments]` and `[actions]` slots, and a list that stays at the newest message unless the reader scrolled up, groups runs and splits them by time. Adds the optional `DsIntl.chat` keys. Nothing to change in your code.",
     {
       "text": "`ds-tree` takes `<ng-template dsTreeTrailing let-node>` (`TreeTrailingDirective`, `TreeTrailingContext`) drawn at the end of every row, a `(nodeHover)` output, and `selection: 'single' | 'multiple'` (`TreeSelection`) with a two-way `selectedIds` in multiple mode. Each row is a focusable `div role=\"treeitem\"` instead of a `button`, and a disabled row is reached by the arrow keys and announced as disabled. Nothing to change in your code unless your styles select the row as a `button`.",

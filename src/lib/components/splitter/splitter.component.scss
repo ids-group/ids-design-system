@@ -7,7 +7,7 @@
   --_splitter-line-color: var(--ds-splitter-line-color, var(--border-strong));
   --_splitter-drag-color: var(--ds-splitter-drag-color, var(--text-muted));
   --_splitter-grip-color: var(--ds-splitter-grip-color, var(--text-muted));
-  --_splitter-overscroll-line-scale: var(--ds-splitter-overscroll-line-scale, 3);
+  --_splitter-overdrag-line-scale: var(--ds-splitter-overdrag-line-scale, 3);
   --_splitter-grip-dot: calc(var(--border-width-strong) + var(--border-width-default));
   --_splitter-sized: min(var(--_splitter-size), 100% - var(--_splitter-gap));
   --_splitter-rest: minmax(0, 1fr);
@@ -72,7 +72,7 @@
 /* Pulled past a limit, the line thickens with the pull up to the scale, and springs back with it. */
 .handle {
   --_splitter-line-thickness: calc(
-    1 + (var(--_splitter-overscroll-line-scale) - 1) * var(--_splitter-pull-ratio, 0)
+    1 + (var(--_splitter-overdrag-line-scale) - 1) * var(--_splitter-pull-ratio, 0)
   );
 }
 

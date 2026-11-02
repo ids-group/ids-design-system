@@ -283,7 +283,7 @@ export { SplitButtonItem } from '@ids-group-ltd/ids-design-system/components/spl
 export { SplitButtonVariant } from '@ids-group-ltd/ids-design-system/components/split-button'; // type
 export { SplitterComponent } from '@ids-group-ltd/ids-design-system/components/splitter'; // component
 export { SplitterOrientation } from '@ids-group-ltd/ids-design-system/components/splitter'; // type
-export { SplitterOverscroll } from '@ids-group-ltd/ids-design-system/components/splitter'; // type
+export { SplitterOverdrag } from '@ids-group-ltd/ids-design-system/components/splitter'; // type
 export { SplitterPane } from '@ids-group-ltd/ids-design-system/components/splitter'; // type
 export { StackComponent } from '@ids-group-ltd/ids-design-system/components/layout'; // component
 export { StatComponent } from '@ids-group-ltd/ids-design-system/components/stat'; // component
