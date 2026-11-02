@@ -20,6 +20,8 @@
     "ChartSkeleton": "charts/chart",
     "ChartTooltipPanel": "charts/line-chart",
     "ChartUnpin": "charts/chart",
+    "ChatAttachment": "components/chat-message",
+    "ChatStep": "components/chat-steps",
     "ColumnChart": "charts/column-chart",
     "Container": "components/layout-primitives",
     "DescriptionItem": "components/description-list",

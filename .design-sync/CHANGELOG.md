@@ -23,6 +23,16 @@ holds an entry; what the release bot commits afterwards needs none.
   `measure-cards` read it, so a release can be rehearsed against a slower runner than the one it
   was built on.
 
+### Cards
+
+- **The chat family, `ds-splitter` and `ds-inline-edit` have usage notes.** `Attachment`,
+  `ChatAttachment`, `ChatInput`, `ChatStep`, `ChatSteps`, `InlineEdit` and `Splitter` ship a
+  `.prompt.md`; `ChatAttachment` takes its card from the chat-message chapter and `ChatStep` from
+  the chat-steps chapter.
+- **The `Tree`, `Timeline` and `TimelineItem` notes describe the current components:** multiple
+  selection and `onNodeHover` on `Tree`, items inside wrappers on `Timeline`, `status`, `trailing`,
+  `details` and the 16px icon on `TimelineItem`.
+
 ## 1.0.3 — 2026-10-27
 
 ### Build
