@@ -6947,6 +6947,11 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "name": "--ds-splitter-grip-color",
         "value": "var(--text-muted)",
         "notes": ""
+      },
+      {
+        "name": "--ds-splitter-overscroll-line-scale",
+        "value": "3",
+        "notes": ""
       }
     ]
   },

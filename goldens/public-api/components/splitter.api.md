@@ -71,5 +71,6 @@ ds-splitter {
     --ds-splitter-gap: var(--space-2);
     --ds-splitter-grip-color: var(--text-muted);
     --ds-splitter-line-color: var(--border-strong);
+    --ds-splitter-overscroll-line-scale: 3;
 }
 ```

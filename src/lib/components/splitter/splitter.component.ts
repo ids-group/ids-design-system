@@ -187,9 +187,11 @@ export class SplitterComponent implements OnInit, OnDestroy {
     }
     const { box } = this.drag;
     const raw = this.fromPaneEdge(event, box) - this.drag.grab;
-    const size = this.clamp(Math.round(raw), this.room(box));
+    const room = this.room(box);
+    const size = this.clamp(Math.round(raw), room);
     if (this.drag.elastic) {
-      this.stretch(raw - size);
+      // Against the unrounded limit: within min and max the excess is exactly 0, not the rounding.
+      this.stretch(raw - this.clamp(raw, room));
     }
     if (size === this.drag.size) {
       return;
@@ -235,6 +237,11 @@ export class SplitterComponent implements OnInit, OnDestroy {
     const scale = horizontal ? 'scaleX' : 'scaleY';
     const shift = this.pane() === 'start' ? pull : -pull;
     handle.style.transform = `translate${horizontal ? 'X' : 'Y'}(${shift}px)`;
+    // The line thickens on the same resistance curve; a custom property, because the line is a pseudo-element.
+    handle.style.setProperty(
+      '--_splitter-pull-ratio',
+      String(Math.abs(pull) / cap),
+    );
     measured.style.transform = `${scale}(${(extent(measured) + pull) / extent(measured)})`;
     other.style.transform = `${scale}(${Math.max(0, extent(other) - pull) / extent(other)})`;
   }
@@ -254,6 +261,7 @@ export class SplitterComponent implements OnInit, OnDestroy {
     for (const element of this.movingParts()) {
       element.style.transform = '';
     }
+    this.handle().nativeElement.style.removeProperty('--_splitter-pull-ratio');
   }
 
   private stopSpring(): void {
