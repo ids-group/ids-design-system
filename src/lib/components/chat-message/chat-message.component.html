@@ -25,6 +25,43 @@
 </div>
 
 <div class="bubble">
+  @if (stepCount()) {
+    <button
+      type="button"
+      class="steps-chip"
+      [attr.aria-expanded]="!folded()"
+      [attr.aria-label]="
+        folded() ? wording().stepsFolded(stepCount(), failedStepCount()) : null
+      "
+      (click)="toggleSteps()">
+      @if (failedStepCount()) {
+        <ds-icon
+          class="steps-chip-failed"
+          name="error"
+          [size]="12" />
+      } @else {
+        <ds-icon
+          class="steps-chip-done"
+          name="check"
+          [size]="12" />
+      }
+
+      <span>
+        {{ wording().steps(stepCount()) }}
+      </span>
+
+      @if (failedStepCount()) {
+        <span class="steps-chip-failed">
+          · {{ wording().stepsFailed(failedStepCount()) }}
+        </span>
+      }
+
+      <ds-icon
+        [name]="folded() ? 'chevronUp' : 'chevronDown'"
+        [size]="12" />
+    </button>
+  }
+
   <div class="body">
     <ng-content></ng-content>
   </div>

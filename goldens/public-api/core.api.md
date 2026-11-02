@@ -369,6 +369,9 @@ export interface DsIntl {
         readonly sent?: string;
         readonly notSent?: string;
         readonly retry?: string;
+        readonly steps?: (count: number) => string;
+        readonly stepsFailed?: (count: number) => string;
+        readonly stepsFolded?: (count: number, failed: number) => string;
     };
     readonly tabs: {
         readonly close: (label: string) => string;

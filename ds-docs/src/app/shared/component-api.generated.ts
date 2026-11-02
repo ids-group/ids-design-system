@@ -3036,6 +3036,27 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "null",
         "required": false,
         "description": "Delivery of a message the reader sent: `'sending'` dims it, `'sent'` marks it, `'failed'` says it was not sent and offers Retry. `null` shows nothing."
+      },
+      {
+        "name": "stepsFolded",
+        "kind": "model",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "The `[steps]` fold into a chip at the top of the bubble, which opens them again; two-way bound. Inside a `ds-chat-thread` the steps of the reply before a new user message fold on their own (`foldStepsOnSend`). Folds only steps given as `ds-timeline-item`s."
+      },
+      {
+        "name": "stepsEnter",
+        "kind": "input",
+        "type": "ChatStepsEnter",
+        "union": [
+          "together",
+          "stagger"
+        ],
+        "default": "'together'",
+        "required": false,
+        "description": "How steps that arrive together (a plan given at once) come in: `'together'` grows them in as one block, `'stagger'` one after another. Steps that arrive one at a time grow in either way."
       }
     ],
     "outputs": [
@@ -3087,6 +3108,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "null",
         "required": false,
         "description": "Accessible name of the scroll area; unset falls back to `DS_INTL.chat.thread`."
+      },
+      {
+        "name": "foldStepsOnSend",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "true",
+        "required": false,
+        "description": "A new user message folds the steps of the replies before it (`ds-chat-message` `stepsFolded`). A reply keeps its steps open while it has a failed step the reader has not opened."
       },
       {
         "name": "timeBreakMinutes",

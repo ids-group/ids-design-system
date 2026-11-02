@@ -137,6 +137,7 @@ export {
 export type {
   ChatMessageRole,
   ChatMessageStatus,
+  ChatStepsEnter,
 } from '@ids-group-ltd/ids-design-system/components/chat-message';
 export { CheckboxComponent } from '@ids-group-ltd/ids-design-system/components/checkbox';
 export { ColorPickerComponent } from '@ids-group-ltd/ids-design-system/components/color-picker';

@@ -300,6 +300,78 @@ error TS2322: Type 'string' is not assignable to type 'number'.
   </div>
 
   <h3 class="block-title t-h4">
+    Steps fold into the reply
+  </h3>
+
+  <p class="block-desc t-s">
+    When the reader sends the next message, the steps of the reply before it
+    fold into a chip at the top of that reply; the chip opens them again. A
+    reply with a failed step keeps its steps open. Set
+    <code>
+      [foldStepsOnSend]="false"
+    </code> on the thread to keep them, or bind
+    <code>
+      [(stepsFolded)]
+    </code> on a message to fold it yourself.
+  </p>
+
+  <ds-chat-thread class="chat-fold">
+    @for (turn of foldTurns(); track turn.id) {
+      <ds-chat-message role="user">
+        {{ turn.request }}
+      </ds-chat-message>
+
+      @if (turn.steps.length || turn.reply) {
+      <ds-chat-message [stepsEnter]="planEnter()">
+        <ds-timeline
+          steps
+          density="compact">
+          @for (step of turn.steps; track step.heading) {
+            <ds-timeline-item
+              [status]="step.status"
+              [heading]="step.heading">
+              @if (step.status === 'error') {
+                <pre
+                  details
+                  class="t-mono-block">
+HTTP 503: service unavailable
+                </pre
+                >
+              }
+            </ds-timeline-item>
+          }
+        </ds-timeline>
+        {{ turn.reply }}
+      </ds-chat-message>
+      }
+    }
+  </ds-chat-thread>
+
+  <div class="chat-try-bar">
+    <ds-button (pressed)="sendFoldTurn()">
+      Send the next message
+    </ds-button>
+
+    <ds-button
+      variant="outline"
+      (pressed)="sendFoldTurn('planned')">
+      Send a request with a plan
+    </ds-button>
+
+    <ds-button
+      variant="outline"
+      (pressed)="planEnter.set(planEnter() === 'together' ? 'stagger' : 'together')">
+      Plan enters: {{ planEnter() }}
+    </ds-button>
+
+    <ds-button
+      variant="outline"
+      (pressed)="sendFoldTurn('fails')">
+      Send a request that fails
+    </ds-button>
+  </div>
+
+  <h3 class="block-title t-h4">
     Try it
   </h3>
 
