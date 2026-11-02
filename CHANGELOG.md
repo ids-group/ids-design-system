@@ -205,7 +205,8 @@
   `--text-tertiary` in light and `--neutral-700` (`#B7BFD0`) under `data-theme="dark"`, about
   7.1:1 on a hovered row (`--surface-overlay-raised-secondary`) and 7.8:1 at rest, where
   `--text-tertiary` gave 4.3:1 and 4.7:1. It colours the `ds-menu-item` description and the
-  `ds-list-item` subtitle and trailing slot inside a `ds-popover` or a submenu, the optgroup label
+  `ds-list-item` subtitle and trailing slot inside a library overlay panel (a `ds-popover`, a
+  submenu, a tooltip or a dropdown panel), the optgroup label
   and no-results line of the `ds-select`, `ds-multi-select` and `ds-autocomplete` panels, the
   `ds-date-picker` weekday header and the `ds-toast` time. `--ds-menu-item-description-color`,
   `--ds-list-item-subtitle-color`, `--ds-dropdown-empty-color` and `--ds-date-picker-weekday-color`
