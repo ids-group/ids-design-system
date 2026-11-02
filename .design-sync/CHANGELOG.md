@@ -17,6 +17,8 @@ holds an entry; what the release bot commits afterwards needs none.
 
 ## Unreleased
 
+## 1.1.0 — 2026-11-02
+
 ### Build
 
 - **`DS_CPU_THROTTLE=<n>` renders every card at 1/n of the machine's speed.** `snapshot-cards` and

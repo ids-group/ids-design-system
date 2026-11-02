@@ -1,5 +1,7 @@
 ## Unreleased
 
+## 1.1.0 — 2026-11-02
+
 ### Added
 
 - **`ds-inline-edit`, text renamed in place.** Plain text that becomes a field of the same font and
