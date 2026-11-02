@@ -201,6 +201,18 @@
   `--surface-secondary: var(--surface-overlay-secondary)` and
   `--surface-muted: var(--surface-overlay-muted)` on that panel, or the `-raised-` pair on a panel
   that floats like a popover.
+- **Secondary text inside a popover-class overlay takes the new `--text-tertiary-overlay`.** It is
+  `--text-tertiary` in light and `--neutral-700` (`#B7BFD0`) under `data-theme="dark"`, about
+  7.1:1 on a hovered row (`--surface-overlay-raised-secondary`) and 7.8:1 at rest, where
+  `--text-tertiary` gave 4.3:1 and 4.7:1. It colours the `ds-menu-item` description and the
+  `ds-list-item` subtitle and trailing slot inside a `ds-popover` or a submenu, the optgroup label
+  and no-results line of the `ds-select`, `ds-multi-select` and `ds-autocomplete` panels, the
+  `ds-date-picker` weekday header and the `ds-toast` time. `--ds-menu-item-description-color`,
+  `--ds-list-item-subtitle-color`, `--ds-dropdown-empty-color` and `--ds-date-picker-weekday-color`
+  default to it there; a value you set on them still wins. A standalone `ds-menu` and a `ds-list`
+  on the page keep `--text-tertiary`. The light theme is unchanged. Nothing to change in your code,
+  unless a row of your own inside a popover or a dropdown panel, such as an option template,
+  colours its second line with `--text-tertiary`: use `--text-tertiary-overlay` there.
 - **A focused `ds-table` resize handle shows the focus on its line.** The line becomes
   `--focus-ring-width` wide in `--focus-ring-color`; the handle draws no ring around itself. In
   forced-colours mode the outline stays. Nothing to change in your code.
