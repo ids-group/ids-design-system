@@ -12228,7 +12228,20 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
     "importPath": "@ids-group-ltd/ids-design-system",
     "entryPoint": "@ids-group-ltd/ids-design-system/components/timeline",
     "summary": null,
-    "inputs": [],
+    "inputs": [
+      {
+        "name": "density",
+        "kind": "input",
+        "type": "TimelineDensity",
+        "union": [
+          "default",
+          "compact"
+        ],
+        "default": "'default'",
+        "required": false,
+        "description": "`'compact'` sets small markers, smaller text and tight rows with no connector, for the steps of an agent beside a chat message."
+      }
+    ],
     "outputs": []
   },
   "timeline:TimelineItemComponent": {

@@ -340,6 +340,105 @@ retry 1/3 failed
 
   <h3
     class="block-title t-h4"
+    data-for="timeline">
+    Compact
+  </h3>
+
+  <p class="block-desc t-s">
+    <code>
+      density="compact"
+    </code> sets small markers, the smaller text size and
+    tight rows with no connector, for an agent's steps beside a chat message.
+    Steps the agent has planned but not reached are <code>pending</code>: a
+    dashed ring and muted text.
+  </p>
+
+  <div class="states is-cols-2">
+    <div class="state-cell">
+      <div class="state-cell-stage">
+        <ds-timeline density="compact">
+          <ds-timeline-item
+            heading="Planning the change"
+            status="done" />
+
+          <ds-timeline-item
+            heading="Editing security-factors.page.html"
+            status="done" />
+
+          <ds-timeline-item
+            heading="Rebuilding"
+            status="running" />
+
+          <ds-timeline-item
+            heading="Checking the screen"
+            status="pending" />
+
+          <ds-timeline-item
+            heading="Summing up"
+            status="pending" />
+        </ds-timeline>
+      </div>
+
+      <div class="state-cell-label">
+        done, running, planned
+      </div>
+    </div>
+
+    <div class="state-cell">
+      <div class="state-cell-stage">
+        <ds-timeline density="compact">
+          <ds-timeline-item
+            heading="Planning the change"
+            status="done" />
+
+          <ds-timeline-item
+            heading="Build failed"
+            status="error"
+            [expanded]="true">
+            <pre
+              details
+              class="t-mono-block">
+NG8001: 'app-usage-chrat' is not a known element.
+security-factors.page.html:33:5
+            </pre
+            >
+          </ds-timeline-item>
+
+          <ds-timeline-item
+            heading="Fixing the build"
+            status="pending" />
+        </ds-timeline>
+      </div>
+
+      <div class="state-cell-label">
+        failed step open
+      </div>
+    </div>
+
+    <div class="state-cell">
+      <div class="state-cell-stage">
+        <ds-timeline density="compact">
+          @for (step of runSteps(); track step.heading) {
+            <ds-timeline-item
+              [heading]="step.heading"
+              [status]="step.status" />
+          }
+        </ds-timeline>
+      </div>
+
+      <div class="state-cell-label">
+        <ds-button
+          variant="outline"
+          size="sm"
+          (pressed)="runPlan()">
+          Run the plan
+        </ds-button>
+      </div>
+    </div>
+  </div>
+
+  <h3
+    class="block-title t-h4"
     data-for="timeline-item">
     Items inside a wrapper
   </h3>

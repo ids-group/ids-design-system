@@ -8171,6 +8171,16 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "name": "--timeline-gap",
         "value": "var(--space-5)",
         "notes": "Timeline item spacing (var(--space-5))."
+      },
+      {
+        "name": "--timeline-node-size-compact",
+        "value": "var(--spinner-md)",
+        "notes": ""
+      },
+      {
+        "name": "--timeline-gap-compact",
+        "value": "var(--space-1)",
+        "notes": ""
       }
     ]
   },
