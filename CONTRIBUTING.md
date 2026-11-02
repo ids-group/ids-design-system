@@ -218,7 +218,7 @@ consumer reads about the others.
 
 **`node tools/check.mjs --group release` runs once before a release, never on a branch**: it is the preflight of the cut. **`--group evidence`** (`upgrade-canary`, `render-evidence`) builds the docs twice and installs two apps, so CI never runs it: run it by hand before a release that touched rendering or the public API; `render-evidence --affected` is the branch-sized check for a rendering change.
 
-**A release that touched `.design-sync/` rehearses the card render on a slower machine:** in a worktree, after `node .design-sync/tools/build-upload.mjs`, run `DS_CPU_THROTTLE=4 node .design-sync/tools/snapshot-cards.mjs`, then `node .design-sync/tools/check-frozen.mjs`. Never in the main checkout: the run freezes the tracked `upload/` tree.
+**A release that touched `.design-sync/` rehearses the card render on a slower machine:** in a worktree, after `node .design-sync/tools/bootstrap.mjs`, `npm run build:elements` (a fresh worktree has no `elements/gen/`, which `build-upload` reads) and `node .design-sync/tools/build-upload.mjs`, run `DS_CPU_THROTTLE=4 node .design-sync/tools/snapshot-cards.mjs`, then `node .design-sync/tools/check-frozen.mjs`. Never in the main checkout: the run freezes the tracked `upload/` tree.
 
 **`node tools/check.mjs --affected` is the branch-sized run of the rest:** it runs only the checks the files changed since the merge-base with `dev` (committed, uncommitted and untracked) can move, and prints each path with the checks it chose. A path its table does not name runs the whole `lint` group.
 
