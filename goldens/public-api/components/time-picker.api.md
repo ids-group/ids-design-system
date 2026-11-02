@@ -110,8 +110,8 @@ ds-time-columns {
 
 ds-time-picker {
     --ds-radius-inner: (none);
-    --ds-time-picker-bg-color: var(--surface-overlay);
-    --ds-time-picker-border: var(--border-default);
+    --ds-time-picker-bg-color: var(--surface-overlay-raised);
+    --ds-time-picker-border: var(--border-overlay);
     --ds-time-picker-focus-shadow: var(--ds-control-focus-shadow);
     --ds-time-picker-panel-radius: var(--ds-radius-panel);
     --ds-time-picker-required-color: var(--error);

@@ -8,6 +8,8 @@
 
 :host {
   --_modal-bg-color:              var(--ds-modal-bg-color,              var(--surface-overlay));
+  --surface-secondary: var(--surface-overlay-secondary);
+  --surface-muted: var(--surface-overlay-muted);
   --_modal-radius:          var(--ds-modal-radius,          var(--ds-radius-panel));
   --_modal-shadow:          var(--ds-modal-shadow,          var(--ds-elevation-modal));
   --_modal-divider:         var(--ds-modal-divider,         var(--border-divider));

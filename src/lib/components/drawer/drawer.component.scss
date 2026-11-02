@@ -4,6 +4,8 @@
 
 :host {
   --_drawer-bg-color:               var(--ds-drawer-bg-color,               var(--surface-overlay));
+  --surface-secondary: var(--surface-overlay-secondary);
+  --surface-muted: var(--surface-overlay-muted);
   --_drawer-scrim-color:            var(--ds-drawer-scrim-color,            var(--scrim, hsl(220deg 20% 12% / 45%)));
   --_drawer-shadow:                 var(--ds-drawer-shadow,                 var(--ds-elevation-modal));
   --_drawer-divider:                var(--ds-drawer-divider,                var(--border-divider));

@@ -401,7 +401,7 @@ export const SEMANTIC_SURFACE: readonly ColourRow[] = [
   {
     "name": "--surface-overlay",
     "value": "var(--neutral-0)",
-    "notes": "Modals, drawers, popovers (with scrim)."
+    "notes": "Modals, drawers and the app-layout rail below lg (with scrim). In the dark theme one neutral step lighter than --surface-default."
   },
   {
     "name": "--surface-inverted",
@@ -431,6 +431,31 @@ export const SEMANTIC_SURFACE: readonly ColourRow[] = [
     "notes": "Muted neutral chip background (stat icon chip, etc.)."
   },
   {
+    "name": "--surface-overlay-secondary",
+    "value": "var(--surface-secondary)",
+    "notes": "What --surface-secondary becomes inside a modal or drawer: one step above --surface-overlay in the dark theme, the same as --surface-secondary in light."
+  },
+  {
+    "name": "--surface-overlay-muted",
+    "value": "var(--surface-muted)",
+    "notes": "What --surface-muted becomes inside a modal or drawer: one step above --surface-overlay-secondary in the dark theme, the same as --surface-muted in light."
+  },
+  {
+    "name": "--surface-overlay-raised",
+    "value": "var(--surface-overlay)",
+    "notes": "Popovers, menus, dropdown panels, picker panels, tooltips and toasts: one neutral step above --surface-overlay in the dark theme, equal to it in light."
+  },
+  {
+    "name": "--surface-overlay-raised-secondary",
+    "value": "var(--surface-secondary)",
+    "notes": "What --surface-secondary becomes inside a popover-class overlay: one step above --surface-overlay-raised in the dark theme, the same as --surface-secondary in light."
+  },
+  {
+    "name": "--surface-overlay-raised-muted",
+    "value": "var(--surface-muted)",
+    "notes": "What --surface-muted becomes inside a popover-class overlay: one step above --surface-overlay-raised-secondary in the dark theme, the same as --surface-muted in light."
+  },
+  {
     "name": "--surface-scrim",
     "value": "hsl(var(--shadow-tint-h) var(--shadow-tint-s) var(--shadow-tint-l) / 55%)",
     "notes": "Modal/overlay backdrop tint (55% shadow-tinted black)."
@@ -447,6 +472,11 @@ export const SEMANTIC_BORDER: readonly ColourRow[] = [
     "name": "--border-strong",
     "value": "var(--neutral-300)",
     "notes": "Hover / emphasised border."
+  },
+  {
+    "name": "--border-overlay",
+    "value": "var(--border-default)",
+    "notes": "Border of a popover-class overlay (popover, dropdown, pickers, tooltip, toast): --border-default in light, --border-strong in dark."
   },
   {
     "name": "--border-subtitle",
@@ -2486,7 +2516,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       {
         "name": "--ds-autocomplete-panel-bg-color",
         "value": "initial",
-        "notes": "Autocomplete dropdown panel fill (default --surface-overlay). The panel is portaled, so set it on the host - a global rule against the pane cannot see the host override."
+        "notes": "Autocomplete dropdown panel fill (default --surface-overlay-raised). The panel is portaled, so set it on the host - a global rule against the pane cannot see the host override."
       },
       {
         "name": "--ds-autocomplete-panel-radius",
@@ -3972,12 +4002,12 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--ds-date-picker-bg-color",
-        "value": "var(--surface-overlay)",
+        "value": "var(--surface-overlay-raised)",
         "notes": "Popover fill."
       },
       {
         "name": "--ds-date-picker-border",
-        "value": "var(--border-default)",
+        "value": "var(--border-overlay)",
         "notes": "Popover border."
       },
       {
@@ -4305,12 +4335,12 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--ds-dropdown-panel-bg-color",
-        "value": "var(--surface-overlay)",
-        "notes": "Connected dropdown panel fill (defaults to --surface-overlay)."
+        "value": "var(--surface-overlay-raised)",
+        "notes": "Connected dropdown panel fill (defaults to --surface-overlay-raised)."
       },
       {
         "name": "--ds-dropdown-panel-border-color",
-        "value": "var(--border-default)",
+        "value": "var(--border-overlay)",
         "notes": ""
       },
       {
@@ -6170,13 +6200,13 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
     "tokens": [
       {
         "name": "--ds-popover-bg-color",
-        "value": "var(--surface-overlay)",
-        "notes": "Popover surface fill (defaults to --surface-overlay)."
+        "value": "var(--surface-overlay-raised)",
+        "notes": "Popover surface fill (defaults to --surface-overlay-raised)."
       },
       {
         "name": "--ds-popover-border-color",
-        "value": "var(--border-default)",
-        "notes": "Popover border colour (defaults to --border-default)."
+        "value": "var(--border-overlay)",
+        "notes": "Popover border colour (defaults to --border-overlay)."
       },
       {
         "name": "--ds-popover-radius",
@@ -8258,12 +8288,12 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--ds-time-picker-bg-color",
-        "value": "var(--surface-overlay)",
+        "value": "var(--surface-overlay-raised)",
         "notes": "Panel fill."
       },
       {
         "name": "--ds-time-picker-border",
-        "value": "var(--border-default)",
+        "value": "var(--border-overlay)",
         "notes": "Panel border."
       },
       {
@@ -8310,7 +8340,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--ds-timeline-node-border-color",
-        "value": "var(--border-strong)",
+        "value": "var(--text-tertiary)",
         "notes": "Timeline node border colour (defaults to --border-strong)."
       },
       {
@@ -8357,8 +8387,8 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
     "tokens": [
       {
         "name": "--ds-toast-queue-bg-color",
-        "value": "var(--surface-overlay)",
-        "notes": "Background of the `+N` strip shown while toasts wait behind maxVisible (default --surface-overlay)."
+        "value": "var(--surface-overlay-raised)",
+        "notes": "Background of the `+N` strip shown while toasts wait behind maxVisible (default --surface-overlay-raised)."
       },
       {
         "name": "--ds-toast-queue-text-color",
@@ -8387,12 +8417,12 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--ds-toast-bg-color",
-        "value": "var(--surface-overlay)",
+        "value": "var(--surface-overlay-raised)",
         "notes": "Base surface fill."
       },
       {
         "name": "--ds-toast-border-color",
-        "value": "var(--border-default)",
+        "value": "var(--border-overlay)",
         "notes": "Base border."
       },
       {
@@ -8442,42 +8472,42 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--ds-toast-bg-color-info",
-        "value": "var(--ds-toast-bg-color,     var(--surface-overlay))",
+        "value": "var(--ds-toast-bg-color,     var(--surface-overlay-raised))",
         "notes": "Info tint fill."
       },
       {
         "name": "--ds-toast-border-color-info",
-        "value": "var(--ds-toast-border-color, var(--border-default))",
+        "value": "var(--ds-toast-border-color, var(--border-overlay))",
         "notes": "Info tint border."
       },
       {
         "name": "--ds-toast-bg-color-success",
-        "value": "var(--ds-toast-bg-color,     var(--surface-overlay))",
+        "value": "var(--ds-toast-bg-color,     var(--surface-overlay-raised))",
         "notes": "Success tint fill."
       },
       {
         "name": "--ds-toast-border-color-success",
-        "value": "var(--ds-toast-border-color, var(--border-default))",
+        "value": "var(--ds-toast-border-color, var(--border-overlay))",
         "notes": "Success tint border."
       },
       {
         "name": "--ds-toast-bg-color-warning",
-        "value": "var(--ds-toast-bg-color,     var(--surface-overlay))",
+        "value": "var(--ds-toast-bg-color,     var(--surface-overlay-raised))",
         "notes": "Warning tint fill."
       },
       {
         "name": "--ds-toast-border-color-warning",
-        "value": "var(--ds-toast-border-color, var(--border-default))",
+        "value": "var(--ds-toast-border-color, var(--border-overlay))",
         "notes": "Warning tint border."
       },
       {
         "name": "--ds-toast-bg-color-error",
-        "value": "var(--ds-toast-bg-color,     var(--surface-overlay))",
+        "value": "var(--ds-toast-bg-color,     var(--surface-overlay-raised))",
         "notes": "Error tint fill."
       },
       {
         "name": "--ds-toast-border-color-error",
-        "value": "var(--ds-toast-border-color, var(--border-default))",
+        "value": "var(--ds-toast-border-color, var(--border-overlay))",
         "notes": "Error tint border."
       },
       {
@@ -8613,8 +8643,8 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--tooltip-bg-color",
-        "value": "var(--surface-overlay)",
-        "notes": "Surface of ds-tooltip and the chart tooltip: --surface-overlay."
+        "value": "var(--surface-overlay-raised)",
+        "notes": "Surface of ds-tooltip and the chart tooltip: --surface-overlay-raised."
       },
       {
         "name": "--tooltip-text-color",
@@ -8623,8 +8653,8 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--tooltip-border-color",
-        "value": "var(--border-default)",
-        "notes": "Border of ds-tooltip and the chart tooltip: --border-default, --border-strong on the dark theme."
+        "value": "var(--border-overlay)",
+        "notes": "Border of ds-tooltip and the chart tooltip (defaults to --border-overlay)."
       }
     ]
   },

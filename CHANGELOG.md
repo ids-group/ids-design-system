@@ -170,6 +170,25 @@
   was `--border-default`, about 1.2:1 against the header; it is `--text-tertiary` now, about 4.3:1.
   Set `--ds-table-resize-line-color` on `ds-table` to choose another colour, for example
   `--ds-table-resize-line-color: var(--border-default)` for the previous look.
+- **Dark theme overlays are lighter than the page, in two levels.** Under `data-theme="dark"`:
+  - Modals, drawers and the `ds-app-layout` rail below `lg` take `--surface-overlay`, which is
+    `--neutral-100` (`#1E2330`, about 1.19:1 against the canvas) instead of `--neutral-0`, the
+    colour of cards.
+  - Popovers, menus, dropdown panels, the date, time and colour picker panels, tooltips and toasts
+    take the new `--surface-overlay-raised`, `--neutral-150` (`#242A38`, about 1.30:1 against the
+    canvas), so a menu or a select opened in a modal stands apart from it. Their border is the new
+    `--border-overlay`: `--border-strong` in the dark theme, `--border-default` in light.
+  - Inside each overlay `--surface-secondary` and `--surface-muted` take its level's tokens:
+    `--surface-overlay-secondary` and `--surface-overlay-muted` (`--neutral-150`, `--neutral-200`)
+    in a modal or drawer, `--surface-overlay-raised-secondary` and `--surface-overlay-raised-muted`
+    (`--neutral-200`, `--neutral-300`) in a popover-class overlay, so hover, pressed and selected
+    fills stay a step above the overlay.
+
+  The light theme is unchanged. Nothing to change in your code, unless a panel of your own is
+  painted with `--surface-overlay` and hovers with `--surface-secondary`: set
+  `--surface-secondary: var(--surface-overlay-secondary)` and
+  `--surface-muted: var(--surface-overlay-muted)` on that panel, or the `-raised-` pair on a panel
+  that floats like a popover.
 - **A focused `ds-table` resize handle shows the focus on its line.** The line becomes
   `--focus-ring-width` wide in `--focus-ring-color`; the handle draws no ring around itself. In
   forced-colours mode the outline stays. Nothing to change in your code.
@@ -179,6 +198,13 @@
 - **The icon of a `ds-timeline-item` marker sits in the middle of the marker.** The icon is 16px
   instead of 15px, so it is centred in the 24px inside the marker's ring; at 15px the browser
   snapped it half a pixel right and down.
+- **The ring of a `ds-timeline-item` marker without a status and of an upcoming `ds-stepper` step
+  stands out from the surface.** Both rings are drawn in `--text-tertiary` instead of
+  `--border-strong`, at 4.74:1 against the surface in the light theme and 5.58:1 in the dark, where
+  `--border-strong` gave 1.66:1 and 1.71:1, under the 3:1 WCAG 1.4.11 asks of a marker. This covers
+  the default and `muted` tones of `ds-timeline-item`; `--ds-timeline-node-border-color` still
+  overrides it. Every marker icon draws its line as thick as the ring, 2px (`stroke` 3 on the 24-unit icon
+  grid, was 1.75). Nothing to change in your code.
 - **A `ds-timeline-item` inside a wrapper element keeps its connector.** The line to the next item
   disappeared from every item wrapped in its own element, because each one was the last child of its
   wrapper. `ds-timeline` now finds its items at any depth and only the last one draws no line.

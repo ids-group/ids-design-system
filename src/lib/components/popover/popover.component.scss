@@ -5,13 +5,15 @@
 
 .popover {
   /* Portaled to body, so --ds-popover-* overrides are theme-level (:root); one-off: panelClass. */
-  --_popover-bg-color:     var(--ds-popover-bg-color,     var(--surface-overlay));
-  --_popover-border-color: var(--ds-popover-border-color, var(--border-default));
+  --_popover-bg-color:     var(--ds-popover-bg-color,     var(--surface-overlay-raised));
+  --_popover-border-color: var(--ds-popover-border-color, var(--border-overlay));
   --_popover-radius:       var(--ds-popover-radius,       var(--ds-radius-panel));
   --_popover-shadow:       var(--ds-popover-shadow,       var(--ds-elevation-overlay));
   --_popover-padding:      var(--ds-popover-padding,      var(--space-3));
   --_popover-max-width:    var(--ds-popover-max-width,    var(--popover-maxw));
   --_popover-min-width:    var(--ds-popover-min-width,    auto);
+  --surface-secondary: var(--surface-overlay-raised-secondary);
+  --surface-muted: var(--surface-overlay-raised-muted);
 
   position: relative;
   background: var(--_popover-bg-color);
