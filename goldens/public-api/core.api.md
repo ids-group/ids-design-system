@@ -70,7 +70,7 @@ export const DS_INTL_DEFAULTS: DsIntl & {
     readonly timeline: Required<NonNullable<DsIntl['timeline']>>;
     readonly splitter: Required<NonNullable<DsIntl['splitter']>>;
     readonly inlineEdit: Required<NonNullable<DsIntl['inlineEdit']>>;
-    readonly messageInput: Required<NonNullable<DsIntl['messageInput']>>;
+    readonly chatInput: Required<NonNullable<DsIntl['chatInput']>>;
     readonly attachment: Required<NonNullable<DsIntl['attachment']>>;
     readonly chat: Required<NonNullable<DsIntl['chat']>>;
 };
@@ -303,7 +303,7 @@ export interface DsIntl {
         readonly image?: string;
         readonly file?: string;
     };
-    readonly messageInput?: {
+    readonly chatInput?: {
         readonly label?: string;
         readonly send?: string;
     };
@@ -353,7 +353,6 @@ export interface DsIntl {
         readonly done?: string;
         readonly running?: string;
         readonly pending?: string;
-        readonly waiting?: string;
         readonly error?: string;
         readonly details?: (heading: string) => string;
     };
@@ -373,6 +372,12 @@ export interface DsIntl {
         readonly steps?: (count: number) => string;
         readonly stepsFailed?: (count: number) => string;
         readonly stepsFolded?: (count: number, failed: number) => string;
+        readonly stepDone?: string;
+        readonly stepRunning?: string;
+        readonly stepPending?: string;
+        readonly stepWaiting?: string;
+        readonly stepFailed?: string;
+        readonly stepDetails?: (heading: string) => string;
     };
     readonly tabs: {
         readonly close: (label: string) => string;

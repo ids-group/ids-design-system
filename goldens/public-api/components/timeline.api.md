@@ -5,17 +5,13 @@
 ```ts
 @Component({ selector: 'ds-timeline' })
 export class TimelineComponent {
-    public readonly density = input<TimelineDensity>('default');
     public readonly firstItem = computed<object | undefined>(…);
     private readonly items;
     public readonly lastItem = computed<object | undefined>(…);
 }
 
-export type TimelineDensity = 'default' | 'compact';
-
 @Component({ selector: 'ds-timeline-item' })
 export class TimelineItemComponent {
-    protected readonly compact = computed(…);
     protected readonly detailsId = `ds-timeline-item-${++nextId}-details`;
     protected readonly detailsLabel = computed(…);
     public readonly expanded = model<boolean>(false);
@@ -34,7 +30,7 @@ export class TimelineItemComponent {
     private readonly wording;
 }
 
-export type TimelineStatus = 'done' | 'running' | 'pending' | 'waiting' | 'error';
+export type TimelineStatus = 'done' | 'running' | 'pending' | 'error';
 
 export type TimelineTone = 'default' | 'primary' | 'success' | 'warning' | 'error' | 'muted';
 ```
@@ -44,11 +40,11 @@ export type TimelineTone = 'default' | 'primary' | 'success' | 'warning' | 'erro
 ```css
 ds-timeline-item {
     --ds-radius-control: (none);
-    --ds-timeline-gap: var(--timeline-gap) | var(--timeline-gap-compact);
+    --ds-timeline-gap: var(--timeline-gap);
     --ds-timeline-node-bg-color: var(--surface-secondary);
     --ds-timeline-node-border-color: var(--border-strong);
     --ds-timeline-node-color: var(--text-tertiary);
-    --ds-timeline-node-size: var(--timeline-node-size) | var(--timeline-node-size-compact);
+    --ds-timeline-node-size: var(--timeline-node-size);
     --ds-timeline-open-bg-color: var(--surface-secondary);
     --ds-timeline-spine-color: var(--border-divider);
     --ds-timeline-spine-width: var(--timeline-spine-w);
