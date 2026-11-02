@@ -264,6 +264,12 @@ export interface DsIntl {
     readonly notSent?: string;
     /** `'Retry'` - the button beside it. */
     readonly retry?: string;
+    /** `` `${count} steps` `` (`'1 step'`) - the chip a message's folded steps turn into. */
+    readonly steps?: (count: number) => string;
+    /** `` `${count} failed` `` - beside it, when some of those steps failed. */
+    readonly stepsFailed?: (count: number) => string;
+    /** `` `Steps folded, ${count}` ``, then `` `, ${failed} failed` `` - the chip's accessible name. */
+    readonly stepsFolded?: (count: number, failed: number) => string;
   };
   readonly tabs: {
     readonly close: (label: string) => string;

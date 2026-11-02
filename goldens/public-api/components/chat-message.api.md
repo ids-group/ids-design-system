@@ -15,21 +15,34 @@ export class ChatAttachmentComponent {
 
 @Component({ selector: 'ds-chat-message' })
 export class ChatMessageComponent {
+    public constructor();
+    private applyFold;
     public readonly author = input<string>('');
+    public readonly failedStepCount = computed(…);
+    protected readonly folded = computed(…);
+    private growIn;
+    private readonly host;
+    private readonly injector;
     private readonly intl;
     protected readonly isContinued = computed(…);
     protected readonly isFirst = computed(…);
     protected readonly isGrouped = computed(…);
+    private motion;
     public readonly retry = output<void>();
     public readonly role = input<ChatMessageRole>('assistant');
     public readonly sentAt = input<Date | string | number | null>(null);
     public readonly sentAtMs = computed(…);
     protected readonly speaker = computed(…);
     public readonly status = input<ChatMessageStatus | null>(null);
+    public readonly stepCount = computed(…);
+    private readonly stepElements;
+    private readonly steps;
+    public readonly stepsFolded = model<boolean>(false);
     public readonly streaming = input(false, { transform: booleanAttribute });
     protected readonly thread = inject(…);
     public readonly time = input<string>('');
     protected readonly timeBreak = computed(…);
+    protected toggleSteps(): void;
     protected readonly wording = computed(…);
 }
 
@@ -51,6 +64,8 @@ export class ChatThreadComponent {
     private readonly destroyRef;
     private dividerText;
     public readonly firstMessage = computed<object | undefined>(…);
+    private foldBefore;
+    public readonly foldStepsOnSend = input(true, { transform: booleanAttribute });
     public readonly groupedMessages = computed<ReadonlySet<object>>(…);
     public readonly hasOlder = input(false, { transform: booleanAttribute });
     private holdAnchor;
@@ -59,6 +74,7 @@ export class ChatThreadComponent {
     private readonly intl;
     protected readonly jumpLabel = computed(…);
     protected readonly label = computed(…);
+    public readonly live = signal(…);
     public readonly loadOlder = output<void>();
     public readonly loadingOlder = input(false, { transform: booleanAttribute });
     private readonly locale;
@@ -102,6 +118,7 @@ ds-chat-message {
     --ds-chat-message-user-bg-color: var(--primary);
     --ds-chat-message-user-color: var(--text-on-primary);
     --ds-radius-inner: (none);
+    --ds-radius-pill: (none);
 }
 
 ds-chat-thread {

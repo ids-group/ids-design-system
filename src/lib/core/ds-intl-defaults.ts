@@ -214,6 +214,12 @@ export const DS_INTL_DEFAULTS: DsIntl & {
     sent: 'Sent',
     notSent: 'Not sent',
     retry: 'Retry',
+    steps: (count) => (count === 1 ? '1 step' : `${count} steps`),
+    stepsFailed: (count) => `${count} failed`,
+    stepsFolded: (count, failed) =>
+      failed
+        ? `Steps folded, ${count}, ${failed} failed`
+        : `Steps folded, ${count}`,
   },
   tabs: {
     close: (label) => `Close ${label}`,

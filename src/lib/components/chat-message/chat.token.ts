@@ -10,6 +10,8 @@ export interface ChatThreadContract {
   readonly continuedMessages: Signal<ReadonlySet<object>>;
   /** Messages that open a time section, with the divider text shown above them. */
   readonly timeBreaks: Signal<ReadonlyMap<object, string>>;
+  /** True once the thread has rendered: messages and steps that arrive after it grow in. */
+  readonly live: Signal<boolean>;
 }
 
 export const CHAT_THREAD = new InjectionToken<ChatThreadContract>(

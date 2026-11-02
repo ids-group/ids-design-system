@@ -105,6 +105,13 @@
   spinner and `workingLabel` at the end. A screen reader hears the working label and each finished
   reply, once: a reply that arrives while `working` is read when `working` clears, and the messages
   present when the thread first renders are never read. `scrollToEnd()` scrolls down from code.
+  `stepsFolded` (two-way) folds a message's `[steps]` into a chip at the top of its bubble that
+  shows the step count and any failed count and opens them again (`aria-expanded`, Enter or
+  Space); once shown, the chip folds them again. When a user message arrives, the thread folds the
+  steps of the reply before it, unless one of its steps failed; `foldStepsOnSend` (default `true`)
+  turns that off. Messages and steps that arrive after the thread first rendered grow in, and a
+  pinned thread keeps its bottom still through every fold and arrival. The fold runs 380ms and
+  nothing moves under reduced motion. Steps are counted from the `ds-timeline-item`s they hold.
   With `hasOlder`, scrolling near the start emits `(loadOlder)`; prepend the older messages and the
   thread keeps the message the reader was looking at where it was, while `loadingOlder` shows a
   spinner over the top of the list. On `ds-chat-message`, `streaming` marks a reply whose text is
@@ -119,7 +126,8 @@
   `--ds-chat-attachment-preview-max-height` (default `16rem`). `expanded` binds the open state
   two-way. A plain file is a `ds-tag`. New optional `DsIntl.chat` keys `user`, `assistant`,
   `thread`, `working`, `newMessages(count)`, `latest`, `today`, `yesterday`, `sending`, `sent`,
-  `notSent` and `retry`, and CSS hooks
+  `notSent`, `retry`, `steps(count)`, `stepsFailed(count)` and `stepsFolded(count, failed)`, and
+  CSS hooks
   `--ds-chat-message-max-width` (default `85%`), `--ds-chat-message-radius`,
   `--ds-chat-message-padding`, `--ds-chat-message-user-bg-color`, `--ds-chat-message-user-color`,
   `--ds-chat-message-assistant-bg-color`, `--ds-chat-message-assistant-color`,

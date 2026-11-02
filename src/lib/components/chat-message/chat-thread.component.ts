@@ -60,6 +60,9 @@ export class ChatThreadComponent {
   readonly workingLabel = input<string>('');
   /** Accessible name of the scroll area; unset falls back to `DS_INTL.chat.thread`. */
   readonly ariaLabel = input<string | null>(null);
+  /** A new user message folds the steps of the reply before it (`ds-chat-message` `stepsFolded`).
+   *  A reply with a failed step keeps its steps open. */
+  readonly foldStepsOnSend = input(true, { transform: booleanAttribute });
   /** Minutes between two messages' `sentAt` that start a new section with a time divider. */
   readonly timeBreakMinutes = input<number>(15);
   /** More messages exist before the first one; scrolling near the start then emits `loadOlder`. */
@@ -142,6 +145,9 @@ export class ChatThreadComponent {
     () => this.workingLabel() || this.wording().working,
   );
 
+  /** True once the thread has rendered. @internal */
+  readonly live = signal(false);
+
   protected readonly pinned = signal(true);
   protected readonly unseen = signal(0);
   protected readonly announcement = signal('');
@@ -153,6 +159,7 @@ export class ChatThreadComponent {
 
   constructor() {
     afterNextRender(() => {
+      this.live.set(true);
       this.toEnd();
       // Growth of the content (a new message, a streamed line, an opened snapshot) and a smaller
       // viewport both move the end away; a pinned thread follows it.
@@ -173,13 +180,20 @@ export class ChatThreadComponent {
     // thread, are history: they are scrolled to, never announced.
     let seen = -1;
     let lastMessage: object | undefined;
+    let known = new Set<ChatMessageComponent>();
     effect(() => {
       const list = this.messages();
       untracked(() => {
         const previous = seen;
         const previousLast = lastMessage;
+        const added =
+          previous > 0 ? list.filter((message) => !known.has(message)) : [];
+        known = new Set(list);
         seen = list.length;
         lastMessage = list.at(-1);
+        if (added.length && this.foldStepsOnSend()) {
+          this.afterRender(() => this.foldBefore(list, added));
+        }
         this.olderRequested = false;
         // Messages prepended by `loadOlder` leave the last one in place and are not new.
         if (
@@ -327,6 +341,24 @@ export class ChatThreadComponent {
     });
 
     return `${day} ${time}`;
+  }
+
+  // A user message that arrived folds the steps of the latest reply before it, unless one failed.
+  private foldBefore(
+    list: readonly ChatMessageComponent[],
+    added: readonly ChatMessageComponent[],
+  ): void {
+    const sent = added.find((message) => message.role() === 'user');
+    if (!sent) {
+      return;
+    }
+    const reply = list
+      .slice(0, list.indexOf(sent))
+      .reverse()
+      .find((message) => message.role() === 'assistant');
+    if (reply && reply.stepCount() > 0 && reply.failedStepCount() === 0) {
+      reply.stepsFolded.set(true);
+    }
   }
 
   private toEnd(): void {

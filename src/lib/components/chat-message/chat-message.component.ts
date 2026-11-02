@@ -1,11 +1,18 @@
 import {
   Component,
+  ElementRef,
+  Injector,
   ViewEncapsulation,
-  computed,
+  afterNextRender,
   booleanAttribute,
+  computed,
+  contentChildren,
+  effect,
   inject,
   input,
+  model,
   output,
+  untracked,
 } from '@angular/core';
 import {
   DS_INTL,
@@ -13,6 +20,7 @@ import {
 } from '@ids-group-ltd/ids-design-system/core';
 import { ButtonComponent } from '@ids-group-ltd/ids-design-system/components/button';
 import { IconComponent } from '@ids-group-ltd/ids-design-system/icons';
+import { TimelineItemComponent } from '@ids-group-ltd/ids-design-system/components/timeline';
 import { CHAT_THREAD } from './chat.token';
 import type { ChatMessageRole, ChatMessageStatus } from './chat.types';
 
@@ -20,6 +28,7 @@ import type { ChatMessageRole, ChatMessageStatus } from './chat.types';
  * One message of a conversation: a bubble on the right for the user, on the left for the
  * assistant. Slots: default (the text or rendered markdown), `[steps]` (a `ds-timeline` of the
  * agent's steps, above the bubble), `[attachments]` (under the text), `[actions]` (under the bubble).
+ * With `stepsFolded` the steps fold into a chip at the top of the bubble that opens them again.
  */
 @Component({
   selector: 'ds-chat-message',
@@ -56,8 +65,30 @@ export class ChatMessageComponent {
    *  was not sent and offers Retry. `null` shows nothing. */
   readonly status = input<ChatMessageStatus | null>(null);
 
+  /** The `[steps]` fold into a chip at the top of the bubble, which opens them again; two-way bound.
+   *  Inside a `ds-chat-thread` the steps of the reply before a new user message fold on their own
+   *  (`foldStepsOnSend`). Folds only steps given as `ds-timeline-item`s. */
+  readonly stepsFolded = model<boolean>(false);
+
   /** Retry was pressed on a `'failed'` message. Send it again and move `status` back to `'sending'`. */
   readonly retry = output<void>();
+
+  private readonly steps = contentChildren(TimelineItemComponent, {
+    descendants: true,
+  });
+  private readonly stepElements = contentChildren(TimelineItemComponent, {
+    descendants: true,
+    read: ElementRef<HTMLElement>,
+  });
+  /** How many `ds-timeline-item`s the `[steps]` hold. @internal */
+  readonly stepCount = computed(() => this.steps().length);
+  /** How many of them have `status="error"`. @internal */
+  readonly failedStepCount = computed(
+    () => this.steps().filter((step) => step.status() === 'error').length,
+  );
+  protected readonly folded = computed(
+    () => this.stepsFolded() && this.stepCount() > 0,
+  );
 
   private readonly intl = inject(DS_INTL);
   protected readonly thread = inject(CHAT_THREAD, { optional: true });
@@ -93,4 +124,185 @@ export class ChatMessageComponent {
   protected readonly speaker = computed(
     () => this.author() || this.wording()[this.role()],
   );
+
+  private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
+
+  constructor() {
+    // The fold is applied here rather than through a template binding, so it can animate from the
+    // current boxes. The first state is applied without motion.
+    let rendered = false;
+    afterNextRender(() => {
+      rendered = true;
+      this.applyFold(this.folded(), false);
+      if (this.thread?.live()) {
+        this.growIn([this.host.nativeElement]);
+      }
+    });
+    effect(() => {
+      const folded = this.folded();
+      untracked(() => {
+        if (rendered) {
+          this.applyFold(folded, true);
+        }
+      });
+    });
+    // Steps that arrive into a message already on screen grow in, one after another.
+    let knownSteps = new Set<TimelineItemComponent>();
+    effect(() => {
+      const items = this.steps();
+      untracked(() => {
+        const added = items.filter((item) => !knownSteps.has(item));
+        knownSteps = new Set(items);
+        if (rendered && added.length) {
+          afterNextRender(
+            () => {
+              const elements = this.stepElements();
+              this.growIn(
+                added.map(
+                  (item) => elements[items.indexOf(item)].nativeElement,
+                ),
+              );
+            },
+            { injector: this.injector },
+          );
+        }
+      });
+    });
+  }
+
+  private readonly injector = inject(Injector);
+
+  protected toggleSteps(): void {
+    this.stepsFolded.set(!this.stepsFolded());
+  }
+
+  private motion(): boolean {
+    const host = this.host.nativeElement;
+
+    return (
+      typeof matchMedia === 'function' &&
+      !matchMedia('(prefers-reduced-motion: reduce)').matches &&
+      typeof host.animate === 'function'
+    );
+  }
+
+  // Height, not a transform, so the thread's layout follows every frame and a pinned thread keeps
+  // its bottom still.
+  private growIn(elements: readonly HTMLElement[]): void {
+    if (!this.motion()) {
+      return;
+    }
+    elements.forEach((element, index) => {
+      const height = element.getBoundingClientRect().height;
+      element.animate(
+        [
+          {
+            height: '0px',
+            opacity: 0,
+            transform: 'translateY(-4px)',
+            overflow: 'hidden',
+          },
+          {
+            height: `${height}px`,
+            opacity: 1,
+            transform: 'none',
+            overflow: 'hidden',
+          },
+        ],
+        {
+          duration: 200,
+          delay: index * 60,
+          easing: 'cubic-bezier(0.2, 0, 0, 1)',
+          fill: 'backwards',
+        },
+      );
+    });
+  }
+
+  // Folding, the steps shrink toward the chip as the chip grows at the top of the bubble; opening,
+  // the steps grow back above it. Both run on height, so the bubble and its text move with the
+  // layout rather than jumping. The chip stays once shown, to fold the steps again.
+  private applyFold(folded: boolean, animate: boolean): void {
+    const host = this.host.nativeElement;
+    if (host.classList.contains('steps-folded') === folded) {
+      return;
+    }
+    const steps = host.querySelector<HTMLElement>(':scope > .steps');
+    const chip = host.querySelector<HTMLElement>(
+      ':scope > .bubble > .steps-chip',
+    );
+    const chipNew = folded && !host.classList.contains('steps-chip-shown');
+    host.classList.add('steps-chip-shown');
+    if (!animate || !this.motion() || !steps) {
+      host.classList.toggle('steps-folded', folded);
+
+      return;
+    }
+    const timing: KeyframeAnimationOptions = {
+      duration: 380,
+      easing: 'cubic-bezier(0.34, 1.25, 0.64, 1)',
+    };
+    if (chip && chipNew) {
+      const chipHeight = chip.getBoundingClientRect().height;
+      chip.animate(
+        [
+          {
+            height: '0px',
+            opacity: 0,
+            transform: 'scale(0.9)',
+            overflow: 'hidden',
+          },
+          {
+            height: `${chipHeight}px`,
+            opacity: 1,
+            transform: 'none',
+            overflow: 'hidden',
+          },
+        ],
+        { ...timing, easing: 'cubic-bezier(0.2, 0, 0, 1)' },
+      );
+    }
+    if (folded) {
+      const height = steps.getBoundingClientRect().height;
+      steps.style.transformOrigin = 'bottom left';
+      steps.animate(
+        [
+          {
+            height: `${height}px`,
+            opacity: 1,
+            transform: 'none',
+            overflow: 'hidden',
+          },
+          {
+            height: '0px',
+            opacity: 0,
+            transform: 'scale(0.6)',
+            overflow: 'hidden',
+          },
+        ],
+        { duration: 380, easing: 'cubic-bezier(0.2, 0, 0, 1)' },
+      ).onfinish = () => host.classList.toggle('steps-folded', this.folded());
+    } else {
+      host.classList.remove('steps-folded');
+      const height = steps.getBoundingClientRect().height;
+      steps.style.transformOrigin = 'bottom left';
+      steps.animate(
+        [
+          {
+            height: '0px',
+            opacity: 0,
+            transform: 'scale(0.6)',
+            overflow: 'hidden',
+          },
+          {
+            height: `${height}px`,
+            opacity: 1,
+            transform: 'none',
+            overflow: 'hidden',
+          },
+        ],
+        timing,
+      );
+    }
+  }
 }
