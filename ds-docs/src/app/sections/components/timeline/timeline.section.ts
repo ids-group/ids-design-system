@@ -14,10 +14,10 @@ import {
 import { DocsSectionComponent } from '../../../shared/docs-section.component';
 
 const RUN_PLAN = [
-  'Planning the change',
-  'Editing security-factors.page.html',
-  'Rebuilding',
-  'Checking the screen',
+  'Import the brief',
+  'Generate screens',
+  'Run the checks',
+  'Publish the prototype',
 ];
 
 @Component({

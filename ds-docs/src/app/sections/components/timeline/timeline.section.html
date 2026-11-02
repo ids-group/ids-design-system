@@ -358,23 +358,23 @@ retry 1/3 failed
       <div class="state-cell-stage">
         <ds-timeline density="compact">
           <ds-timeline-item
-            heading="Planning the change"
+            heading="Import the brief"
             status="done" />
 
           <ds-timeline-item
-            heading="Editing security-factors.page.html"
+            heading="Generate screens"
             status="done" />
 
           <ds-timeline-item
-            heading="Rebuilding"
+            heading="Run the checks"
             status="running" />
 
           <ds-timeline-item
-            heading="Checking the screen"
+            heading="Publish the prototype"
             status="pending" />
 
           <ds-timeline-item
-            heading="Summing up"
+            heading="Notify the reviewers"
             status="pending" />
         </ds-timeline>
       </div>
@@ -388,24 +388,24 @@ retry 1/3 failed
       <div class="state-cell-stage">
         <ds-timeline density="compact">
           <ds-timeline-item
-            heading="Planning the change"
+            heading="Import the brief"
             status="done" />
 
           <ds-timeline-item
-            heading="Build failed"
+            heading="Upload failed"
             status="error"
             [expanded]="true">
             <pre
               details
               class="t-mono-block">
-NG8001: 'app-usage-chrat' is not a known element.
-security-factors.page.html:33:5
+HTTP 503: service unavailable
+retry 1/3 failed
             </pre
             >
           </ds-timeline-item>
 
           <ds-timeline-item
-            heading="Fixing the build"
+            heading="Retrying the upload"
             status="pending" />
         </ds-timeline>
       </div>
