@@ -73,7 +73,7 @@
   color: var(--text-tertiary);
 
   // A row whose only content is the spoken speaker takes no space.
-  &:has(.time, .speaker:not(.visually-hidden)) {
+  &:has(.speaker:not(.visually-hidden)) {
     margin-bottom: var(--space-1);
   }
 }

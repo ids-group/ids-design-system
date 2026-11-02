@@ -90,8 +90,8 @@
 - **`ds-chat-message`, `ds-chat-thread` and `ds-chat-attachment`, the bubbles and the list of a
   chat.** `ds-chat-message` takes `role` (`ChatMessageRole`, `'user'` or `'assistant'`, default
   `'assistant'`): a user message is a filled bubble on the right, an assistant message a subtle one
-  on the left. Optional `author` and `time` show above the bubble; without `author` the role is
-  spoken. The default slot is the text, rendered by your app; `[steps]` sits above the bubble on
+  on the left. Optional `author` shows above the bubble; without it the role is spoken. Optional `time`
+  (already formatted) shows under the bubble, and in a thread only under the last message of a run. The default slot is the text, rendered by your app; `[steps]` sits above the bubble on
   the thread's surface (a `ds-timeline`; a message with only steps draws no bubble),
   `[attachments]` under the text, and `[actions]` under the bubble, shown on hover or
   focus. The text is selectable and long words and addresses wrap. `ds-chat-thread` scrolls its
@@ -110,8 +110,9 @@
   spinner over the top of the list. On `ds-chat-message`, `streaming` marks a reply whose text is
   still arriving: a caret blinks after the text, `aria-busy` is set, `[actions]` stay hidden, and the
   thread reads the reply once it completes. `status` (`ChatMessageStatus`: `'sending'`, `'sent'` or
-  `'failed'`) shows the delivery of a message the reader sent under its bubble; `'sending'` dims the
-  bubble, `'failed'` says it was not sent with a Retry button that emits `(retry)`. Sending is the
+  `'failed'`) is the delivery of a message the reader sent: `'sending'` dims the bubble and says so
+  under it, `'failed'` says it was not sent with a Retry button that emits `(retry)`, both in place of
+  the time; `'sent'` shows nothing and is only spoken. Sending is the
   app's: set `status` back to `'sending'` on retry.
   `ds-chat-attachment` is a chip in `[attachments]` with `label`, an optional `source` (the page it
   was picked on) and `icon` (default `paperclip`); open, it becomes a card on its own line that
