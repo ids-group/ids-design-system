@@ -11,6 +11,7 @@ import {
   inject,
   input,
   model,
+  signal,
   output,
   untracked,
 } from '@angular/core';
@@ -86,6 +87,17 @@ export class ChatMessageComponent {
   readonly failedStepCount = computed(
     () => this.steps().filter((step) => step.status() === 'error').length,
   );
+  private readonly openedFailures = new Set<TimelineItemComponent>();
+  private readonly openedFailuresVersion = signal(0);
+  /** Failed steps the reader has not opened yet; while any remain the thread does not fold them.
+   *  @internal */
+  readonly unopenedFailedStepCount = computed(() => {
+    this.openedFailuresVersion();
+
+    return this.steps().filter(
+      (step) => step.status() === 'error' && !this.openedFailures.has(step),
+    ).length;
+  });
   protected readonly folded = computed(
     () => this.stepsFolded() && this.stepCount() > 0,
   );
@@ -145,6 +157,21 @@ export class ChatMessageComponent {
           this.applyFold(folded, true);
         }
       });
+    });
+    // Opening a failed step's details counts as the reader having seen it.
+    effect(() => {
+      for (const step of this.steps()) {
+        if (
+          step.status() === 'error' &&
+          step.expanded() &&
+          !this.openedFailures.has(step)
+        ) {
+          this.openedFailures.add(step);
+          untracked(() =>
+            this.openedFailuresVersion.update((version) => version + 1),
+          );
+        }
+      }
     });
     // Steps that arrive into a message already on screen grow in, one after another.
     let knownSteps = new Set<TimelineItemComponent>();

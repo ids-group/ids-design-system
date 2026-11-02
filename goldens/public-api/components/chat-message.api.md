@@ -28,6 +28,8 @@ export class ChatMessageComponent {
     protected readonly isFirst = computed(…);
     protected readonly isGrouped = computed(…);
     private motion;
+    private readonly openedFailures;
+    private readonly openedFailuresVersion;
     public readonly retry = output<void>();
     public readonly role = input<ChatMessageRole>('assistant');
     public readonly sentAt = input<Date | string | number | null>(null);
@@ -43,6 +45,7 @@ export class ChatMessageComponent {
     public readonly time = input<string>('');
     protected readonly timeBreak = computed(…);
     protected toggleSteps(): void;
+    public readonly unopenedFailedStepCount = computed(…);
     protected readonly wording = computed(…);
 }
 

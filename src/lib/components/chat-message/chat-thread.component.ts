@@ -60,8 +60,8 @@ export class ChatThreadComponent {
   readonly workingLabel = input<string>('');
   /** Accessible name of the scroll area; unset falls back to `DS_INTL.chat.thread`. */
   readonly ariaLabel = input<string | null>(null);
-  /** A new user message folds the steps of the reply before it (`ds-chat-message` `stepsFolded`).
-   *  A reply with a failed step keeps its steps open. */
+  /** A new user message folds the steps of the replies before it (`ds-chat-message` `stepsFolded`).
+   *  A reply keeps its steps open while it has a failed step the reader has not opened. */
   readonly foldStepsOnSend = input(true, { transform: booleanAttribute });
   /** Minutes between two messages' `sentAt` that start a new section with a time divider. */
   readonly timeBreakMinutes = input<number>(15);
@@ -343,7 +343,8 @@ export class ChatThreadComponent {
     return `${day} ${time}`;
   }
 
-  // A user message that arrived folds the steps of the latest reply before it, unless one failed.
+  // A user message that arrived folds the steps of every reply before it, except a reply whose failed
+  // step the reader has not opened yet.
   private foldBefore(
     list: readonly ChatMessageComponent[],
     added: readonly ChatMessageComponent[],
@@ -352,12 +353,14 @@ export class ChatThreadComponent {
     if (!sent) {
       return;
     }
-    const reply = list
-      .slice(0, list.indexOf(sent))
-      .reverse()
-      .find((message) => message.role() === 'assistant');
-    if (reply && reply.stepCount() > 0 && reply.failedStepCount() === 0) {
-      reply.stepsFolded.set(true);
+    for (const reply of list.slice(0, list.indexOf(sent))) {
+      if (
+        reply.role() === 'assistant' &&
+        reply.stepCount() > 0 &&
+        reply.unopenedFailedStepCount() === 0
+      ) {
+        reply.stepsFolded.set(true);
+      }
     }
   }
 
