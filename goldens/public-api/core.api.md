@@ -353,6 +353,7 @@ export interface DsIntl {
         readonly done?: string;
         readonly running?: string;
         readonly pending?: string;
+        readonly waiting?: string;
         readonly error?: string;
         readonly details?: (heading: string) => string;
     };
