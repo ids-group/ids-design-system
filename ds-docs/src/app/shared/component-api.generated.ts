@@ -10175,6 +10175,18 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "null",
         "required": false,
         "description": "Accessible name of the handle; unset falls back to `DS_INTL.splitter.label`. Name what it resizes."
+      },
+      {
+        "name": "overscroll",
+        "kind": "input",
+        "type": "SplitterOverscroll",
+        "union": [
+          "elastic",
+          "none"
+        ],
+        "default": "'elastic'",
+        "required": false,
+        "description": "Dragged past `min` or `max`: `'elastic'` follows the pointer with growing resistance and springs back on release, `'none'` stops at the limit. Off under `prefers-reduced-motion: reduce`."
       }
     ],
     "outputs": []

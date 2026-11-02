@@ -6,9 +6,11 @@
 @Component({ selector: 'ds-splitter' })
 export class SplitterComponent implements OnInit, OnDestroy {
     public constructor();
+    private applyMove;
     public readonly ariaLabel = input<string | null>(null);
     private clamp;
     private clampToBox;
+    private clearTransforms;
     private commit;
     protected readonly current = computed(…);
     protected readonly cursor = computed(…);
@@ -19,6 +21,7 @@ export class SplitterComponent implements OnInit, OnDestroy {
     protected readonly dragging = signal(…);
     private endDrag;
     protected readonly endId = nextControlId(…);
+    private frame;
     private fromPaneEdge;
     private readonly handle;
     private readonly host;
@@ -27,6 +30,7 @@ export class SplitterComponent implements OnInit, OnDestroy {
     protected readonly lineOrientation = computed(…);
     public readonly max = input(640, { transform: numberAttribute });
     public readonly min = input(160, { transform: numberAttribute });
+    private movingParts;
     public ngOnDestroy(): void;
     public ngOnInit(): void;
     protected onKeydown(event: KeyboardEvent): void;
@@ -34,17 +38,27 @@ export class SplitterComponent implements OnInit, OnDestroy {
     private readonly onPointerMove;
     protected onPointerUp(event: PointerEvent): void;
     public readonly orientation = input<SplitterOrientation>('horizontal');
+    public readonly overscroll = input<SplitterOverscroll>('elastic');
     public readonly pane = input<SplitterPane>('start');
     private panesBox;
+    private pendingMove;
     public readonly persistKey = input<string>('');
     protected reset(): void;
+    private room;
     public readonly size = model<number | null>(null);
+    private springBack;
+    private springTimer;
+    protected readonly springing = signal(…);
     protected readonly startId = nextControlId(…);
+    private stopSpring;
     private storageKey;
+    private stretch;
     private readonly zone;
 }
 
 export type SplitterOrientation = 'horizontal' | 'vertical';
+
+export type SplitterOverscroll = 'elastic' | 'none';
 
 export type SplitterPane = 'start' | 'end';
 ```

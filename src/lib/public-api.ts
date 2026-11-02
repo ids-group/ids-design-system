@@ -328,6 +328,7 @@ export type {
 export { SplitterComponent } from '@ids-group-ltd/ids-design-system/components/splitter';
 export type {
   SplitterOrientation,
+  SplitterOverscroll,
   SplitterPane,
 } from '@ids-group-ltd/ids-design-system/components/splitter';
 export { StatComponent } from '@ids-group-ltd/ids-design-system/components/stat';

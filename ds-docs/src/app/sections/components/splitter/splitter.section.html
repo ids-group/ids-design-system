@@ -126,6 +126,79 @@
   </div>
 
   <h3 class="block-title t-h4">
+    Past the limit
+  </h3>
+
+  <p class="block-desc t-s">
+    Drag either handle past its limit. With the default
+    <code class="t-mono-inline">
+      overscroll="elastic"
+    </code>
+    it follows with growing resistance and springs back on release; with
+    <code class="t-mono-inline">
+      "none"
+    </code>
+    it stops. Reduced motion turns the effect off.
+  </p>
+
+  <div class="states is-cols-2">
+    <div class="state-cell">
+      <div class="state-cell-stage">
+        <ds-splitter
+          class="frame"
+          ariaLabel="List width"
+          [defaultSize]="140"
+          [min]="96"
+          [max]="200">
+          <div
+            start
+            class="pane-fill">
+            List
+          </div>
+
+          <div
+            end
+            class="pane-fill">
+            Detail
+          </div>
+        </ds-splitter>
+      </div>
+
+      <div class="state-cell-label">
+        elastic · default
+      </div>
+    </div>
+
+    <div class="state-cell">
+      <div class="state-cell-stage">
+        <ds-splitter
+          class="frame"
+          overscroll="none"
+          ariaLabel="List width"
+          [defaultSize]="140"
+          [min]="96"
+          [max]="200">
+          <div
+            start
+            class="pane-fill">
+            List
+          </div>
+
+          <div
+            end
+            class="pane-fill">
+            Detail
+          </div>
+        </ds-splitter>
+      </div>
+
+      <div class="state-cell-label">
+        none
+      </div>
+    </div>
+  </div>
+
+  <h3 class="block-title t-h4">
     Try it
   </h3>
 
