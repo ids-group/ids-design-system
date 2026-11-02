@@ -11,7 +11,7 @@
 // against props AND slots rather than inputs alone.
 //
 //   node .design-sync/tools/check-doc-api.mjs
-import { readFileSync, readdirSync, statSync } from 'node:fs';
+import { existsSync, readFileSync, readdirSync, statSync } from 'node:fs';
 import { join, dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -132,6 +132,15 @@ for (const file of readdirSync(join(syncDir, 'docs')).filter((name) =>
       `docs/${file} — no component named ${name}; the doc would upload with nothing to describe`,
     );
   }
+}
+
+// build-cards reads `docs/<Name>.md` for every component in the surface and stops at the first one
+// missing, so without this the gap shows only when the upload is built after a release.
+for (const name of accepted.keys()) {
+  if (existsSync(join(syncDir, 'docs', `${name}.md`))) continue;
+  problems.push(
+    `docs/${name}.md — missing; ${name} is in the surface, and build-cards needs its usage notes`,
+  );
 }
 
 if (problems.length) {

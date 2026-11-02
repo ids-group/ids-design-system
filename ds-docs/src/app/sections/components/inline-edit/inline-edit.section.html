@@ -1,0 +1,91 @@
+<docs-section
+  anchor="inline-edit"
+  eyebrow="Components"
+  title="Inline edit">
+  <span lede>
+    Text that turns into a field of the same font and size when clicked, to
+    rename it in place. Enter or leaving the field saves, Escape cancels.
+  </span>
+
+  <h3 class="block-title t-h4">
+    In a header
+  </h3>
+
+  <p class="block-desc t-s">
+    Put it inside the heading: it inherits the heading's font. Click the title,
+    or Tab to it and press Enter or F2.
+  </p>
+
+  <div class="chat-header">
+    <h2 class="chat-title t-h4">
+      <ds-inline-edit
+        ariaLabel="Chat title"
+        placeholder="Untitled chat"
+        [maxLength]="80"
+        [(value)]="title"
+        (saved)="record($event)" />
+    </h2>
+  </div>
+
+  <p class="log t-s">
+    Saved:
+    {{ log().length ? log().join(' · ') : 'nothing yet' }}
+  </p>
+
+  <h3 class="block-title t-h4">
+    States
+  </h3>
+
+  <div class="states is-cols-2">
+    <div class="state-cell">
+      <div class="state-cell-stage t-body">
+        <ds-inline-edit
+          ariaLabel="Project name"
+          value="Q3 roadmap" />
+      </div>
+
+      <div class="state-cell-label">
+        Default · hover or focus shows the pencil
+      </div>
+    </div>
+
+    <div class="state-cell">
+      <div class="state-cell-stage t-body">
+        <ds-inline-edit
+          ariaLabel="Project name"
+          placeholder="Untitled project" />
+      </div>
+
+      <div class="state-cell-label">
+        Empty · placeholder
+      </div>
+    </div>
+
+    <div class="state-cell">
+      <div class="state-cell-stage t-body">
+        <div class="narrow">
+          <ds-inline-edit
+            ariaLabel="Project name"
+            value="A project name far longer than the space it has" />
+        </div>
+      </div>
+
+      <div class="state-cell-label">
+        Long text · truncated
+      </div>
+    </div>
+
+    <div class="state-cell">
+      <div class="state-cell-stage t-body">
+        <ds-inline-edit
+          ariaLabel="Project name"
+          value="Archived project"
+          disabled />
+      </div>
+
+      <div class="state-cell-label">
+        Disabled
+      </div>
+    </div>
+  </div>
+</docs-section>

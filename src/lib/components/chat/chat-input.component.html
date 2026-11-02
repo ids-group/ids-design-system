@@ -1,0 +1,63 @@
+<div [class]="'chat-input layout-' + layout()">
+  <div class="attachments">
+    <ng-content select="[attachments]" />
+  </div>
+
+  @if (statusAbove()) {
+    <div
+      class="status status-above"
+      aria-live="polite">
+      {{ statusText() }}
+    </div>
+  }
+
+  <div
+    class="frame"
+    dsFieldClickFocus
+    [class.disabled]="disabled()">
+    <div class="box"></div>
+
+    <div class="chips">
+      <ng-content select="[chips]" />
+    </div>
+
+    <ds-textarea
+      autosize
+      resize="none"
+      [rows]="minRows()"
+      [minRows]="minRows()"
+      [maxRows]="maxRows()"
+      [placeholder]="placeholder()"
+      [ariaLabel]="textareaLabel()"
+      [disabled]="disabled()"
+      [(value)]="value"
+      (keydown)="onKeydown($event)"
+      (paste)="onPaste($event)" />
+
+    <div class="actions">
+      <ng-content select="[actions]" />
+    </div>
+
+    @if (!statusAbove()) {
+      <span
+        class="status status-bar"
+        aria-live="polite">
+        {{ statusText() }}
+      </span>
+    }
+
+    <div class="send">
+      <ng-content select="[send]">
+        <ds-button
+          icon="arrowUp"
+          size="sm"
+          class="send-button"
+          loadingMode="icon"
+          [ariaLabel]="sendLabel()"
+          [disabled]="!busy() && !canSubmit()"
+          [loading]="busy()"
+          (pressed)="submit()" />
+      </ng-content>
+    </div>
+  </div>
+</div>

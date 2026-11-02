@@ -64,6 +64,34 @@
     {
       "text": "The trigger `<button>` of `ds-time-picker` holds its shown time in an inner `<span>` beside hidden `.time-value-sizer` spans (`aria-hidden=\"true\"`) that reserve its width, so the text content of the trigger also contains their text.",
       "verify": "A `ds-time-picker` set to 09:30 shows `09:30` and keeps the same width when cleared; a query by role and accessible name still finds the trigger."
+    },
+    {
+      "text": "A resizable `ds-table` column draws its resize handle as a thin line in `--border-default` at rest; before, the line was transparent until hover, drag or keyboard focus.",
+      "verify": "Open a `ds-table` with `dsTableResize` on a pointer device: every resizable header cell shows a thin line at its right edge before the pointer reaches it."
+    },
+    {
+      "text": "A keyboard-focused column resize handle of a `ds-table` draws the standard focus ring; before, it widened its line to `--border-width-strong` and drew no outline outside forced-colors mode.",
+      "verify": "Tab to a column separator of a `ds-table` with `dsTableResize`: the focus ring shows around the handle."
+    },
+    {
+      "text": "The column resize separators of a `ds-table` with `dsTableResize` carry `aria-valuenow`, `aria-valuemin` and `aria-valuemax` whenever the column's width is known; before, only the focused separator carried them, so a test that reads or counts them now sees them on every separator.",
+      "verify": "Query the separators of a `ds-table` with `dsTableResize` before focusing any: each has the three attributes."
+    },
+    {
+      "text": "In the typed mask of `ds-date-picker`, a separator takes the placeholder colour until the part before it holds all its digits; before, separators always took the value colour.",
+      "verify": "Open an empty `ds-date-picker` with a typed mask and type `12`: the first slash reads in the value colour and the second in the placeholder colour."
+    },
+    {
+      "text": "A `ds-time-picker` hour or minute column that does not loop (`loop=\"never\"`, or `'auto'` where the column does not overflow) scrolls at the browser's wheel speed and snaps to a cell; before, every hour and minute column stepped by whole rows per wheel notch, looping or not.",
+      "verify": "Turn the wheel over a minute column with `loop=\"never\"`: it scrolls as far as a native list and settles on a cell."
+    },
+    {
+      "text": "A `ds-menu-item` that is the first or last child of its parent takes the menu's inner radius on its outer corners, so its focus ring follows the rounded corners of the menu; before, those rows were square and the menu clipped them.",
+      "verify": "Open a `ds-menu` and focus its first item with the keyboard: the ring follows the rounded top corners and is not cut off."
+    },
+    {
+      "text": "`ds-chart`, `ds-column-chart`, `ds-line-chart` and `ds-waterfall-chart` measure the width of their axis labels again once the page's web fonts have loaded; before, they measured when they rendered and when a label's text changed.",
+      "verify": "Open a page whose web font arrives after a chart: the value-axis labels are not clipped and the gutter matches their width."
     }
   ],
   "deleteList": []

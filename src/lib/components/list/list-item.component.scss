@@ -12,6 +12,7 @@
   --_list-item-selected-icon-color: var(--ds-list-item-selected-icon-color, var(--_list-item-selected-label-color));
   --_list-item-label-color: var(--ds-list-item-label-color, var(--text-primary));
   --_list-item-subtitle-color: var(--ds-list-item-subtitle-color, var(--text-tertiary));
+  --_list-item-trailing-color: var(--text-tertiary);
 
   display: flex;
   align-items: center;
@@ -47,6 +48,12 @@ button.activator {
   }
 }
 
+:host-context(.popover),
+:host-context(.ds-overlay-pane) {
+  --_list-item-subtitle-color: var(--ds-list-item-subtitle-color, var(--text-tertiary-overlay));
+  --_list-item-trailing-color: var(--text-tertiary-overlay);
+}
+
 :host(:has(button.activator:hover)) {
   background-color: var(--_list-item-hover-bg-color);
 }
@@ -66,7 +73,7 @@ button.activator {
 }
 
 .trailing {
-  color: var(--text-tertiary);
+  color: var(--_list-item-trailing-color);
 }
 
 .body {

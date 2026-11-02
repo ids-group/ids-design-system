@@ -66,6 +66,13 @@ export const DS_INTL = new InjectionToken<Signal<DsIntl>>('DS_INTL', {
 export const DS_INTL_DEFAULTS: DsIntl & {
     readonly field: Required<DsIntl['field']>;
     readonly chart: Required<DsIntl['chart']>;
+    readonly toast: Required<DsIntl['toast']>;
+    readonly timeline: Required<NonNullable<DsIntl['timeline']>>;
+    readonly splitter: Required<NonNullable<DsIntl['splitter']>>;
+    readonly inlineEdit: Required<NonNullable<DsIntl['inlineEdit']>>;
+    readonly chatInput: Required<NonNullable<DsIntl['chatInput']>>;
+    readonly attachment: Required<NonNullable<DsIntl['attachment']>>;
+    readonly chat: Required<NonNullable<DsIntl['chat']>>;
 };
 
 export interface DsConfig {
@@ -110,6 +117,7 @@ export interface DsConfig {
         position?: Partial<DsToastPosition>;
         maxVisible?: number;
         showQueueCount?: boolean;
+        groupDuplicates?: boolean;
         mirrorDevWarnings?: boolean;
     };
     picker?: {
@@ -283,9 +291,31 @@ export interface DsIntl {
     };
     readonly toast: {
         readonly region: string;
+        readonly showAll?: string;
+        readonly hide?: string;
+        readonly dismissAll?: string;
+        readonly repeated?: (message: string, count: number) => string;
+    };
+    readonly attachment?: {
+        readonly remove?: (name: string) => string;
+        readonly pdf?: string;
+        readonly doc?: string;
+        readonly image?: string;
+        readonly file?: string;
+    };
+    readonly chatInput?: {
+        readonly label?: string;
+        readonly send?: string;
     };
     readonly spinner: {
         readonly label: string;
+    };
+    readonly splitter?: {
+        readonly label?: string;
+    };
+    readonly inlineEdit?: {
+        readonly rename?: string;
+        readonly saved?: string;
     };
     readonly breadcrumbs: {
         readonly label: string;
@@ -318,6 +348,36 @@ export interface DsIntl {
     readonly stepper: {
         readonly label: string;
         readonly step: (position: number, label: string, state: DsIntlStepState) => string;
+    };
+    readonly timeline?: {
+        readonly done?: string;
+        readonly running?: string;
+        readonly pending?: string;
+        readonly error?: string;
+        readonly details?: (heading: string) => string;
+    };
+    readonly chat?: {
+        readonly user?: string;
+        readonly assistant?: string;
+        readonly thread?: string;
+        readonly working?: string;
+        readonly newMessages?: (count: number) => string;
+        readonly latest?: string;
+        readonly today?: string;
+        readonly yesterday?: string;
+        readonly sending?: string;
+        readonly sent?: string;
+        readonly notSent?: string;
+        readonly retry?: string;
+        readonly steps?: (count: number) => string;
+        readonly stepsFailed?: (count: number) => string;
+        readonly stepsFolded?: (count: number, failed: number) => string;
+        readonly stepDone?: string;
+        readonly stepRunning?: string;
+        readonly stepPending?: string;
+        readonly stepWaiting?: string;
+        readonly stepFailed?: string;
+        readonly stepDetails?: (heading: string) => string;
     };
     readonly tabs: {
         readonly close: (label: string) => string;

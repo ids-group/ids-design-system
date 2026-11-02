@@ -31,9 +31,9 @@
 Loaded via `@use 'styles/tokens';` (when the consumer also `@use 'styles/ds';` the full aggregate is pulled in). Brand themes override Tier 1 palette + a few Tier 2 roles in their own `_brand-*.scss`.
 
 **Colour roles:**
-- Surfaces: `--surface-canvas`, `--surface-default`, `--surface-secondary`, `--surface-overlay`, `--surface-tint`, `--surface-disabled`, `--surface-muted`, `--surface-inverted`, `--surface-inverted-hover`, `--surface-scrim`
-- Borders: `--border-default`, `--border-strong`, `--border-subtle`, `--border-divider`, `--border-disabled`, `--border-inverted`
-- Text: `--text-primary`, `--text-secondary`, `--text-tertiary`, `--text-muted`, `--text-disabled`, `--text-inverted`, `--text-link`, `--text-link-visited`, `--text-on-primary`, `--text-on-success`, `--text-on-error`
+- Surfaces: `--surface-canvas`, `--surface-default`, `--surface-secondary`, `--surface-overlay`, `--surface-overlay-secondary`, `--surface-overlay-muted`, `--surface-overlay-raised`, `--surface-overlay-raised-secondary`, `--surface-overlay-raised-muted`, `--surface-tint`, `--surface-disabled`, `--surface-muted`, `--surface-inverted`, `--surface-inverted-hover`, `--surface-scrim`
+- Borders: `--border-default`, `--border-strong`, `--border-overlay`, `--border-subtle`, `--border-divider`, `--border-disabled`, `--border-inverted`
+- Text: `--text-primary`, `--text-secondary`, `--text-tertiary`, `--text-tertiary-overlay`, `--text-muted`, `--text-disabled`, `--text-inverted`, `--text-link`, `--text-link-visited`, `--text-on-primary`, `--text-on-success`, `--text-on-error`
 - Icons: `--icon-default`, `--icon-strong`, `--icon-muted`, `--icon-on-primary`
 - Primary (main brand fill): `--primary`, `--primary-hover`, `--primary-pressed`, `--primary-selected-hover`, `--primary-strong`, `--primary-subtle`, `--primary-muted`, `--primary-muted-strong`, `--primary-on` + HSL channels `--primary-h/s/l`
 - Secondary (paired CTAs, accent rails, opt-in variants): `--secondary`, `--secondary-hover`, `--secondary-pressed`, `--secondary-strong`, `--secondary-subtle`, `--secondary-muted`, `--secondary-on` + HSL channels `--secondary-h/s/l`
@@ -188,6 +188,17 @@ Tokens: `--ds-icon-button-bg-color`, `--ds-icon-button-icon-color`, `--ds-icon-b
 All inputs: `icon: required IconName`, `ariaLabel: required string`, `ariaDescribedBy: string | null = null`, `variant: 'standard' | 'filled' | 'tonal' | 'outlined' = 'standard'`, `color: ButtonColor = 'primary'`, `size: 'sm' | 'md' | 'lg' = null`, `type: 'button' | 'submit' | 'reset' = 'button'`, `disabled: boolean = false`, `selected: boolean | null = null`, `ariaHasPopup: 'true' | 'menu' | 'listbox' | 'tree' | 'grid' | 'dialog' = null`, `ariaExpanded: boolean | null = null`, `ariaControls: string | null = null`
 <!-- /inputs -->
 
+#### `<ds-inline-edit>` — `InlineEditComponent`
+Text that turns into a field of the same font and size when clicked, to rename it in place: a chat or document title, a layer, a list name. Put it inside the element that gives the text its role and type, such as a heading; it inherits the font, and the text keeps its place when the field replaces it.
+At rest it is plain text. Hover shows a tinted background behind the text and a pencil at its end; keyboard focus adds the focus ring; the tooltip reads `DS_INTL.inlineEdit.rename` ("Rename"). Long text truncates with an ellipsis.
+Keyboard: the text is a button, so Enter, Space, a click or F2 edits, with the text selected. Enter or leaving the field saves; Escape cancels (and does not reach a dialog around it). Enter and Escape return focus to the text. A blank or unchanged value saves nothing.
+Value: `value: model<string>` two-way; `(saved): string` emits the trimmed new value after a save that changed it, and `DS_INTL.inlineEdit.saved` ("Saved") is announced. Inputs: `placeholder` (shown muted while empty), `maxLength`, `disabled` (plain text, no affordance), `ariaLabel` (what the text is, e.g. "Chat title"; the text is announced as "Chat title: <value>"). Method: `edit()`.
+Tokens: `--ds-inline-edit-padding`, `--ds-inline-edit-hover-bg-color`, `--ds-inline-edit-border-color`, `--ds-inline-edit-radius`.
+
+<!-- inputs:ds-inline-edit -->
+All inputs: `value: string = ''`, `placeholder: string = ''`, `maxLength: number | null = null`, `disabled: boolean = false`, `ariaLabel: string | null = null`
+<!-- /inputs -->
+
 #### `<ds-input>` — `InputComponent`
 Inputs: `value: model<string>`, `type: InputType = 'text'` (`'text' | 'email' | 'password' | 'number' | 'tel' | 'url' | 'search'`), `size: 'sm' | 'md' | 'lg' = 'md'`, `label: string = ''`, `hint: string = ''`, `placeholder: string = ''`, `disabled: boolean = false`, `invalid: boolean = false`, `required: boolean = false`, `optional: boolean = false`, `name: string | null = null`, `clearable: boolean | null = null` (inline clear (×) button; `null` resolves to `true` for `type="search"` and `false` otherwise)
 Content slots — addon attributes apply to any child element:
@@ -228,6 +239,19 @@ Methods: `focus(options?)`, `selectionStart` / `selectionEnd` (reads), `setSelec
 
 <!-- inputs:ds-textarea -->
 All inputs: `hint: string = ''`, `error: string = ''`, `warning: string = ''`, `reserveMessage: boolean | null = null`, `messageIcon: IconName | false | null = null`, `errors: readonly DsFieldError[] = []`, `invalid: boolean = false`, `touched: boolean = false`, `pending: boolean = false`, `dirty: boolean = false`, `showDirty: boolean | null = null`, `hidden: boolean = false`, `value: string = ''`, `size: 'sm' | 'md' | 'lg' = null`, `label: string = ''`, `placeholder: string = ''`, `disabled: boolean = false`, `readOnly: boolean = false`, `readonly: boolean = false`, `success: string = ''`, `required: boolean = false`, `optional: boolean = false`, `rows: number = 3`, `name: string | null = null`, `autosize: boolean = false`, `minRows: number | null = null`, `maxRows: number | null = null`, `resize: 'none' | 'vertical' | 'horizontal' | 'both' = 'vertical'`, `ariaLabel: string | null = null`, `maxLength: number | null = null`, `maxLengthMode: 'hard' | 'soft' = 'hard'`, `countTrimmed: boolean = false`, `minLength: number | null = null`, `pattern: readonly RegExp[] = []`
+<!-- /inputs -->
+
+#### `<ds-chat-input>` — `ChatInputComponent`
+Message box for a chat or an instruction: chips above an auto-growing text area, a bottom bar with actions on the left and the send button on the right. Use it instead of a `ds-textarea` beside icon buttons, or a `ds-search` standing in for a message box.
+Slots: `[attachments]` on the page above the frame (the app's own card for a picked element and its snapshot; hidden while empty), `[chips]` above the text inside the frame (project `ds-tag`s for attachments and picked elements; hidden while empty), `[actions]` on the left of the bar (an attach `ds-icon-button`), `[send]` replaces the default send button (render your own states, e.g. Queue / Stop while `busy`; call `submit()` or read `canSubmit`).
+Keyboard: Enter emits `(submitted): string` with the trimmed text; Shift+Enter breaks the line; an Enter that commits an IME composition never submits; blank text, `busy` and `disabled` never submit. Enter on blank text inserts nothing.
+Send button: a 32px `ds-button` with an arrow, named by `DS_INTL.chatInput.send`, disabled while the text is blank. `busy` puts it in `loading` (spinner, `aria-busy`, press refused, focus kept). `layout: ChatInputLayout = 'status-bar'` places the `busyLabel` step: `'status-bar'` beside the fixed square button, `'status-above'` on a reserved line above the box, `'split'` attach outside left and send outside right with the step above, `'send-outside'` a round 40px send outside right, `'toolbar'` attach, step and send in a row under the box.
+Output: `(filesPasted): File[]` — the image files of a paste; the paste inserts no text when it carries images. The value is NOT cleared on submit: set `value` to `''` once the message is accepted.
+Methods: `submit()`, `focus(options?)`; `canSubmit` signal. Text area name: `ariaLabel`, else `DS_INTL.chatInput.label`.
+Tokens: `--ds-chat-input-bg-color`, `--ds-chat-input-radius`, `--ds-chat-input-padding`; border, hover and focus follow the `--ds-field-*` set.
+
+<!-- inputs:ds-chat-input -->
+All inputs: `value: string = ''`, `placeholder: string = ''`, `ariaLabel: string | null = null`, `minRows: number = 1`, `maxRows: number = 8`, `disabled: boolean = false`, `busy: boolean = false`, `busyLabel: string = ''`, `layout: ChatInputLayout = 'status-bar'`
 <!-- /inputs -->
 
 #### `<ds-number-stepper>` — `NumberStepperComponent`
@@ -436,6 +460,15 @@ Input: `status: DsStatusKey` (same consumer-registered vocabulary as `ds-badge`;
 All inputs: `status: DsStatusKey`, `ariaLabel: string | null = null`
 <!-- /inputs -->
 
+#### `<ds-attachment>` — `AttachmentComponent`
+A file attached to a message, for the `[chips]` slot of `<ds-chat-input>`: a 24px type tile (PDF, DOC, IMG, FILE) or an image preview, the file name in bold and a muted second line.
+Inputs: `name: required string`, `meta: string = ''` (e.g. `'PDF · 240 KB'`), `kind: AttachmentKind = 'file'` (`'pdf' | 'doc' | 'image' | 'file'`), `previewUrl: string | null = null` (used when `kind` is `'image'`), `removable: boolean = false`. Output: `(removed): void`.
+Accessibility: the remove button is named `DS_INTL.attachment.remove(name)` ("Remove Brief.pdf"), the kind ("PDF document") is announced before `meta`, an image preview takes `name` as alt text.
+
+<!-- inputs:ds-attachment -->
+All inputs: `name: required string`, `meta: string = ''`, `kind: 'pdf' | 'doc' | 'image' | 'file' = 'file'`, `previewUrl: string | null = null`, `removable: boolean = false`
+<!-- /inputs -->
+
 #### `<ds-tag>` — `TagComponent`
 Inputs: `variant: 'solid' | 'neutral' = 'solid'`, `closable: boolean = false`
 Output: `(closed): void` — emits when the close button is pressed
@@ -539,7 +572,7 @@ The companion `<ds-toast-region>` lives inside the `ToastService` (see Services)
 A toast leaving with focus inside it (its action, its close button, or `ToastRef.dismiss()`) hands focus to the next toast in the region, else back to the element focused before focus entered the region, as a dialog returns it.
 
 <!-- inputs:ds-toast -->
-All inputs: `variant: 'info' | 'success' | 'warning' | 'error' | 'loading' = 'info'`, `title: string = ''`, `body: string = ''`, `dismissible: boolean = false`, `icon: IconName | null = null`, `action: ToastAction | null = null`
+All inputs: `variant: 'info' | 'success' | 'warning' | 'error' | 'loading' = 'info'`, `title: string = ''`, `body: string = ''`, `dismissible: boolean = false`, `icon: IconName | null = null`, `action: ToastAction | null = null`, `occurrences: readonly ToastOccurrence[] = []`
 <!-- /inputs -->
 
 ---
@@ -564,10 +597,61 @@ Tokens: `--ds-loading-overlay-radius` (default `0`) rounds the scrim's corners; 
 All inputs: `loading: boolean = false`, `label: string = ''`, `blur: boolean = true`, `spinnerSize: 'sm' | 'md' | 'lg' = 'md'`, `insetTop: string = '0'`, `inertContent: boolean = true`
 <!-- /inputs -->
 
+#### `<ds-timeline>` — `TimelineComponent`
+
+The list that holds `ds-timeline-item`s, at any depth: it marks the first and last item so the connector stops at both ends. For an agent's steps beside a chat message use `ds-chat-steps`.
+
+<!-- inputs:ds-timeline -->
+<!-- /inputs -->
+
 #### `<ds-timeline-item>` — `TimelineItemComponent`
 
+Slots: default content below the heading; `[trailing]` at the end of the heading row (Undo, Stop, Retry); `[details]` behind a chevron toggle (down while closed, up while open), closed by default, open state two-way as `expanded`; it opens with a height transition, and an open item sits on a tinted card behind its marker, text and details (`--ds-timeline-open-bg-color`, default `--surface-secondary`). `status` draws the marker and is spoken before the heading; while set, `icon` and `tone` are ignored. Place items inside `<ds-timeline>`, at any depth: it marks the last item, which draws no connector. A `pending` step draws a dashed ring and muted text (a planned step not reached yet).
+
 <!-- inputs:ds-timeline-item -->
-All inputs: `heading: string = ''`, `time: string = ''`, `icon: IconName | null = null`, `tone: TimelineTone = 'default'`
+All inputs: `heading: string = ''`, `time: string = ''`, `icon: IconName | null = null`, `tone: TimelineTone = 'default'`, `status: 'done' | 'running' | 'pending' | 'error' = null`, `expanded: boolean = false`
+<!-- /inputs -->
+
+#### `<ds-chat-message>` — `ChatMessageComponent`
+
+One message of a chat: `role: ChatMessageRole = 'assistant'` puts a filled bubble on the right (`'user'`) or a subtle one on the left (`'assistant'`). `author` shows above the bubble; `time` (already formatted) under it, in a thread only under the last message of a run, and not while `streaming`; `sentAt: Date | string | number | null` lets a thread split runs by time; without `author` the role is spoken (`DS_INTL.chat.user` / `assistant`). Slots: default (the text, or the markdown your app renders; a user message keeps its line breaks), `[steps]` above the bubble, on the thread's surface (a `ds-chat-steps` of the agent's steps; a message with only steps draws no bubble), `[attachments]` under the text (`ds-chat-attachment` for something to open, `ds-tag` for a plain file), `[actions]` under the bubble (copy, retry), shown on hover or focus and always without hover. Text is selectable and long words and URLs wrap. The window, tabs, composer and question cards around it stay in the app. `streaming` marks a reply still arriving (caret after the text, `aria-busy`, `[actions]` hidden; the thread reads it when it completes). `status: ChatMessageStatus | null` is the delivery of a sent message, under it in place of the time: `'sending'` (dimmed), `'failed'` with a Retry button emitting `(retry)`; `'sent'` shows nothing and is only spoken; the app resends and sets `status` back. `stepsFolded` (two-way) folds the `[steps]` into a chip at the top of the bubble with the step count and the failed count; the chip toggles them (`aria-expanded`), and stays once shown. Steps are counted from their `ds-chat-step`s; a step that fails while folded opens the steps again.
+Tokens: `--ds-chat-message-max-width` (default `85%`), `--ds-chat-message-radius`, `--ds-chat-message-padding`, `--ds-chat-message-user-bg-color` / `-user-color`, `--ds-chat-message-assistant-bg-color` / `-assistant-color`.
+
+<!-- inputs:ds-chat-message -->
+All inputs: `role: 'user' | 'assistant' = 'assistant'`, `author: string = ''`, `time: string = ''`, `sentAt: Date | string | number | null = null`, `streaming: boolean = false`, `status: 'sending' | 'sent' | 'failed' = null`, `stepsFolded: boolean = false`
+<!-- /inputs -->
+
+#### `<ds-chat-thread>` — `ChatThreadComponent`
+
+Scrollable list of `ds-chat-message`s; give it a height (or `flex: 1` in a column). Stays at the newest message as messages arrive or grow; once the reader scrolls up it stays put and shows a jump button with the count of messages that arrived below (`DS_INTL.chat.newMessages(count)`, `latest` when none). A message with `role="user"` arriving scrolls back down. Consecutive messages of one role sit at `--ds-chat-thread-group-gap`, speakers apart at `--ds-chat-thread-gap`; only the last message of a run takes the tight bottom corner on the speaker's side (`--ds-radius-inner`), the messages above it stay round. With `sentAt` on the messages, a gap of `timeBreakMinutes` (default `15`) or more starts a new run under a centred divider (`DS_INTL.chat.today` / `yesterday` or the date, then the time, in `DsConfig.locale`); the first dated message gets one too. `working` shows a spinner row with `workingLabel` (else `DS_INTL.chat.working`) at the end; never put a time estimate in it. Screen readers: the list is not a live region; the thread announces a finished assistant reply once (when it arrives while not `working`, or when `working` clears) and the working label, and never the messages present at first render. Older messages: set `hasOlder` and scrolling near the start emits `(loadOlder)` once until the list changes; prepend them and the thread keeps the message in view in place; `loadingOlder` shows a spinner over the top. A user message that arrives folds the steps of the replies before it, except a reply with a failed step the reader has not opened (`foldStepsOnSend`, default `true`); messages and steps that arrive later grow in while a pinned thread keeps its bottom still. Method: `scrollToEnd()`.
+Tokens: `--ds-chat-thread-gap`, `--ds-chat-thread-group-gap`, `--ds-chat-thread-padding`.
+
+<!-- inputs:ds-chat-thread -->
+All inputs: `working: boolean = false`, `workingLabel: string = ''`, `ariaLabel: string | null = null`, `foldStepsOnSend: boolean = true`, `timeBreakMinutes: number = 15`, `hasOlder: boolean = false`, `loadingOlder: boolean = false`
+<!-- /inputs -->
+
+#### `<ds-chat-attachment>` — `ChatAttachmentComponent`
+
+Chip in a message's `[attachments]` slot (`label` required, `source` muted after it, `icon` default `paperclip`). Open, it becomes a card on a line of its own: the same header row, then its default slot framed in a preview (such as a snapshot of a picked element as it was when sent), scrolling past `--ds-chat-attachment-preview-max-height` (default `16rem`). `expanded` binds the open state two-way; the header button carries `aria-expanded` and `aria-controls`. Tokens: `--ds-chat-attachment-bg-color`, `--ds-chat-attachment-preview-bg-color`, `--ds-chat-attachment-preview-max-height`.
+
+<!-- inputs:ds-chat-attachment -->
+All inputs: `label: required string`, `source: string = ''`, `icon: IconName | null = 'paperclip'`, `expanded: boolean = false`
+<!-- /inputs -->
+
+#### `<ds-chat-steps>` — `ChatStepsComponent`
+
+The steps of an agent's work, in the `[steps]` slot of a `ds-chat-message`: `ds-chat-step`s in order, at any depth, with 16px markers, the smaller text size and 4px rows with no connector. Import from `@ids-group-ltd/ids-design-system/components/chat` with the rest of the chat family. `enter: ChatStepsEnter = 'together'` brings steps that arrive at once (a plan given up front) into a message as one block, or `'stagger'` one after another; steps that arrive one at a time grow in either way.
+
+<!-- inputs:ds-chat-steps -->
+All inputs: `enter: 'together' | 'stagger' = 'together'`
+<!-- /inputs -->
+
+#### `<ds-chat-step>` — `ChatStepComponent`
+
+One step: `heading`, optional `time`, and `status: ChatStepStatus | null` (`'done' | 'running' | 'pending' | 'waiting' | 'error'`), which draws the marker (a check, a spinner, a dashed ring with muted text, a grey disc with a pause glyph, a cross) and is spoken before the heading (`DS_INTL.chat.stepDone`, `stepRunning`, `stepPending`, `stepWaiting` "Waiting for your approval", `stepFailed`). Slots: default content under the heading (the reader's answer buttons on a `waiting` step, whose marker stays beside the heading); `[trailing]` at the end of the heading row (Stop, Retry); `[details]` behind a chevron toggle (`DS_INTL.chat.stepDetails(heading)`), closed by default, open state two-way as `expanded`; it opens with a height transition on a tinted card. A failed step the reader has not opened keeps its message's steps unfolded.
+
+<!-- inputs:ds-chat-step -->
+All inputs: `heading: string = ''`, `time: string = ''`, `status: 'done' | 'running' | 'pending' | 'waiting' | 'error' = null`, `expanded: boolean = false`
 <!-- /inputs -->
 
 #### `<ds-toast-region>` — `ToastRegionComponent`
@@ -578,8 +662,10 @@ All inputs: `maxVisible: number`, `showQueueCount: boolean = true`
 
 #### `<ds-tree>` — `TreeComponent`
 
+Nested rows with one tab stop and arrow-key navigation. `(nodeSelected)` emits the node selected; `(nodeHover)` emits the node under the pointer or newly focused, `null` when the pointer leaves the tree. `<ng-template dsTreeTrailing let-node>` draws at the end of every row (a badge, a count, a small icon button); a click inside it neither selects nor toggles the row, and its controls are tab stops on the focused row only. `selection="multiple"` binds `[(selectedIds)]`: Shift-click, Ctrl-click, Shift+Space or Ctrl+Space adds or removes a row, a plain click or Enter selects it alone, and the host carries `aria-multiselectable`.
+
 <!-- inputs:ds-tree -->
-All inputs: `nodes: readonly TreeNode[] = []`, `expandedIds: Set<string>`, `selectedId: string | null = null`
+All inputs: `nodes: readonly TreeNode[] = []`, `expandedIds: Set<string>`, `selection: 'single' | 'multiple' = 'single'`, `selectedId: string | null = null`, `selectedIds: string[] = []`
 <!-- /inputs -->
 
 #### `<ds-description-list>` — `DescriptionListComponent`
@@ -732,6 +818,17 @@ All inputs: `gap: 'none' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' = null`, `align: 'st
 
 <!-- inputs:ds-stack -->
 All inputs: `gap: 'none' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' = null`, `align: 'start' | 'center' | 'end' | 'stretch' = null`
+<!-- /inputs -->
+
+#### `<ds-splitter>` — `SplitterComponent`
+Two panes with a handle between them that resizes one of them: a preview beside a chat, a list beside a detail, an editor above its output. Slots: `[start]` and `[end]`. `orientation="horizontal"` (default) lays them side by side, `"vertical"` stacks them. `pane` (`'start'` default, or `'end'`) is the pane `size` measures; the other takes the rest. Give the splitter a size: it fills the box its parent gives it.
+Size: `size: model<number | null>` in px, `null` shows `defaultSize` (320); `min` (160) and `max` (640) bound it inclusively, and the pane never takes more than the splitter less the handle. A drag writes `size` once, on release; each key press writes it. `persistKey` saves the size in `localStorage` under `ds-splitter:<key>` and restores it on init, over the bound `size`.
+Handle: `role="separator"`, focusable, `aria-valuenow` / `aria-valuemin` / `aria-valuemax` in px, `aria-controls` the measured pane. Name it with `ariaLabel` (what it resizes, e.g. "Preview width"); unset falls back to `DS_INTL.splitter.label`. Keyboard: arrows along the axis move it by 16px, with Shift or PageUp / PageDown by 64px, Home / End to `min` / `max`. A double click returns to `defaultSize`. The left button only; the handle stays under the pointer, and while it is dragged the whole page keeps the resize cursor and selects no text. At a limit the cursor shows the one direction still possible. Dragged past `min` or `max` the handle follows with growing resistance (up to 100px, at most a third of the pane it squashes), its line thickening on the same curve up to `--ds-splitter-overdrag-line-scale` times its width (default `3`), and springs back on release; `overdrag: 'elastic' | 'none' = 'elastic'`, off under `prefers-reduced-motion: reduce`.
+Look: at rest a three-dot grip in the gap, no line; hover and drag swap it for a neutral line (stronger while dragging), keyboard focus for a line in `--focus-ring-color`. The handle fills the gap between the panes: for two rounded panels with space between them, set `--ds-splitter-gap` to that space.
+Tokens: `--ds-splitter-gap`, `--ds-splitter-line-color`, `--ds-splitter-drag-color`, `--ds-splitter-grip-color`, `--ds-splitter-overdrag-line-scale` (a number: how many times the line widens at the full pull).
+
+<!-- inputs:ds-splitter -->
+All inputs: `orientation: 'horizontal' | 'vertical' = 'horizontal'`, `pane: 'start' | 'end' = 'start'`, `size: number | null = null`, `defaultSize: number = 320`, `min: number = 160`, `max: number = 640`, `persistKey: string = ''`, `ariaLabel: string | null = null`, `overdrag: 'elastic' | 'none' = 'elastic'`
 <!-- /inputs -->
 
 #### `<ds-sidenav-footer>` — `SidenavFooterComponent`
@@ -907,7 +1004,7 @@ Cell templates: `<ng-template dsCellTemplate="<colKey>" [dsCellTemplateOf]="rows
 Content slots: `[empty]` (rendered when `data.length === 0`), `[bulk-actions]` (rendered in the bulk action bar when `selectable && some selected`)
 Loading modes: `'skeleton'` replaces rows with `ds-skeleton` shimmer placeholders; `'overlay'` keeps existing rows visible behind a translucent layer with a centred spinner; under `'skeleton'` the footer pager takes `loading` as well - its controls disable and its range label is masked, so it never quotes the previous query's count. `'overlay'` leaves the pager live, like the header.
 Footer pager: `pageSizeOptions`, `showPageSize`, `showLabel`, `paginationSize: DsSize | null = null` and `paginationLayout: PaginationLayout | null = null` are the embedded `ds-pagination`'s own inputs forwarded one-to-one; the last two unset resolve `DS_CONFIG.pagination.size` (then `DS_CONFIG.control.size`, then `sm`) and `DS_CONFIG.pagination.layout` (then `'grouped'`), so an app whose every pager wants `md` / `spread` says it once in the config. A paged table with no rows announces its empty state's text (`[empty]` or `emptyTemplate`); with none it announces `rangeAnnouncement(0, 0, 0)`, `Showing 0 of 0` by default.
-Tokens: `--ds-table-border: var(--border-default)`, `--ds-table-radius: var(--radius-md)`, `--ds-table-bg-color`, `--ds-table-head-text-color: var(--text-secondary)`, `--ds-table-head-bg-color: var(--surface-secondary)`, `--ds-table-head-font-size: var(--font-size-xs)`, `--ds-table-row-hover-bg-color`, `--ds-table-row-selected-bg-color`, `--ds-table-divider`, `--ds-table-sort-active-icon-color`, `--ds-table-cell-padding-x/y`, `--ds-table-utility-column-width` (the column the column picker and the row-actions ⋮ ride in; default `--space-6`, the buttons' own size, so the column is as wide as its padding makes it) and `--ds-table-utility-column-padding-x` (one length for both sides; default the cell padding chain), `--ds-table-footer-padding-y` / `-top` / `-bottom` (the pagination footer's block padding; default `--space-3`). (Renamed 2026-06: `--ds-table-header-*` → `--ds-table-head-*`, matching the tokens reference.)
+Tokens: `--ds-table-border: var(--border-default)`, `--ds-table-radius: var(--radius-md)`, `--ds-table-bg-color`, `--ds-table-head-text-color: var(--text-secondary)`, `--ds-table-head-bg-color: var(--surface-secondary)`, `--ds-table-head-font-size: var(--font-size-xs)`, `--ds-table-row-hover-bg-color`, `--ds-table-row-selected-bg-color`, `--ds-table-divider`, `--ds-table-sort-active-icon-color`, `--ds-table-resize-line-color: var(--text-tertiary)` (the column resize line at rest), `--ds-table-cell-padding-x/y`, `--ds-table-utility-column-width` (the column the column picker and the row-actions ⋮ ride in; default `--space-6`, the buttons' own size, so the column is as wide as its padding makes it) and `--ds-table-utility-column-padding-x` (one length for both sides; default the cell padding chain), `--ds-table-footer-padding-y` / `-top` / `-bottom` (the pagination footer's block padding; default `--space-3`). (Renamed 2026-06: `--ds-table-header-*` → `--ds-table-head-*`, matching the tokens reference.)
 
 <!-- inputs:ds-table -->
 All inputs: `data: required readonly T[]`, `rowId: ((row: T) => string) | null = null`, `columns: required readonly TableColumn<T>[]`, `selectable: boolean = false`, `bordered: boolean | null = null`, `loading: boolean | 'skeleton' | 'overlay' = false`, `stickyHeader: boolean = true`, `printAllRows: boolean = false`, `printHeading: string | null = null`, `printHeadingNote: string | null = null`, `maxHeight: string | null = null`, `density: 'default' | 'compact' = 'default'`, `zebra: boolean = false`, `animateHeight: boolean = false`, `selectedIds: Set<string>`, `sortKey: string | null = null`, `sortDirection: 'asc' | 'desc' = null`, `sortingOrder: SortDirection[]`, `sortAnnouncement: ((label: string, dir: SortDirection) => string) | null = null`, `rangeAnnouncement: ((first: number, last: number, total: number) => string) | null = null`, `skeletonRows: number = 5`, `caption: string = ''`, `rowInteractive: boolean = false`, `activeRowId: string | null = null`, `filterQuery: string = ''`, `columnFilters: Map<string, ReadonlySet<string>>`, `persistLayout: boolean = false`, `storageKey: string = ''`, `stickyScrollbar: boolean | null = null`, `pageSize: number | null = null`, `page: number = 1`, `pageSizeOptions: number[]`, `showPageSize: boolean = true`, `showLabel: boolean = true`, `paginationSize: 'sm' | 'md' | 'lg' = null`, `paginationLayout: 'grouped' | 'spread' = null`, `total: number | null = null`, `scrollToTopOnPageChange: boolean = false`, `sortMode: 'client' | 'server' | 'none' = null`, `filterMode: 'client' | 'server' | 'none' = null`, `columnFilterOptions: ReadonlyMap<string, readonly string[]>`, `stickyScrollbarOffset: string | null = null`, `layout: 'fixed' | 'auto' = null`, `stickyFirstColumn: boolean = false`, `virtualScroll: boolean = false`, `virtualRowSize: number = 44`, `lazy: boolean = false`, `rowActions: readonly TableRowAction<T>[] = []`, `cellTemplateMap: Record<string, TemplateRef<{ $implicit: unknown; row: unknown }>> = {}`, `emptyTemplate: TemplateRef<unknown> | null = null`, `expandableRows: boolean = false`, `expandedIds: Set<string>`, `expandMode: 'multiple' | 'single' = 'multiple'`, `expandAllToggle: boolean = false`, `rowExpandTemplate: TemplateRef<{
@@ -1332,13 +1429,14 @@ this.crumbs.clear();
 
 #### `ToastService`
 `@Injectable({ providedIn: 'root' })`. Inject and call:
-- `show(opts: ToastOptions): ToastRef` — `{ title?, body, variant?: 'info' | 'success' | 'warning' | 'error' | 'loading', dismissible?, icon?, action?: ToastAction, durationMs? = 5000 }`. Returns `{ id, dismiss() }`. `durationMs: 0` (and any negative) means it never auto-dismisses, and it is counted from the moment the toast becomes VISIBLE, not from the call — a toast queued behind `maxVisible` keeps its full time on screen. A `loading` toast is forced to 0 and discards a supplied `durationMs`.
-- `promise<T>(source: Promise<T>, messages: ToastPromiseMessages): Promise<T>` — shows a `loading` toast, then patches it in place to `success` or `error` when `source` settles. Returns `source` itself, so an un-`catch`ed call still produces an unhandled rejection. The settled toast dismisses after a hard-coded 4s (success) or 6s (error), counted from the moment it becomes visible and not overridable; `dismissAll()` cancels it like any other.
+- `show(opts: ToastOptions): ToastRef` — `{ title?, body, variant?: 'info' | 'success' | 'warning' | 'error' | 'loading', dismissible?, icon?, action?: ToastAction, durationMs? = 5000, groupKey? }`. Returns `{ id, dismiss(), update(patch) }`: `update` takes a `ToastUpdate` (`title`, `body`, `variant`, `durationMs`, `dismissible`) and changes the toast in place while it is on screen or queued, and does nothing once it is gone; it is announced only when `variant` turns `success` or `error`, `durationMs` restarts the countdown, and a toast leaving `loading` without one counts down 5000 ms. `durationMs: 0` (and any negative) means it never auto-dismisses, and it is counted from the moment the toast becomes VISIBLE, not from the call — a toast queued behind `maxVisible` keeps its full time on screen. A `loading` toast is forced to 0 and discards a supplied `durationMs`.
+- `promise<T>(source: Promise<T>, messages: ToastPromiseMessages): Promise<T>` — shows a `loading` toast, then patches it in place to `success` or `error` when `source` settles. Returns `source` itself, so an un-`catch`ed call still produces an unhandled rejection. The settled toast dismisses after a hard-coded 4s (success) or 6s (error), counted from the moment it becomes visible and not overridable; `dismissAll()` cancels it like any other. A toast closed before `source` settles stays closed and its outcome is not announced.
 - `dismissAll(): void`
 
 Defaults come from `provideDsConfig({ toast: … })`:
 - `maxVisible?: number` — cap on concurrently visible toasts. Default `5`; `0` means unlimited. Extras queue and appear as earlier ones dismiss.
 - `position?: { horizontalPosition?: 'left' | 'center' | 'right', verticalPosition?: 'top' | 'bottom', offset?: string }` — merged field by field over `right` / `top` / `var(--space-6)`, so naming one key keeps the other two.
+- `groupDuplicates?: boolean` — fold a `show()` whose `variant`, `title` and `body` match a visible or queued toast into it as a `×N` stack (or, with `groupKey`, any call with the same key), restarting its countdown. The stack lists each occurrence with its time under "Show all"; its close, and the `ToastRef` every folded call returns, dismiss the whole stack. Loading and `promise()` toasts never fold. Default `false`.
 - `mirrorDevWarnings?: boolean` — in dev mode, every library warning that reaches the console also shows as a `warning` toast titled "Dev warning" for 10s, once per message, from the moment the app first injects `ToastService` (warnings raised before that show then, up to 50). Default `true`; never in a production build, and an app that never injects `ToastService` gets the console only.
 
 The `toast` section resolves **once, at the root injector**, when the service is first used — unlike every other section, which a `Route` or a component can narrow. `ToastService` is `providedIn: 'root'`, so a route-level `provideDsConfig` never reaches it, and the position cannot change after the first `show()`.

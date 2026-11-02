@@ -160,8 +160,8 @@ export type DateValue = Date | null;
 
 ```css
 ds-date-picker {
-    --ds-date-picker-bg-color: var(--surface-overlay);
-    --ds-date-picker-border: var(--border-default);
+    --ds-date-picker-bg-color: var(--surface-overlay-raised);
+    --ds-date-picker-border: var(--border-overlay);
     --ds-date-picker-day-disabled-label-color: var(--text-disabled);
     --ds-date-picker-day-hover-bg-color: var(--surface-secondary);
     --ds-date-picker-day-label-color: var(--text-primary);
@@ -188,7 +188,7 @@ ds-date-picker {
     --ds-date-picker-value-font-family: var(--font-mono);
     --ds-date-picker-value-font-size: var(--font-size-s);
     --ds-date-picker-value-font-weight: var(--font-weight-regular);
-    --ds-date-picker-weekday-color: var(--text-tertiary);
+    --ds-date-picker-weekday-color: var(--text-tertiary-overlay);
     --ds-date-picker-width: var(--date-picker-w);
     --ds-radius-inner: (none);
 }

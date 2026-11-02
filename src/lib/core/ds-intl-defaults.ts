@@ -5,6 +5,13 @@ import type { DsIntl } from './ds-intl.types';
 export const DS_INTL_DEFAULTS: DsIntl & {
   readonly field: Required<DsIntl['field']>;
   readonly chart: Required<DsIntl['chart']>;
+  readonly toast: Required<DsIntl['toast']>;
+  readonly timeline: Required<NonNullable<DsIntl['timeline']>>;
+  readonly splitter: Required<NonNullable<DsIntl['splitter']>>;
+  readonly inlineEdit: Required<NonNullable<DsIntl['inlineEdit']>>;
+  readonly chatInput: Required<NonNullable<DsIntl['chatInput']>>;
+  readonly attachment: Required<NonNullable<DsIntl['attachment']>>;
+  readonly chat: Required<NonNullable<DsIntl['chat']>>;
 } = {
   field: {
     optional: '(optional)',
@@ -133,9 +140,31 @@ export const DS_INTL_DEFAULTS: DsIntl & {
   },
   toast: {
     region: 'Notifications',
+    showAll: 'Show all',
+    hide: 'Hide',
+    dismissAll: 'Dismiss all',
+    repeated: (message, count) => `${message}, ${count} times`,
+  },
+  attachment: {
+    remove: (name) => `Remove ${name}`,
+    pdf: 'PDF document',
+    doc: 'Word document',
+    image: 'Image',
+    file: 'File',
+  },
+  chatInput: {
+    label: 'Message',
+    send: 'Send',
   },
   spinner: {
     label: 'Loading',
+  },
+  splitter: {
+    label: 'Resize panes',
+  },
+  inlineEdit: {
+    rename: 'Rename',
+    saved: 'Saved',
   },
   breadcrumbs: {
     label: 'Breadcrumb',
@@ -168,6 +197,40 @@ export const DS_INTL_DEFAULTS: DsIntl & {
   stepper: {
     label: 'Progress',
     step: (position, label, state) => `Step ${position}: ${label} (${state})`,
+  },
+  timeline: {
+    done: 'Done',
+    running: 'In progress',
+    pending: 'Not started',
+    error: 'Failed',
+    details: (heading) => (heading ? `Details: ${heading}` : 'Details'),
+  },
+  chat: {
+    user: 'You',
+    assistant: 'Assistant',
+    thread: 'Conversation',
+    working: 'Assistant is working',
+    newMessages: (count) =>
+      count === 1 ? '1 new message' : `${count} new messages`,
+    latest: 'Jump to latest',
+    today: 'Today',
+    yesterday: 'Yesterday',
+    sending: 'Sending',
+    sent: 'Sent',
+    notSent: 'Not sent',
+    retry: 'Retry',
+    steps: (count) => (count === 1 ? '1 step' : `${count} steps`),
+    stepsFailed: (count) => `${count} failed`,
+    stepsFolded: (count, failed) =>
+      failed
+        ? `Steps folded, ${count}, ${failed} failed`
+        : `Steps folded, ${count}`,
+    stepDone: 'Done',
+    stepRunning: 'In progress',
+    stepPending: 'Not started',
+    stepWaiting: 'Waiting for your approval',
+    stepFailed: 'Failed',
+    stepDetails: (heading) => (heading ? `Details: ${heading}` : 'Details'),
   },
   tabs: {
     close: (label) => `Close ${label}`,

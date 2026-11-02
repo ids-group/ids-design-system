@@ -1,0 +1,253 @@
+<docs-section
+  anchor="splitter"
+  eyebrow="Components"
+  title="Splitter">
+  <span lede>
+    Two panes with a handle between them that resizes one of them. Drag the
+    handle, or focus it and use the arrow keys; a double click returns to the
+    default size.
+  </span>
+
+  <h3 class="block-title t-h4">
+    States
+  </h3>
+
+  <div class="states is-cols-2">
+    <div class="state-cell">
+      <div class="state-cell-stage">
+        <ds-splitter
+          class="frame"
+          ariaLabel="List width"
+          [defaultSize]="140"
+          [min]="96"
+          [max]="240">
+          <div
+            start
+            class="pane-fill">
+            List
+          </div>
+
+          <div
+            end
+            class="pane-fill is-plain">
+            Detail
+          </div>
+        </ds-splitter>
+      </div>
+
+      <div class="state-cell-label">
+        Horizontal · start pane sized
+      </div>
+    </div>
+
+    <div class="state-cell">
+      <div class="state-cell-stage">
+        <ds-splitter
+          class="frame"
+          pane="end"
+          ariaLabel="Chat width"
+          [defaultSize]="140"
+          [min]="96"
+          [max]="240">
+          <div
+            start
+            class="pane-fill is-plain">
+            Preview
+          </div>
+
+          <div
+            end
+            class="pane-fill">
+            Chat
+          </div>
+        </ds-splitter>
+      </div>
+
+      <div class="state-cell-label">
+        Horizontal · end pane sized
+      </div>
+    </div>
+
+    <div class="state-cell">
+      <div class="state-cell-stage">
+        <ds-splitter
+          class="frame"
+          orientation="vertical"
+          pane="end"
+          ariaLabel="Output height"
+          [defaultSize]="64"
+          [min]="40"
+          [max]="120">
+          <div
+            start
+            class="pane-fill is-plain">
+            Editor
+          </div>
+
+          <div
+            end
+            class="pane-fill">
+            Output
+          </div>
+        </ds-splitter>
+      </div>
+
+      <div class="state-cell-label">
+        Vertical · end pane sized
+      </div>
+    </div>
+
+    <div class="state-cell">
+      <div class="state-cell-stage">
+        <ds-splitter
+          class="frame"
+          ariaLabel="List width"
+          [defaultSize]="96"
+          [min]="96"
+          [max]="240">
+          <div
+            start
+            class="pane-fill">
+            List
+          </div>
+
+          <div
+            end
+            class="pane-fill is-plain">
+            Detail
+          </div>
+        </ds-splitter>
+      </div>
+
+      <div class="state-cell-label">
+        At min · cursor points right
+      </div>
+    </div>
+  </div>
+
+  <h3 class="block-title t-h4">
+    Past the limit
+  </h3>
+
+  <p class="block-desc t-s">
+    Drag either handle past its limit. With the default
+    <code class="t-mono-inline">
+      overdrag="elastic"
+    </code>
+    it follows with growing resistance, its line thickens with the pull, and it
+    springs back on release; with
+    <code class="t-mono-inline">
+      "none"
+    </code>
+    it stops. Reduced motion turns the effect off.
+  </p>
+
+  <div class="states is-cols-2">
+    <div class="state-cell">
+      <div class="state-cell-stage">
+        <ds-splitter
+          class="frame"
+          ariaLabel="List width"
+          [defaultSize]="140"
+          [min]="96"
+          [max]="200">
+          <div
+            start
+            class="pane-fill">
+            List
+          </div>
+
+          <div
+            end
+            class="pane-fill">
+            Detail
+          </div>
+        </ds-splitter>
+      </div>
+
+      <div class="state-cell-label">
+        elastic · default
+      </div>
+    </div>
+
+    <div class="state-cell">
+      <div class="state-cell-stage">
+        <ds-splitter
+          class="frame"
+          overdrag="none"
+          ariaLabel="List width"
+          [defaultSize]="140"
+          [min]="96"
+          [max]="200">
+          <div
+            start
+            class="pane-fill">
+            List
+          </div>
+
+          <div
+            end
+            class="pane-fill">
+            Detail
+          </div>
+        </ds-splitter>
+      </div>
+
+      <div class="state-cell-label">
+        none
+      </div>
+    </div>
+  </div>
+
+  <h3 class="block-title t-h4">
+    Try it
+  </h3>
+
+  <p class="block-desc t-s">
+    The chat pane is sized and remembered: drag it, reload the page, and it
+    comes back at the same width. Double-click the handle to forget it.
+  </p>
+
+  <ds-splitter
+    class="frame is-tall"
+    pane="end"
+    persistKey="docs-splitter-chat"
+    ariaLabel="Chat width"
+    [defaultSize]="280"
+    [min]="200"
+    [max]="480"
+    [(size)]="previewWidth">
+    <ds-splitter
+      start
+      class="fill"
+      orientation="vertical"
+      pane="end"
+      ariaLabel="Console height"
+      [min]="64"
+      [max]="200"
+      [(size)]="outputHeight">
+      <div
+        start
+        class="pane-fill is-plain">
+        Preview
+      </div>
+
+      <div
+        end
+        class="pane-fill">
+        Console
+      </div>
+    </ds-splitter>
+
+    <div
+      end
+      class="pane-fill">
+      Chat
+    </div>
+  </ds-splitter>
+
+  <p class="readout t-s">
+    Chat width: {{ previewWidth() ?? 'default' }} · console height:
+    {{ outputHeight() ?? 'default' }}
+  </p>
+</docs-section>

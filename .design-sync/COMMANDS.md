@@ -244,6 +244,9 @@ comments — 219 KB of the same three blocks. Tree 20 MB → 9.0 MB.
   `snapshot-cards` renders each unsettled card once more, alone, and fails only a card
   that still does not settle. `build-design-sync.sh` sets `DS_CDP_DEBUG=1`, so a
   render that comes back empty names the CDP call that refused.
+- **`DS_CPU_THROTTLE=<n>` renders every card at 1/n of the machine's speed.**
+  `snapshot-cards` and `measure-cards` read it, so a run can be rehearsed against a
+  slower runner than the one it was built on. Unset, or 1, leaves the render alone.
 
 ### The gates that keep CI from thawing it
 

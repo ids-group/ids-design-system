@@ -15,6 +15,7 @@ import { devWarn } from '@ids-group-ltd/ids-design-system/core';
 import { moveFocusOutOf } from '@ids-group-ltd/ids-design-system/components';
 import { DS_TOAST_POSITION_DEFAULT } from './toast.config';
 import { ToastComponent } from './toast.component';
+import { findToastStack, withoutToastOccurrence } from './toast-group';
 import type { ToastEntry } from './toast.types';
 
 // Fallback floor; leaveDuration() reads the real length off the node.
@@ -274,7 +275,14 @@ export class ToastRegionComponent {
     patch: Partial<
       Pick<
         ToastEntry,
-        'body' | 'title' | 'variant' | 'dismissible' | 'action' | 'durationMs'
+        | 'body'
+        | 'title'
+        | 'variant'
+        | 'dismissible'
+        | 'action'
+        | 'durationMs'
+        | 'occurrences'
+        | 'groupKey'
       >
     >,
   ): void {
@@ -295,6 +303,34 @@ export class ToastRegionComponent {
     this.pendingQueue.update((queue) =>
       queue.map((entry) => (entry.id === id ? { ...entry, ...patch } : entry)),
     );
+  }
+
+  /** The visible or queued toast with this id; one already leaving is gone. */
+  entryFor(id: number): ToastEntry | undefined {
+    return [...this.visibleEntries(), ...this.pendingQueue()].find(
+      (entry) => entry.id === id && !this.isLeaving(id),
+    );
+  }
+
+  /** The visible or queued toast a repeat with this `groupKey` folds into; one already leaving
+   *  takes no more. */
+  stackFor(key: string): ToastEntry | undefined {
+    return findToastStack(
+      [
+        ...this.visibleEntries().filter((entry) => !this.isLeaving(entry.id)),
+        ...this.pendingQueue(),
+      ],
+      key,
+    );
+  }
+
+  protected closeOccurrence(entry: ToastEntry, occurrenceId: number): void {
+    const occurrences = withoutToastOccurrence(entry, occurrenceId);
+    if (occurrences) {
+      this.update(entry.id, { occurrences });
+    } else {
+      this.remove(entry.id);
+    }
   }
 
   remove(id: number): void {

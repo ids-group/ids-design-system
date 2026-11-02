@@ -1,0 +1,224 @@
+@use '../../styles/field-box' as field-box;
+@use '../../styles/focus' as focus;
+@use '../../styles/text-clip' as text-clip;
+@use '../../styles/component-base' as component-base;
+@include component-base.rules;
+
+/* The border, hover and focus follow the `--ds-field-*` set, so a retuned field retunes the chat input too. */
+:host {
+  @include field-box.field-box-tokens;
+
+  --_chat-input-bg-color: var(--ds-chat-input-bg-color, var(--surface-default));
+  --_chat-input-radius: var(--ds-chat-input-radius, var(--ds-radius-control));
+  --_chat-input-padding: var(--ds-chat-input-padding, var(--space-2));
+
+  display: block;
+}
+
+.chat-input {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+/* One grid for every layout: rows are chips, text, bar; `.box` draws the frame behind the cells the layout puts inside it. */
+.frame {
+  --_p: var(--_chat-input-padding);
+
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  grid-template-rows: auto auto auto;
+  grid-template-areas:
+    'chips chips chips'
+    'text text text'
+    'actions status send';
+  column-gap: var(--space-2);
+  cursor: text;
+
+  @include focus.owns-the-focus-ring('ds-textarea');
+}
+
+.box {
+  grid-row: 1 / 4;
+  grid-column: 1 / 4;
+  background-color: var(--_chat-input-bg-color);
+  border: var(--border-width-default) solid var(--_field-border-color);
+  border-radius: var(--_chat-input-radius);
+  transition:
+    border-color var(--duration-fast) var(--ease-standard),
+    box-shadow var(--duration-fast) var(--ease-standard);
+}
+
+.frame:has(ds-textarea:hover, .chips:hover) .box {
+  border-color: var(--_field-border-color-hover);
+}
+
+/* Only the text area lights the box: a focused chip or button draws its own ring. */
+.frame:has(ds-textarea:focus-within) .box {
+  border-color: var(--_field-border-color-focus);
+  box-shadow: var(--ds-field-focus-shadow);
+}
+
+.frame.disabled {
+  cursor: default;
+
+  .box {
+    background-color: var(--surface-disabled);
+    border-color: var(--border-disabled);
+  }
+}
+
+/* The box draws the frame, so the inner field drops its own. */
+ds-textarea {
+  --ds-input-bg-color: transparent;
+  --ds-input-bg-color-disabled: transparent;
+  --ds-input-border: transparent;
+  --ds-input-border-hover: transparent;
+  --ds-input-border-focus: transparent;
+  --ds-input-focus-shadow: none;
+  --ds-input-padding-x: var(--space-2);
+  --ds-input-padding-y: var(--space-1);
+
+  // A disabled field paints `--border-disabled` straight, with no `--ds-input-*` hook in between.
+  --border-disabled: transparent;
+
+  grid-area: text;
+  margin: var(--_p) var(--_p) var(--space-1);
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  grid-area: chips;
+  gap: var(--space-2);
+  margin: var(--_p) calc(var(--_p) + var(--space-1)) 0;
+
+  &:empty {
+    display: none;
+  }
+}
+
+.actions {
+  display: flex;
+  grid-area: actions;
+  align-items: center;
+  gap: var(--space-1);
+  margin: 0 0 var(--_p) var(--_p);
+}
+
+.status {
+  @include text-clip.single-line-ellipsis;
+
+  color: var(--text-secondary);
+  font-size: var(--font-size-s);
+  line-height: var(--line-height-base);
+}
+
+.status-bar {
+  grid-area: status;
+  align-self: center;
+  min-width: 0;
+  text-align: end;
+  margin-block-end: var(--_p);
+}
+
+/* The line is kept while idle, so the box does not move down when a step appears. */
+.status-above {
+  min-height: 1lh;
+  padding-inline: var(--space-4);
+}
+
+.send {
+  display: flex;
+  grid-area: send;
+  align-items: center;
+  gap: var(--space-2);
+  margin: 0 var(--_p) var(--_p) 0;
+}
+
+/* One fixed square, idle or busy, so nothing moves. */
+.send-button {
+  --ds-button-padding-x: 0;
+
+  width: var(--field-h-sm);
+}
+
+/* Attach outside on the left, send outside on the right, on the last line of the text. */
+.layout-split .frame {
+  grid-template-rows: auto auto;
+  grid-template-areas:
+    '. chips .'
+    'actions text send';
+
+  .box {
+    grid-row: 1 / 3;
+    grid-column: 2 / 3;
+  }
+
+  ds-textarea {
+    margin-block-end: var(--_p);
+  }
+
+  .actions,
+  .send {
+    align-self: end;
+    margin: 0 0 calc(var(--_p) - var(--space-1) / 2);
+  }
+}
+
+/* Attach and the step inside, one round send button outside on the right. */
+.layout-send-outside .frame {
+  grid-template-areas:
+    'chips chips .'
+    'text text .'
+    'actions status send';
+
+  .box {
+    grid-column: 1 / 3;
+  }
+
+  .status-bar {
+    margin-inline-end: var(--_p);
+  }
+
+  .send {
+    align-self: end;
+    margin: 0;
+  }
+
+  .send-button {
+    --ds-button-height: var(--field-h-md);
+    --ds-button-radius: 50%;
+
+    width: var(--field-h-md);
+  }
+}
+
+/* The box holds only chips and text; attach, the step and send form a toolbar under it. */
+.layout-toolbar .frame {
+  .box {
+    grid-row: 1 / 3;
+  }
+
+  ds-textarea {
+    margin-block-end: var(--_p);
+  }
+
+  .actions,
+  .status-bar,
+  .send {
+    margin: var(--space-1) 0 0;
+  }
+}
+
+/* What the message points at, such as a picked element with its snapshot, sits on the page above the frame. */
+.attachments {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  margin-block-end: var(--space-1);
+
+  &:empty {
+    display: none;
+  }
+}

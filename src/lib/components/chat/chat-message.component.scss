@@ -1,0 +1,257 @@
+@use '../../styles/visually-hidden' as visually-hidden;
+@use '../../styles/component-base' as component-base;
+@include component-base.rules;
+
+:host {
+  --_chat-bubble-max-width: var(--ds-chat-message-max-width, 85%);
+  --_chat-bubble-radius: var(--ds-chat-message-radius, var(--ds-radius-panel));
+  --_chat-bubble-padding: var(--ds-chat-message-padding, var(--space-2) var(--space-3));
+  --_chat-bubble-bg-color: var(--ds-chat-message-assistant-bg-color, var(--surface-secondary));
+  --_chat-bubble-color: var(--ds-chat-message-assistant-color, var(--text-primary));
+
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  min-width: 0;
+}
+
+:host([data-role='user']) {
+  --_chat-bubble-bg-color: var(--ds-chat-message-user-bg-color, var(--primary));
+  --_chat-bubble-color: var(--ds-chat-message-user-color, var(--text-on-primary));
+
+  align-items: flex-end;
+}
+
+// Spacing between messages is the thread's: a full gap between speakers, a tight one inside a run.
+:host(.in-thread) {
+  margin-top: var(--_chat-thread-gap);
+}
+
+:host(.is-grouped) {
+  margin-top: var(--_chat-thread-group-gap);
+}
+
+:host(.is-first) {
+  margin-top: 0;
+}
+
+// A time break: the divider spans the thread whichever side the message sits on.
+.divider {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  align-self: stretch;
+  margin-bottom: var(--space-3);
+  font-size: var(--font-size-xs);
+  line-height: var(--line-height-base);
+  color: var(--text-tertiary);
+
+  &::before,
+  &::after {
+    content: '';
+    flex: 1;
+    border-top: var(--border-width-default) solid var(--border-divider);
+  }
+}
+
+.divider-label {
+  flex: none;
+}
+
+.visually-hidden {
+  @include visually-hidden.visually-hidden;
+}
+
+.meta {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-2);
+  max-width: 100%;
+  font-size: var(--font-size-xs);
+  line-height: var(--line-height-base);
+  color: var(--text-tertiary);
+
+  // A row whose only content is the spoken speaker takes no space.
+  &:has(.speaker:not(.visually-hidden)) {
+    margin-bottom: var(--space-1);
+  }
+}
+
+.speaker {
+  font-weight: var(--font-weight-semibold);
+  color: var(--text-secondary);
+}
+
+.bubble {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  max-width: var(--_chat-bubble-max-width);
+  min-width: 0;
+  padding: var(--_chat-bubble-padding);
+  border-radius: var(--_chat-bubble-radius);
+  background-color: var(--_chat-bubble-bg-color);
+  color: var(--_chat-bubble-color);
+  font-size: var(--font-size-s);
+  line-height: var(--line-height-base);
+  overflow-wrap: anywhere;
+
+  // A host app that switches selection off for its chrome must not take the conversation with it.
+  user-select: text;
+}
+
+// The tail is the tight bottom corner on the speaker's side, drawn only on the last message of a run,
+// so the run ends where it reads as ending; the messages above it keep every corner round.
+:host([data-role='assistant']:not(.is-continued)) .bubble {
+  border-end-start-radius: var(--ds-radius-inner);
+}
+
+:host([data-role='user']:not(.is-continued)) .bubble {
+  border-end-end-radius: var(--ds-radius-inner);
+}
+
+:host([data-role='user']) .bubble {
+  // The page's selection tint is mixed from --primary, which is this bubble's fill.
+  ::selection {
+    background-color: var(--_chat-bubble-color);
+    color: var(--_chat-bubble-bg-color);
+  }
+}
+
+// Typed text keeps its line breaks.
+:host([data-role='user']) .body {
+  white-space: pre-line;
+}
+
+.steps,
+.body,
+.attachments {
+  min-width: 0;
+}
+
+
+// The agent's steps stand on the thread's own surface above the bubble, where their status colours
+// read; a message that has only steps so far draws no empty bubble.
+.steps {
+  inline-size: 100%;
+  max-inline-size: var(--_chat-bubble-max-width);
+  margin-bottom: var(--space-2);
+  padding-inline: var(--space-1);
+  overflow-wrap: anywhere;
+}
+
+.bubble:has(> .body:empty):not(:has(> .attachments > *)) {
+  display: none;
+}
+
+.attachments {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1);
+}
+
+// The caret sits after the last line of text while the reply is still arriving.
+:host([aria-busy='true']) .body::after {
+  content: '';
+  display: inline-block;
+  inline-size: 0.5em;
+  block-size: 1em;
+  margin-inline-start: var(--space-0-5);
+  vertical-align: text-bottom;
+  background-color: currentcolor;
+  animation: chat-caret var(--duration-loop-fast) steps(1) infinite;
+}
+
+@keyframes chat-caret {
+  50% {
+    opacity: 0;
+  }
+}
+
+:host([data-status='sending']) .bubble {
+  opacity: var(--opacity-disabled);
+}
+
+.status {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  margin-top: var(--space-1);
+  font-size: var(--font-size-xs);
+  line-height: var(--line-height-base);
+  color: var(--text-tertiary);
+
+  &.is-failed {
+    color: var(--error-text);
+  }
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  margin-top: var(--space-1);
+  opacity: 0;
+  transition: opacity var(--duration-fast) var(--ease-standard);
+}
+
+:host(:hover) .actions,
+.actions:focus-within {
+  opacity: 1;
+}
+
+// Without hover there is nothing to reveal them, so they stay visible.
+@media (hover: none) {
+  .actions {
+    opacity: 1;
+  }
+}
+
+// Last, so an empty slot stays hidden over the display its own rule sets above; left in place it
+// would still take the bubble's row gap or the actions' margin.
+.steps:not(:has(*)),
+.attachments:not(:has(*)),
+.actions:not(:has(*)),
+.body:empty {
+  display: none;
+}
+
+// The chip the folded steps become, at the top of the bubble; hidden while the steps show.
+.steps-chip {
+  display: none;
+  align-items: center;
+  align-self: flex-start;
+  gap: var(--space-1);
+  padding: var(--space-0-5) var(--space-2);
+  border: var(--border-width-default) solid var(--border-default);
+  border-radius: var(--ds-radius-pill);
+  background-color: var(--surface-default);
+  color: var(--text-secondary);
+  font: inherit;
+  font-size: var(--font-size-xs);
+  line-height: var(--line-height-base);
+  cursor: pointer;
+
+  &:hover {
+    border-color: var(--border-strong);
+    color: var(--text-primary);
+  }
+}
+
+.steps-chip-done {
+  color: var(--success-text);
+}
+
+.steps-chip-failed {
+  color: var(--error-text);
+  font-weight: var(--font-weight-semibold);
+}
+
+:host(.steps-folded) > .steps {
+  display: none;
+}
+
+:host(.steps-chip-shown) .steps-chip {
+  display: inline-flex;
+}

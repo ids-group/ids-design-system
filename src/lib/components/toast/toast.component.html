@@ -1,5 +1,17 @@
 <!-- No role or aria-live: a region created with its text already in it announces nothing;
      ToastService speaks through the CDK LiveAnnouncer. A hand-placed <ds-toast> is silent. -->
+@if (stacked() && !expanded()) {
+  <div
+    class="ghost ghost-far"
+    aria-hidden="true">
+  </div>
+
+  <div
+    class="ghost ghost-near"
+    aria-hidden="true">
+  </div>
+}
+
 <div [class]="classes()">
   @if (isLoading()) {
     <!-- aria-hidden because ds-spinner is a role="status" of its own: the message is
@@ -19,10 +31,31 @@
     @if (title()) {
       <div class="title">
         {{ title() }}
+        @if (stacked()) {
+          <span class="count">
+            ×{{ count() }}
+          </span>
+        }
       </div>
     }
     {{ body() }}
+    @if (stacked() && !title()) {
+      <span class="count">
+        ×{{ count() }}
+      </span>
+    }
+
     <ng-content></ng-content>
+
+    @if (stacked()) {
+      <button
+        type="button"
+        class="more"
+        [attr.aria-expanded]="expanded()"
+        (click)="expanded.set(!expanded())">
+        {{ expanded() ? toastIntl().hide : toastIntl().showAll }}
+      </button>
+    }
   </div>
 
   @if (action(); as act) {
@@ -42,7 +75,9 @@
     <button
       type="button"
       class="close"
-      [attr.aria-label]="intl().dialog.dismiss"
+      [attr.aria-label]="
+        stacked() ? toastIntl().dismissAll : intl().dialog.dismiss
+      "
       (click)="onDismiss()">
       <ds-icon
         name="x"
@@ -50,3 +85,35 @@
     </button>
   }
 </div>
+
+@if (stacked() && expanded()) {
+  <div class="occurrences">
+    @for (occurrence of occurrences(); track occurrence.id) {
+      <div [class]="classes()">
+        <ds-icon
+          class="icon"
+          [name]="icon() ?? defaultIcon()"
+          [size]="16" />
+
+        <div class="body">
+          {{ occurrence.body }}
+          <span class="time">
+            {{ formatTime(occurrence.at) }}
+          </span>
+        </div>
+
+        @if (dismissible()) {
+          <button
+            type="button"
+            class="close"
+            [attr.aria-label]="intl().dialog.dismiss"
+            (click)="occurrenceClosed.emit(occurrence.id)">
+            <ds-icon
+              name="x"
+              [size]="14" />
+          </button>
+        }
+      </div>
+    }
+  </div>
+}

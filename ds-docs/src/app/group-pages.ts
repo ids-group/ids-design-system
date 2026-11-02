@@ -14,6 +14,7 @@ import { CheckboxSection } from './sections/components/checkbox/checkbox.section
 import { ColorPickerSection } from './sections/components/color-picker/color-picker.section';
 import { DatePickerSection } from './sections/components/date-picker/date-picker.section';
 import { DropzoneSection } from './sections/components/dropzone/dropzone.section';
+import { InlineEditSection } from './sections/components/inline-edit/inline-edit.section';
 import { InputSection } from './sections/components/input/input.section';
 import { MultiSelectSection } from './sections/components/multi-select/multi-select.section';
 import { NumberStepperSection } from './sections/components/number-stepper/number-stepper.section';
@@ -24,6 +25,7 @@ import { SearchSection } from './sections/components/search/search.section';
 import { SelectSection } from './sections/components/select/select.section';
 import { SliderSection } from './sections/components/slider/slider.section';
 import { SwitchSection } from './sections/components/switch/switch.section';
+import { ChatInputSection } from './sections/components/chat-input/chat-input.section';
 import { TextareaSection } from './sections/components/textarea/textarea.section';
 import { TimePickerSection } from './sections/components/time-picker/time-picker.section';
 import { W3wSection } from './sections/components/w3w/w3w.section';
@@ -34,6 +36,7 @@ import { BreadcrumbsSection } from './sections/components/breadcrumbs/breadcrumb
 import { MenuSection } from './sections/components/menu/menu.section';
 import { PaginationSection } from './sections/components/pagination/pagination.section';
 import { SidenavSection } from './sections/components/sidenav/sidenav.section';
+import { SplitterSection } from './sections/components/splitter/splitter.section';
 import { StepperSection } from './sections/components/stepper/stepper.section';
 import { TabsSection } from './sections/components/tabs/tabs.section';
 import { TopbarSection } from './sections/components/topbar/topbar.section';
@@ -41,11 +44,14 @@ import { TopbarSection } from './sections/components/topbar/topbar.section';
 import { AccordionSection } from './sections/components/accordion/accordion.section';
 import { AvatarSection } from './sections/components/avatar/avatar.section';
 import { CardSection } from './sections/components/card/card.section';
+import { ChatMessageSection } from './sections/components/chat-message/chat-message.section';
+import { ChatStepsSection } from './sections/components/chat-steps/chat-steps.section';
 import { DescriptionListSection } from './sections/components/description-list/description-list.section';
 import { IconSection } from './sections/components/icon/icon.section';
 import { ListSection } from './sections/components/list/list.section';
 import { StatSection } from './sections/components/stat/stat.section';
 import { TableSection } from './sections/components/table/table.section';
+import { AttachmentSection } from './sections/components/attachment/attachment.section';
 import { TagSection } from './sections/components/tag/tag.section';
 import { TimelineSection } from './sections/components/timeline/timeline.section';
 import { TreeSection } from './sections/components/tree/tree.section';
@@ -150,6 +156,7 @@ export const GROUP_PAGES: readonly GroupPageDef[] = [
       DatePickerSection,
       DropzoneSection,
       FieldGroupSection,
+      InlineEditSection,
       InputSection,
       MultiSelectSection,
       NumberStepperSection,
@@ -175,6 +182,7 @@ export const GROUP_PAGES: readonly GroupPageDef[] = [
       MenuSection,
       PaginationSection,
       SidenavSection,
+      SplitterSection,
       StepperSection,
       TabsSection,
       TopbarSection,
@@ -195,6 +203,16 @@ export const GROUP_PAGES: readonly GroupPageDef[] = [
       TagSection,
       TimelineSection,
       TreeSection,
+    ],
+  },
+  {
+    path: 'components/chat',
+    title: 'Chat',
+    sections: [
+      AttachmentSection,
+      ChatMessageSection,
+      ChatInputSection,
+      ChatStepsSection,
     ],
   },
   {

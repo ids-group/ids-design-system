@@ -1,0 +1,192 @@
+@use '../../styles/focus' as focus;
+@use '../../styles/component-base' as component-base;
+@include component-base.rules;
+
+:host {
+  --_splitter-gap: var(--ds-splitter-gap, var(--space-2));
+  --_splitter-line-color: var(--ds-splitter-line-color, var(--border-strong));
+  --_splitter-drag-color: var(--ds-splitter-drag-color, var(--text-muted));
+  --_splitter-grip-color: var(--ds-splitter-grip-color, var(--text-muted));
+  --_splitter-overdrag-line-scale: var(--ds-splitter-overdrag-line-scale, 3);
+  --_splitter-grip-dot: calc(var(--border-width-strong) + var(--border-width-default));
+  --_splitter-sized: min(var(--_splitter-size), 100% - var(--_splitter-gap));
+  --_splitter-rest: minmax(0, 1fr);
+
+  display: grid;
+  min-inline-size: 0;
+  min-block-size: 0;
+}
+
+:host([data-pane='start']) {
+  --_splitter-start: var(--_splitter-sized);
+  --_splitter-end: var(--_splitter-rest);
+}
+
+:host([data-pane='end']) {
+  --_splitter-start: var(--_splitter-rest);
+  --_splitter-end: var(--_splitter-sized);
+}
+
+:host([data-orientation='horizontal']) {
+  grid-template-columns: var(--_splitter-start) var(--_splitter-gap) var(--_splitter-end);
+  grid-template-rows: minmax(0, 1fr);
+}
+
+:host([data-orientation='vertical']) {
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: var(--_splitter-start) var(--_splitter-gap) var(--_splitter-end);
+}
+
+.pane {
+  min-inline-size: 0;
+  min-block-size: 0;
+  overflow: auto;
+}
+
+/* The rubber band scales each pane from its outer edge, so the edges at the host stay put. */
+:host([data-orientation='horizontal']) {
+  .pane-start {
+    transform-origin: left center;
+  }
+
+  .pane-end {
+    transform-origin: right center;
+  }
+}
+
+:host([data-orientation='vertical']) {
+  .pane-start {
+    transform-origin: center top;
+  }
+
+  .pane-end {
+    transform-origin: center bottom;
+  }
+}
+
+/* Released past a limit: the handle and the panes spring back with a small overshoot. */
+:host(.springing) :is(.pane, .handle) {
+  transition: transform var(--duration-slower) var(--ease-spring);
+}
+
+/* Pulled past a limit, the line thickens with the pull up to the scale, and springs back with it. */
+.handle {
+  --_splitter-line-thickness: calc(
+    1 + (var(--_splitter-overdrag-line-scale) - 1) * var(--_splitter-pull-ratio, 0)
+  );
+}
+
+:host([data-orientation='horizontal']) .handle::after {
+  transform: scaleX(var(--_splitter-line-thickness));
+}
+
+:host([data-orientation='vertical']) .handle::after {
+  transform: scaleY(var(--_splitter-line-thickness));
+}
+
+:host(.springing) .handle::after {
+  transition:
+    opacity var(--duration-fast) var(--ease-standard),
+    background-color var(--duration-fast) var(--ease-standard),
+    transform var(--duration-slower) var(--ease-spring);
+}
+
+/* The handle fills the gap between the panes. At rest only the grip shows; hover, drag and focus
+   swap it for a line on the edge being moved. */
+.handle {
+  position: relative;
+  touch-action: none;
+  user-select: none;
+
+  &::after {
+    position: absolute;
+    content: '';
+    background-color: var(--_splitter-line-color);
+    border-radius: var(--radius-pill);
+    opacity: 0;
+    transition:
+      opacity var(--duration-fast) var(--ease-standard),
+      background-color var(--duration-fast) var(--ease-standard);
+  }
+
+  &::before {
+    position: absolute;
+    inset-block-start: 50%;
+    inset-inline-start: 50%;
+    content: '';
+    background-image: radial-gradient(
+      circle closest-side,
+      var(--_splitter-grip-color) 98%,
+      transparent
+    );
+    background-position: 0 0;
+    translate: -50% -50%;
+    transition: opacity var(--duration-fast) var(--ease-standard);
+  }
+
+  /* A pointer crossing the handle on its way elsewhere does not flash it. */
+  &:hover::after,
+  &:hover::before {
+    transition-delay: var(--duration-slow);
+  }
+
+  &:hover,
+  &.dragging,
+  &:focus-visible {
+    &::after {
+      opacity: 1;
+    }
+
+    &::before {
+      opacity: 0;
+    }
+  }
+
+  &.dragging::after {
+    background-color: var(--_splitter-drag-color);
+  }
+
+  &.dragging::after,
+  &.dragging::before {
+    transition-delay: 0s;
+  }
+
+  /* Only keyboard focus takes the focus colour; the line carries the indicator in place of a ring. */
+  &:focus-visible {
+    @include focus.own-indicator;
+  }
+
+  &:focus-visible::after {
+    background-color: var(--focus-ring-color);
+  }
+}
+
+:host([data-orientation='horizontal']) .handle {
+  &::after {
+    inset-block: 0;
+    inset-inline-start: calc(50% - var(--border-width-strong) / 2);
+    inline-size: var(--border-width-strong);
+  }
+
+  &::before {
+    inline-size: var(--_splitter-grip-dot);
+    block-size: calc(var(--_splitter-grip-dot) * 6);
+    background-size: var(--_splitter-grip-dot) calc(var(--_splitter-grip-dot) * 2);
+    background-repeat: repeat-y;
+  }
+}
+
+:host([data-orientation='vertical']) .handle {
+  &::after {
+    inset-inline: 0;
+    inset-block-start: calc(50% - var(--border-width-strong) / 2);
+    block-size: var(--border-width-strong);
+  }
+
+  &::before {
+    inline-size: calc(var(--_splitter-grip-dot) * 6);
+    block-size: var(--_splitter-grip-dot);
+    background-size: calc(var(--_splitter-grip-dot) * 2) var(--_splitter-grip-dot);
+    background-repeat: repeat-x;
+  }
+}

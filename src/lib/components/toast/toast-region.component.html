@@ -14,6 +14,8 @@
     [body]="entry.body"
     [dismissible]="entry.dismissible"
     [action]="entry.action ?? null"
+    [occurrences]="entry.occurrences ?? []"
     [class.leaving]="isLeaving(entry.id)"
-    (closed)="remove(entry.id)" />
+    (closed)="remove(entry.id)"
+    (occurrenceClosed)="closeOccurrence(entry, $event)" />
 }

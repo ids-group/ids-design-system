@@ -21,14 +21,22 @@ export class ToastComponent {
     public readonly body = input<string>('');
     protected readonly classes = computed(…);
     public readonly closed = output<void>();
+    protected readonly count = computed(…);
     protected readonly defaultIcon = computed<IconName>(…);
     public readonly dismissible = input(false, { transform: booleanAttribute });
+    protected readonly expanded = signal(…);
+    protected formatTime(at: number): string;
     public readonly icon = input<IconName | null>(null);
     protected readonly intl = inject(…);
     protected readonly isLoading = computed(…);
+    public readonly occurrenceClosed = output<number>();
+    public readonly occurrences = input<readonly ToastOccurrence[]>([]);
     protected onAction(action: ToastAction): void;
     protected onDismiss(): void;
+    protected readonly stacked = computed(…);
+    private readonly timeFormat;
     public readonly title = input<string>('');
+    protected readonly toastIntl = computed(…);
     public readonly variant = input<ToastVariant>('info');
 }
 
@@ -40,6 +48,14 @@ export interface ToastEntry {
     readonly dismissible: boolean;
     readonly action?: ToastAction;
     readonly durationMs: number;
+    readonly groupKey?: string;
+    readonly occurrences?: readonly ToastOccurrence[];
+}
+
+export interface ToastOccurrence {
+    readonly id: number;
+    readonly body: string;
+    readonly at: number;
 }
 
 export interface ToastOptions {
@@ -49,6 +65,7 @@ export interface ToastOptions {
     readonly dismissible?: boolean;
     readonly durationMs?: number;
     readonly action?: ToastAction;
+    readonly groupKey?: string;
 }
 
 export interface ToastPromiseMessages<T = unknown> {
@@ -60,6 +77,7 @@ export interface ToastPromiseMessages<T = unknown> {
 export interface ToastRef {
     readonly id: number;
     dismiss(): void;
+    update(patch: ToastUpdate): void;
 }
 
 @Component({ selector: 'ds-toast-region' })
@@ -69,7 +87,9 @@ export class ToastRegionComponent {
     private arm;
     public clear(): void;
     private clearCountdown;
+    protected closeOccurrence(entry: ToastEntry, occurrenceId: number): void;
     private drainQueue;
+    public entryFor(id: number): ToastEntry | undefined;
     private focusOrigin;
     private focusWithin;
     private readonly host;
@@ -96,11 +116,12 @@ export class ToastRegionComponent {
     private show;
     public readonly showQueueCount = input(true, { transform: booleanAttribute });
     private slideNeighbours;
+    public stackFor(key: string): ToastEntry | undefined;
     private readonly startedAt;
     private syncPause;
     private readonly timers;
     private toastNodes;
-    public update(id: number, patch: Partial<Pick<ToastEntry, 'body' | 'title' | 'variant' | 'dismissible' | 'action' | 'durationMs'>>): void;
+    public update(id: number, patch: Partial<Pick<ToastEntry, 'body' | 'title' | 'variant' | 'dismissible' | 'action' | 'durationMs' | 'occurrences' | 'groupKey'>>): void;
     protected readonly visibleEntries = signal<readonly ToastEntry[]>(…);
 }
 
@@ -113,18 +134,23 @@ export class ToastService {
     private buildPositionStrategy;
     public dismissAll(): void;
     private ensureRegion;
+    private readonly intl;
     private keepAboveScrims;
     private nextId;
     private readonly overlay;
     private overlayRef;
-    private pendingAnnouncements;
+    private readonly pendingAnnouncements;
     private pendingAssertive;
     public promise<T>(source: Promise<T>, messages: ToastPromiseMessages<T>): Promise<T>;
+    private refFor;
     private regionRef;
     private scrimWatcher;
     public show(opts: ToastOptions): ToastRef;
     private readonly toastConfig;
+    private updateToast;
 }
+
+export type ToastUpdate = Partial<Pick<ToastOptions, 'title' | 'body' | 'variant' | 'durationMs' | 'dismissible'>>;
 
 export type ToastVariant = 'info' | 'success' | 'warning' | 'error' | 'loading';
 ```
@@ -135,16 +161,16 @@ export type ToastVariant = 'info' | 'success' | 'warning' | 'error' | 'loading';
 ds-toast {
     --ds-radius-inner: (none);
     --ds-toast-bar-color: var(--accent) | var(--error) | var(--success) | var(--warning-hover);
-    --ds-toast-bg-color: var(--surface-overlay);
-    --ds-toast-bg-color-error: var(--ds-toast-bg-color, var(--surface-overlay));
-    --ds-toast-bg-color-info: var(--ds-toast-bg-color, var(--surface-overlay));
-    --ds-toast-bg-color-success: var(--ds-toast-bg-color, var(--surface-overlay));
-    --ds-toast-bg-color-warning: var(--ds-toast-bg-color, var(--surface-overlay));
-    --ds-toast-border-color: var(--border-default);
-    --ds-toast-border-color-error: var(--ds-toast-border-color, var(--border-default));
-    --ds-toast-border-color-info: var(--ds-toast-border-color, var(--border-default));
-    --ds-toast-border-color-success: var(--ds-toast-border-color, var(--border-default));
-    --ds-toast-border-color-warning: var(--ds-toast-border-color, var(--border-default));
+    --ds-toast-bg-color: var(--surface-overlay-raised);
+    --ds-toast-bg-color-error: var(--ds-toast-bg-color, var(--surface-overlay-raised));
+    --ds-toast-bg-color-info: var(--ds-toast-bg-color, var(--surface-overlay-raised));
+    --ds-toast-bg-color-success: var(--ds-toast-bg-color, var(--surface-overlay-raised));
+    --ds-toast-bg-color-warning: var(--ds-toast-bg-color, var(--surface-overlay-raised));
+    --ds-toast-border-color: var(--border-overlay);
+    --ds-toast-border-color-error: var(--ds-toast-border-color, var(--border-overlay));
+    --ds-toast-border-color-info: var(--ds-toast-border-color, var(--border-overlay));
+    --ds-toast-border-color-success: var(--ds-toast-border-color, var(--border-overlay));
+    --ds-toast-border-color-warning: var(--ds-toast-border-color, var(--border-overlay));
     --ds-toast-enter-duration: var(--ds-motion-enter-large-duration);
     --ds-toast-enter-easing: var(--ds-motion-enter-large-easing);
     --ds-toast-enter-keyframes: ds-fade-in;
@@ -160,7 +186,7 @@ ds-toast {
 }
 
 ds-toast-region {
-    --ds-toast-queue-bg-color: var(--surface-overlay);
+    --ds-toast-queue-bg-color: var(--surface-overlay-raised);
     --ds-toast-queue-text-color: var(--text-secondary);
 }
 ```

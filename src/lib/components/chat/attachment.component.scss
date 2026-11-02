@@ -1,0 +1,111 @@
+@use '../../styles/focus' as focus;
+@use '../../styles/press' as press;
+@use '../../styles/target' as target;
+@use '../../styles/text-clip' as text-clip;
+@use '../../styles/visually-hidden' as visually-hidden;
+@use '../../styles/component-base' as component-base;
+@include component-base.rules;
+
+/* The tile and preview widths and the tile text have no token on the scale; they keep the 24px-tall tile in proportion. */
+:host {
+  --_attachment-tile-width: 29px;
+  --_attachment-preview-width: 34px;
+  --_attachment-tile-font-size: 9px;
+  --_attachment-tile-bg-color: var(--text-secondary);
+  --_attachment-tile-text-color: var(--surface-default);
+
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1-5);
+  max-inline-size: 100%;
+  padding: var(--space-1) var(--space-1-5);
+  border: var(--border-width-default) solid var(--border-default);
+  border-radius: var(--radius-sm);
+  background-color: var(--surface-secondary);
+  color: var(--text-primary);
+  font-size: var(--font-size-2xs);
+  line-height: var(--line-height-flat);
+}
+
+:host(.kind-pdf) {
+  --_attachment-tile-bg-color: var(--error);
+  --_attachment-tile-text-color: var(--error-on);
+}
+
+:host(.kind-doc) {
+  --_attachment-tile-bg-color: var(--primary);
+  --_attachment-tile-text-color: var(--primary-on);
+}
+
+.tile,
+.preview {
+  flex: none;
+  block-size: var(--space-6);
+  border-radius: var(--space-0-5);
+}
+
+.tile {
+  display: grid;
+  place-items: center;
+  inline-size: var(--_attachment-tile-width);
+  background-color: var(--_attachment-tile-bg-color);
+  color: var(--_attachment-tile-text-color);
+  font-size: var(--_attachment-tile-font-size);
+  font-weight: var(--font-weight-extrabold);
+}
+
+.preview {
+  inline-size: var(--_attachment-preview-width);
+  object-fit: cover;
+  border: var(--border-width-default) solid var(--border-default);
+}
+
+.text {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-0-5);
+  min-inline-size: 0;
+}
+
+.name {
+  @include text-clip.single-line-ellipsis;
+
+  font-weight: var(--font-weight-bold);
+}
+
+.meta {
+  @include text-clip.single-line-ellipsis;
+
+  color: var(--text-secondary);
+  font-size: var(--font-size-3xs);
+}
+
+.visually-hidden {
+  @include visually-hidden.visually-hidden;
+}
+
+.remove {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-0-5);
+  border: 0;
+  border-radius: var(--ds-radius-inner);
+  background: transparent;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: background-color var(--duration-fast) var(--ease-standard);
+
+  &:hover {
+    background: color-mix(in oklab, currentcolor calc(var(--opacity-state-hover) * 100%), transparent);
+  }
+
+  @include press.feedback;
+
+  &:focus-visible {
+    @include focus.ring(1px);
+  }
+
+  @include target.min-size;
+}

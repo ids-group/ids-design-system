@@ -1,0 +1,113 @@
+@if (timeBreak(); as label) {
+  <div class="divider">
+    <span class="divider-label">
+      {{ label }}
+    </span>
+  </div>
+}
+
+<div class="meta">
+  <span
+    class="speaker"
+    [class.visually-hidden]="!author() || isGrouped()">
+    {{ speaker() }}
+  </span>
+</div>
+
+<div class="steps">
+  <ng-content select="[steps]"></ng-content>
+</div>
+
+<div class="bubble">
+  @if (stepCount()) {
+    <button
+      type="button"
+      class="steps-chip"
+      [attr.aria-expanded]="!folded()"
+      [attr.aria-label]="
+        folded() ? wording().stepsFolded(stepCount(), failedStepCount()) : null
+      "
+      (click)="toggleSteps()">
+      @if (failedStepCount()) {
+        <ds-icon
+          class="steps-chip-failed"
+          name="error"
+          [size]="12" />
+      } @else {
+        <ds-icon
+          class="steps-chip-done"
+          name="check"
+          [size]="12" />
+      }
+
+      <span>
+        {{ wording().steps(stepCount()) }}
+      </span>
+
+      @if (failedStepCount()) {
+        <span class="steps-chip-failed">
+          · {{ wording().stepsFailed(failedStepCount()) }}
+        </span>
+      }
+
+      <ds-icon
+        [name]="folded() ? 'chevronUp' : 'chevronDown'"
+        [size]="12" />
+    </button>
+  }
+
+  <div class="body">
+    <ng-content></ng-content>
+  </div>
+
+  <div class="attachments">
+    <ng-content select="[attachments]"></ng-content>
+  </div>
+</div>
+
+@switch (status()) {
+  @case ('sending') {
+    <div
+      class="status"
+      role="status">
+      {{ wording().sending }}
+    </div>
+  }
+  @case ('failed') {
+    <div
+      class="status is-failed"
+      role="status">
+      <ds-icon
+        name="error"
+        [size]="14" />
+      {{ wording().notSent }}
+      <ds-button
+        variant="text"
+        size="sm"
+        (pressed)="retry.emit()">
+        {{ wording().retry }}
+      </ds-button>
+    </div>
+  }
+  @default {
+    @if (status() === 'sent') {
+      <span
+        class="visually-hidden"
+        role="status">
+        {{ wording().sent }}
+      </span>
+    }
+
+    @if (time() && !isContinued() && !streaming()) {
+      <div class="status time">
+        {{ time() }}
+      </div>
+    }
+  }
+}
+
+@if (!streaming()) {
+  <div class="actions">
+    <ng-content select="[actions]"></ng-content>
+  </div>
+}

@@ -1,0 +1,248 @@
+@use '../../styles/dismiss-button' as dismiss-button;
+@use '../../styles/target' as target;
+@use '../../styles/visually-hidden' as visually-hidden;
+@use '../../styles/component-base' as component-base;
+@use '../../styles/step-marker' as step-marker;
+@include component-base.rules;
+
+// Small markers, the smaller text size and tight rows with no connector, to sit beside a chat message.
+:host {
+  --_step-node-size: var(--chat-step-node-size);
+  --_step-spine-width: var(--timeline-spine-w);
+  --_step-gap: var(--chat-step-gap);
+
+  --_step-node-bg-color: var(--surface-secondary);
+  --_step-node-color: var(--text-tertiary);
+  --_step-node-border-color: var(--text-tertiary);
+  --_step-spine-color: var(--border-divider);
+  --_step-toggle-icon-color: var(--icon-default);
+  --_step-toggle-icon-color-hover: var(--icon-strong);
+  --_step-open-bg-color: var(--surface-secondary);
+
+  // Row 1 holds the marker and the text (heading, content, time); row 2 holds the details and the
+  // gap to the next step. The marker centres on the text, or the text on the marker when the text
+  // is shorter, so the details opening never moves the marker.
+  display: grid;
+  grid-template-columns: var(--_step-node-size) 1fr;
+  column-gap: var(--space-2);
+}
+
+// Every part is placed, so the open item's backdrop can share the text column with them.
+.node-col {
+  grid-area: 1 / 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+@include step-marker.node(step, var(--border-width-default));
+
+.spine {
+  visibility: hidden;
+  flex: 1;
+  width: var(--_step-spine-width);
+  margin-top: var(--space-1);
+  background-color: var(--_step-spine-color);
+}
+
+// Equal to the segment below the marker, so the marker stays centred in the row.
+.lead {
+  margin-top: 0;
+  margin-bottom: var(--space-1);
+}
+
+.tail {
+  grid-area: 2 / 1;
+  justify-self: center;
+  margin-top: 0;
+}
+
+.text {
+  grid-area: 1 / 2;
+  display: flex;
+  flex-direction: column;
+  align-self: center;
+  gap: var(--space-0-5);
+  min-width: 0;
+}
+
+.rest {
+  grid-area: 2 / 2;
+  padding-bottom: var(--_step-gap);
+  min-width: 0;
+}
+
+// ds-chat-steps names its last step, so a wrapper element around a step does not break the gap.
+// A step with no ds-chat-steps above it falls back to its position among its siblings.
+:host(.is-last),
+:host(.outside-steps:last-child) {
+  .spine:not(.lead) {
+    visibility: hidden;
+  }
+  .rest {
+    padding-bottom: 0;
+  }
+}
+
+:host(.is-first),
+:host(.outside-steps:first-child) {
+  .lead {
+    visibility: hidden;
+  }
+}
+
+.head {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-2);
+  min-width: 0;
+}
+
+.visually-hidden {
+  @include visually-hidden.visually-hidden;
+}
+
+.trailing {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin-left: auto;
+  flex: none;
+
+  // One heading line tall while it holds only the chevron, so the rows keep their rhythm.
+  height: calc(var(--font-size-xs) * var(--line-height-base));
+}
+
+// A projected action (Retry, Undo) is taller than the heading line: the row grows to hold it and
+// keeps the row gap to the content under it, instead of the button overlapping the text and the
+// open card's edge.
+.head:has(.trailing > :not(.toggle)) {
+  align-items: center;
+  margin-bottom: var(--space-1-5);
+
+  // Open or closed alike, so opening still moves nothing: the open card hugs the item, and this keeps
+  // the action clear of its top edge.
+  padding-top: var(--space-2);
+
+  .trailing {
+    height: auto;
+  }
+}
+
+.toggle {
+  @include dismiss-button.button;
+  @include target.min-size;
+
+  color: var(--_step-toggle-icon-color);
+
+  &:hover {
+    color: var(--_step-toggle-icon-color-hover);
+  }
+
+  .chev {
+    transition: transform var(--duration-base) var(--ease-standard);
+  }
+
+  &[aria-expanded='true'] .chev {
+    transform: rotate(180deg);
+  }
+}
+
+// The toggle exists only while something is projected into [details].
+:host:not(:has(.details-body > *)) .toggle {
+  display: none;
+}
+
+// The open item sits on a tinted card behind its marker, text and details. The card is drawn behind
+// the item and takes no room, so opening never moves the heading or the marker; it reaches out
+// sideways only, so the chevron keeps the same room to the edge as the marker, and the row gaps
+// above and below stay as they are.
+:host(.is-expanded) {
+  isolation: isolate;
+
+  &::before {
+    content: '';
+    grid-area: 1 / 1 / 3 / 3;
+    z-index: -1;
+    margin: 0 calc(-1 * var(--space-2)) var(--_step-gap);
+    border-radius: var(--ds-radius-control);
+    background-color: var(--_step-open-bg-color);
+  }
+}
+
+:host(.is-expanded.is-last)::before,
+:host(.is-expanded.outside-steps:last-child)::before {
+  margin-bottom: 0;
+}
+
+// Closed, the details collapse to no height and leave the accessibility tree and the tab order
+// (inert); the height animates between the two.
+.details {
+  display: grid;
+  grid-template-rows: 0fr;
+  min-width: 0;
+  visibility: hidden;
+  transition:
+    grid-template-rows var(--duration-slow) var(--ease-decelerate),
+    visibility var(--duration-slow) allow-discrete;
+
+  &:not(:has(.details-body > *)) {
+    display: none;
+  }
+}
+
+:host(.is-expanded) .details {
+  grid-template-rows: 1fr;
+  visibility: visible;
+}
+
+// The spacing lives one level in, so the collapsed row really is 0 high.
+.details-content {
+  min-height: 0;
+
+  // glyph-clip-guard: collapses the details; open, the row is as tall as the log it holds
+  overflow: hidden;
+}
+
+.details-body {
+  padding-top: var(--space-1);
+}
+
+.heading {
+  color: var(--text-primary);
+  font:
+    var(--font-weight-regular) var(--font-size-xs) / var(--line-height-base)
+    var(--font-sans);
+}
+
+.time {
+  color: var(--text-tertiary);
+  font:
+    var(--font-weight-regular) var(--font-size-xs) / var(--line-height-base)
+    var(--font-sans);
+}
+
+@include step-marker.statuses(step);
+
+:host([data-status='waiting']) {
+  --_step-node-bg-color: var(--text-secondary);
+  --_step-node-color: var(--surface-default);
+  --_step-node-border-color: var(--text-secondary);
+}
+
+// A waiting step carries the reader's answer (Approve, Not now) under its heading, so its marker
+// stays beside the heading instead of centring on the taller row.
+:host([data-status='waiting']) {
+  --_step-heading-line: calc(var(--font-size-xs) * var(--line-height-base));
+
+  .text {
+    align-self: start;
+    padding-top: max(0px, var(--_step-node-size) / 2 + var(--space-1) - var(--_step-heading-line) / 2);
+  }
+
+  .lead {
+    flex: none;
+    height: max(0px, var(--_step-heading-line) / 2 - var(--_step-node-size) / 2 - var(--space-1));
+  }
+}

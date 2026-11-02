@@ -15,6 +15,8 @@ export { AnnounceState } from '@ids-group-ltd/ids-design-system/core'; // interf
 export { AppLayoutComponent } from '@ids-group-ltd/ids-design-system/components/app-layout'; // component
 export { AppLayoutNavigationService } from '@ids-group-ltd/ids-design-system/components/app-layout'; // injectable
 export { AppLayoutScrollService } from '@ids-group-ltd/ids-design-system/components/app-layout'; // injectable
+export { AttachmentComponent } from '@ids-group-ltd/ids-design-system/components/chat'; // component
+export { AttachmentKind } from '@ids-group-ltd/ids-design-system/components/chat'; // type
 export { AuthLayoutComponent } from '@ids-group-ltd/ids-design-system/components/auth-layout'; // component
 export { AutocompleteComponent } from '@ids-group-ltd/ids-design-system/components/autocomplete'; // component
 export { AutocompleteItem } from '@ids-group-ltd/ids-design-system/components/autocomplete'; // type
@@ -84,6 +86,17 @@ export { ChartTooltipEntry } from '@ids-group-ltd/ids-design-system/components/c
 export { ChartTooltipOrigin } from '@ids-group-ltd/ids-design-system/components/chart-tooltip'; // type
 export { ChartTooltipTrigger } from '@ids-group-ltd/ids-design-system/components/chart-tooltip'; // type
 export { ChartValueFormat } from '@ids-group-ltd/ids-design-system/core'; // type
+export { ChatAttachmentComponent } from '@ids-group-ltd/ids-design-system/components/chat'; // component
+export { ChatInputComponent } from '@ids-group-ltd/ids-design-system/components/chat'; // component
+export { ChatInputLayout } from '@ids-group-ltd/ids-design-system/components/chat'; // type
+export { ChatMessageComponent } from '@ids-group-ltd/ids-design-system/components/chat'; // component
+export { ChatMessageRole } from '@ids-group-ltd/ids-design-system/components/chat'; // type
+export { ChatMessageStatus } from '@ids-group-ltd/ids-design-system/components/chat'; // type
+export { ChatStepComponent } from '@ids-group-ltd/ids-design-system/components/chat'; // component
+export { ChatStepStatus } from '@ids-group-ltd/ids-design-system/components/chat'; // type
+export { ChatStepsComponent } from '@ids-group-ltd/ids-design-system/components/chat'; // component
+export { ChatStepsEnter } from '@ids-group-ltd/ids-design-system/components/chat'; // type
+export { ChatThreadComponent } from '@ids-group-ltd/ids-design-system/components/chat'; // component
 export { CheckboxComponent } from '@ids-group-ltd/ids-design-system/components/checkbox'; // component
 export { ColorPickerComponent } from '@ids-group-ltd/ids-design-system/components/color-picker'; // component
 export { ColumnChartComponent } from '@ids-group-ltd/ids-design-system/components/column-chart'; // component
@@ -184,6 +197,7 @@ export { IconComponent } from '@ids-group-ltd/ids-design-system/icons'; // compo
 export { IconName } from '@ids-group-ltd/ids-design-system/core'; // type
 export { InfoHintComponent } from '@ids-group-ltd/ids-design-system/components/info-hint'; // component
 export { InlineComponent } from '@ids-group-ltd/ids-design-system/components/layout'; // component
+export { InlineEditComponent } from '@ids-group-ltd/ids-design-system/components/inline-edit'; // component
 export { InputComponent } from '@ids-group-ltd/ids-design-system/components/input'; // component
 export { InputType } from '@ids-group-ltd/ids-design-system/components/input'; // type
 export { LayoutAlign } from '@ids-group-ltd/ids-design-system/components/layout'; // type
@@ -272,6 +286,10 @@ export { SpinnerComponent } from '@ids-group-ltd/ids-design-system/components/sp
 export { SplitButtonComponent } from '@ids-group-ltd/ids-design-system/components/split-button'; // component
 export { SplitButtonItem } from '@ids-group-ltd/ids-design-system/components/split-button'; // interface
 export { SplitButtonVariant } from '@ids-group-ltd/ids-design-system/components/split-button'; // type
+export { SplitterComponent } from '@ids-group-ltd/ids-design-system/components/splitter'; // component
+export { SplitterOrientation } from '@ids-group-ltd/ids-design-system/components/splitter'; // type
+export { SplitterOverdrag } from '@ids-group-ltd/ids-design-system/components/splitter'; // type
+export { SplitterPane } from '@ids-group-ltd/ids-design-system/components/splitter'; // type
 export { StackComponent } from '@ids-group-ltd/ids-design-system/components/layout'; // component
 export { StatComponent } from '@ids-group-ltd/ids-design-system/components/stat'; // component
 export { StatusDotComponent } from '@ids-group-ltd/ids-design-system/components/status-dot'; // component
@@ -306,15 +324,18 @@ export { TimeRangeValue } from '@ids-group-ltd/ids-design-system/components/time
 export { TimeValue } from '@ids-group-ltd/ids-design-system/components/time-picker'; // type
 export { TimelineComponent } from '@ids-group-ltd/ids-design-system/components/timeline'; // component
 export { TimelineItemComponent } from '@ids-group-ltd/ids-design-system/components/timeline'; // component
+export { TimelineStatus } from '@ids-group-ltd/ids-design-system/components/timeline'; // type
 export { TimelineTone } from '@ids-group-ltd/ids-design-system/components/timeline'; // type
 export { ToastAction } from '@ids-group-ltd/ids-design-system/components/toast'; // interface
 export { ToastComponent } from '@ids-group-ltd/ids-design-system/components/toast'; // component
 export { ToastEntry } from '@ids-group-ltd/ids-design-system/components/toast'; // interface
+export { ToastOccurrence } from '@ids-group-ltd/ids-design-system/components/toast'; // interface
 export { ToastOptions } from '@ids-group-ltd/ids-design-system/components/toast'; // interface
 export { ToastPromiseMessages } from '@ids-group-ltd/ids-design-system/components/toast'; // interface
 export { ToastRef } from '@ids-group-ltd/ids-design-system/components/toast'; // interface
 export { ToastRegionComponent } from '@ids-group-ltd/ids-design-system/components/toast'; // component
 export { ToastService } from '@ids-group-ltd/ids-design-system/components/toast'; // injectable
+export { ToastUpdate } from '@ids-group-ltd/ids-design-system/components/toast'; // type
 export { ToastVariant } from '@ids-group-ltd/ids-design-system/components/toast'; // type
 export { ToggleButtonComponent } from '@ids-group-ltd/ids-design-system/components/toggle-button'; // component
 export { TooltipDirective } from '@ids-group-ltd/ids-design-system/components/tooltip'; // directive
@@ -323,6 +344,9 @@ export { TooltipPlacement } from '@ids-group-ltd/ids-design-system/core'; // typ
 export { TopBarComponent } from '@ids-group-ltd/ids-design-system/components/topbar'; // component
 export { TreeComponent } from '@ids-group-ltd/ids-design-system/components/tree'; // component
 export { TreeNode } from '@ids-group-ltd/ids-design-system/components/tree'; // interface
+export { TreeSelection } from '@ids-group-ltd/ids-design-system/components/tree'; // type
+export { TreeTrailingContext } from '@ids-group-ltd/ids-design-system/components/tree'; // interface
+export { TreeTrailingDirective } from '@ids-group-ltd/ids-design-system/components/tree'; // directive
 export { W3wComponent } from '@ids-group-ltd/ids-design-system/components/w3w'; // component
 export { WaterfallChartBar } from '@ids-group-ltd/ids-design-system/components/waterfall-chart'; // interface
 export { WaterfallChartComponent } from '@ids-group-ltd/ids-design-system/components/waterfall-chart'; // component
@@ -405,10 +429,10 @@ styles/_clear-button.scss {
 }
 
 styles/_dropdown-overlay.scss {
-    --ds-dropdown-empty-color: var(--text-tertiary);
+    --ds-dropdown-empty-color: var(--text-tertiary-overlay);
     --ds-dropdown-empty-font-size: inherit;
-    --ds-dropdown-panel-bg-color: var(--surface-overlay);
-    --ds-dropdown-panel-border-color: var(--border-default);
+    --ds-dropdown-panel-bg-color: var(--surface-overlay-raised);
+    --ds-dropdown-panel-border-color: var(--border-overlay);
     --ds-dropdown-panel-max-height: 320px;
     --ds-dropdown-panel-max-width: none;
     --ds-dropdown-panel-min-width: 0;

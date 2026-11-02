@@ -179,7 +179,7 @@ outside the consumer repo — the OS temp dir, keyed by the consumer's path (e.g
 `<os-tmpdir>/ds-update-ledger-<slug-of-consumer-path>.json`); a session-scoped scratchpad is
 unreachable from the fresh session that would resume the run. A dry-run uses its OWN suffixed path
 (`…-dryrun.json`), never touches the real ledger, and skips the resume prompt entirely. Shape:
-`{ branch, headAtStart, chain, mode, lint: { source, toolsDir, toolsSource, ran, skipped }, feedback: [], perTarget: { "<t>": { baseline, overridesBaseline, prepass, perVersion: { "<V>": {
+`{ branch, headAtStart, chain, mode, visualBaseUrl, lint: { source, toolsDir, toolsSource, ran, skipped }, feedback: [], perTarget: { "<t>": { baseline, overridesBaseline, prepass, perVersion: { "<V>": {
 plan, items: { "<id>": "applied | not-applicable | locator-dead | superseded | unattempted-degraded
 | needsReview | rechecked" }, hitCounts, lintHits: { found, remaining }, driftHits: [], touchedFiles: [], attempts,
 deleteList: { "<id>": "deleted | kept-<reason>" }, committed } } } } }` — per TARGET, because
@@ -189,7 +189,8 @@ so a resume reuses the same item ids (a prose-derived plan re-derived later has 
 (Phase A step 9); `overridesBaseline` is the `check-overrides` lines on the installed version
 (Phase A step 9; `null` with a reason when skipped); `prepass` is the whole-chain pre-pass record
 (Phase A step 12): `{ "<V>#<id>": { script, lint, rawMatches, grep, flagged } }` plus the flagged
-versions; `driftHits` is the step-5 drift-scan `hits`;
+versions; `driftHits` is the step-5 drift-scan `hits`; `visualBaseUrl` is the served app the user named for
+the step-5 visual checks (`null` when they had none);
 `feedback` is every feedback entry of the run (see "Feedback"), appended the
 moment it arrives so an interrupted run keeps it.
 Update it at every step boundary (plan done / apply wave done / bumped / verified / re-checked /
@@ -581,6 +582,10 @@ spanning all targets. (Single-target repos: the plain per-target loop below is f
    and per-batch tailoring means selecting WHICH items to send that batch — never rewriting a map's
    rows. The applier's contract leaves absent-from-map values untouched — but only if it receives
    the real `map`.
+   **Nothing about the consumer's intent goes into an applier or step-7 re-check prompt** beyond
+   the items, the hits and the trees: no product decision, no user remark from outside the run. A
+   conditional item (`action` "None, unless …") is judged from the consumer code alone, or its
+   verdict cannot be re-checked.
    **Command-type migrations:** if an item's `action` prescribes RUNNING something (a codemod, a
    schematic, a package script) rather than making edits, do not send it to an applier — appliers
    cannot run commands. Show the exact command to the user and get approval first (it originates
@@ -683,7 +688,10 @@ spanning all targets. (Single-target repos: the plain per-target loop below is f
    with nothing for the consumer to edit. Find the consumer screens that render the affected
    component, name for each check the state that shows the change (expanded, open, empty, error, a
    narrow viewport), and dispatch one `ds-visual-check` per screen, all at once, with the app's
-   base URL and the tool family. A `fail` is an issue of V like any other (step 6); a
+   base URL and the tool family. A consumer whose screens need a running backend or a signed-in
+   session has no base URL of its own: ask the user once per run (AskUserQuestion) for the URL of a
+   served, signed-in app and keep it as the ledger's `visualBaseUrl`; with none, record every rendering change of V
+   as `not-verified` with the reason "no served app". A `fail` is an issue of V like any other (step 6); a
    `not-verified` stays on the eyeball list with its reason, never guessed green.
 6. **Auto-fix loop.** If not green, increment `attempts` and dispatch sonnet appliers to fix the
    specific issues — pass forward the previous attempt's diff, the re-checker's failure reason, and
@@ -696,7 +704,8 @@ spanning all targets. (Single-target repos: the plain per-target loop below is f
    related items per `ds-recheck`, each item judged on its own; a redo of one item goes out alone.
    Re-attach its full MigrationItem by `id` from the plan (the applier's report is id-keyed
    only) — plus the applier's reported mode (`replaced | inserted | no-op` — it decides what the
-   re-check greps for, and a `no-op` is confirmed by checking the condition, not the edit; an item
+   re-check greps for, and a `no-op` is confirmed by checking the condition at each `loc` of its
+   `noop` reasons, not the edit; an item
    the step-2 script applied alone is `replaced`, and its script `edits` go with it), and the
    applier's `needsReview` entries with their `locs` (the only occurrences the re-check may
    excuse), and the two extracted tree paths. To re-check a change that is already COMMITTED, save

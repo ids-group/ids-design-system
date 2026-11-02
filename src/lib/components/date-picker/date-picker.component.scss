@@ -224,8 +224,10 @@
 }
 
 .calendar {
-  --_date-picker-bg-color: var(--ds-date-picker-bg-color, var(--surface-overlay));
-  --_date-picker-border: var(--ds-date-picker-border, var(--border-default));
+  --_date-picker-bg-color: var(--ds-date-picker-bg-color, var(--surface-overlay-raised));
+  --_date-picker-border: var(--ds-date-picker-border, var(--border-overlay));
+  --surface-secondary: var(--surface-overlay-raised-secondary);
+  --surface-muted: var(--surface-overlay-raised-muted);
   --_date-picker-shadow: var(--ds-date-picker-shadow, var(--ds-elevation-overlay));
   --_date-picker-day-hover-bg-color: var(--ds-date-picker-day-hover-bg-color, var(--surface-secondary));
   --_date-picker-day-today-label-color: var(--ds-date-picker-day-today-label-color, var(--accent));
@@ -237,7 +239,7 @@
   --_date-picker-day-disabled-label-color: var(--ds-date-picker-day-disabled-label-color, var(--text-disabled));
   --_date-picker-day-label-color: var(--ds-date-picker-day-label-color, var(--text-primary));
   --_date-picker-day-muted-label-color: var(--ds-date-picker-day-muted-label-color, var(--text-muted));
-  --_date-picker-weekday-color: var(--ds-date-picker-weekday-color, var(--text-tertiary));
+  --_date-picker-weekday-color: var(--ds-date-picker-weekday-color, var(--text-tertiary-overlay));
   --_date-picker-header-label-color: var(--ds-date-picker-header-label-color, var(--text-primary));
   --_date-picker-nav-icon-color: var(--ds-date-picker-nav-icon-color, var(--icon-default));
   --_date-picker-width: var(--ds-date-picker-width, var(--date-picker-w));

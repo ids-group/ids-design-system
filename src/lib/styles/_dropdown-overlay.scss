@@ -25,11 +25,13 @@
   --_option-line-height: var(--ds-option-line-height, var(--line-height-flat));
   --_option-font-family: var(--ds-option-font-family, var(--font-sans));
   --_option-color: var(--ds-option-color, var(--text-primary));
-  --_dropdown-empty-color: var(--ds-dropdown-empty-color, var(--text-tertiary));
+  --_dropdown-empty-color: var(--ds-dropdown-empty-color, var(--text-tertiary-overlay));
   --_dropdown-empty-font-size: var(--ds-dropdown-empty-font-size, inherit);
 
-  --_dropdown-panel-bg-color: var(--ds-dropdown-panel-bg-color, var(--surface-overlay));
-  --_dropdown-panel-border-color: var(--ds-dropdown-panel-border-color, var(--border-default));
+  --_dropdown-panel-bg-color: var(--ds-dropdown-panel-bg-color, var(--surface-overlay-raised));
+  --_dropdown-panel-border-color: var(--ds-dropdown-panel-border-color, var(--border-overlay));
+  --surface-secondary: var(--surface-overlay-raised-secondary);
+  --surface-muted: var(--surface-overlay-raised-muted);
   --_dropdown-panel-shadow: var(--ds-dropdown-panel-shadow, var(--shadow-popover));
   --_dropdown-panel-max-height: var(--ds-dropdown-panel-max-height, 320px);
 
@@ -97,7 +99,7 @@
     display: block;
     padding: var(--space-2) var(--space-3) var(--space-1);
     font: var(--font-weight-semibold) var(--font-size-xs) / var(--line-height-flat) var(--font-sans);
-    color: var(--text-tertiary);
+    color: var(--text-tertiary-overlay);
     text-transform: uppercase;
     letter-spacing: var(--letter-spacing-wide);
 

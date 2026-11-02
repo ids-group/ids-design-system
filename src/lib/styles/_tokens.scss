@@ -59,7 +59,7 @@
   --focus-ring-radius:    var(--ds-radius-inner);
 
   /* Composed from a channel-split tint so a theme can re-colour them (-h/-s are theme-independent, -l comes
-     from each theme's palette). Constant alphas make the same values read as glows over dark surfaces. */
+     from each theme's palette). The dark theme redeclares all four with its own alphas. */
   --shadow-1: 0 1px 2px  hsl(var(--shadow-tint-h) var(--shadow-tint-s) var(--shadow-tint-l) / 6%),
               0 1px 3px  hsl(var(--shadow-tint-h) var(--shadow-tint-s) var(--shadow-tint-l) / 8%);
   --shadow-2: 0 4px 8px  hsl(var(--shadow-tint-h) var(--shadow-tint-s) var(--shadow-tint-l) / 6%),
@@ -393,9 +393,9 @@
 
   --tooltip-maxw:            240px;
   --tooltip-arrow:           var(--space-2);             /* caret edge length, halved for offset */
-  --tooltip-bg-color:        var(--surface-overlay);
+  --tooltip-bg-color:        var(--surface-overlay-raised);
   --tooltip-text-color:      var(--text-primary);
-  --tooltip-border-color:    var(--border-default);
+  --tooltip-border-color:    var(--border-overlay);
 
   --popover-maxw:            320px;
 
@@ -450,6 +450,8 @@
   --timeline-node-size:      var(--hit-sm);
   --timeline-spine-w:        var(--border-width-strong);
   --timeline-gap:            var(--space-5);
+  --chat-step-node-size:     var(--spinner-md);
+  --chat-step-gap:           var(--space-1);
 
   --tree-indent:             var(--space-5);
   --tree-row-pad-y:          var(--space-1-5);

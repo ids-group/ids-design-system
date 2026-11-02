@@ -155,9 +155,45 @@ export interface DsIntl {
   };
   readonly toast: {
     readonly region: string;
+    /** `'Show all'` - the button that lists each occurrence of a `×N` stack. */
+    readonly showAll?: string;
+    /** `'Hide'` - the same button while the list is open. */
+    readonly hide?: string;
+    /** `'Dismiss all'` - the close button of a `×N` stack. */
+    readonly dismissAll?: string;
+    /** `` `${message}, ${count} times` `` - spoken when a stack grows. */
+    readonly repeated?: (message: string, count: number) => string;
+  };
+  readonly attachment?: {
+    /** `` `Remove ${name}` `` - the remove button of a `ds-attachment`. */
+    readonly remove?: (name: string) => string;
+    /** `'PDF document'` - announced before the second line of `kind="pdf"`. */
+    readonly pdf?: string;
+    /** `'Word document'` - `kind="doc"`. */
+    readonly doc?: string;
+    /** `'Image'` - `kind="image"`. */
+    readonly image?: string;
+    /** `'File'` - `kind="file"`. */
+    readonly file?: string;
+  };
+  readonly chatInput?: {
+    /** `'Message'` - accessible name of the `ds-chat-input` text area when `ariaLabel` is unset. */
+    readonly label?: string;
+    /** `'Send'` - its default send button. */
+    readonly send?: string;
   };
   readonly spinner: {
     readonly label: string;
+  };
+  readonly splitter?: {
+    /** `'Resize panes'` - accessible name of the `ds-splitter` handle when `ariaLabel` is unset. */
+    readonly label?: string;
+  };
+  readonly inlineEdit?: {
+    /** `'Rename'` - the tooltip of the `ds-inline-edit` text, and its name when `ariaLabel` is unset. */
+    readonly rename?: string;
+    /** `'Saved'` - announced once a changed value is saved. */
+    readonly saved?: string;
   };
   readonly breadcrumbs: {
     readonly label: string;
@@ -195,6 +231,63 @@ export interface DsIntl {
       label: string,
       state: DsIntlStepState,
     ) => string;
+  };
+  readonly timeline?: {
+    /** `'Done'` - spoken before the heading of a `ds-timeline-item` with `status="done"`. */
+    readonly done?: string;
+    /** `'In progress'` - `status="running"`. */
+    readonly running?: string;
+    /** `'Not started'` - `status="pending"`. */
+    readonly pending?: string;
+    /** `'Failed'` - `status="error"`. */
+    readonly error?: string;
+    /** `` `Details: ${heading}` `` - the toggle of the `[details]` area; `'Details'` without a heading. */
+    readonly details?: (heading: string) => string;
+  };
+  readonly chat?: {
+    /** `'You'` - spoken before a `ds-chat-message` with `role="user"` and no `author`. */
+    readonly user?: string;
+    /** `'Assistant'` - the same for `role="assistant"`. */
+    readonly assistant?: string;
+    /** `'Conversation'` - accessible name of the `ds-chat-thread` scroll area when `ariaLabel` is unset. */
+    readonly thread?: string;
+    /** `'Assistant is working'` - the working row when `workingLabel` is empty. */
+    readonly working?: string;
+    /** `` `${count} new messages` `` (`'1 new message'`) - the jump button while messages arrived
+     *  below the scrolled-up view. */
+    readonly newMessages?: (count: number) => string;
+    /** `'Jump to latest'` - the jump button while nothing new arrived. */
+    readonly latest?: string;
+    /** `'Today'` - the time divider of a message sent today, before its time. */
+    readonly today?: string;
+    /** `'Yesterday'` - the same for a message sent yesterday. */
+    readonly yesterday?: string;
+    /** `'Sending'` - under a message with `status="sending"`. */
+    readonly sending?: string;
+    /** `'Sent'` - spoken, not shown, for a message with `status="sent"`. */
+    readonly sent?: string;
+    /** `'Not sent'` - under a message with `status="failed"`. */
+    readonly notSent?: string;
+    /** `'Retry'` - the button beside it. */
+    readonly retry?: string;
+    /** `` `${count} steps` `` (`'1 step'`) - the chip a message's folded steps turn into. */
+    readonly steps?: (count: number) => string;
+    /** `` `${count} failed` `` - beside it, when some of those steps failed. */
+    readonly stepsFailed?: (count: number) => string;
+    /** `` `Steps folded, ${count}` ``, then `` `, ${failed} failed` `` - the chip's accessible name. */
+    readonly stepsFolded?: (count: number, failed: number) => string;
+    /** `'Done'` - spoken before the heading of a `ds-chat-step` with `status="done"`. */
+    readonly stepDone?: string;
+    /** `'In progress'` - `status="running"`. */
+    readonly stepRunning?: string;
+    /** `'Not started'` - `status="pending"`. */
+    readonly stepPending?: string;
+    /** `'Waiting for your approval'` - `status="waiting"`. */
+    readonly stepWaiting?: string;
+    /** `'Failed'` - `status="error"`. */
+    readonly stepFailed?: string;
+    /** `` `Details: ${heading}` `` - the toggle of a step's `[details]` area; `'Details'` without a heading. */
+    readonly stepDetails?: (heading: string) => string;
   };
   readonly tabs: {
     readonly close: (label: string) => string;

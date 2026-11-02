@@ -1,0 +1,7 @@
+// While a `ds-splitter` handle is dragged the pointer leaves it: every element keeps the drag cursor and
+// no text is selected on the way. The handle writes the cursor into `--_ds-splitter-cursor`.
+html[data-ds-splitter-dragging],
+html[data-ds-splitter-dragging] * {
+  cursor: var(--_ds-splitter-cursor) !important;
+  user-select: none !important;
+}

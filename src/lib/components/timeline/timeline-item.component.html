@@ -1,21 +1,53 @@
-<div class="node-col">
+<div
+  class="node-col"
+  aria-hidden="true">
+  <span class="spine lead"></span>
+
   <span class="node">
-    @if (icon(); as name) {
+    @if (status() === 'running') {
+      <ds-spinner size="md" />
+    } @else if (nodeIcon(); as name) {
       <ds-icon
         [name]="name"
-        [size]="15" />
+        [size]="16"
+        [stroke]="3" />
     }
   </span>
 
   <span class="spine"></span>
 </div>
 
-<div class="content">
-  @if (heading()) {
-    <span class="heading">
-      {{ heading() }}
+<div class="text">
+  <div class="head">
+    @if (statusLabel()) {
+      <span class="visually-hidden">
+        {{ statusLabel() }}:
+      </span>
+    }
+
+    @if (heading()) {
+      <span class="heading">
+        {{ heading() }}
+      </span>
+    }
+
+    <span class="trailing">
+      <ng-content select="[trailing]"></ng-content>
+
+      <button
+        type="button"
+        class="toggle"
+        [attr.aria-label]="detailsLabel()"
+        [attr.aria-expanded]="expanded()"
+        [attr.aria-controls]="detailsId"
+        (click)="toggle()">
+        <ds-icon
+          class="chev"
+          name="chevronDown"
+          [size]="16" />
+      </button>
     </span>
-  }
+  </div>
 
   <ng-content></ng-content>
 
@@ -24,4 +56,22 @@
       {{ time() }}
     </span>
   }
+</div>
+
+<span
+  class="spine tail"
+  aria-hidden="true">
+</span>
+
+<div class="rest">
+  <div
+    class="details"
+    [id]="detailsId"
+    [attr.inert]="expanded() ? null : ''">
+    <div class="details-content">
+      <div class="details-body">
+        <ng-content select="[details]"></ng-content>
+      </div>
+    </div>
+  </div>
 </div>

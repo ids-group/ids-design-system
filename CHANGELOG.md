@@ -1,5 +1,248 @@
 ## Unreleased
 
+### Added
+
+- **`ds-inline-edit`, text renamed in place.** Plain text that becomes a field of the same font and
+  size on a click, Enter, Space or F2, with the text selected; Enter or leaving the field saves,
+  Escape cancels, and a blank or unchanged value saves nothing. Hover tints the background behind the
+  text and shows a pencil, with a "Rename" tooltip. Two-way `value`, `(saved)` with the trimmed new
+  value, `placeholder`, `maxLength`, `disabled`, `ariaLabel` and `edit()`. New optional
+  `DsIntl.inlineEdit` keys `rename` (`'Rename'`) and `saved` (`'Saved'`, announced after a save), and
+  CSS hooks `--ds-inline-edit-padding`, `--ds-inline-edit-hover-bg-color`, `--ds-inline-edit-border-color`
+  and `--ds-inline-edit-radius`.
+- **Repeated toasts can fold into one `×N` stack.** With
+  `provideDsConfig({ toast: { groupDuplicates: true } })`, a `ToastService.show()` whose `variant`,
+  `title` and `body` match a toast on screen or queued adds an occurrence to that toast instead of a
+  new one, and restarts its countdown. `ToastOptions.groupKey` groups calls by a key of your own,
+  whatever their text. The stack shows a `×N` count and two edges behind it; "Show all" lists each
+  occurrence with its time and its own close button, and the stack's close dismisses all of them. A
+  folded call returns the stack's `ToastRef`, so its `dismiss()` closes the whole stack. A screen
+  reader hears a repeat once, with its count ("Save failed, 3 times"), however many arrive at once.
+  Loading toasts and `ToastService.promise()` never fold. Off by default; nothing to change in your
+  code.
+- **New toast types and members for the stack.** `ToastOccurrence` (`id`, `body`, `at`), the optional
+  `ToastEntry.groupKey` and `ToastEntry.occurrences`, the `ds-toast` input `occurrences` and output
+  `occurrenceClosed`, `ToastRegionComponent.stackFor(key)` and `DsConfig.toast.groupDuplicates`
+  (default `false`). `DsIntl.toast` takes the optional
+  `showAll`, `hide`, `dismissAll` and `repeated(message, count)`.
+- **A toast that is showing changes its text in place.** `ToastRef.update(patch)` takes any of
+  `title`, `body`, `variant`, `durationMs` and `dismissible` (new type `ToastUpdate`) and changes the
+  toast on screen or in the queue; after the toast is dismissed or expired it does nothing. A screen
+  reader hears the change only when `variant` turns `success` or `error`, so a progress count can
+  change on every step without being read out. `durationMs` restarts the countdown; a toast leaving
+  `loading` without one counts down 5000 ms, as `show()` does. A `loading` toast, or one with an
+  `action`, never expires and stays dismissible. On a folded stack the ref changes the stack. New
+  `ToastRegionComponent.entryFor(id)` returns the toast with that id while it is on screen or queued.
+  A `ToastRef` object you build yourself, such as a test double, needs an `update` member.
+- **`ds-tree` draws content at the end of a row, reports hover and selects several rows.**
+  `<ng-template dsTreeTrailing let-node>` renders at the end of every row, for a badge, a count or
+  a small icon button; a click inside it neither selects nor toggles the row, and its controls are
+  tab stops on the focused row only, so Tab from that row reaches them. `(nodeHover)` emits the node
+  under the pointer or newly focused, and `null` when the pointer leaves the tree.
+  `selection="multiple"` binds `[(selectedIds)]` (`string[]`): a click, Enter or Space with Shift,
+  Ctrl or Cmd held adds or removes a row, a plain click, Enter or Space selects that row alone, and
+  the tree carries `aria-multiselectable="true"`. `selection` defaults to `'single'`, where `selectedId`
+  works as before. New exports `TreeTrailingDirective`, `TreeTrailingContext` and `TreeSelection`.
+- **`ds-splitter`, two panes with a handle that resizes one of them.** Project `[start]` and `[end]`;
+  `orientation` is `'horizontal'` (side by side, default) or `'vertical'` (stacked), and `pane`
+  (`'start'` default, or `'end'`) is the pane the two-way `size` measures, in px. `size` `null` shows
+  `defaultSize` (320); `min` (160) and `max` (640) bound it inclusively. A drag writes `size` once, on
+  release, and keeps the handle under the pointer; while it lasts, the whole page shows the resize
+  cursor and selects no text. The handle is a focusable `separator` with `aria-valuenow`,
+  `aria-valuemin` and `aria-valuemax`: the arrow keys along the axis move it by 16px, Shift or
+  PageUp / PageDown by 64px, Home / End to the limits, and a double click returns to `defaultSize`.
+  At a limit the cursor shows the one direction left. Dragged past `min` or `max`, the handle follows
+  the pointer with growing resistance, up to 100px and at most a third of the pane it squashes, its
+  line thickening on the same curve up to `--ds-splitter-overdrag-line-scale` times (default `3`),
+  and springs back on release; `overdrag="none"` stops it at the limit instead, and `prefers-reduced-motion: reduce` turns the effect off. At rest the handle shows a three-dot grip and
+  no line; hover and drag show a neutral line, keyboard focus a line in the focus colour. The handle
+  fills the gap between the panes, `--ds-splitter-gap` wide. `persistKey` keeps the size in `localStorage`
+  under `ds-splitter:<key>`. Name the handle with `ariaLabel`; the new optional `DsIntl.splitter.label`
+  (`'Resize panes'`) is the fallback. New exports `SplitterComponent`, `SplitterOrientation`,
+  `SplitterOverdrag` and `SplitterPane`, and CSS hooks `--ds-splitter-gap`, `--ds-splitter-line-color`,
+  `--ds-splitter-drag-color`, `--ds-splitter-grip-color` and `--ds-splitter-overdrag-line-scale`.
+
+- **`ds-timeline-item` draws the steps of a process.** `status`
+  (`'done' | 'running' | 'pending' | 'error'`, default `null`) draws the marker: a check,
+  a spinner, an empty ring or a cross, and a screen reader hears it before the heading ("Failed: Send to
+  reviewers"). While `status` is set it decides the marker and `icon` and `tone` are ignored; with
+  `null` `icon` and `tone` work as before. An element marked `trailing` sits at the end of the heading
+  row, for an Undo, Stop or Retry button. An element marked `details` is hidden behind a chevron
+  button at the end of that row, closed by default; `expanded` binds its open state two-way. The
+  chevron points down while closed and up while open, the details open and close with a height
+  transition, closed details are out of the tab order and the accessibility tree, and an open item
+  sits on a tinted card behind its marker, text and details (`--ds-timeline-open-bg-color`, default
+  `--surface-secondary`), which moves neither the heading nor the marker. A `pending` step has a
+  dashed ring in `--text-tertiary`, which stands out from the surface at 3:1 or more in both themes, and muted text. For an agent's steps in a chat, use `ds-chat-steps`. New type `TimelineStatus`, CSS hooks
+  `--ds-timeline-toggle-icon-color`, `--ds-timeline-toggle-icon-color-hover` and
+  `--ds-timeline-open-bg-color`, and the optional `DsIntl.timeline` keys `done`,
+  `running`, `pending`, `error` and `details(heading)`.
+- **`ds-chat-input` (`ChatInputComponent`), a message box for a chat or an instruction.** An auto-growing text area
+  (`minRows`, default `1`; `maxRows`, default `8`) with the two-way `value`, plus `placeholder`,
+  `ariaLabel` and `disabled`. Enter emits `(submitted)` with the trimmed text and Shift+Enter breaks the line; an
+  Enter that commits an IME composition, blank text, `busy` and `disabled` never submit. Elements
+  marked `attachments` sit on the page above the frame (a picked element with its snapshot), `chips`
+  above the text inside the frame, `actions` on the left of the bottom bar, and `send` replaces the
+  default send button on the right. That button is disabled while the text is blank; with `busy` it
+  shows a spinner and refuses the press. `layout` (`ChatInputLayout`, default `'status-bar'`) places
+  the buttons and the `busyLabel` step: `'status-bar'` keeps a 32px square send button and shows the
+  step beside it, `'status-above'` shows the step on a line above the box, `'split'` puts attach outside on
+  the left and send outside on the right with the step above, `'send-outside'` keeps attach and the
+  step inside and puts a round 40px send button outside on the right, and `'toolbar'` puts attach,
+  the step and send in a row under the box. `(filesPasted)` emits the
+  image files of a paste, which then inserts no text. `submit()`, `focus()` and `canSubmit` serve a
+  custom send area. The text is not cleared on submit: clear `value` once the message is accepted.
+  New optional `DsIntl.chatInput` keys `label` (`'Message'`) and `send` (`'Send'`), and CSS hooks
+  `--ds-chat-input-bg-color`, `--ds-chat-input-radius`, `--ds-chat-input-padding` (default `--space-2`); the border, hover and
+  focus colours follow the `--ds-field-*` set and the focus shadow `--ds-field-focus-shadow`.
+- **`ds-attachment` (`AttachmentComponent`), a file attached to a message.** A type tile (`kind`: `'pdf' | 'doc' | 'image' |
+  'file'`, default `'file'`) or, for `'image'` with `previewUrl`, the image itself, then `name` and a
+  second line `meta` such as the size. `removable` shows a remove button named "Remove {name}" that
+  emits `(removed)`; the kind is announced before `meta`, and an image preview takes `name` as its
+  alt text. Place it in the `[chips]` slot of `ds-chat-input`. New type `AttachmentKind` and the
+  optional `DsIntl.attachment` keys `remove(name)`, `pdf`, `doc`, `image` and `file`.
+- **`ds-chat-message`, `ds-chat-thread`, `ds-chat-attachment`, `ds-chat-steps` and `ds-chat-step`,
+  the bubbles, the list and the agent's steps of a chat.** The chat family, with `ds-chat-input` and
+  `ds-attachment`, imports from `@ids-group-ltd/ids-design-system/components/chat`. `ds-chat-message` takes `role` (`ChatMessageRole`, `'user'` or `'assistant'`, default
+  `'assistant'`): a user message is a filled bubble on the right, an assistant message a subtle one
+  on the left. Optional `author` shows above the bubble; without it the role is spoken. Optional `time`
+  (already formatted) shows under the bubble, and in a thread only under the last message of a run, and not while `streaming`. The default slot is the text, rendered by your app; `[steps]` sits above the bubble on
+  the thread's surface (a `ds-chat-steps`; a message with only steps draws no bubble),
+  `[attachments]` under the text, and `[actions]` under the bubble, shown on hover or
+  focus. The text is selectable and long words and addresses wrap. `ds-chat-thread` scrolls its
+  messages and stays at the newest one as messages arrive or grow; once the reader scrolls up it
+  stays put and shows a jump button with the count of messages that arrived below ("3 new
+  messages", else "Jump to latest"), and a message the reader sends scrolls back down. Consecutive
+  messages of one role sit closer together, and only the last one of a run takes the tight corner
+  on the speaker's side, so the run reads as one block that ends where its tail is. With `sentAt`
+  (`Date`, ISO string or epoch milliseconds) on the messages, a gap of `timeBreakMinutes` (default
+  `15`) or more starts a new run under a centred time divider ("Today 14:32"), and the first message is dated the same way. `working` shows a row with a
+  spinner and `workingLabel` at the end. A screen reader hears the working label and each finished
+  reply, once: a reply that arrives while `working` is read when `working` clears, and the messages
+  present when the thread first renders are never read. `scrollToEnd()` scrolls down from code. Name the thread with `ariaLabel`.
+  `stepsFolded` (two-way) folds a message's `[steps]` into a chip at the top of its bubble that
+  shows the step count and any failed count and opens them again (`aria-expanded`, Enter or
+  Space); once shown, the chip folds them again. When a user message arrives, the thread folds the
+  steps of the replies before it, except a reply with a failed step the reader has not opened yet;
+  `foldStepsOnSend` (default `true`) turns that off; a step that fails while folded opens them again.
+  Messages that arrive below and steps that arrive after the thread first rendered grow in; older
+  messages prepended above do not. `enter` on `ds-chat-steps` (`ChatStepsEnter`, default
+  `'together'`) brings steps that arrive at once, such as a plan given up front, in as one block, or
+  `'stagger'` one after another. A pinned thread keeps its bottom still through every fold and arrival, and only the
+  reader scrolling up unpins it. The fold runs 380ms and nothing moves under reduced motion. Steps
+  are counted from the `ds-chat-step`s they hold. `ds-chat-step` takes `heading`, `time` and
+  `status` (`ChatStepStatus`: `'done' | 'running' | 'pending' | 'waiting' | 'error'`): a check, a
+  spinner, a dashed ring with muted text, a grey disc with a pause glyph or a cross, at 16px with the
+  smaller text size and 4px rows, spoken before the heading ("Waiting for your approval: Publish").
+  A `waiting` step holds the reader's answer, such as Approve buttons, under its heading, and its
+  marker stays beside the heading. An element marked `trailing` sits at the end of the heading row
+  (Stop, Retry), and one marked `details` (the step's log) opens behind a chevron, with `expanded`
+  two-way.
+  With `hasOlder`, scrolling near the start emits `(loadOlder)`; prepend the older messages and the
+  thread keeps the message the reader was looking at where it was, while `loadingOlder` shows a
+  spinner over the top of the list. On `ds-chat-message`, `streaming` marks a reply whose text is
+  still arriving: a caret blinks after the text, `aria-busy` is set, `[actions]` stay hidden, and the
+  thread reads the reply once it completes. `status` (`ChatMessageStatus`: `'sending'`, `'sent'` or
+  `'failed'`) is the delivery of a message the reader sent: `'sending'` dims the bubble and says so
+  under it, `'failed'` says it was not sent with a Retry button that emits `(retry)`, both in place of
+  the time; `'sent'` shows nothing and is only spoken. Sending is the
+  app's: set `status` back to `'sending'` on retry.
+  `ds-chat-attachment` is a chip in `[attachments]` with `label`, an optional `source` (the page it
+  was picked on) and `icon` (default `paperclip`); open, it becomes a card on its own line that
+  frames its default slot, such as a snapshot of what was attached, in a preview of at most
+  `--ds-chat-attachment-preview-max-height` (default `16rem`). `expanded` binds the open state
+  two-way. A plain file is a `ds-tag`. New optional `DsIntl.chat` keys `user`, `assistant`,
+  `thread`, `working`, `newMessages(count)`, `latest`, `today`, `yesterday`, `sending`, `sent`,
+  `notSent`, `retry`, `steps(count)`, `stepsFailed(count)`, `stepsFolded(count, failed)`, `stepDone`,
+  `stepRunning`, `stepPending`, `stepWaiting`, `stepFailed` and `stepDetails(heading)`, and
+  CSS hooks
+  `--ds-chat-message-max-width` (default `85%`), `--ds-chat-message-radius`,
+  `--ds-chat-message-padding`, `--ds-chat-message-user-bg-color`, `--ds-chat-message-user-color`,
+  `--ds-chat-message-assistant-bg-color`, `--ds-chat-message-assistant-color`,
+  `--ds-chat-thread-gap`, `--ds-chat-thread-group-gap`, `--ds-chat-thread-padding`,
+  `--ds-chat-attachment-bg-color`, `--ds-chat-attachment-preview-bg-color` and
+  `--ds-chat-attachment-preview-max-height`; the attachment chip and the jump button are rounded by
+  `--ds-radius-pill`. New exports `ChatMessageComponent`, `ChatThreadComponent`,
+  `ChatAttachmentComponent`, `ChatStepsComponent` and `ChatStepComponent`.
+
+### Changed
+
+- **A `ToastService.promise()` toast closed before the promise settles stays silent.** The outcome
+  is announced only while the toast is on screen or queued. Nothing to change in your code.
+- **A `ds-tree` row is a `div role="treeitem"` instead of a `button`.** It renders the same. A
+  disabled row is reached by the arrow keys, shows the focus ring and is announced as disabled;
+  Enter and Space on it select nothing. A style that selects the row as a `button` matches nothing.
+
+- **A `ds-timeline-item` marker centres on its text.** With a description or a time under the
+  heading, the marker sits at the middle of the heading, description and time together; a heading
+  alone sits at the middle of the marker. An open `[details]` area does not move the marker. The
+  connector now also runs above each marker but the first, so it reaches a marker that sits lower.
+  Nothing to change in your code.
+- **A `ds-table` column resize line is visible at rest.** The line between resizable header cells
+  was `--border-default`, about 1.2:1 against the header; it is `--text-tertiary` now, about 4.3:1.
+  Set `--ds-table-resize-line-color` on `ds-table` to choose another colour, for example
+  `--ds-table-resize-line-color: var(--border-default)` for the previous look.
+- **Dark theme overlays are lighter than the page, in two levels.** Under `data-theme="dark"`:
+  - Modals, drawers and the `ds-app-layout` rail below `lg` take `--surface-overlay`, which is
+    `--neutral-100` (`#1E2330`, about 1.19:1 against the canvas) instead of `--neutral-0`, the
+    colour of cards.
+  - Popovers, menus, dropdown panels, the date, time and colour picker panels, tooltips and toasts
+    take the new `--surface-overlay-raised`, `--neutral-150` (`#242A38`, about 1.30:1 against the
+    canvas), so a menu or a select opened in a modal stands apart from it. Their border is the new
+    `--border-overlay`: `--border-strong` in the dark theme, `--border-default` in light.
+  - Inside each overlay `--surface-secondary` and `--surface-muted` take its level's tokens:
+    `--surface-overlay-secondary` and `--surface-overlay-muted` (`--neutral-150`, `--neutral-200`)
+    in a modal or drawer, `--surface-overlay-raised-secondary` and `--surface-overlay-raised-muted`
+    (`--neutral-200`, `--neutral-300`) in a popover-class overlay, so hover, pressed and selected
+    fills stay a step above the overlay.
+
+  The light theme is unchanged. Nothing to change in your code, unless a panel of your own is
+  painted with `--surface-overlay` and hovers with `--surface-secondary`: set
+  `--surface-secondary: var(--surface-overlay-secondary)` and
+  `--surface-muted: var(--surface-overlay-muted)` on that panel, or the `-raised-` pair on a panel
+  that floats like a popover.
+- **Secondary text inside a popover-class overlay takes the new `--text-tertiary-overlay`.** It is
+  `--text-tertiary` in light and `--neutral-700` (`#B7BFD0`) under `data-theme="dark"`, about
+  7.1:1 on a hovered row (`--surface-overlay-raised-secondary`) and 7.8:1 at rest, where
+  `--text-tertiary` gave 4.3:1 and 4.7:1. It colours the `ds-menu-item` description and the
+  `ds-list-item` subtitle and trailing slot inside a library overlay panel (a `ds-popover`, a
+  submenu, a tooltip or a dropdown panel), the optgroup label
+  and no-results line of the `ds-select`, `ds-multi-select` and `ds-autocomplete` panels, the
+  `ds-date-picker` weekday header and the `ds-toast` time. `--ds-menu-item-description-color`,
+  `--ds-list-item-subtitle-color`, `--ds-dropdown-empty-color` and `--ds-date-picker-weekday-color`
+  default to it there; a value you set on them still wins. A standalone `ds-menu` and a `ds-list`
+  on the page keep `--text-tertiary`. The light theme is unchanged. Nothing to change in your code,
+  unless a row of your own inside a popover or a dropdown panel, such as an option template,
+  colours its second line with `--text-tertiary`: use `--text-tertiary-overlay` there.
+- **A focused `ds-table` resize handle shows the focus on its line.** The line becomes
+  `--focus-ring-width` wide in `--focus-ring-color`; the handle draws no ring around itself. In
+  forced-colours mode the outline stays. Nothing to change in your code.
+
+### Fixed
+
+- **The step number of a `ds-stepper` sits in the middle of its circle.** The circle centred the
+  figure's line box, and a figure has no descender, so the number sat slightly high; it is now
+  nudged down to the optical centre. Nothing to change in your code.
+- **The icon of a `ds-timeline-item` marker sits in the middle of the marker.** The icon is 16px
+  instead of 15px, so it is centred in the 24px inside the marker's ring; at 15px the browser
+  snapped it half a pixel right and down.
+- **The ring of a `ds-timeline-item` marker without a status and of an upcoming `ds-stepper` step
+  stands out from the surface.** Both rings are drawn in `--text-tertiary` instead of
+  `--border-strong`, at 4.74:1 against the surface in the light theme and 5.58:1 in the dark, where
+  `--border-strong` gave 1.66:1 and 1.71:1, under the 3:1 WCAG 1.4.11 asks of a marker. This covers
+  the default and `muted` tones of `ds-timeline-item`; `--ds-timeline-node-border-color` still
+  overrides it. Every marker icon draws its line as thick as the ring, 2px (`stroke` 3 on the 24-unit icon
+  grid, was 1.75). Nothing to change in your code.
+- **A `ds-timeline-item` inside a wrapper element keeps its connector.** The line to the next item
+  disappeared from every item wrapped in its own element, because each one was the last child of its
+  wrapper. `ds-timeline` now finds its items at any depth and only the last one draws no line.
+  `TimelineComponent.firstItem` and `TimelineComponent.lastItem` read the first and the last item.
+- **Dark theme shadows are dark.** `--shadow-1` to `--shadow-4` (and every `--shadow-*` and
+  `--ds-elevation-*` alias built on them) rendered as a light glow around cards, popovers, tooltips,
+  toasts, modals and drawers. Under `data-theme="dark"` they are now near-black at 30% to 60% alpha,
+  and `--shadow-4` (modal, drawer) adds a 1px light hairline at 8% alpha as the surface edge.
+  `--shadow-tint-l` is `3%` in the dark theme. Nothing to change in your code.
+
 ## 1.0.3 — 2026-10-27
 
 ### Fixed
@@ -58,9 +301,9 @@
 
 - **A `ds-menu-item` that is the first or last child of the menu rounds its corners with it.** The rows are square and
   the menu clips them at its rounded edge, so the focus ring of the first or last item was cut off
-  at two corners and kept square ones at the other two. Those rows now take the menu's inner radius
-  and every row's focus ring is drawn inside the row. `--ds-menu-item-radius` still sets every
-  row's radius.
+  at two corners and kept square ones at the other two. Those rows now take the menu's inner radius,
+  so the ring, drawn inside the row, follows the menu's rounded corners. `--ds-menu-item-radius`
+  still sets every row's radius.
   Nothing to change in your code.
 - **`ds-menu` rows touch each other, so the pointer never falls between them.** The menu put a 2px
   gap between rows, and a pointer resting in it hovered no row, so the hover fill flickered off

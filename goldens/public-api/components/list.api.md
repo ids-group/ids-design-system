@@ -35,6 +35,6 @@ ds-list-item {
     --ds-list-item-selected-bg-color: var(--accent-surface-tint);
     --ds-list-item-selected-icon-color: var(--_list-item-selected-label-color);
     --ds-list-item-selected-label-color: var(--accent-strong);
-    --ds-list-item-subtitle-color: var(--text-tertiary);
+    --ds-list-item-subtitle-color: var(--text-tertiary) | var(--text-tertiary-overlay);
 }
 ```

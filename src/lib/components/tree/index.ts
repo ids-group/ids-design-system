@@ -1,2 +1,6 @@
 export { TreeComponent } from './tree.component';
-export type { TreeNode } from './tree.types';
+export {
+  TreeTrailingDirective,
+  type TreeTrailingContext,
+} from './tree-trailing.directive';
+export type { TreeNode, TreeSelection } from './tree.types';

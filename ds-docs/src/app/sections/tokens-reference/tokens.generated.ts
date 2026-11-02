@@ -319,6 +319,11 @@ export const SEMANTIC_TEXT: readonly ColourRow[] = [
     "notes": "Tertiary, meta text, labels."
   },
   {
+    "name": "--text-tertiary-overlay",
+    "value": "var(--text-tertiary)",
+    "notes": "Tertiary text inside a popover-class overlay (menu item descriptions, list item subtitles, dropdown group labels and no-results line, calendar weekdays, toast time): --text-tertiary in light, --neutral-700 in dark, so it stays above 4.5:1 on a hovered row of --surface-overlay-raised."
+  },
+  {
     "name": "--text-muted",
     "value": "var(--neutral-400)",
     "notes": "Muted text, placeholders."
@@ -401,7 +406,7 @@ export const SEMANTIC_SURFACE: readonly ColourRow[] = [
   {
     "name": "--surface-overlay",
     "value": "var(--neutral-0)",
-    "notes": "Modals, drawers, popovers (with scrim)."
+    "notes": "Modals, drawers and the app-layout rail below lg (with scrim). In the dark theme one neutral step lighter than --surface-default."
   },
   {
     "name": "--surface-inverted",
@@ -431,6 +436,31 @@ export const SEMANTIC_SURFACE: readonly ColourRow[] = [
     "notes": "Muted neutral chip background (stat icon chip, etc.)."
   },
   {
+    "name": "--surface-overlay-secondary",
+    "value": "var(--surface-secondary)",
+    "notes": "What --surface-secondary becomes inside a modal or drawer: one step above --surface-overlay in the dark theme, the same as --surface-secondary in light."
+  },
+  {
+    "name": "--surface-overlay-muted",
+    "value": "var(--surface-muted)",
+    "notes": "What --surface-muted becomes inside a modal or drawer: one step above --surface-overlay-secondary in the dark theme, the same as --surface-muted in light."
+  },
+  {
+    "name": "--surface-overlay-raised",
+    "value": "var(--surface-overlay)",
+    "notes": "Popovers, menus, dropdown panels, picker panels, tooltips and toasts: one neutral step above --surface-overlay in the dark theme, equal to it in light."
+  },
+  {
+    "name": "--surface-overlay-raised-secondary",
+    "value": "var(--surface-secondary)",
+    "notes": "What --surface-secondary becomes inside a popover-class overlay: one step above --surface-overlay-raised in the dark theme, the same as --surface-secondary in light."
+  },
+  {
+    "name": "--surface-overlay-raised-muted",
+    "value": "var(--surface-muted)",
+    "notes": "What --surface-muted becomes inside a popover-class overlay: one step above --surface-overlay-raised-secondary in the dark theme, the same as --surface-muted in light."
+  },
+  {
     "name": "--surface-scrim",
     "value": "hsl(var(--shadow-tint-h) var(--shadow-tint-s) var(--shadow-tint-l) / 55%)",
     "notes": "Modal/overlay backdrop tint (55% shadow-tinted black)."
@@ -447,6 +477,11 @@ export const SEMANTIC_BORDER: readonly ColourRow[] = [
     "name": "--border-strong",
     "value": "var(--neutral-300)",
     "notes": "Hover / emphasised border."
+  },
+  {
+    "name": "--border-overlay",
+    "value": "var(--border-default)",
+    "notes": "Border of a popover-class overlay (popover, dropdown, pickers, tooltip, toast): --border-default in light, --border-strong in dark."
   },
   {
     "name": "--border-subtitle",
@@ -2486,7 +2521,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       {
         "name": "--ds-autocomplete-panel-bg-color",
         "value": "initial",
-        "notes": "Autocomplete dropdown panel fill (default --surface-overlay). The panel is portaled, so set it on the host - a global rule against the pane cannot see the host override."
+        "notes": "Autocomplete dropdown panel fill (default --surface-overlay-raised). The panel is portaled, so set it on the host - a global rule against the pane cannot see the host override."
       },
       {
         "name": "--ds-autocomplete-panel-radius",
@@ -3573,6 +3608,113 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
     ]
   },
   {
+    "component": "Chat",
+    "selector": ".chat",
+    "description": "",
+    "tokens": [
+      {
+        "name": "--ds-chat-attachment-bg-color",
+        "value": "var(--surface-default)",
+        "notes": ""
+      },
+      {
+        "name": "--ds-chat-attachment-preview-bg-color",
+        "value": "var(--surface-secondary)",
+        "notes": ""
+      },
+      {
+        "name": "--ds-chat-attachment-preview-max-height",
+        "value": "16rem",
+        "notes": ""
+      },
+      {
+        "name": "--ds-radius-pill",
+        "value": "—",
+        "notes": "Radius role for fully round shapes — avatars, badges, switch tracks. Defaults to --radius-pill."
+      },
+      {
+        "name": "--ds-chat-input-bg-color",
+        "value": "var(--surface-default)",
+        "notes": ""
+      },
+      {
+        "name": "--ds-chat-input-radius",
+        "value": "var(--ds-radius-control)",
+        "notes": ""
+      },
+      {
+        "name": "--ds-chat-input-padding",
+        "value": "var(--space-2)",
+        "notes": ""
+      },
+      {
+        "name": "--ds-field-focus-shadow",
+        "value": "—",
+        "notes": "Field focus ring shadow — themeable (defaults to --focus-field)."
+      },
+      {
+        "name": "--ds-chat-message-max-width",
+        "value": "85%",
+        "notes": ""
+      },
+      {
+        "name": "--ds-chat-message-radius",
+        "value": "var(--ds-radius-panel)",
+        "notes": ""
+      },
+      {
+        "name": "--ds-chat-message-padding",
+        "value": "var(--space-2) var(--space-3)",
+        "notes": ""
+      },
+      {
+        "name": "--ds-chat-message-assistant-bg-color",
+        "value": "var(--surface-secondary)",
+        "notes": ""
+      },
+      {
+        "name": "--ds-chat-message-assistant-color",
+        "value": "var(--text-primary)",
+        "notes": ""
+      },
+      {
+        "name": "--ds-chat-message-user-bg-color",
+        "value": "var(--primary)",
+        "notes": ""
+      },
+      {
+        "name": "--ds-chat-message-user-color",
+        "value": "var(--text-on-primary)",
+        "notes": ""
+      },
+      {
+        "name": "--ds-chat-thread-gap",
+        "value": "var(--space-4)",
+        "notes": ""
+      },
+      {
+        "name": "--ds-chat-thread-group-gap",
+        "value": "var(--space-1)",
+        "notes": ""
+      },
+      {
+        "name": "--ds-chat-thread-padding",
+        "value": "var(--space-4)",
+        "notes": ""
+      },
+      {
+        "name": "--chat-step-node-size",
+        "value": "var(--spinner-md)",
+        "notes": ""
+      },
+      {
+        "name": "--chat-step-gap",
+        "value": "var(--space-1)",
+        "notes": ""
+      }
+    ]
+  },
+  {
     "component": "Checkbox",
     "selector": ".checkbox",
     "description": "",
@@ -3865,12 +4007,12 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--ds-date-picker-bg-color",
-        "value": "var(--surface-overlay)",
+        "value": "var(--surface-overlay-raised)",
         "notes": "Popover fill."
       },
       {
         "name": "--ds-date-picker-border",
-        "value": "var(--border-default)",
+        "value": "var(--border-overlay)",
         "notes": "Popover border."
       },
       {
@@ -3880,8 +4022,8 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--ds-date-picker-weekday-color",
-        "value": "var(--text-tertiary)",
-        "notes": "Calendar weekday header label colour."
+        "value": "var(--text-tertiary-overlay)",
+        "notes": "Calendar weekday header label colour (default --text-tertiary-overlay)."
       },
       {
         "name": "--ds-date-picker-header-label-color",
@@ -4188,8 +4330,8 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--ds-dropdown-empty-color",
-        "value": "var(--text-tertiary)",
-        "notes": "Colour of the no-results line."
+        "value": "var(--text-tertiary-overlay)",
+        "notes": "Colour of the no-results line (default --text-tertiary-overlay)."
       },
       {
         "name": "--ds-dropdown-empty-font-size",
@@ -4198,12 +4340,12 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--ds-dropdown-panel-bg-color",
-        "value": "var(--surface-overlay)",
-        "notes": "Connected dropdown panel fill (defaults to --surface-overlay)."
+        "value": "var(--surface-overlay-raised)",
+        "notes": "Connected dropdown panel fill (defaults to --surface-overlay-raised)."
       },
       {
         "name": "--ds-dropdown-panel-border-color",
-        "value": "var(--border-default)",
+        "value": "var(--border-overlay)",
         "notes": ""
       },
       {
@@ -4766,6 +4908,43 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
     ]
   },
   {
+    "component": "Inline Edit",
+    "selector": ".inline-edit",
+    "description": "",
+    "tokens": [
+      {
+        "name": "--ds-inline-edit-padding",
+        "value": "var(--space-1)",
+        "notes": ""
+      },
+      {
+        "name": "--ds-inline-edit-hover-bg-color",
+        "value": "var(--surface-muted)",
+        "notes": ""
+      },
+      {
+        "name": "--ds-inline-edit-border-color",
+        "value": "var(--primary)",
+        "notes": ""
+      },
+      {
+        "name": "--ds-inline-edit-radius",
+        "value": "var(--radius-sm)",
+        "notes": ""
+      },
+      {
+        "name": "--inline-edit-input-minw",
+        "value": "var(--space-20)",
+        "notes": "80px — inline-edit input minimum width."
+      },
+      {
+        "name": "--inline-edit-btn-size",
+        "value": "var(--hit-xs)",
+        "notes": "Inline-edit confirm/cancel button size (defaults to --hit-xs, 24px)."
+      }
+    ]
+  },
+  {
     "component": "Input",
     "selector": ".input",
     "description": "",
@@ -5121,7 +5300,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       {
         "name": "--ds-list-item-subtitle-color",
         "value": "var(--text-tertiary)",
-        "notes": "List item subtitle text colour (defaults to --text-tertiary)."
+        "notes": "List item subtitle text colour (defaults to --text-tertiary, and to --text-tertiary-overlay inside a popover-class overlay)."
       },
       {
         "name": "--ds-list-divider-color",
@@ -5245,7 +5424,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       {
         "name": "--ds-menu-item-description-color",
         "value": "var(--text-tertiary)",
-        "notes": "Colour of a ds-menu-item `description` — the standing second line under the label (default --text-tertiary, quieter than the label so the action still reads first)."
+        "notes": "Colour of a ds-menu-item `description` — the standing second line under the label (default --text-tertiary-overlay inside a popover or submenu, --text-tertiary in a standalone ds-menu; quieter than the label so the action still reads first)."
       },
       {
         "name": "--ds-menu-item-description-font-size",
@@ -6026,13 +6205,13 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
     "tokens": [
       {
         "name": "--ds-popover-bg-color",
-        "value": "var(--surface-overlay)",
-        "notes": "Popover surface fill (defaults to --surface-overlay)."
+        "value": "var(--surface-overlay-raised)",
+        "notes": "Popover surface fill (defaults to --surface-overlay-raised)."
       },
       {
         "name": "--ds-popover-border-color",
-        "value": "var(--border-default)",
-        "notes": "Popover border colour (defaults to --border-default)."
+        "value": "var(--border-overlay)",
+        "notes": "Popover border colour (defaults to --border-overlay)."
       },
       {
         "name": "--ds-popover-radius",
@@ -6813,6 +6992,38 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
     ]
   },
   {
+    "component": "Splitter",
+    "selector": ".splitter",
+    "description": "",
+    "tokens": [
+      {
+        "name": "--ds-splitter-gap",
+        "value": "var(--space-2)",
+        "notes": ""
+      },
+      {
+        "name": "--ds-splitter-line-color",
+        "value": "var(--border-strong)",
+        "notes": ""
+      },
+      {
+        "name": "--ds-splitter-drag-color",
+        "value": "var(--text-muted)",
+        "notes": ""
+      },
+      {
+        "name": "--ds-splitter-grip-color",
+        "value": "var(--text-muted)",
+        "notes": ""
+      },
+      {
+        "name": "--ds-splitter-overdrag-line-scale",
+        "value": "3",
+        "notes": ""
+      }
+    ]
+  },
+  {
     "component": "Stat",
     "selector": ".stat",
     "description": "",
@@ -7588,6 +7799,11 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "notes": "Row divider."
       },
       {
+        "name": "--ds-table-resize-line-color",
+        "value": "var(--text-tertiary)",
+        "notes": "Column resize line at rest."
+      },
+      {
         "name": "--ds-table-icon-button-color",
         "value": "var(--icon-default)",
         "notes": "Icon colour of ds-table's own icon buttons — the row-action kebab and the column picker. Defaults to --icon-default. Neither is a ds-icon-button, so the icon-button tokens do not reach them."
@@ -8077,12 +8293,12 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--ds-time-picker-bg-color",
-        "value": "var(--surface-overlay)",
+        "value": "var(--surface-overlay-raised)",
         "notes": "Panel fill."
       },
       {
         "name": "--ds-time-picker-border",
-        "value": "var(--border-default)",
+        "value": "var(--border-overlay)",
         "notes": "Panel border."
       },
       {
@@ -8129,13 +8345,28 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--ds-timeline-node-border-color",
-        "value": "var(--border-strong)",
+        "value": "var(--text-tertiary)",
         "notes": "Timeline node border colour (defaults to --border-strong)."
       },
       {
         "name": "--ds-timeline-spine-color",
         "value": "var(--border-divider)",
         "notes": "Timeline connector spine colour (defaults to --border-divider)."
+      },
+      {
+        "name": "--ds-timeline-toggle-icon-color",
+        "value": "var(--icon-default)",
+        "notes": ""
+      },
+      {
+        "name": "--ds-timeline-toggle-icon-color-hover",
+        "value": "var(--icon-strong)",
+        "notes": ""
+      },
+      {
+        "name": "--ds-timeline-open-bg-color",
+        "value": "var(--surface-secondary)",
+        "notes": ""
       },
       {
         "name": "--timeline-node-size",
@@ -8161,8 +8392,8 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
     "tokens": [
       {
         "name": "--ds-toast-queue-bg-color",
-        "value": "var(--surface-overlay)",
-        "notes": "Background of the `+N` strip shown while toasts wait behind maxVisible (default --surface-overlay)."
+        "value": "var(--surface-overlay-raised)",
+        "notes": "Background of the `+N` strip shown while toasts wait behind maxVisible (default --surface-overlay-raised)."
       },
       {
         "name": "--ds-toast-queue-text-color",
@@ -8191,12 +8422,12 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--ds-toast-bg-color",
-        "value": "var(--surface-overlay)",
+        "value": "var(--surface-overlay-raised)",
         "notes": "Base surface fill."
       },
       {
         "name": "--ds-toast-border-color",
-        "value": "var(--border-default)",
+        "value": "var(--border-overlay)",
         "notes": "Base border."
       },
       {
@@ -8246,42 +8477,42 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--ds-toast-bg-color-info",
-        "value": "var(--ds-toast-bg-color,     var(--surface-overlay))",
+        "value": "var(--ds-toast-bg-color,     var(--surface-overlay-raised))",
         "notes": "Info tint fill."
       },
       {
         "name": "--ds-toast-border-color-info",
-        "value": "var(--ds-toast-border-color, var(--border-default))",
+        "value": "var(--ds-toast-border-color, var(--border-overlay))",
         "notes": "Info tint border."
       },
       {
         "name": "--ds-toast-bg-color-success",
-        "value": "var(--ds-toast-bg-color,     var(--surface-overlay))",
+        "value": "var(--ds-toast-bg-color,     var(--surface-overlay-raised))",
         "notes": "Success tint fill."
       },
       {
         "name": "--ds-toast-border-color-success",
-        "value": "var(--ds-toast-border-color, var(--border-default))",
+        "value": "var(--ds-toast-border-color, var(--border-overlay))",
         "notes": "Success tint border."
       },
       {
         "name": "--ds-toast-bg-color-warning",
-        "value": "var(--ds-toast-bg-color,     var(--surface-overlay))",
+        "value": "var(--ds-toast-bg-color,     var(--surface-overlay-raised))",
         "notes": "Warning tint fill."
       },
       {
         "name": "--ds-toast-border-color-warning",
-        "value": "var(--ds-toast-border-color, var(--border-default))",
+        "value": "var(--ds-toast-border-color, var(--border-overlay))",
         "notes": "Warning tint border."
       },
       {
         "name": "--ds-toast-bg-color-error",
-        "value": "var(--ds-toast-bg-color,     var(--surface-overlay))",
+        "value": "var(--ds-toast-bg-color,     var(--surface-overlay-raised))",
         "notes": "Error tint fill."
       },
       {
         "name": "--ds-toast-border-color-error",
-        "value": "var(--ds-toast-border-color, var(--border-default))",
+        "value": "var(--ds-toast-border-color, var(--border-overlay))",
         "notes": "Error tint border."
       },
       {
@@ -8417,8 +8648,8 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--tooltip-bg-color",
-        "value": "var(--surface-overlay)",
-        "notes": "Surface of ds-tooltip and the chart tooltip: --surface-overlay."
+        "value": "var(--surface-overlay-raised)",
+        "notes": "Surface of ds-tooltip and the chart tooltip: --surface-overlay-raised."
       },
       {
         "name": "--tooltip-text-color",
@@ -8427,8 +8658,8 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--tooltip-border-color",
-        "value": "var(--border-default)",
-        "notes": "Border of ds-tooltip and the chart tooltip: --border-default, --border-strong on the dark theme."
+        "value": "var(--border-overlay)",
+        "notes": "Border of ds-tooltip and the chart tooltip (defaults to --border-overlay)."
       }
     ]
   },
@@ -8809,11 +9040,6 @@ export const NEW_TOKENS: readonly NewToken[] = [
     "kind": "color"
   },
   {
-    "name": "--ds-field-focus-shadow",
-    "value": "var(--focus-field)",
-    "kind": "color"
-  },
-  {
     "name": "--ds-motion-chart-scale-marker-delay",
     "value": "var(--duration-fast)",
     "kind": "other"
@@ -8891,11 +9117,6 @@ export const NEW_TOKENS: readonly NewToken[] = [
   {
     "name": "--ds-radius-panel",
     "value": "var(--radius-lg)",
-    "kind": "length"
-  },
-  {
-    "name": "--ds-radius-pill",
-    "value": "var(--radius-pill)",
     "kind": "length"
   },
   {
@@ -9007,16 +9228,6 @@ export const NEW_TOKENS: readonly NewToken[] = [
     "name": "--icon-strong",
     "value": "var(--neutral-700)",
     "kind": "color"
-  },
-  {
-    "name": "--inline-edit-btn-size",
-    "value": "var(--hit-xs)",
-    "kind": "length"
-  },
-  {
-    "name": "--inline-edit-input-minw",
-    "value": "var(--space-20)",
-    "kind": "length"
   },
   {
     "name": "--kbd-pad-x",

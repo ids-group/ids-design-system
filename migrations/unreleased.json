@@ -1,0 +1,183 @@
+{
+  "version": "unreleased",
+  "items": [
+    {
+      "id": "table-resize-line-default-color",
+      "kind": "behavior",
+      "old": "--border-default",
+      "new": null,
+      "surface": [
+        "template",
+        "style"
+      ],
+      "searchHints": [
+        "dsTableResize",
+        "--ds-table-resize-line-color"
+      ],
+      "detect": [
+        "dsTableResize"
+      ],
+      "action": "None, unless a table must keep the faint resize line it had: set `--ds-table-resize-line-color: var(--border-default)` on that `ds-table`.",
+      "appliesWhen": "A `ds-table` with `dsTableResize`. A table without it draws no resize line.",
+      "restore": "ds-table { --ds-table-resize-line-color: var(--border-default); }",
+      "verify": "At rest, a resizable `ds-table` header shows a `--text-tertiary` line at each column edge, unless `--ds-table-resize-line-color` is set."
+    },
+    {
+      "id": "dark-surface-overlay-one-step-lighter",
+      "kind": "behavior",
+      "old": "--surface-overlay",
+      "new": null,
+      "surface": [
+        "style"
+      ],
+      "searchHints": [
+        "--surface-overlay",
+        "--surface-secondary",
+        "--surface-muted",
+        "--border-default",
+        "--tooltip-bg-color"
+      ],
+      "detect": [
+        "var(--surface-overlay)"
+      ],
+      "action": "None, unless a panel of your own is painted with `--surface-overlay` and fills a hover, pressed or selected state with `--surface-secondary` or `--surface-muted`: declare `--surface-secondary: var(--surface-overlay-secondary)` and `--surface-muted: var(--surface-overlay-muted)` on that panel. A panel that floats over other content like a popover takes `--surface-overlay-raised` as its fill and `--surface-overlay-raised-secondary` / `--surface-overlay-raised-muted` in those two declarations.",
+      "appliesWhen": "The dark theme (`data-theme=\"dark\"`) only: `--surface-overlay` is `--neutral-100` there, the value `--surface-secondary` has, so a hover in that colour on your own overlay no longer shows. `ds-modal`, `ds-drawer` and the `ds-app-layout` rail below `lg` paint `--surface-overlay`; `ds-popover`, `ds-menu` in it, the dropdown panels of `ds-select`, `ds-multi-select` and `ds-autocomplete`, `ds-date-picker`, `ds-time-picker`, `ds-color-picker`, `ds-tooltip-panel` and `ds-toast` paint `--surface-overlay-raised` (`--neutral-150`). Each sets its level's tokens itself. Light values are unchanged.",
+      "pitfall": "A dark-theme `--surface-secondary` or `--surface-muted` override on `:root` no longer reaches inside the library overlays, which read `--surface-overlay-secondary`, `--surface-overlay-muted`, `--surface-overlay-raised-secondary` and `--surface-overlay-raised-muted` there; override those as well.",
+      "restore": ":root[data-theme='dark'] { --surface-overlay: var(--neutral-0); --surface-overlay-secondary: var(--neutral-100); --surface-overlay-muted: var(--neutral-150); --surface-overlay-raised: var(--neutral-0); --surface-overlay-raised-secondary: var(--neutral-100); --surface-overlay-raised-muted: var(--neutral-150); --border-overlay: var(--border-default); }",
+      "verify": "In the dark theme open a `ds-select` inside a `ds-modal`: the modal is lighter than the page, the panel lighter than the modal, and a hovered option lighter than the panel; a panel of your own painted with `--surface-overlay` shows its hovered row lighter than itself.",
+      "evidence": [
+        "tokens:--surface-overlay-secondary",
+        "tokens:--surface-overlay-muted",
+        "tokens:--surface-overlay-raised",
+        "tokens:--surface-overlay-raised-secondary",
+        "tokens:--surface-overlay-raised-muted",
+        "tokens:--border-overlay"
+      ]
+    },
+    {
+      "id": "dark-text-tertiary-overlay",
+      "kind": "behavior",
+      "old": "--text-tertiary",
+      "new": null,
+      "surface": [
+        "style"
+      ],
+      "searchHints": [
+        "--text-tertiary",
+        "--ds-menu-item-description-color",
+        "--ds-list-item-subtitle-color",
+        "--ds-dropdown-empty-color",
+        "--ds-date-picker-weekday-color"
+      ],
+      "detect": [
+        "var(--text-tertiary)"
+      ],
+      "action": "None, unless a row of your own rendered inside a `ds-popover`, a submenu or a dropdown panel (an option template, a custom menu row) colours its secondary line with `--text-tertiary`: use `var(--text-tertiary-overlay)` there.",
+      "appliesWhen": "The dark theme (`data-theme=\"dark\"`) only, where `--text-tertiary-overlay` is `--neutral-700`; in light it equals `--text-tertiary`. Library rows that take it: the `ds-menu-item` description and the `ds-list-item` subtitle and trailing slot inside a library overlay panel (a `ds-popover`, a submenu, a tooltip or a dropdown panel), the optgroup label and no-results line of the `ds-select`, `ds-multi-select` and `ds-autocomplete` panels, the `ds-date-picker` weekday header and the `ds-toast` time. A standalone `ds-menu`, a `ds-list` on the page, a modal or a drawer keep `--text-tertiary`.",
+      "pitfall": "`--ds-menu-item-description-color` and `--ds-list-item-subtitle-color` set to `var(--text-tertiary)` on `:root` pin those rows to the darker colour inside overlays too; scope such an override to the page or drop it.",
+      "restore": ":root[data-theme='dark'] { --text-tertiary-overlay: var(--text-tertiary); }",
+      "verify": "In the dark theme open a `ds-popover` holding a `ds-menu` with a `description` and hover the item: the description's computed colour equals `--neutral-700` (`rgb(183, 191, 208)`), and a row of your own inside a popover reads `--text-tertiary-overlay` for its second line.",
+      "evidence": [
+        "tokens:--text-tertiary-overlay"
+      ]
+    },
+    {
+      "id": "timeline-node-border-default-color",
+      "kind": "behavior",
+      "old": "--border-strong",
+      "new": null,
+      "surface": [
+        "template",
+        "style"
+      ],
+      "searchHints": [
+        "ds-timeline-item",
+        "--ds-timeline-node-border-color"
+      ],
+      "detect": [
+        "ds-timeline-item"
+      ],
+      "action": "None, unless a timeline must keep the faint ring it had: was `--border-strong`, now `--text-tertiary`; set `--ds-timeline-node-border-color: var(--border-strong)` on that `ds-timeline-item`.",
+      "appliesWhen": "A `ds-timeline-item` with no `status` and the default or `muted` tone. Items with a `status` or another tone draw their own ring.",
+      "restore": "ds-timeline-item { --ds-timeline-node-border-color: var(--border-strong); }",
+      "verify": "A `ds-timeline-item` with no `status` and the default tone draws its marker ring in `--text-tertiary`, unless `--ds-timeline-node-border-color` is set."
+    },
+    {
+      "id": "toast-ref-update-member",
+      "kind": "behavior",
+      "old": "ToastRef",
+      "new": null,
+      "surface": [
+        "typescript"
+      ],
+      "searchHints": [
+        "ToastRef"
+      ],
+      "detect": [
+        ": ToastRef = {",
+        "as ToastRef",
+        "implements ToastRef"
+      ],
+      "action": "None, unless the app builds a `ToastRef` object itself: give it an `update` member, for example `update: () => {}`.",
+      "appliesWhen": "An object literal or class typed as `ToastRef` in the app, usually a test double standing in for `ToastService.show()`. A ref returned by `ToastService` already has `update`.",
+      "verify": "Every object the app types as `ToastRef` has an `update` member, and the app compiles.",
+      "restore": null
+    }
+  ],
+  "informational": [
+    "New component `ds-inline-edit` (`InlineEditComponent`): text renamed in place, with a two-way `value`, `(saved)`, `placeholder`, `maxLength`, `disabled` and `ariaLabel`. Adds the optional `DsIntl.inlineEdit` keys `rename` and `saved`. Nothing to change in your code.",
+    "New component `ds-splitter` (`SplitterComponent`, `SplitterOrientation`, `SplitterOverdrag`, `SplitterPane`): two projected panes with a draggable, keyboard-operable handle, a two-way `size` in px, `defaultSize`, `min` / `max`, `orientation`, `pane`, `overdrag`, `persistKey` and `ariaLabel`. Adds the optional `DsIntl.splitter.label`. Nothing to change in your code.",
+    "New components `ds-chat-message`, `ds-chat-thread`, `ds-chat-attachment`, `ds-chat-steps` and `ds-chat-step` (`ChatMessageComponent`, `ChatThreadComponent`, `ChatAttachmentComponent`, `ChatStepsComponent`, `ChatStepComponent`, types `ChatMessageRole`, `ChatMessageStatus`, `ChatStepStatus` and `ChatStepsEnter`), in the entry point `@ids-group-ltd/ids-design-system/components/chat`: chat bubbles with `[steps]`, `[attachments]` and `[actions]` slots, an agent's steps for the `[steps]` slot, and a list that stays at the newest message unless the reader scrolled up, groups runs and splits them by time. Adds the optional `DsIntl.chat` keys. Nothing to change in your code.",
+    {
+      "text": "`ds-tree` takes `<ng-template dsTreeTrailing let-node>` (`TreeTrailingDirective`, `TreeTrailingContext`) drawn at the end of every row, a `(nodeHover)` output, and `selection: 'single' | 'multiple'` (`TreeSelection`) with a two-way `selectedIds` in multiple mode. Each row is a focusable `div role=\"treeitem\"` instead of a `button`, and a disabled row is reached by the arrow keys and announced as disabled. Nothing to change in your code unless your styles select the row as a `button`.",
+      "verify": "Open a `ds-tree` with a disabled node: rows look as before, ArrowDown stops on the disabled row with a focus ring, and Enter on it selects nothing."
+    },
+    "New component `ds-attachment` (`AttachmentComponent`): a file chip with a type tile or image preview, name and size, for the `[chips]` slot of `ds-chat-input`. Adds `AttachmentKind` and the optional `DsIntl.attachment` keys. Nothing to change in your code.",
+    "New component `ds-chat-input` (`ChatInputComponent`): an auto-growing message box with `[attachments]`, `[chips]`, `[actions]` and `[send]` slots, Enter to submit, `busy` / `busyLabel` and `(filesPasted)`. Adds the optional `DsIntl.chatInput` keys `label` and `send`. Nothing to change in your code.",
+    {
+      "text": "A focused `ds-table` resize handle draws no outline; its line becomes `--focus-ring-width` wide in `--focus-ring-color`, inset `--space-1` from the cell's top and bottom. Forced-colours mode keeps the outline.",
+      "verify": "Tab to a column resize handle: the line at the column edge turns the focus colour and wider, with no ring around the handle."
+    },
+    "`ToastService` can fold repeated toasts into one `×N` stack under `provideDsConfig({ toast: { groupDuplicates: true } })`, or by `ToastOptions.groupKey`; off by default. Adds `ToastOccurrence`, `ToastEntry.groupKey` and `ToastEntry.occurrences`, the `ds-toast` input `occurrences` and output `occurrenceClosed`, `ToastRegionComponent.stackFor`, an `occurrences` key in the patch `ToastRegionComponent.update()` accepts, and the optional `DsIntl.toast` keys `showAll`, `hide`, `dismissAll` and `repeated`. Nothing to change in your code.",
+    "`ToastRef.update(patch)` (patch type `ToastUpdate`) changes the `title`, `body`, `variant`, `durationMs` or `dismissible` of a toast on screen or queued, and `ToastRegionComponent.entryFor(id)` returns that toast. A `ToastRef` the app builds itself is covered by the item `toast-ref-update-member`.",
+    {
+      "text": "A `ToastService.promise()` toast closed before the promise settles announces nothing; the outcome is announced only while the toast is on screen or queued.",
+      "verify": "Start a `ToastService.promise()`, close its toast, then let the promise resolve: the live region announces nothing."
+    },
+    {
+      "text": "Under `data-theme=\"dark\"`, `--shadow-1` to `--shadow-4` and every `--shadow-*` and `--ds-elevation-*` alias built on them are near-black at 30% to 60% alpha instead of a light glow, `--shadow-4` adds a 1px light hairline at 8% alpha, and `--shadow-tint-l` is `3%`.",
+      "verify": "In the dark theme open a modal and a popover and read their computed box-shadow: every layer is a dark rgba, and the modal's first layer is `0 0 0 1px` at 0.08 alpha."
+    },
+    "`ds-timeline-item` takes `status` (`TimelineStatus`: done, running, pending, error), a `[trailing]` slot at the end of the heading row, and a `[details]` slot behind a chevron toggle with a two-way `expanded`. Adds the optional `DsIntl.timeline` keys `done`, `running`, `pending`, `error` and `details`, and `TimelineComponent.firstItem` and `lastItem`. Nothing to change in your code.",
+    {
+      "text": "A `ds-timeline-item` wrapped in its own element inside `ds-timeline` draws its connector to the next item; only the last item of the timeline draws none.",
+      "verify": "Wrap each `ds-timeline-item` of a `ds-timeline` in a `div`: every item but the last shows the vertical line under its marker."
+    },
+    {
+      "text": "Under `data-theme=\"dark\"` the border of `ds-popover`, the dropdown panels, the `ds-date-picker`, `ds-time-picker` and `ds-color-picker` panels, `ds-tooltip-panel` and `ds-toast` is `--border-overlay`, which is `--border-strong` in dark and `--border-default` in light. `--ds-popover-border-color`, `--ds-dropdown-panel-border-color`, `--ds-date-picker-border`, `--ds-time-picker-border`, `--ds-toast-border-color`, `--ds-toast-border-color-info`, `--ds-toast-border-color-success`, `--ds-toast-border-color-warning`, `--ds-toast-border-color-error` and `--tooltip-border-color` default to it instead of `--border-default`; set one to `var(--border-default)` for the previous border; a value you set on them still wins.",
+      "verify": "In the dark theme open a `ds-select` and read the computed border colour of its panel: it equals `--border-strong`."
+    },
+    {
+      "text": "`--ds-popover-bg-color`, `--ds-dropdown-panel-bg-color`, `--ds-date-picker-bg-color`, `--ds-time-picker-bg-color`, `--ds-toast-bg-color`, `--ds-toast-bg-color-info`, `--ds-toast-bg-color-success`, `--ds-toast-bg-color-warning`, `--ds-toast-bg-color-error`, `--ds-toast-queue-bg-color` and `--tooltip-bg-color` default to `--surface-overlay-raised` instead of `--surface-overlay`; the two are equal in light. Set one to `var(--surface-overlay)` to paint that overlay at the modal's level.",
+      "verify": "In the dark theme open a `ds-popover` and read its computed background: it equals `--neutral-150`."
+    },
+    "The ring of an upcoming `ds-stepper` step is drawn in `--text-tertiary` instead of `--border-strong`, so it reaches 3:1 against the surface. Visual only. Nothing to change in your code.",
+    {
+      "text": "The marker of a `ds-timeline-item` centres vertically on the heading, description and time together, or the text on the marker when the text is shorter; an open `[details]` area does not move it, and the connector also runs above every marker but the first.",
+      "verify": "Open a `ds-timeline` whose items have a description and a time: each marker sits at the middle of its text block and the line reaches it from the item above."
+    },
+    {
+      "text": "The icon inside a `ds-timeline-item` marker is 16px instead of 15px and draws its line at stroke 3 on the 24-unit grid instead of 1.75, as thick as the 2px ring.",
+      "verify": "Open a `ds-timeline-item` with an `icon`: the icon is centred in the ring and its line is as thick as the ring."
+    },
+    {
+      "text": "The step number inside a `ds-stepper` circle is wrapped in its own inline-block `span`, moved down by 0.033em, so it sits in the middle of the circle. Visual only.",
+      "verify": "Open a `ds-stepper` with an upcoming step and compare the number with its circle: the digit is centred vertically, not a fraction of a pixel high."
+    },
+    {
+      "text": "`--ds-menu-item-description-color` and `--ds-list-item-subtitle-color` default to `--text-tertiary-overlay` inside a library overlay panel (a `ds-popover`, a submenu, a tooltip or a dropdown panel), and `--ds-dropdown-empty-color` and `--ds-date-picker-weekday-color` default to it everywhere; it equals `--text-tertiary` in light. A value you set on them still wins.",
+      "verify": "In the dark theme open a `ds-select` with `optgroup` labels and read the computed colour of a group label: it equals `--neutral-700`."
+    }
+  ],
+  "deleteList": []
+}

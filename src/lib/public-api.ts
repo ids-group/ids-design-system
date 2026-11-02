@@ -127,6 +127,23 @@ export type {
   ChartTooltipOrigin,
   ChartTooltipTrigger,
 } from '@ids-group-ltd/ids-design-system/components/chart-tooltip';
+export {
+  AttachmentComponent,
+  ChatAttachmentComponent,
+  ChatInputComponent,
+  ChatMessageComponent,
+  ChatStepComponent,
+  ChatStepsComponent,
+  ChatThreadComponent,
+} from '@ids-group-ltd/ids-design-system/components/chat';
+export type {
+  AttachmentKind,
+  ChatInputLayout,
+  ChatMessageRole,
+  ChatMessageStatus,
+  ChatStepStatus,
+  ChatStepsEnter,
+} from '@ids-group-ltd/ids-design-system/components/chat';
 export { CheckboxComponent } from '@ids-group-ltd/ids-design-system/components/checkbox';
 export { ColorPickerComponent } from '@ids-group-ltd/ids-design-system/components/color-picker';
 export { ColumnChartComponent } from '@ids-group-ltd/ids-design-system/components/column-chart';
@@ -191,6 +208,7 @@ export type {
   IconButtonVariant,
 } from '@ids-group-ltd/ids-design-system/components/icon-button';
 export { InfoHintComponent } from '@ids-group-ltd/ids-design-system/components/info-hint';
+export { InlineEditComponent } from '@ids-group-ltd/ids-design-system/components/inline-edit';
 export { InputComponent } from '@ids-group-ltd/ids-design-system/components/input';
 export type { InputType } from '@ids-group-ltd/ids-design-system/components/input';
 export {
@@ -325,6 +343,12 @@ export type {
   SplitButtonItem,
   SplitButtonVariant,
 } from '@ids-group-ltd/ids-design-system/components/split-button';
+export { SplitterComponent } from '@ids-group-ltd/ids-design-system/components/splitter';
+export type {
+  SplitterOrientation,
+  SplitterOverdrag,
+  SplitterPane,
+} from '@ids-group-ltd/ids-design-system/components/splitter';
 export { StatComponent } from '@ids-group-ltd/ids-design-system/components/stat';
 export { StatusDotComponent } from '@ids-group-ltd/ids-design-system/components/status-dot';
 export { StepperComponent } from '@ids-group-ltd/ids-design-system/components/stepper';
@@ -383,7 +407,10 @@ export {
   TimelineComponent,
   TimelineItemComponent,
 } from '@ids-group-ltd/ids-design-system/components/timeline';
-export type { TimelineTone } from '@ids-group-ltd/ids-design-system/components/timeline';
+export type {
+  TimelineStatus,
+  TimelineTone,
+} from '@ids-group-ltd/ids-design-system/components/timeline';
 export {
   DS_TOAST_POSITION_DEFAULT,
   ToastComponent,
@@ -396,9 +423,11 @@ export type {
   DsToastVerticalPosition,
   ToastAction,
   ToastEntry,
+  ToastOccurrence,
   ToastOptions,
   ToastPromiseMessages,
   ToastRef,
+  ToastUpdate,
   ToastVariant,
 } from '@ids-group-ltd/ids-design-system/components/toast';
 export { ToggleButtonComponent } from '@ids-group-ltd/ids-design-system/components/toggle-button';
@@ -411,8 +440,15 @@ export type {
   TooltipPlacement,
 } from '@ids-group-ltd/ids-design-system/components/tooltip';
 export { TopBarComponent } from '@ids-group-ltd/ids-design-system/components/topbar';
-export { TreeComponent } from '@ids-group-ltd/ids-design-system/components/tree';
-export type { TreeNode } from '@ids-group-ltd/ids-design-system/components/tree';
+export {
+  TreeComponent,
+  TreeTrailingDirective,
+} from '@ids-group-ltd/ids-design-system/components/tree';
+export type {
+  TreeNode,
+  TreeSelection,
+  TreeTrailingContext,
+} from '@ids-group-ltd/ids-design-system/components/tree';
 export { W3wComponent } from '@ids-group-ltd/ids-design-system/components/w3w';
 export { WaterfallChartComponent } from '@ids-group-ltd/ids-design-system/components/waterfall-chart';
 export type {

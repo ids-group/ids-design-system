@@ -151,7 +151,7 @@ is stale. Closing an item means deleting the item and nothing else.
   - In `ds-banner` and `ds-dropzone` the `ds-icon` box is 16px while its svg draws 20px
 - **Missing components (from gap analysis)**
   - Image / lightbox
-  - Splitter — ASKED 2026-08-05, Stas: keep in the backlog for now (not built, not closed)
+  - Splitter - built as `ds-splitter` on `feat/splitter`, in review
   - CascadeSelect — ASKED 2026-08-05, Stas: keep in the backlog for now (not built, not closed)
 - **Missing tokens / foundations (from gap analysis)**
   - Primary-button CTA token layer — ASKED 2026-08-05, Stas: keep in the backlog
@@ -1302,7 +1302,7 @@ Most of the original gap list has SHIPPED (verified 2026-07-24: multi-select · 
 
 - [ ] **[P3] Image / lightbox.** No demand stated; overlay/motion infra (`modal`/`drawer`/`overlay-motion.ts`) exists to build on.
 
-- [ ] **[P3] Splitter — ASKED 2026-08-05, Stas: keep in the backlog for now (not built, not closed).** Resizable split panes (drag a divider to resize adjacent regions). **DECISION-PENDING** on need. Reference: the `dsTableResize` directive's pointer logic (`onResizeStart/Move/End` with `setPointerCapture`, `table-resize/table-resize.directive.ts`) is a ready basis for the drag mechanics (panes vs columns aside).
+- [ ] **[P3] Splitter - built as `ds-splitter` on `feat/splitter`, in review.** First consumer: Bandsmith (a resizable preview | chat panel). Stas: build it in the DS from the best of the Bandsmith desktop `itbSplit` directive and the Dashboard Review sidebar resizer. Wrapper component with `[start]` / `[end]` slots, `orientation`, `pane`, two-way `size` in px, `min` / `max` / `defaultSize`, `persistKey`. Closes when the branch merges into `dev`. Open: RTL is not handled (a horizontal start pane is measured from the left), see the `ponytail:` comment in `splitter.component.ts`.
 
 - [ ] **[P3] CascadeSelect — ASKED 2026-08-05, Stas: keep in the backlog for now (not built, not closed).** Hierarchical cascading dropdown (ref https://primeng.dev/cascadeselect).** Pick a leaf from nested groups via a compact overlay that expands sub-levels (Country → State → City). GAP: `ds-select`/`ds-multi-select` are FLAT dropdowns; `ds-tree` is a full inline tree VIEW (single-select via `selectedId`), not a compact selector; `ds-menu` is an actions menu, not a value control — so no cascading value-select exists. Niche (category / geo pickers), no active request. Building blocks if pulled: `ds-tree`'s `TreeNode` model + the shared overlay/popover infra + `ds-select`'s trigger. Otherwise document "use `ds-tree` for inline hierarchy, or flatten into grouped `ds-select`".
 
@@ -1817,7 +1817,7 @@ already defaults to 0; their own `TODO(ds-bump)` says so.
 > release cut sequences everything breaking behind it, and every breaking change added before the cut
 > makes the one migration a consumer must swallow larger.
 
-**22 open — 8 P2 and 14 P3 — but the count flatters the board.** **Twelve are parked**: ten P3s waiting on a first consumer ask (splitter, CascadeSelect, lightbox, CDK Menu, `ds-select` native multi, stepper formatting, row-expansion deltas, primary-CTA, MED, inspect mode) and two kept deliberately as decision records not to be "simplified" (`role="banner"`, the duplicated `compact` condition). **A P2 — shared picker internals — is open against its own recommendation**, which is not to build it until a fourth list picker appears.
+**22 open — 8 P2 and 14 P3 — but the count flatters the board.** **Eleven are parked**: nine P3s waiting on a first consumer ask (CascadeSelect, lightbox, CDK Menu, `ds-select` native multi, stepper formatting, row-expansion deltas, primary-CTA, MED, inspect mode) and two kept deliberately as decision records not to be "simplified" (`role="banner"`, the duplicated `compact` condition). **A P2 — shared picker internals — is open against its own recommendation**, which is not to build it until a fourth list picker appears.
 
 **So the live board is six decisions and one piece of work.** _(0.9.0 was CUT on 2026-08-10 — the P1 that everything queued behind is done, and the release chain ran clean: publish to npmjs, docs deployed.)_ The decisions: **Angular 22**, whose peer range we currently exclude and which should be settled before the next cut · **packaging A/C/D** · **the breaking batch**, decided as one story · **the four identical consumer overrides**, which are evidence about our defaults · **verdicts B1–B5** plus a colour space, for the interlocked token trio · **the LOOK** for `dirty` / `pending` / `disabledReasons`. The work: the `ds-modal` status widening (breaking, so it rides the batch) — width-based overflow shipped as an opt-in on 2026-08-11, leaving only its default flip, which is already a member of the batch. _(Composition rules closed 2026-08-10: all three rule gaps written and rendered at `Practice → Composition rules` from the same file the package ships.)_
 

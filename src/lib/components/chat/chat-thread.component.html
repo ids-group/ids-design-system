@@ -1,0 +1,50 @@
+<div
+  #scroller
+  class="scroller"
+  role="region"
+  tabindex="0"
+  [attr.aria-label]="label()"
+  (scroll)="onScroll()">
+  <div
+    #content
+    class="content">
+    <ng-content></ng-content>
+
+    @if (working()) {
+      <div class="working">
+        <span aria-hidden="true">
+          <ds-spinner size="sm" />
+        </span>
+
+        <span class="working-label">
+          {{ workingText() }}
+        </span>
+      </div>
+    }
+  </div>
+</div>
+
+@if (loadingOlder()) {
+  <div class="older">
+    <ds-spinner size="sm" />
+  </div>
+}
+
+@if (!pinned()) {
+  <ds-button
+    class="jump"
+    variant="outline"
+    color="neutral"
+    size="sm"
+    trailingIcon="arrowDown"
+    (pressed)="scrollToEnd()">
+    {{ jumpLabel() }}
+  </ds-button>
+}
+
+<div
+  class="visually-hidden"
+  aria-live="polite"
+  aria-atomic="true">
+  {{ announcement() }}
+</div>

@@ -124,18 +124,25 @@
     inset-block: var(--space-2);
     right: 0;
     width: var(--border-width-default);
-    background-color: var(--border-default);
+    background-color: var(--_table-resize-line-color);
     transition: background-color var(--duration-fast) var(--ease-standard);
   }
 
   &:hover::after,
-  &:active::after,
-  &:focus-visible::after {
+  &:active::after {
     background-color: var(--_table-sort-active-icon-color);
   }
 
+  // The line sits on the column edge and the next cell paints over anything right of it, so a ring
+  // around the handle or the line is cut; the line itself carries the focus indicator.
   &:focus-visible {
-    @include focus.ring;
+    @include focus.own-indicator;
+  }
+
+  &:focus-visible::after {
+    inset-block: var(--space-1);
+    width: var(--focus-ring-width);
+    background-color: var(--focus-ring-color);
   }
 }
 
@@ -185,6 +192,7 @@
   --_table-head-font-size:         var(--ds-table-head-font-size,         var(--font-size-xs));
   --_table-divider:         var(--ds-table-divider,         var(--border-divider));
   --_table-sort-active-icon-color:  var(--ds-table-sort-active-icon-color,  var(--accent));
+  --_table-resize-line-color: var(--ds-table-resize-line-color, var(--text-tertiary));
   --_table-icon-button-color: var(--ds-table-icon-button-color, var(--icon-default));
   --_table-icon-button-color-hover: var(--ds-table-icon-button-color-hover, var(--icon-strong));
   --_table-icon-button-focus-color: var(--ds-table-icon-button-focus-color, var(--accent));

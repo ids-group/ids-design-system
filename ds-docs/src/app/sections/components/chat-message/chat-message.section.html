@@ -1,0 +1,456 @@
+<docs-section
+  anchor="chat-message"
+  eyebrow="Components"
+  title="Chat">
+  <span lede>
+    Message bubbles and the list that holds them. The window around them, the
+    tabs and the composer stay with the app; the text inside a bubble is the
+    app's too, rendered markdown included.
+  </span>
+
+  <h3 class="block-title t-h4">
+    States
+  </h3>
+
+  <div class="states is-cols-2">
+    <div class="state-cell">
+      <div class="state-cell-stage chat-stage">
+        <ds-chat-thread>
+          <ds-chat-message
+            role="user"
+            time="09:41">
+            Make the header use the brand colour.
+          </ds-chat-message>
+
+          <ds-chat-message
+            author="Assistant"
+            time="09:41">
+            Done. The header now uses the brand colour.
+            <ds-icon-button
+              actions
+              icon="copy"
+              size="sm"
+              color="neutral"
+              ariaLabel="Copy answer" />
+          </ds-chat-message>
+        </ds-chat-thread>
+      </div>
+
+      <div class="state-cell-label">
+        User right, assistant left
+      </div>
+    </div>
+
+    <div class="state-cell">
+      <div class="state-cell-stage chat-stage">
+        <ds-chat-thread>
+          <ds-chat-message role="user">
+            Move the search to the right.
+          </ds-chat-message>
+
+          <ds-chat-message role="user">
+            And make it narrower.
+          </ds-chat-message>
+
+          <ds-chat-message role="user">
+            About half the width.
+          </ds-chat-message>
+
+          <ds-chat-message>
+            Moved and narrowed to half.
+          </ds-chat-message>
+
+          <ds-chat-message>
+            The filters stay above it.
+          </ds-chat-message>
+        </ds-chat-thread>
+      </div>
+
+      <div class="state-cell-label">
+        A run of one role, tighter
+      </div>
+    </div>
+
+    <div class="state-cell">
+      <div class="state-cell-stage chat-stage">
+        <ds-chat-thread>
+          <ds-chat-message
+            role="user"
+            [sentAt]="pauseTimes[0]">
+            Make the cards wider.
+          </ds-chat-message>
+
+          <ds-chat-message
+            role="user"
+            [sentAt]="pauseTimes[1]">
+            Three per row.
+          </ds-chat-message>
+
+          <ds-chat-message
+            role="user"
+            [sentAt]="pauseTimes[2]">
+            And add a shadow on hover.
+          </ds-chat-message>
+
+          <ds-chat-message [sentAt]="pauseTimes[3]">
+            Added a hover shadow to the cards.
+          </ds-chat-message>
+        </ds-chat-thread>
+      </div>
+
+      <div class="state-cell-label">
+        A long pause starts a new section
+      </div>
+    </div>
+
+    <div class="state-cell">
+      <div class="state-cell-stage chat-stage">
+        <ds-chat-thread>
+          <ds-chat-message role="user">
+            Make this button bigger.
+            <ds-chat-attachment
+              attachments
+              label="button.primary"
+              source="Pricing page"
+              icon="scan">
+              <span class="snapshot-sample">
+                Save changes
+              </span>
+            </ds-chat-attachment>
+
+            <ds-tag
+              attachments
+              variant="neutral">
+              brief.pdf
+            </ds-tag>
+          </ds-chat-message>
+        </ds-chat-thread>
+      </div>
+
+      <div class="state-cell-label">
+        Attachment closed
+      </div>
+    </div>
+
+    <div class="state-cell">
+      <div class="state-cell-stage chat-stage">
+        <ds-chat-thread>
+          <ds-chat-message role="user">
+            Make this button bigger.
+            <ds-chat-attachment
+              attachments
+              label="button.primary"
+              source="Pricing page"
+              icon="scan"
+              [expanded]="true">
+              <span class="snapshot-sample">
+                Save changes
+              </span>
+            </ds-chat-attachment>
+          </ds-chat-message>
+        </ds-chat-thread>
+      </div>
+
+      <div class="state-cell-label">
+        Attachment open: snapshot as sent
+      </div>
+    </div>
+
+    <div class="state-cell">
+      <div class="state-cell-stage chat-stage">
+        <ds-chat-thread>
+          <ds-chat-message>
+            <ds-chat-steps steps>
+              <ds-chat-step
+                heading="Read the page"
+                status="done" />
+
+              <ds-chat-step
+                heading="Run the build"
+                status="error"
+                [expanded]="true">
+                <pre
+                  details
+                  class="t-mono-block">
+error TS2322: Type 'string' is not assignable to type 'number'.
+                </pre>
+              </ds-chat-step>
+
+              <ds-chat-step
+                heading="Fix the type"
+                status="done" />
+            </ds-chat-steps>
+            The build failed once on a type error; I fixed it and it passes now.
+          </ds-chat-message>
+        </ds-chat-thread>
+      </div>
+
+      <div class="state-cell-label">
+        Steps above the answer
+      </div>
+    </div>
+
+    <div class="state-cell">
+      <div class="state-cell-stage chat-stage">
+        <ds-chat-thread
+          workingLabel="Running the build"
+          [working]="true">
+          <ds-chat-message role="user">
+            Fix the build.
+          </ds-chat-message>
+
+          <ds-chat-message>
+            <ds-chat-steps steps>
+              <ds-chat-step
+                heading="Read the page"
+                status="done" />
+
+              <ds-chat-step
+                heading="Run the build"
+                status="running" />
+            </ds-chat-steps>
+          </ds-chat-message>
+        </ds-chat-thread>
+      </div>
+
+      <div class="state-cell-label">
+        Steps only, while working
+      </div>
+    </div>
+
+    <div class="state-cell">
+      <div class="state-cell-stage chat-stage">
+        <ds-chat-thread
+          workingLabel="Rebuilding"
+          [working]="true">
+          <ds-chat-message role="user">
+            Rebuild the prototype.
+          </ds-chat-message>
+        </ds-chat-thread>
+      </div>
+
+      <div class="state-cell-label">
+        Working, with the current step
+      </div>
+    </div>
+
+    <div class="state-cell">
+      <div class="state-cell-stage chat-stage">
+        <ds-chat-thread>
+          <ds-chat-message role="user">
+            https://ids-ds.proto.ids-group.co.uk/components/data-display?section=chat&amp;variant=long-unbroken-address
+          </ds-chat-message>
+
+          <ds-chat-message>
+            Averylongwordwithnobreakopportunityatallthatwouldotherwiseoverflowthebubble.
+          </ds-chat-message>
+        </ds-chat-thread>
+      </div>
+
+      <div class="state-cell-label">
+        Long words and URLs wrap
+      </div>
+    </div>
+
+    <div class="state-cell">
+      <div class="state-cell-stage chat-stage">
+        <ds-chat-thread>
+          <ds-chat-message
+            role="user"
+            status="sent"
+            time="13:02">
+            Rename the page to Pricing.
+          </ds-chat-message>
+
+          <ds-chat-message
+            role="user"
+            status="sent"
+            time="13:02">
+            And move it first in the menu.
+          </ds-chat-message>
+
+          <ds-chat-message time="13:03">
+            Renamed the page and moved it first.
+          </ds-chat-message>
+
+          <ds-chat-message
+            role="user"
+            status="sending"
+            time="13:04">
+            Add a FAQ section under it.
+          </ds-chat-message>
+
+          <ds-chat-message
+            role="user"
+            status="failed"
+            time="13:04">
+            With five questions.
+          </ds-chat-message>
+        </ds-chat-thread>
+      </div>
+
+      <div class="state-cell-label">
+        Time under a run; sending, failed with Retry
+      </div>
+    </div>
+
+    <div class="state-cell">
+      <div class="state-cell-stage chat-stage">
+        <ds-chat-thread>
+          <ds-chat-message role="user">
+            Summarise the changes.
+          </ds-chat-message>
+
+          <ds-chat-message [streaming]="true">
+            I renamed the page, moved it first and
+          </ds-chat-message>
+        </ds-chat-thread>
+      </div>
+
+      <div class="state-cell-label">
+        Reply still streaming
+      </div>
+    </div>
+  </div>
+
+  <h3 class="block-title t-h4">
+    Steps fold into the reply
+  </h3>
+
+  <p class="block-desc t-s">
+    When the reader sends the next message, the steps of the reply before it
+    fold into a chip at the top of that reply; the chip opens them again. A
+    reply with a failed step keeps its steps open. Set
+    <code>
+      [foldStepsOnSend]="false"
+    </code> on the thread to keep them, or bind
+    <code>
+      [(stepsFolded)]
+    </code> on a message to fold it yourself.
+  </p>
+
+  <ds-chat-thread class="chat-fold">
+    @for (turn of foldTurns(); track turn.id) {
+      <ds-chat-message role="user">
+        {{ turn.request }}
+      </ds-chat-message>
+
+      @if (turn.steps.length || turn.reply) {
+        <ds-chat-message>
+          <ds-chat-steps
+            steps
+            [enter]="planEnter()">
+            @for (step of turn.steps; track step.heading) {
+              <ds-chat-step
+                [status]="step.status"
+                [heading]="step.heading">
+                @if (step.status === 'error') {
+                  <pre
+                    details
+                    class="t-mono-block">
+HTTP 503: service unavailable
+                </pre
+                  >
+                }
+              </ds-chat-step>
+            }
+          </ds-chat-steps>
+          {{ turn.reply }}
+        </ds-chat-message>
+      }
+    }
+  </ds-chat-thread>
+
+  <div class="chat-try-bar">
+    <ds-button (pressed)="sendFoldTurn()">
+      Send the next message
+    </ds-button>
+
+    <ds-button
+      variant="outline"
+      (pressed)="sendFoldTurn('planned')">
+      Send a request with a plan
+    </ds-button>
+
+    <ds-button
+      variant="outline"
+      (pressed)="
+        planEnter.set(planEnter() === 'together' ? 'stagger' : 'together')
+      ">
+      Plan enters: {{ planEnter() }}
+    </ds-button>
+
+    <ds-button
+      variant="outline"
+      (pressed)="sendFoldTurn('fails')">
+      Send a request that fails
+    </ds-button>
+  </div>
+
+  <h3 class="block-title t-h4">
+    Try it
+  </h3>
+
+  <p class="block-desc t-s">
+    Send a few messages: the list follows them. Scroll up and press Reply, and
+    the list stays where you are and offers a jump button instead. Scroll to the
+    top to load earlier messages; the message you were reading stays put.
+  </p>
+
+  <ds-chat-thread
+    class="chat-try"
+    workingLabel="Rebuilding"
+    [working]="working()"
+    [hasOlder]="hasOlder()"
+    [loadingOlder]="loadingOlder()"
+    (loadOlder)="loadOlder()">
+    @for (message of messages(); track message.id) {
+      <ds-chat-message
+        [role]="message.role"
+        [sentAt]="message.sentAt"
+        [streaming]="!!message.streaming"
+        [status]="message.status ?? null"
+        (retry)="retry(message.id)">
+        {{ message.text }}
+      </ds-chat-message>
+    }
+  </ds-chat-thread>
+
+  <form
+    class="chat-try-bar"
+    (submit)="send($event)">
+    <ds-input
+      class="chat-try-input"
+      ariaLabel="Message"
+      placeholder="Type and press Enter"
+      [(value)]="draft" />
+
+    <ds-button type="submit">
+      Send
+    </ds-button>
+
+    <ds-button
+      variant="outline"
+      (pressed)="reply()">
+      Reply
+    </ds-button>
+
+    <ds-button
+      variant="outline"
+      (pressed)="wait()">
+      Wait 20 min
+    </ds-button>
+
+    <ds-button
+      variant="outline"
+      (pressed)="failNext.set(!failNext())">
+      {{ failNext() ? 'Next send fails' : 'Fail next send' }}
+    </ds-button>
+
+    <ds-button
+      variant="outline"
+      (pressed)="working.set(!working())">
+      {{ working() ? 'Stop working' : 'Working' }}
+    </ds-button>
+  </form>
+</docs-section>

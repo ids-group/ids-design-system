@@ -1,0 +1,42 @@
+.state-cell-stage {
+  align-items: stretch;
+  justify-content: stretch;
+
+  > * {
+    flex: 1;
+  }
+}
+
+.frame {
+  --ds-splitter-gap: var(--space-3);
+
+  block-size: 180px;
+  padding: var(--space-2);
+  background-color: var(--surface-muted);
+  border-radius: var(--radius-lg);
+}
+
+.frame.is-tall {
+  block-size: 320px;
+}
+
+.fill {
+  block-size: 100%;
+}
+
+.pane-fill {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  block-size: 100%;
+  padding: var(--space-3);
+  color: var(--text-secondary);
+  background-color: var(--surface-default);
+  border: var(--border-width-default) solid var(--border-default);
+  border-radius: var(--radius-md);
+}
+
+.readout {
+  margin: var(--space-2) 0 0;
+  color: var(--text-secondary);
+}
