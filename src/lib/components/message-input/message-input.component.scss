@@ -116,8 +116,9 @@ ds-textarea {
 
 .status-bar {
   grid-area: status;
-  place-self: center end;
+  align-self: center;
   min-width: 0;
+  text-align: end;
   margin-block-end: var(--_p);
 }
 
