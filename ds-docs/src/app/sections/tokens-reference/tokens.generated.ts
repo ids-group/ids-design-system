@@ -8314,7 +8314,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--ds-timeline-node-border-color",
-        "value": "var(--border-strong)",
+        "value": "var(--text-tertiary)",
         "notes": "Timeline node border colour (defaults to --border-strong)."
       },
       {
