@@ -3045,6 +3045,18 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "false",
         "required": false,
         "description": "The `[steps]` fold into a chip at the top of the bubble, which opens them again; two-way bound. Inside a `ds-chat-thread` the steps of the reply before a new user message fold on their own (`foldStepsOnSend`). Folds only steps given as `ds-timeline-item`s."
+      },
+      {
+        "name": "stepsEnter",
+        "kind": "input",
+        "type": "ChatStepsEnter",
+        "union": [
+          "together",
+          "stagger"
+        ],
+        "default": "'together'",
+        "required": false,
+        "description": "How steps that arrive together (a plan given at once) come in: `'together'` grows them in as one block, `'stagger'` one after another. Steps that arrive one at a time grow in either way."
       }
     ],
     "outputs": [
