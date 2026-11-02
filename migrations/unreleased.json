@@ -73,7 +73,7 @@
         "var(--text-tertiary)"
       ],
       "action": "None, unless a row of your own rendered inside a `ds-popover`, a submenu or a dropdown panel (an option template, a custom menu row) colours its secondary line with `--text-tertiary`: use `var(--text-tertiary-overlay)` there.",
-      "appliesWhen": "The dark theme (`data-theme=\"dark\"`) only, where `--text-tertiary-overlay` is `--neutral-700`; in light it equals `--text-tertiary`. Library rows that take it: the `ds-menu-item` description and the `ds-list-item` subtitle and trailing slot inside a `ds-popover` or a submenu, the optgroup label and no-results line of the `ds-select`, `ds-multi-select` and `ds-autocomplete` panels, the `ds-date-picker` weekday header and the `ds-toast` time. A standalone `ds-menu`, a `ds-list` on the page, a modal or a drawer keep `--text-tertiary`.",
+      "appliesWhen": "The dark theme (`data-theme=\"dark\"`) only, where `--text-tertiary-overlay` is `--neutral-700`; in light it equals `--text-tertiary`. Library rows that take it: the `ds-menu-item` description and the `ds-list-item` subtitle and trailing slot inside a library overlay panel (a `ds-popover`, a submenu, a tooltip or a dropdown panel), the optgroup label and no-results line of the `ds-select`, `ds-multi-select` and `ds-autocomplete` panels, the `ds-date-picker` weekday header and the `ds-toast` time. A standalone `ds-menu`, a `ds-list` on the page, a modal or a drawer keep `--text-tertiary`.",
       "pitfall": "`--ds-menu-item-description-color` and `--ds-list-item-subtitle-color` set to `var(--text-tertiary)` on `:root` pin those rows to the darker colour inside overlays too; scope such an override to the page or drop it.",
       "restore": ":root[data-theme='dark'] { --text-tertiary-overlay: var(--text-tertiary); }",
       "verify": "In the dark theme open a `ds-popover` holding a `ds-menu` with a `description` and hover the item: the description's computed colour equals `--neutral-700` (`rgb(183, 191, 208)`), and a row of your own inside a popover reads `--text-tertiary-overlay` for its second line.",
@@ -175,7 +175,7 @@
       "verify": "Open a `ds-stepper` with an upcoming step and compare the number with its circle: the digit is centred vertically, not a fraction of a pixel high."
     },
     {
-      "text": "`--ds-menu-item-description-color` and `--ds-list-item-subtitle-color` default to `--text-tertiary-overlay` inside a `ds-popover` or a submenu, and `--ds-dropdown-empty-color` and `--ds-date-picker-weekday-color` default to it everywhere; it equals `--text-tertiary` in light. A value you set on them still wins.",
+      "text": "`--ds-menu-item-description-color` and `--ds-list-item-subtitle-color` default to `--text-tertiary-overlay` inside a library overlay panel (a `ds-popover`, a submenu, a tooltip or a dropdown panel), and `--ds-dropdown-empty-color` and `--ds-date-picker-weekday-color` default to it everywhere; it equals `--text-tertiary` in light. A value you set on them still wins.",
       "verify": "In the dark theme open a `ds-select` with `optgroup` labels and read the computed colour of a group label: it equals `--neutral-700`."
     }
   ],
