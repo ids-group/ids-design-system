@@ -306,8 +306,8 @@ error TS2322: Type 'string' is not assignable to type 'number'.
 
   <p class="block-desc t-s">
     A prototype for review, not API: three ways to show a failed agent step,
-    each at 340px and 640px. The summary line stays readable while the step is
-    closed; the log opens in a scrollable monospace panel.
+    each at 340px and 640px. Closed, the step shows only its title and status;
+    the error, the code and the log appear when it opens.
   </p>
 
   <div class="fail-grid">
@@ -330,24 +330,24 @@ error TS2322: Type 'string' is not assignable to type 'number'.
                 <ds-timeline-item
                   heading="Run the build"
                   status="error">
-                  <div class="fail-summary">
-                    <span class="fail-code">
-                      TS2322
-                    </span>
-                    Type 'string' is not assignable to type 'number'.
-                  </div>
-
-                  <a
-                    class="fail-path"
-                    href="#"
-                    [title]="failPath"
-                    (click)="$event.preventDefault()">
-                    <span class="fail-path-text">
-                      {{ failPath }}
-                    </span>
-                  </a>
-
                   <div details>
+                    <div class="fail-summary">
+                      <span class="fail-code">
+                        TS2322
+                      </span>
+                      Type 'string' is not assignable to type 'number'.
+                    </div>
+
+                    <a
+                      class="fail-path"
+                      href="#"
+                      [title]="failPath"
+                      (click)="$event.preventDefault()">
+                      <span class="fail-path-text">
+                        {{ failPath }}
+                      </span>
+                    </a>
+
                     @switch (variant) {
                       @case ('a') {
                         <div class="fail-frame">

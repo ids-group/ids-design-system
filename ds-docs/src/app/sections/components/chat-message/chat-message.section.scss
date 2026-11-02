@@ -33,8 +33,7 @@
   min-width: 12rem;
 }
 
-// Failed-step prototype. The ds-timeline-item details opening is animated here with ::ng-deep for
-// the review only; the real change belongs in ds-timeline-item.
+// Failed-step prototype for review.
 .fail-grid {
   display: flex;
   flex-wrap: wrap;
@@ -63,26 +62,6 @@
   left: var(--space-3);
   font-size: var(--font-size-xs);
   color: var(--text-tertiary);
-}
-
-:host ::ng-deep .fail-stage ds-timeline-item .details {
-  display: grid;
-  grid-template-rows: 1fr;
-  opacity: 1;
-  transition:
-    grid-template-rows var(--duration-slow) var(--ease-decelerate),
-    opacity var(--duration-slow) var(--ease-decelerate);
-
-  > * {
-    min-height: 0;
-    overflow: hidden;
-  }
-
-  &[hidden] {
-    grid-template-rows: 0fr;
-    opacity: 0;
-    visibility: hidden;
-  }
 }
 
 .fail-summary {
@@ -129,7 +108,7 @@
   padding: var(--space-2) 0;
   overflow-x: auto;
   border-radius: var(--ds-radius-control);
-  background-color: var(--surface-secondary);
+  background-color: var(--surface-default);
   font-family: var(--font-mono);
   font-size: var(--font-size-mono);
   line-height: var(--line-height-loose);
@@ -191,7 +170,7 @@
   overflow: hidden;
   border: var(--border-width-default) solid var(--border-default);
   border-radius: var(--ds-radius-control);
-  background-color: var(--surface-secondary);
+  background-color: var(--surface-default);
 }
 
 .fail-log-bar {
@@ -229,7 +208,7 @@
     display: block;
     block-size: var(--space-6);
     margin-top: calc(-1 * var(--space-6));
-    background: linear-gradient(transparent, var(--surface-secondary));
+    background: linear-gradient(transparent, var(--surface-default));
     pointer-events: none;
   }
 }
