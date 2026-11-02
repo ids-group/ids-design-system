@@ -31,11 +31,25 @@ export interface ToastOccurrence {
   readonly at: number;
 }
 
-/** A `show()` folded into a stack returns the stack's ref: `id` is the stack's, and `dismiss()`
- *  closes the whole stack. */
+/** What `ToastRef.update()` can change. A field left out keeps its value. */
+export type ToastUpdate = Partial<
+  Pick<
+    ToastOptions,
+    'title' | 'body' | 'variant' | 'durationMs' | 'dismissible'
+  >
+>;
+
+/** A `show()` folded into a stack returns the stack's ref: `id` is the stack's, `dismiss()`
+ *  closes the whole stack and `update()` changes the stack. */
 export interface ToastRef {
   readonly id: number;
   dismiss(): void;
+  /** Changes the toast in place, on screen or queued; does nothing once it is dismissed or
+   *  expired. A screen reader hears the change only when `variant` turns `success` or `error`.
+   *  `durationMs` restarts the countdown; leaving `loading` without one counts down the `show()`
+   *  default, 5000 ms. A `loading` toast, or one with an `action`, never expires and stays
+   *  dismissible. */
+  update(patch: ToastUpdate): void;
 }
 
 export interface ToastEntry {

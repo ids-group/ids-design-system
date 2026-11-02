@@ -77,6 +77,7 @@ export interface ToastPromiseMessages<T = unknown> {
 export interface ToastRef {
     readonly id: number;
     dismiss(): void;
+    update(patch: ToastUpdate): void;
 }
 
 @Component({ selector: 'ds-toast-region' })
@@ -88,6 +89,7 @@ export class ToastRegionComponent {
     private clearCountdown;
     protected closeOccurrence(entry: ToastEntry, occurrenceId: number): void;
     private drainQueue;
+    public entryFor(id: number): ToastEntry | undefined;
     private focusOrigin;
     private focusWithin;
     private readonly host;
@@ -119,7 +121,7 @@ export class ToastRegionComponent {
     private syncPause;
     private readonly timers;
     private toastNodes;
-    public update(id: number, patch: Partial<Pick<ToastEntry, 'body' | 'title' | 'variant' | 'dismissible' | 'action' | 'durationMs' | 'occurrences'>>): void;
+    public update(id: number, patch: Partial<Pick<ToastEntry, 'body' | 'title' | 'variant' | 'dismissible' | 'action' | 'durationMs' | 'occurrences' | 'groupKey'>>): void;
     protected readonly visibleEntries = signal<readonly ToastEntry[]>(…);
 }
 
@@ -140,11 +142,15 @@ export class ToastService {
     private readonly pendingAnnouncements;
     private pendingAssertive;
     public promise<T>(source: Promise<T>, messages: ToastPromiseMessages<T>): Promise<T>;
+    private refFor;
     private regionRef;
     private scrimWatcher;
     public show(opts: ToastOptions): ToastRef;
     private readonly toastConfig;
+    private updateToast;
 }
+
+export type ToastUpdate = Partial<Pick<ToastOptions, 'title' | 'body' | 'variant' | 'durationMs' | 'dismissible'>>;
 
 export type ToastVariant = 'info' | 'success' | 'warning' | 'error' | 'loading';
 ```

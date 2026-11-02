@@ -21,6 +21,27 @@
       "appliesWhen": "A `ds-table` with `dsTableResize`. A table without it draws no resize line.",
       "restore": "ds-table { --ds-table-resize-line-color: var(--border-default); }",
       "verify": "At rest, a resizable `ds-table` header shows a `--text-tertiary` line at each column edge, unless `--ds-table-resize-line-color` is set."
+    },
+    {
+      "id": "toast-ref-update-member",
+      "kind": "behavior",
+      "old": "ToastRef",
+      "new": null,
+      "surface": [
+        "typescript"
+      ],
+      "searchHints": [
+        "ToastRef"
+      ],
+      "detect": [
+        ": ToastRef = {",
+        "as ToastRef",
+        "implements ToastRef"
+      ],
+      "action": "None, unless the app builds a `ToastRef` object itself: give it an `update` member, for example `update: () => {}`.",
+      "appliesWhen": "An object literal or class typed as `ToastRef` in the app, usually a test double standing in for `ToastService.show()`. A ref returned by `ToastService` already has `update`.",
+      "verify": "Every object the app types as `ToastRef` has an `update` member, and the app compiles.",
+      "restore": null
     }
   ],
   "informational": [
@@ -46,7 +67,8 @@
     {
       "text": "A `ds-timeline-item` wrapped in its own element inside `ds-timeline` draws its connector to the next item; only the last item of the timeline draws none.",
       "verify": "Wrap each `ds-timeline-item` of a `ds-timeline` in a `div`: every item but the last shows the vertical line under its marker."
-    }
+    },
+    "`ToastRef.update(patch)` changes a toast on screen or queued: `title`, `body`, `variant`, `durationMs` and `dismissible` (type `ToastUpdate`); a screen reader hears it only when `variant` turns `success` or `error`. Adds `ToastRegionComponent.entryFor`. A `ToastService.promise()` toast closed before the promise settles is silent. Nothing to change in your code."
   ],
   "deleteList": []
 }
