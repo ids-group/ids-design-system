@@ -22,6 +22,9 @@ holds an entry; what the release bot commits afterwards needs none.
 - **`DS_CPU_THROTTLE=<n>` renders every card at 1/n of the machine's speed.** `snapshot-cards` and
   `measure-cards` read it, so a release can be rehearsed against a slower runner than the one it
   was built on.
+- **`check-doc-api` fails a component in the surface that has no `docs/<Name>.md`.** `build-cards`
+  needs one for every component, so a new component without usage notes now fails the PR check
+  rather than the upload built after the release.
 
 ### Cards
 
