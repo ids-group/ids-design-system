@@ -45,6 +45,13 @@
     font: var(--font-weight-bold) var(--font-size-xs) / var(--line-height-flat) var(--font-sans);
     transition: background-color var(--duration-base) var(--ease-standard), border-color var(--duration-base) var(--ease-standard), color var(--duration-base) var(--ease-standard);
 
+    // Centring the line box leaves the figure's ink high, since a figure has no descender. The nudge is
+    // a transform: a layout offset on text rounds to a whole CSS pixel, a transform to a device pixel.
+    .number {
+      display: inline-block;
+      translate: 0 0.033em;
+    }
+
     &.done {
       background: var(--accent-subtitle);
       border-color: var(--accent);

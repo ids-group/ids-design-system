@@ -195,6 +195,10 @@
 
 ### Fixed
 
+- **The step number of a `ds-stepper` sits in the middle of its circle.** The circle centred the
+  figure's line box, and a figure has no descender, so at 150% display scaling it sat up to 0.67px
+  high. It is now nudged down by 0.033em and sits within 0.33px; at 100% and 200% it stays within
+  0.5px, the nearest a whole device pixel allows. Nothing to change in your code.
 - **The icon of a `ds-timeline-item` marker sits in the middle of the marker.** The icon is 16px
   instead of 15px, so it is centred in the 24px inside the marker's ring; at 15px the browser
   snapped it half a pixel right and down.
