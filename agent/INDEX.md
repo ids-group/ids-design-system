@@ -46,7 +46,7 @@ and token names.** These leaves are for orientation and usage.
 
 - [<ds-badge> — BadgeComponent](feedback/ds-badge.md) — Content: label text. Use for status pills, counts, lifecycle markers.
 - [<ds-status-dot> — StatusDotComponent](feedback/ds-status-dot.md) — <!-- inputs:ds-status-dot -->
-- [<ds-attachment> — AttachmentComponent](feedback/ds-attachment.md) — A file attached to a message, for the [chips] slot of <ds-message-input>: a 24px type tile (PDF, DOC, IMG, FIL
+- [<ds-attachment> — AttachmentComponent](feedback/ds-attachment.md) — A file attached to a message, for the [chips] slot of <ds-chat-input>: a 24px type tile (PDF, DOC, IMG, FILE) 
 - [<ds-tag> — TagComponent](feedback/ds-tag.md) — Content: label.
 - [<ds-avatar> — AvatarComponent](feedback/ds-avatar.md) — <!-- inputs:ds-avatar -->
 - [<ds-avatar-group> — AvatarGroupComponent](feedback/ds-avatar-group.md) — Content: project <ds-avatar> children.
@@ -66,6 +66,8 @@ and token names.** These leaves are for orientation and usage.
 - [<ds-chat-message> — ChatMessageComponent](feedback/ds-chat-message.md) — One message of a chat: role: ChatMessageRole = 'assistant' puts a filled bubble on the right ('user') or a sub
 - [<ds-chat-thread> — ChatThreadComponent](feedback/ds-chat-thread.md) — Scrollable list of ds-chat-messages; give it a height (or flex: 1 in a column). Stays at the newest message as
 - [<ds-chat-attachment> — ChatAttachmentComponent](feedback/ds-chat-attachment.md) — Chip in a message's [attachments] slot (label required, source muted after it, icon default paperclip). Open, 
+- [<ds-chat-steps> — ChatStepsComponent](feedback/ds-chat-steps.md) — The steps of an agent's work, in the [steps] slot of a ds-chat-message: ds-chat-steps in order, at any depth, 
+- [<ds-chat-step> — ChatStepComponent](feedback/ds-chat-step.md) — One step: heading, optional time, and status: ChatStepStatus | null ('done' | 'running' | 'pending' | 'waiting
 - [<ds-toast-region> — ToastRegionComponent](feedback/ds-toast-region.md) — <!-- inputs:ds-toast-region -->
 - [<ds-tree> — TreeComponent](feedback/ds-tree.md) — Nested rows with one tab stop and arrow-key navigation. (nodeSelected) emits the node selected; (nodeHover) em
 - [<ds-description-list> — DescriptionListComponent](feedback/ds-description-list.md) — **A horizontal list stacks when a value would get too narrow.** Each item is a wrapping flex row: once the lis
@@ -78,7 +80,7 @@ and token names.** These leaves are for orientation and usage.
 - [<ds-inline-edit> — InlineEditComponent](forms/ds-inline-edit.md) — Text that turns into a field of the same font and size when clicked, to rename it in place: a chat or document
 - [<ds-input> — InputComponent](forms/ds-input.md) — Content slots — addon attributes apply to any child element:
 - [<ds-textarea> — TextareaComponent](forms/ds-textarea.md) — Multi-line counterpart to <ds-input> — same wrapper/states, reuses the --ds-input-* token family. No prefix/su
-- [<ds-message-input> — MessageInputComponent](forms/ds-message-input.md) — Message box for a chat or an instruction: chips above an auto-growing text area, a bottom bar with actions on 
+- [<ds-chat-input> — ChatInputComponent](forms/ds-chat-input.md) — Message box for a chat or an instruction: chips above an auto-growing text area, a bottom bar with actions on 
 - [<ds-number-stepper> — NumberStepperComponent](forms/ds-number-stepper.md) — Spinbox for bounded quantities — −/+ buttons around a numeric value.
 - [<ds-checkbox> — CheckboxComponent](forms/ds-checkbox.md) — <!-- inputs:ds-checkbox -->
 - [<ds-radio> — RadioComponent](forms/ds-radio.md) — <!-- inputs:ds-radio -->
