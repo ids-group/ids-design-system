@@ -29,8 +29,10 @@ import type {
 
 const STEP = 16;
 const LARGE_STEP = 64;
-// The farthest the rubber band pulls past a limit, approached and never reached.
+// The farthest the rubber band pulls past a limit, approached and never reached: 100px, and never more
+// than a third of the pane it squashes, whose content would otherwise read as distorted.
 const OVERSCROLL_CAP = 100;
+const OVERSCROLL_SQUASH = 1 / 3;
 
 /**
  * Two panes with a handle between them that resizes one of them. Slots: `[start]` and `[end]`.
@@ -205,28 +207,31 @@ export class SplitterComponent implements OnInit, OnDestroy {
     );
   }
 
-  // Past a limit by `excess` px of size, the pull approaches OVERSCROLL_CAP and never reaches it. The
-  // handle moves by the pull, the measured pane stretches by it and the other squashes by it, each from
-  // its outer edge, so no gap opens. Transforms only: the layout keeps the clamped size.
+  // Past a limit by `excess` px of size, the pull approaches the cap and never reaches it. The handle
+  // moves by the pull, the measured pane stretches by it and the other squashes by it (the other way
+  // round past `min`), each from its outer edge, so no gap opens. Transforms only: the layout keeps
+  // the clamped size.
   private stretch(excess: number): void {
     const drag = this.drag!;
+    const [handle, measured, other] = this.movingParts();
+    const horizontal = this.orientation() === 'horizontal';
+    const extent = (element: HTMLElement) =>
+      horizontal ? element.offsetWidth : element.offsetHeight;
+    const squashed = excess > 0 ? other : measured;
+    const cap = Math.min(OVERSCROLL_CAP, extent(squashed) * OVERSCROLL_SQUASH);
     const pull =
-      Math.sign(excess) *
-      OVERSCROLL_CAP *
-      (1 - 1 / (Math.abs(excess) / OVERSCROLL_CAP + 1));
+      cap > 0
+        ? Math.sign(excess) * cap * (1 - 1 / (Math.abs(excess) / cap + 1))
+        : 0;
     if (pull === drag.pull) {
       return;
     }
     drag.pull = pull;
-    const [handle, measured, other] = this.movingParts();
     if (pull === 0) {
       this.clearTransforms();
 
       return;
     }
-    const horizontal = this.orientation() === 'horizontal';
-    const extent = (element: HTMLElement) =>
-      horizontal ? element.offsetWidth : element.offsetHeight;
     const scale = horizontal ? 'scaleX' : 'scaleY';
     const shift = this.pane() === 'start' ? pull : -pull;
     handle.style.transform = `translate${horizontal ? 'X' : 'Y'}(${shift}px)`;
