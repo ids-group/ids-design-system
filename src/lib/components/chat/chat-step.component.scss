@@ -200,6 +200,8 @@
 // The spacing lives one level in, so the collapsed row really is 0 high.
 .details-content {
   min-height: 0;
+
+  // glyph-clip-guard: collapses the details; open, the row is as tall as the log it holds
   overflow: hidden;
 }
 
