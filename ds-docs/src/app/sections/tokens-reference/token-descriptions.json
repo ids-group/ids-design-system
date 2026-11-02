@@ -451,7 +451,7 @@
   "--ds-date-picker-value-font-family": "Font family of the date value AND its ghost mask (default --font-mono — fixed-width digits keep the typed value on the mask; a proportional override still lines up thanks to tabular-nums).",
   "--ds-date-picker-value-font-size": "Size of the date value and its ghost mask (default --font-size-s).",
   "--ds-date-picker-value-font-weight": "Weight of the date value and its ghost mask (default --font-weight-regular).",
-  "--ds-date-picker-weekday-color": "Calendar weekday header label colour.",
+  "--ds-date-picker-weekday-color": "Calendar weekday header label colour (default --text-tertiary-overlay).",
   "--ds-date-picker-width": "Calendar width.",
   "--ds-description-item-details-color": "Description list details (value) text colour.",
   "--ds-description-item-details-font-size": "Value size.",
@@ -485,7 +485,7 @@
   "--ds-drawer-shadow": "Drawer panel elevation shadow (defaults to --ds-elevation-modal).",
   "--ds-drawer-title-color": "Drawer title text colour (defaults to inherited colour).",
   "--ds-drawer-width": "Panel width for every `size` of a left/right drawer; unset, each size reads --drawer-w-sm|md|lg.",
-  "--ds-dropdown-empty-color": "Colour of the no-results line.",
+  "--ds-dropdown-empty-color": "Colour of the no-results line (default --text-tertiary-overlay).",
   "--ds-dropdown-empty-font-size": "Size of the no-results line.",
   "--ds-dropdown-panel-bg-color": "Connected dropdown panel fill (defaults to --surface-overlay-raised).",
   "--ds-dropdown-panel-max-height": "Connected dropdown panel height before it scrolls (default 320px). The option list inside stops sooner, at --picker-maxh.",
@@ -610,7 +610,7 @@
   "--ds-list-item-selected-bg-color": "List item selected fill (defaults to --accent-surface-tint).",
   "--ds-list-item-selected-icon-color": "Icon colour in a selected list row. Defaults to the row's selected label colour, so icon and text move together.",
   "--ds-list-item-selected-label-color": "List item label colour when selected (defaults to --accent-strong).",
-  "--ds-list-item-subtitle-color": "List item subtitle text colour (defaults to --text-tertiary).",
+  "--ds-list-item-subtitle-color": "List item subtitle text colour (defaults to --text-tertiary, and to --text-tertiary-overlay inside a popover-class overlay).",
   "--ds-loading-overlay-enter-duration": "Loading-scrim entrance duration (default --duration-fast).",
   "--ds-loading-overlay-enter-easing": "Loading-scrim entrance easing (default --ease-standard).",
   "--ds-loading-overlay-enter-keyframes": "Loading-scrim entrance @keyframes (default ds-fade-in).",
@@ -624,7 +624,7 @@
   "--ds-menu-divider-color": "Menu item group divider colour (defaults to --border-divider).",
   "--ds-menu-divider-spacing": "Air above and below a ds-menu-divider. Default 0 means FLUSH: the divider cancels the menu's row gap, so items touch the line. Set it only to make the boundary breathe more than the rows — it is the one knob that can desync the divider from the row rhythm. For an airier menu, --ds-menu-gap spaces every row evenly.",
   "--ds-menu-gap": "Gap between menu items.",
-  "--ds-menu-item-description-color": "Colour of a ds-menu-item `description` — the standing second line under the label (default --text-tertiary, quieter than the label so the action still reads first).",
+  "--ds-menu-item-description-color": "Colour of a ds-menu-item `description` — the standing second line under the label (default --text-tertiary-overlay inside a popover or submenu, --text-tertiary in a standalone ds-menu; quieter than the label so the action still reads first).",
   "--ds-menu-item-description-font-size": "Type size of that second line (default --font-size-2xs).",
   "--ds-menu-item-description-max-width": "Where the description wraps (default 14rem). It exists because the line is prose, and an unbounded one would stretch the menu to the width of its longest sentence.",
   "--ds-menu-item-error-label-color": "Destructive menu item label colour (defaults to --error-text).",
@@ -1627,5 +1627,6 @@
   "--border-overlay": "Border of a popover-class overlay (popover, dropdown, pickers, tooltip, toast): --border-default in light, --border-strong in dark.",
   "--surface-overlay-raised": "Popovers, menus, dropdown panels, picker panels, tooltips and toasts: one neutral step above --surface-overlay in the dark theme, equal to it in light.",
   "--surface-overlay-raised-secondary": "What --surface-secondary becomes inside a popover-class overlay: one step above --surface-overlay-raised in the dark theme, the same as --surface-secondary in light.",
-  "--surface-overlay-raised-muted": "What --surface-muted becomes inside a popover-class overlay: one step above --surface-overlay-raised-secondary in the dark theme, the same as --surface-muted in light."
+  "--surface-overlay-raised-muted": "What --surface-muted becomes inside a popover-class overlay: one step above --surface-overlay-raised-secondary in the dark theme, the same as --surface-muted in light.",
+  "--text-tertiary-overlay": "Tertiary text inside a popover-class overlay (menu item descriptions, list item subtitles, dropdown group labels and no-results line, calendar weekdays, toast time): --text-tertiary in light, --neutral-700 in dark, so it stays above 4.5:1 on a hovered row of --surface-overlay-raised."
 }

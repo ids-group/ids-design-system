@@ -319,6 +319,11 @@ export const SEMANTIC_TEXT: readonly ColourRow[] = [
     "notes": "Tertiary, meta text, labels."
   },
   {
+    "name": "--text-tertiary-overlay",
+    "value": "var(--text-tertiary)",
+    "notes": "Tertiary text inside a popover-class overlay (menu item descriptions, list item subtitles, dropdown group labels and no-results line, calendar weekdays, toast time): --text-tertiary in light, --neutral-700 in dark, so it stays above 4.5:1 on a hovered row of --surface-overlay-raised."
+  },
+  {
     "name": "--text-muted",
     "value": "var(--neutral-400)",
     "notes": "Muted text, placeholders."
@@ -4017,8 +4022,8 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--ds-date-picker-weekday-color",
-        "value": "var(--text-tertiary)",
-        "notes": "Calendar weekday header label colour."
+        "value": "var(--text-tertiary-overlay)",
+        "notes": "Calendar weekday header label colour (default --text-tertiary-overlay)."
       },
       {
         "name": "--ds-date-picker-header-label-color",
@@ -4325,8 +4330,8 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--ds-dropdown-empty-color",
-        "value": "var(--text-tertiary)",
-        "notes": "Colour of the no-results line."
+        "value": "var(--text-tertiary-overlay)",
+        "notes": "Colour of the no-results line (default --text-tertiary-overlay)."
       },
       {
         "name": "--ds-dropdown-empty-font-size",
@@ -5295,7 +5300,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       {
         "name": "--ds-list-item-subtitle-color",
         "value": "var(--text-tertiary)",
-        "notes": "List item subtitle text colour (defaults to --text-tertiary)."
+        "notes": "List item subtitle text colour (defaults to --text-tertiary, and to --text-tertiary-overlay inside a popover-class overlay)."
       },
       {
         "name": "--ds-list-divider-color",
@@ -5419,7 +5424,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       {
         "name": "--ds-menu-item-description-color",
         "value": "var(--text-tertiary)",
-        "notes": "Colour of a ds-menu-item `description` — the standing second line under the label (default --text-tertiary, quieter than the label so the action still reads first)."
+        "notes": "Colour of a ds-menu-item `description` — the standing second line under the label (default --text-tertiary-overlay inside a popover or submenu, --text-tertiary in a standalone ds-menu; quieter than the label so the action still reads first)."
       },
       {
         "name": "--ds-menu-item-description-font-size",
