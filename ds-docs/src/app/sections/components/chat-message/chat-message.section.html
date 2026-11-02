@@ -400,6 +400,15 @@ error TS2322: Type 'string' is not assignable to type 'number'.
                             trailingIcon="external">
                             Open log
                           </ds-button>
+
+                          <ds-button
+                            variant="outline"
+                            color="neutral"
+                            size="sm"
+                            icon="sparkle"
+                            (pressed)="askAboutError()">
+                            Ask the agent
+                          </ds-button>
                         </div>
                       }
                     }
@@ -413,6 +422,24 @@ error TS2322: Type 'string' is not assignable to type 'number'.
               The build failed on a type error; I am fixing it.
             </ds-chat-message>
           </ds-chat-thread>
+
+          @if (variant === 'c') {
+            <div class="fail-field">
+              @if (askChip(); as chip) {
+                <ds-tag
+                  variant="neutral"
+                  [closable]="true"
+                  (closed)="askChip.set(null)">
+                  {{ chip }}
+                </ds-tag>
+              }
+
+              <input
+                class="fail-field-input"
+                aria-label="Message"
+                placeholder="Tell the agent what to do about it" />
+            </div>
+          }
         </div>
       }
     }

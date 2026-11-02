@@ -84,6 +84,22 @@ export class ChatMessageSection {
     'Application bundle generation failed. [4.213 seconds]',
   ];
 
+  // The open failed step can hand its error to the message field, for the reader to say what to do.
+  protected readonly askChip = signal<string | null>(null);
+
+  protected askAboutError(): void {
+    this.askChip.set(
+      "Run the build: TS2322 Type 'string' is not assignable to type 'number'.",
+    );
+    queueMicrotask(() =>
+      document
+        .querySelector<HTMLInputElement>(
+          '.fail-stage[data-variant="c"] .fail-field-input',
+        )
+        ?.focus(),
+    );
+  }
+
   protected copyLog(): void {
     void navigator.clipboard?.writeText(this.failLog.join('\n'));
   }
