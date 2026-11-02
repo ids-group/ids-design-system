@@ -79,6 +79,46 @@
   emits `(removed)`; the kind is announced before `meta`, and an image preview takes `name` as its
   alt text. Place it in the `[chips]` slot of `ds-message-input`. New type `AttachmentKind` and the
   optional `DsIntl.attachment` keys `remove(name)`, `pdf`, `doc`, `image` and `file`.
+- **`ds-chat-message`, `ds-chat-thread` and `ds-chat-attachment`, the bubbles and the list of a
+  chat.** `ds-chat-message` takes `role` (`ChatMessageRole`, `'user'` or `'assistant'`, default
+  `'assistant'`): a user message is a filled bubble on the right, an assistant message a subtle one
+  on the left. Optional `author` and `time` show above the bubble; without `author` the role is
+  spoken. The default slot is the text, rendered by your app; `[steps]` sits above the bubble on
+  the thread's surface (a `ds-timeline`; a message with only steps draws no bubble),
+  `[attachments]` under the text, and `[actions]` under the bubble, shown on hover or
+  focus. The text is selectable and long words and addresses wrap. `ds-chat-thread` scrolls its
+  messages and stays at the newest one as messages arrive or grow; once the reader scrolls up it
+  stays put and shows a jump button with the count of messages that arrived below ("3 new
+  messages", else "Jump to latest"), and a message the reader sends scrolls back down. Consecutive
+  messages of one role sit closer together, and only the last one of a run takes the tight corner
+  on the speaker's side, so the run reads as one block that ends where its tail is. With `sentAt`
+  (`Date`, ISO string or epoch milliseconds) on the messages, a gap of `timeBreakMinutes` (default
+  `15`) or more starts a new run under a centred time divider ("Today 14:32"), and the first message is dated the same way. `working` shows a row with a
+  spinner and `workingLabel` at the end. A screen reader hears the working label and each finished
+  reply, once: a reply that arrives while `working` is read when `working` clears, and the messages
+  present when the thread first renders are never read. `scrollToEnd()` scrolls down from code.
+  With `hasOlder`, scrolling near the start emits `(loadOlder)`; prepend the older messages and the
+  thread keeps the message the reader was looking at where it was, while `loadingOlder` shows a
+  spinner over the top of the list. On `ds-chat-message`, `streaming` marks a reply whose text is
+  still arriving: a caret blinks after the text, `aria-busy` is set, `[actions]` stay hidden, and the
+  thread reads the reply once it completes. `status` (`ChatMessageStatus`: `'sending'`, `'sent'` or
+  `'failed'`) shows the delivery of a message the reader sent under its bubble; `'sending'` dims the
+  bubble, `'failed'` says it was not sent with a Retry button that emits `(retry)`. Sending is the
+  app's: set `status` back to `'sending'` on retry.
+  `ds-chat-attachment` is a chip in `[attachments]` with `label`, an optional `source` (the page it
+  was picked on) and `icon` (default `paperclip`); open, it becomes a card on its own line that
+  frames its default slot, such as a snapshot of what was attached, in a preview of at most
+  `--ds-chat-attachment-preview-max-height` (default `16rem`). `expanded` binds the open state
+  two-way. A plain file is a `ds-tag`. New optional `DsIntl.chat` keys `user`, `assistant`,
+  `thread`, `working`, `newMessages(count)`, `latest`, `today`, `yesterday`, `sending`, `sent`,
+  `notSent` and `retry`, and CSS hooks
+  `--ds-chat-message-max-width` (default `85%`), `--ds-chat-message-radius`,
+  `--ds-chat-message-padding`, `--ds-chat-message-user-bg-color`, `--ds-chat-message-user-color`,
+  `--ds-chat-message-assistant-bg-color`, `--ds-chat-message-assistant-color`,
+  `--ds-chat-thread-gap`, `--ds-chat-thread-group-gap`, `--ds-chat-thread-padding`,
+  `--ds-chat-attachment-bg-color`, `--ds-chat-attachment-preview-bg-color` and
+  `--ds-chat-attachment-preview-max-height`; the attachment chip and the jump button are rounded by
+  `--ds-radius-pill`.
 
 ### Changed
 

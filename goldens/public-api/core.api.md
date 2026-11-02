@@ -71,6 +71,7 @@ export const DS_INTL_DEFAULTS: DsIntl & {
     readonly splitter: Required<NonNullable<DsIntl['splitter']>>;
     readonly messageInput: Required<NonNullable<DsIntl['messageInput']>>;
     readonly attachment: Required<NonNullable<DsIntl['attachment']>>;
+    readonly chat: Required<NonNullable<DsIntl['chat']>>;
 };
 
 export interface DsConfig {
@@ -349,6 +350,20 @@ export interface DsIntl {
         readonly pending?: string;
         readonly error?: string;
         readonly details?: (heading: string) => string;
+    };
+    readonly chat?: {
+        readonly user?: string;
+        readonly assistant?: string;
+        readonly thread?: string;
+        readonly working?: string;
+        readonly newMessages?: (count: number) => string;
+        readonly latest?: string;
+        readonly today?: string;
+        readonly yesterday?: string;
+        readonly sending?: string;
+        readonly sent?: string;
+        readonly notSent?: string;
+        readonly retry?: string;
     };
     readonly tabs: {
         readonly close: (label: string) => string;

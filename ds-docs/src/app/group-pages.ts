@@ -43,6 +43,7 @@ import { TopbarSection } from './sections/components/topbar/topbar.section';
 import { AccordionSection } from './sections/components/accordion/accordion.section';
 import { AvatarSection } from './sections/components/avatar/avatar.section';
 import { CardSection } from './sections/components/card/card.section';
+import { ChatMessageSection } from './sections/components/chat-message/chat-message.section';
 import { DescriptionListSection } from './sections/components/description-list/description-list.section';
 import { IconSection } from './sections/components/icon/icon.section';
 import { ListSection } from './sections/components/list/list.section';
@@ -193,6 +194,7 @@ export const GROUP_PAGES: readonly GroupPageDef[] = [
       AttachmentSection,
       AvatarSection,
       CardSection,
+      ChatMessageSection,
       DescriptionListSection,
       IconSection,
       ListSection,

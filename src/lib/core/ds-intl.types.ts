@@ -238,6 +238,33 @@ export interface DsIntl {
     /** `` `Details: ${heading}` `` - the toggle of the `[details]` area; `'Details'` without a heading. */
     readonly details?: (heading: string) => string;
   };
+  readonly chat?: {
+    /** `'You'` - spoken before a `ds-chat-message` with `role="user"` and no `author`. */
+    readonly user?: string;
+    /** `'Assistant'` - the same for `role="assistant"`. */
+    readonly assistant?: string;
+    /** `'Conversation'` - accessible name of the `ds-chat-thread` scroll area when `ariaLabel` is unset. */
+    readonly thread?: string;
+    /** `'Assistant is working'` - the working row when `workingLabel` is empty. */
+    readonly working?: string;
+    /** `` `${count} new messages` `` (`'1 new message'`) - the jump button while messages arrived
+     *  below the scrolled-up view. */
+    readonly newMessages?: (count: number) => string;
+    /** `'Jump to latest'` - the jump button while nothing new arrived. */
+    readonly latest?: string;
+    /** `'Today'` - the time divider of a message sent today, before its time. */
+    readonly today?: string;
+    /** `'Yesterday'` - the same for a message sent yesterday. */
+    readonly yesterday?: string;
+    /** `'Sending'` - under a message with `status="sending"`. */
+    readonly sending?: string;
+    /** `'Sent'` - under a message with `status="sent"`. */
+    readonly sent?: string;
+    /** `'Not sent'` - under a message with `status="failed"`. */
+    readonly notSent?: string;
+    /** `'Retry'` - the button beside it. */
+    readonly retry?: string;
+  };
   readonly tabs: {
     readonly close: (label: string) => string;
   };

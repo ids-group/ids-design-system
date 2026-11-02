@@ -10,6 +10,7 @@ export const DS_INTL_DEFAULTS: DsIntl & {
   readonly splitter: Required<NonNullable<DsIntl['splitter']>>;
   readonly messageInput: Required<NonNullable<DsIntl['messageInput']>>;
   readonly attachment: Required<NonNullable<DsIntl['attachment']>>;
+  readonly chat: Required<NonNullable<DsIntl['chat']>>;
 } = {
   field: {
     optional: '(optional)',
@@ -198,6 +199,21 @@ export const DS_INTL_DEFAULTS: DsIntl & {
     pending: 'Not started',
     error: 'Failed',
     details: (heading) => (heading ? `Details: ${heading}` : 'Details'),
+  },
+  chat: {
+    user: 'You',
+    assistant: 'Assistant',
+    thread: 'Conversation',
+    working: 'Assistant is working',
+    newMessages: (count) =>
+      count === 1 ? '1 new message' : `${count} new messages`,
+    latest: 'Jump to latest',
+    today: 'Today',
+    yesterday: 'Yesterday',
+    sending: 'Sending',
+    sent: 'Sent',
+    notSent: 'Not sent',
+    retry: 'Retry',
   },
   tabs: {
     close: (label) => `Close ${label}`,

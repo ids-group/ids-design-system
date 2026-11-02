@@ -2915,6 +2915,219 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       }
     ]
   },
+  "chat-message:ChatAttachmentComponent": {
+    "key": "chat-message",
+    "selector": "ds-chat-attachment",
+    "isElement": true,
+    "className": "ChatAttachmentComponent",
+    "status": "stable",
+    "importName": "ChatAttachmentComponent",
+    "importPath": "@ids-group-ltd/ids-design-system",
+    "entryPoint": "@ids-group-ltd/ids-design-system/components/chat-message",
+    "summary": null,
+    "inputs": [
+      {
+        "name": "label",
+        "kind": "input-required",
+        "type": "string",
+        "union": null,
+        "default": null,
+        "required": true,
+        "description": "Chip text: the file name, or the picked element's name."
+      },
+      {
+        "name": "source",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "''",
+        "required": false,
+        "description": "Where it came from, shown muted after the label: the page or screen it was picked on."
+      },
+      {
+        "name": "icon",
+        "kind": "input",
+        "type": "IconName | null",
+        "union": null,
+        "default": "'paperclip'",
+        "required": false,
+        "description": "Icon before the label."
+      },
+      {
+        "name": "expanded",
+        "kind": "model",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Whether the snapshot is open, two-way bound."
+      }
+    ],
+    "outputs": []
+  },
+  "chat-message": {
+    "key": "chat-message",
+    "selector": "ds-chat-message",
+    "isElement": true,
+    "className": "ChatMessageComponent",
+    "status": "stable",
+    "importName": "ChatMessageComponent",
+    "importPath": "@ids-group-ltd/ids-design-system",
+    "entryPoint": "@ids-group-ltd/ids-design-system/components/chat-message",
+    "summary": null,
+    "inputs": [
+      {
+        "name": "role",
+        "kind": "input",
+        "type": "ChatMessageRole",
+        "union": [
+          "user",
+          "assistant"
+        ],
+        "default": "'assistant'",
+        "required": false,
+        "description": "Who wrote it: `'user'` draws a filled bubble on the right, `'assistant'` a subtle one on the left."
+      },
+      {
+        "name": "author",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "''",
+        "required": false,
+        "description": "Name shown above the bubble. Without it the role is spoken (`DS_INTL.chat.user` / `assistant`)."
+      },
+      {
+        "name": "time",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "''",
+        "required": false,
+        "description": "Time label shown above the bubble, already formatted."
+      },
+      {
+        "name": "sentAt",
+        "kind": "input",
+        "type": "Date | string | number | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "When it was sent. Inside a `ds-chat-thread` it splits a run by time and dates the divider."
+      },
+      {
+        "name": "streaming",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "The text is still arriving: a caret blinks after it and `[actions]` stay hidden until it is done."
+      },
+      {
+        "name": "status",
+        "kind": "input",
+        "type": "ChatMessageStatus | null",
+        "union": [
+          "sending",
+          "sent",
+          "failed"
+        ],
+        "default": "null",
+        "required": false,
+        "description": "Delivery of a message the reader sent: `'sending'` dims it, `'sent'` marks it, `'failed'` says it was not sent and offers Retry. `null` shows nothing."
+      }
+    ],
+    "outputs": [
+      {
+        "name": "retry",
+        "kind": "output",
+        "type": "void",
+        "union": null,
+        "default": null,
+        "required": false,
+        "description": "Retry was pressed on a `'failed'` message. Send it again and move `status` back to `'sending'`."
+      }
+    ]
+  },
+  "chat-message:ChatThreadComponent": {
+    "key": "chat-message",
+    "selector": "ds-chat-thread",
+    "isElement": true,
+    "className": "ChatThreadComponent",
+    "status": "stable",
+    "importName": "ChatThreadComponent",
+    "importPath": "@ids-group-ltd/ids-design-system",
+    "entryPoint": "@ids-group-ltd/ids-design-system/components/chat-message",
+    "summary": null,
+    "inputs": [
+      {
+        "name": "working",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Shows the working row at the end of the thread: a spinner and `workingLabel`."
+      },
+      {
+        "name": "workingLabel",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "''",
+        "required": false,
+        "description": "The current step while `working`, such as \"Rebuilding\"; empty falls back to `DS_INTL.chat.working`."
+      },
+      {
+        "name": "ariaLabel",
+        "kind": "input",
+        "type": "string | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Accessible name of the scroll area; unset falls back to `DS_INTL.chat.thread`."
+      },
+      {
+        "name": "timeBreakMinutes",
+        "kind": "input",
+        "type": "number",
+        "union": null,
+        "default": "15",
+        "required": false,
+        "description": "Minutes between two messages' `sentAt` that start a new section with a time divider."
+      },
+      {
+        "name": "hasOlder",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "More messages exist before the first one; scrolling near the start then emits `loadOlder`."
+      },
+      {
+        "name": "loadingOlder",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Older messages are on their way: a spinner shows over the top of the list."
+      }
+    ],
+    "outputs": [
+      {
+        "name": "loadOlder",
+        "kind": "output",
+        "type": "void",
+        "union": null,
+        "default": null,
+        "required": false,
+        "description": "The reader scrolled near the start while `hasOlder` and not `loadingOlder`. Prepend the older messages; the thread keeps the message the reader was looking at in place."
+      }
+    ]
+  },
   "checkbox": {
     "key": "checkbox",
     "selector": "ds-checkbox",

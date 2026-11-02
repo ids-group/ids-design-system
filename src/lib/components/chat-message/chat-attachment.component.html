@@ -1,0 +1,35 @@
+<button
+  type="button"
+  class="head"
+  [attr.aria-expanded]="expanded()"
+  [attr.aria-controls]="snapshotId"
+  (click)="toggle()">
+  @if (icon(); as name) {
+    <ds-icon
+      class="icon"
+      [name]="name"
+      [size]="14" />
+  }
+
+  <span class="label">
+    {{ label() }}
+  </span>
+
+  @if (source()) {
+    <span class="source">
+      {{ source() }}
+    </span>
+  }
+
+  <ds-icon
+    class="chev"
+    name="chevronDown"
+    [size]="14" />
+</button>
+
+<div
+  class="preview"
+  [id]="snapshotId"
+  [hidden]="!expanded()">
+  <ng-content></ng-content>
+</div>

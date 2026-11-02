@@ -3580,6 +3580,83 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
     ]
   },
   {
+    "component": "Chat Message",
+    "selector": ".chat-message",
+    "description": "",
+    "tokens": [
+      {
+        "name": "--ds-chat-attachment-bg-color",
+        "value": "var(--surface-default)",
+        "notes": ""
+      },
+      {
+        "name": "--ds-chat-attachment-preview-bg-color",
+        "value": "var(--surface-secondary)",
+        "notes": ""
+      },
+      {
+        "name": "--ds-chat-attachment-preview-max-height",
+        "value": "16rem",
+        "notes": ""
+      },
+      {
+        "name": "--ds-radius-pill",
+        "value": "—",
+        "notes": "Radius role for fully round shapes — avatars, badges, switch tracks. Defaults to --radius-pill."
+      },
+      {
+        "name": "--ds-chat-message-max-width",
+        "value": "85%",
+        "notes": ""
+      },
+      {
+        "name": "--ds-chat-message-radius",
+        "value": "var(--ds-radius-panel)",
+        "notes": ""
+      },
+      {
+        "name": "--ds-chat-message-padding",
+        "value": "var(--space-2) var(--space-3)",
+        "notes": ""
+      },
+      {
+        "name": "--ds-chat-message-assistant-bg-color",
+        "value": "var(--surface-secondary)",
+        "notes": ""
+      },
+      {
+        "name": "--ds-chat-message-assistant-color",
+        "value": "var(--text-primary)",
+        "notes": ""
+      },
+      {
+        "name": "--ds-chat-message-user-bg-color",
+        "value": "var(--primary)",
+        "notes": ""
+      },
+      {
+        "name": "--ds-chat-message-user-color",
+        "value": "var(--text-on-primary)",
+        "notes": ""
+      },
+      {
+        "name": "--ds-chat-thread-gap",
+        "value": "var(--space-4)",
+        "notes": ""
+      },
+      {
+        "name": "--ds-chat-thread-group-gap",
+        "value": "var(--space-1)",
+        "notes": ""
+      },
+      {
+        "name": "--ds-chat-thread-padding",
+        "value": "var(--space-4)",
+        "notes": ""
+      }
+    ]
+  },
+  {
     "component": "Checkbox",
     "selector": ".checkbox",
     "description": "",
@@ -8962,11 +9039,6 @@ export const NEW_TOKENS: readonly NewToken[] = [
   {
     "name": "--ds-radius-panel",
     "value": "var(--radius-lg)",
-    "kind": "length"
-  },
-  {
-    "name": "--ds-radius-pill",
-    "value": "var(--radius-pill)",
     "kind": "length"
   },
   {
