@@ -108,14 +108,14 @@ through the UI afterwards renders the bar and its plain content, and drops the n
 
 ### What the manifest list means now
 
-`manual-surface.json` records the 16 templates whose `<ng-content>` sits inside a control-flow
-block of their own. **That is a watch-list, not a defect list** - all 16 are green today. It exists
+`manual-surface.json` records the 17 templates whose `<ng-content>` sits inside a control-flow
+block of their own. **That is a watch-list, not a defect list** - all 17 are green today. It exists
 because the two defects above were invisible until someone looked, and a new component that gates
 its projection deserves the same look. `check-manual-surface.mjs` fails when the list changes so
 the look actually happens. A template whose `<ng-content>` sits in an `<ng-template>` that another
 component stamps is not on it, because the gate lives in the stamper; `chart` is that case (below).
 
-The sixteen, each with the gate its `<ng-content>` sits behind:
+The seventeen, each with the gate its `<ng-content>` sits behind:
 
 | component       | gate              | status                                                                                                 |
 | --------------- | ----------------- | ------------------------------------------------------------------------------------------------------ |
@@ -135,6 +135,7 @@ The sixteen, each with the gate its `<ng-content>` sits behind:
 | `stat`          | `delta()`         | ✅ with the delta input set                                                                            |
 | `table`         | `emptyTemplate()` | [empty] ✅; [bulk-actions] ✅ with `selectedIds` passed as an initial prop                             |
 | `filter-bar`    | `collapsed()`     | drops unslotted content by design                                                                      |
+| `chat-message`  | `!streaming()`    | [actions] only; live when `streaming` is unset at creation, by the rule above; not measured            |
 
 `ds-modal-card` also has projection but does not appear here: its slots are at root level,
 outside any block, and it is one of the components that register under an alias.
