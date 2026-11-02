@@ -58,6 +58,52 @@ const REPLIES = [
 })
 export class ChatMessageSection {
   private nextId = 0;
+
+  protected readonly foldTurns = signal<
+    readonly {
+      id: number;
+      request: string;
+      steps: readonly string[];
+      reply: string;
+    }[]
+  >([
+    {
+      id: 0,
+      request: 'Make the header blue.',
+      steps: [
+        'Reading the page',
+        'Editing the header',
+        'Rebuilding',
+        'Checking the screen',
+      ],
+      reply: 'Done: the header is blue now.',
+    },
+  ]);
+
+  // The next request: the reader's message first, then the agent's steps one by one, then its reply.
+  protected sendFoldTurn(): void {
+    const id = this.foldTurns().length;
+    const steps = ['Reading the page', 'Editing the header', 'Rebuilding'];
+    this.foldTurns.update((turns) => [
+      ...turns,
+      { id, request: 'And move the logo to the left.', steps: [], reply: '' },
+    ]);
+    const patch = (change: object) =>
+      this.foldTurns.update((turns) =>
+        turns.map((turn) => (turn.id === id ? { ...turn, ...change } : turn)),
+      );
+    steps.forEach((_, index) =>
+      this.later(
+        () => patch({ steps: steps.slice(0, index + 1) }),
+        500 + index * 350,
+      ),
+    );
+    this.later(
+      () => patch({ reply: 'Moved the logo to the left.' }),
+      500 + steps.length * 350,
+    );
+  }
+
   private olderPages = 0;
   private readonly timers = new Set<ReturnType<typeof setTimeout>>();
 

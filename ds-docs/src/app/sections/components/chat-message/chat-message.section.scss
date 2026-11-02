@@ -32,3 +32,10 @@
   flex: 1;
   min-width: 12rem;
 }
+
+.chat-fold {
+  height: 26rem;
+  margin-top: var(--space-3);
+  border: var(--border-width-default) solid var(--border-default);
+  border-radius: var(--radius-lg);
+}
