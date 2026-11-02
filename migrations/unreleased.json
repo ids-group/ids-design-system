@@ -112,6 +112,11 @@
       "verify": "Tab to a column resize handle: the line at the column edge turns the focus colour and wider, with no ring around the handle."
     },
     "`ToastService` can fold repeated toasts into one `×N` stack under `provideDsConfig({ toast: { groupDuplicates: true } })`, or by `ToastOptions.groupKey`; off by default. Adds `ToastOccurrence`, `ToastEntry.groupKey` and `ToastEntry.occurrences`, the `ds-toast` input `occurrences` and output `occurrenceClosed`, `ToastRegionComponent.stackFor`, an `occurrences` key in the patch `ToastRegionComponent.update()` accepts, and the optional `DsIntl.toast` keys `showAll`, `hide`, `dismissAll` and `repeated`. Nothing to change in your code.",
+    "`ToastRef.update(patch)` (patch type `ToastUpdate`) changes the `title`, `body`, `variant`, `durationMs` or `dismissible` of a toast on screen or queued, and `ToastRegionComponent.entryFor(id)` returns that toast. A `ToastRef` the app builds itself is covered by the item `toast-ref-update-member`.",
+    {
+      "text": "A `ToastService.promise()` toast closed before the promise settles announces nothing; the outcome is announced only while the toast is on screen or queued.",
+      "verify": "Start a `ToastService.promise()`, close its toast, then let the promise resolve: the live region announces nothing."
+    },
     {
       "text": "Under `data-theme=\"dark\"`, `--shadow-1` to `--shadow-4` and every `--shadow-*` and `--ds-elevation-*` alias built on them are near-black at 30% to 60% alpha instead of a light glow, `--shadow-4` adds a 1px light hairline at 8% alpha, and `--shadow-tint-l` is `3%`.",
       "verify": "In the dark theme open a modal and a popover and read their computed box-shadow: every layer is a dark rgba, and the modal's first layer is `0 0 0 1px` at 0.08 alpha."
