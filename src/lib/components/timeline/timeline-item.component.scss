@@ -17,11 +17,6 @@
   --_timeline-toggle-icon-color-hover: var(--ds-timeline-toggle-icon-color-hover, var(--icon-strong));
   --_timeline-open-bg-color: var(--ds-timeline-open-bg-color, var(--surface-secondary));
 
-  // How far the open card reaches above and below the item. It is drawn behind the item and takes
-  // no room, so opening never moves the item or anything above it; the compact rows leave less to
-  // reach into before the card meets its neighbours.
-  --_timeline-open-extend: var(--space-2);
-
   // Row 1 holds the marker and the text (heading, content, time); row 2 holds the details and the
   // gap to the next item. The marker centres on the text, or the text on the marker when the text
   // is shorter, so the details opening never moves the marker.
@@ -163,9 +158,10 @@
   display: none;
 }
 
-// The open item sits on a tinted card behind its marker, text and details. The card reaches past
-// the item into the gaps around it rather than padding the item, so opening never moves the
-// heading or the marker; the chevron keeps the same room to the edge as the marker.
+// The open item sits on a tinted card behind its marker, text and details. The card is drawn behind
+// the item and takes no room, so opening never moves the heading or the marker; it reaches out
+// sideways only, so the chevron keeps the same room to the edge as the marker, and the row gaps
+// above and below stay as they are.
 :host(.is-expanded) {
   isolation: isolate;
 
@@ -173,8 +169,7 @@
     content: '';
     grid-area: 1 / 1 / 3 / 3;
     z-index: -1;
-    margin: calc(-1 * var(--_timeline-open-extend)) calc(-1 * var(--space-2))
-      calc(var(--_timeline-gap) - var(--_timeline-open-extend));
+    margin: 0 calc(-1 * var(--space-2)) var(--_timeline-gap);
     border-radius: var(--ds-radius-control);
     background-color: var(--_timeline-open-bg-color);
   }
@@ -182,7 +177,7 @@
 
 :host(.is-expanded.is-last)::before,
 :host(.is-expanded.outside-timeline:last-child)::before {
-  margin-bottom: calc(-1 * var(--_timeline-open-extend));
+  margin-bottom: 0;
 }
 
 // Closed, the details collapse to no height and leave the accessibility tree and the tab order
@@ -295,7 +290,6 @@
 :host(.is-compact) {
   --_timeline-node-size: var(--ds-timeline-node-size, var(--timeline-node-size-compact));
   --_timeline-gap: var(--ds-timeline-gap, var(--timeline-gap-compact));
-  --_timeline-open-extend: var(--space-1);
 
   column-gap: var(--space-2);
 
