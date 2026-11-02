@@ -187,9 +187,11 @@ export class SplitterComponent implements OnInit, OnDestroy {
     }
     const { box } = this.drag;
     const raw = this.fromPaneEdge(event, box) - this.drag.grab;
-    const size = this.clamp(Math.round(raw), this.room(box));
+    const room = this.room(box);
+    const size = this.clamp(Math.round(raw), room);
     if (this.drag.elastic) {
-      this.stretch(raw - size);
+      // Against the unrounded limit: within min and max the excess is exactly 0, not the rounding.
+      this.stretch(raw - this.clamp(raw, room));
     }
     if (size === this.drag.size) {
       return;
