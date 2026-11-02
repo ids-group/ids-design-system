@@ -21,10 +21,16 @@ import {
   retainStyles,
 } from '@ids-group-ltd/ids-design-system/core';
 import { SplitterDraggingStylesComponent } from './splitter-dragging-styles.component';
-import type { SplitterOrientation, SplitterPane } from './splitter.types';
+import type {
+  SplitterOrientation,
+  SplitterOverscroll,
+  SplitterPane,
+} from './splitter.types';
 
 const STEP = 16;
 const LARGE_STEP = 64;
+// The farthest the rubber band pulls past a limit, approached and never reached.
+const OVERSCROLL_CAP = 100;
 
 /**
  * Two panes with a handle between them that resizes one of them. Slots: `[start]` and `[end]`.
@@ -42,6 +48,7 @@ const LARGE_STEP = 64;
     '[attr.data-orientation]': 'orientation()',
     '[attr.data-pane]': 'pane()',
     '[style.--_splitter-size]': 'current() + "px"',
+    '[class.springing]': 'springing()',
   },
 })
 export class SplitterComponent implements OnInit, OnDestroy {
@@ -68,10 +75,14 @@ export class SplitterComponent implements OnInit, OnDestroy {
   readonly persistKey = input<string>('');
   /** Accessible name of the handle; unset falls back to `DS_INTL.splitter.label`. Name what it resizes. */
   readonly ariaLabel = input<string | null>(null);
+  /** Dragged past `min` or `max`: `'elastic'` follows the pointer with growing resistance and springs
+   *  back on release, `'none'` stops at the limit. Off under `prefers-reduced-motion: reduce`. */
+  readonly overscroll = input<SplitterOverscroll>('elastic');
 
   protected readonly startId = nextControlId('ds-splitter-pane');
   protected readonly endId = nextControlId('ds-splitter-pane');
   protected readonly dragging = signal(false);
+  protected readonly springing = signal(false);
   protected readonly current = computed(() =>
     this.clamp(this.size() ?? this.defaultSize(), this.max()),
   );
@@ -87,7 +98,18 @@ export class SplitterComponent implements OnInit, OnDestroy {
     this.orientation() === 'horizontal' ? 'vertical' : 'horizontal',
   );
 
-  private drag: { pointerId: number; grab: number; size: number } | null = null;
+  private drag: {
+    pointerId: number;
+    grab: number;
+    size: number;
+    // Measured once at the grab: the rubber band transforms the panes, so their boxes are not read mid-drag.
+    box: DOMRect;
+    elastic: boolean;
+    pull: number;
+  } | null = null;
+  private pendingMove: PointerEvent | null = null;
+  private frame = 0;
+  private springTimer = 0;
 
   constructor() {
     retainStyles(SplitterDraggingStylesComponent);
@@ -119,12 +141,20 @@ export class SplitterComponent implements OnInit, OnDestroy {
     event.preventDefault();
     const handle = this.handle().nativeElement;
     handle.setPointerCapture(event.pointerId);
+    // A grab during the spring-back stops it where the layout puts the handle, before anything is measured.
+    this.stopSpring();
     // The grab point's distance from the measured pane's edge stays fixed, so the handle never jumps.
-    const box = handle.getBoundingClientRect();
     this.drag = {
       pointerId: event.pointerId,
-      grab: this.fromPaneEdge(event, box),
+      grab: this.fromPaneEdge(event, handle.getBoundingClientRect()),
       size: this.current(),
+      box: this.panesBox(),
+      elastic:
+        this.overscroll() === 'elastic' &&
+        !this.document.defaultView?.matchMedia(
+          '(prefers-reduced-motion: reduce)',
+        ).matches,
+      pull: 0,
     };
     this.dragging.set(true);
     // Outside Angular: a move writes the DOM itself, so it must not start change detection per frame.
@@ -140,10 +170,25 @@ export class SplitterComponent implements OnInit, OnDestroy {
     if (event.pointerId !== this.drag?.pointerId) {
       return;
     }
-    const box = this.panesBox();
-    const size = this.clampToBox(
-      Math.round(this.fromPaneEdge(event, box) - this.drag.grab),
-    );
+    this.pendingMove = event;
+    if (!this.frame) {
+      this.frame = requestAnimationFrame(() => this.applyMove());
+    }
+  };
+
+  private applyMove(): void {
+    this.frame = 0;
+    const event = this.pendingMove;
+    this.pendingMove = null;
+    if (!event || !this.drag) {
+      return;
+    }
+    const { box } = this.drag;
+    const raw = this.fromPaneEdge(event, box) - this.drag.grab;
+    const size = this.clamp(Math.round(raw), this.room(box));
+    if (this.drag.elastic) {
+      this.stretch(raw - size);
+    }
     if (size === this.drag.size) {
       return;
     }
@@ -158,14 +203,87 @@ export class SplitterComponent implements OnInit, OnDestroy {
       '--_ds-splitter-cursor',
       cursor,
     );
-  };
+  }
+
+  // Past a limit by `excess` px of size, the pull approaches OVERSCROLL_CAP and never reaches it. The
+  // handle moves by the pull, the measured pane stretches by it and the other squashes by it, each from
+  // its outer edge, so no gap opens. Transforms only: the layout keeps the clamped size.
+  private stretch(excess: number): void {
+    const drag = this.drag!;
+    const pull =
+      Math.sign(excess) *
+      OVERSCROLL_CAP *
+      (1 - 1 / (Math.abs(excess) / OVERSCROLL_CAP + 1));
+    if (pull === drag.pull) {
+      return;
+    }
+    drag.pull = pull;
+    const [handle, measured, other] = this.movingParts();
+    if (pull === 0) {
+      this.clearTransforms();
+
+      return;
+    }
+    const horizontal = this.orientation() === 'horizontal';
+    const extent = (element: HTMLElement) =>
+      horizontal ? element.offsetWidth : element.offsetHeight;
+    const scale = horizontal ? 'scaleX' : 'scaleY';
+    const shift = this.pane() === 'start' ? pull : -pull;
+    handle.style.transform = `translate${horizontal ? 'X' : 'Y'}(${shift}px)`;
+    measured.style.transform = `${scale}(${(extent(measured) + pull) / extent(measured)})`;
+    other.style.transform = `${scale}(${Math.max(0, extent(other) - pull) / extent(other)})`;
+  }
+
+  // The handle, the pane `size` measures, then the other pane.
+  private movingParts(): [HTMLElement, HTMLElement, HTMLElement] {
+    const handle = this.handle().nativeElement;
+    const start = handle.previousElementSibling as HTMLElement;
+    const end = handle.nextElementSibling as HTMLElement;
+
+    return this.pane() === 'start'
+      ? [handle, start, end]
+      : [handle, end, start];
+  }
+
+  private clearTransforms(): void {
+    for (const element of this.movingParts()) {
+      element.style.transform = '';
+    }
+  }
+
+  private stopSpring(): void {
+    clearTimeout(this.springTimer);
+    this.springing.set(false);
+    this.clearTransforms();
+  }
+
+  // The class adds the transition; clearing the transforms in the next frame plays it back to rest.
+  private springBack(): void {
+    this.springing.set(true);
+    this.zone.runOutsideAngular(() => {
+      requestAnimationFrame(() => {
+        this.clearTransforms();
+        this.springTimer = window.setTimeout(
+          () => this.zone.run(() => this.springing.set(false)),
+          600,
+        );
+      });
+    });
+  }
 
   protected onPointerUp(event: PointerEvent): void {
     if (event.pointerId !== this.drag?.pointerId) {
       return;
     }
-    const { size } = this.drag;
+    if (this.frame) {
+      cancelAnimationFrame(this.frame);
+      this.applyMove();
+    }
+    const { size, pull } = this.drag;
     this.endDrag();
+    if (pull !== 0) {
+      this.springBack();
+    }
     if (size !== this.current()) {
       this.commit(size);
     }
@@ -222,6 +340,9 @@ export class SplitterComponent implements OnInit, OnDestroy {
     }
     const handle = this.handle().nativeElement;
     handle.removeEventListener('pointermove', this.onPointerMove);
+    cancelAnimationFrame(this.frame);
+    this.frame = 0;
+    this.pendingMove = null;
     try {
       handle.releasePointerCapture(this.drag.pointerId);
     } catch {
@@ -255,14 +376,17 @@ export class SplitterComponent implements OnInit, OnDestroy {
   }
 
   private clampToBox(size: number): number {
-    const box = this.panesBox();
+    return this.clamp(size, this.room(this.panesBox()));
+  }
+
+  private room(box: DOMRect): number {
     const handle = this.handle().nativeElement;
     const room =
       this.orientation() === 'horizontal'
         ? box.width - handle.offsetWidth
         : box.height - handle.offsetHeight;
 
-    return this.clamp(size, Math.min(this.max(), room));
+    return Math.min(this.max(), room);
   }
 
   // From the start pane's leading edge to the end pane's trailing edge: the host's border and

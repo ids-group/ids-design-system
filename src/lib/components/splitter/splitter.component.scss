@@ -42,6 +42,32 @@
   overflow: auto;
 }
 
+/* The rubber band scales each pane from its outer edge, so the edges at the host stay put. */
+:host([data-orientation='horizontal']) {
+  .pane-start {
+    transform-origin: left center;
+  }
+
+  .pane-end {
+    transform-origin: right center;
+  }
+}
+
+:host([data-orientation='vertical']) {
+  .pane-start {
+    transform-origin: center top;
+  }
+
+  .pane-end {
+    transform-origin: center bottom;
+  }
+}
+
+/* Released past a limit: the handle and the panes spring back with a small overshoot. */
+:host(.springing) :is(.pane, .handle) {
+  transition: transform var(--duration-slower) var(--ease-spring);
+}
+
 /* The handle fills the gap between the panes. At rest only the grip shows; hover, drag and focus
    swap it for a line on the edge being moved. */
 .handle {
