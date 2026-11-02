@@ -230,6 +230,19 @@ Methods: `focus(options?)`, `selectionStart` / `selectionEnd` (reads), `setSelec
 All inputs: `hint: string = ''`, `error: string = ''`, `warning: string = ''`, `reserveMessage: boolean | null = null`, `messageIcon: IconName | false | null = null`, `errors: readonly DsFieldError[] = []`, `invalid: boolean = false`, `touched: boolean = false`, `pending: boolean = false`, `dirty: boolean = false`, `showDirty: boolean | null = null`, `hidden: boolean = false`, `value: string = ''`, `size: 'sm' | 'md' | 'lg' = null`, `label: string = ''`, `placeholder: string = ''`, `disabled: boolean = false`, `readOnly: boolean = false`, `readonly: boolean = false`, `success: string = ''`, `required: boolean = false`, `optional: boolean = false`, `rows: number = 3`, `name: string | null = null`, `autosize: boolean = false`, `minRows: number | null = null`, `maxRows: number | null = null`, `resize: 'none' | 'vertical' | 'horizontal' | 'both' = 'vertical'`, `ariaLabel: string | null = null`, `maxLength: number | null = null`, `maxLengthMode: 'hard' | 'soft' = 'hard'`, `countTrimmed: boolean = false`, `minLength: number | null = null`, `pattern: readonly RegExp[] = []`
 <!-- /inputs -->
 
+#### `<ds-message-input>` — `MessageInputComponent`
+Message box for a chat or an instruction: chips above an auto-growing text area, a bottom bar with actions on the left and the send button on the right. Use it instead of a `ds-textarea` beside icon buttons, or a `ds-search` standing in for a message box.
+Slots: `[attachments]` on the page above the frame (the app's own card for a picked element and its snapshot; hidden while empty), `[chips]` above the text inside the frame (project `ds-tag`s for attachments and picked elements; hidden while empty), `[actions]` on the left of the bar (an attach `ds-icon-button`), `[send]` replaces the default send button (render your own states, e.g. Queue / Stop while `busy`; call `submit()` or read `canSubmit`).
+Keyboard: Enter emits `(submitted): string` with the trimmed text; Shift+Enter breaks the line; an Enter that commits an IME composition never submits; blank text, `busy` and `disabled` never submit. Enter on blank text inserts nothing.
+Send button: a 32px `ds-button` with an arrow, named by `DS_INTL.messageInput.send`, disabled while the text is blank. `busy` puts it in `loading` (spinner, `aria-busy`, press refused, focus kept). `layout: MessageInputLayout = 'status-bar'` places the `busyLabel` step: `'status-bar'` beside the fixed square button, `'status-above'` on a reserved line above the box, `'split'` attach outside left and send outside right with the step above, `'send-outside'` a round 40px send outside right, `'toolbar'` attach, step and send in a row under the box.
+Output: `(filesPasted): File[]` — the image files of a paste; the paste inserts no text when it carries images. The value is NOT cleared on submit: set `value` to `''` once the message is accepted.
+Methods: `submit()`, `focus(options?)`; `canSubmit` signal. Text area name: `ariaLabel`, else `DS_INTL.messageInput.label`.
+Tokens: `--ds-message-input-bg-color`, `--ds-message-input-radius`, `--ds-message-input-padding`; border, hover and focus follow the `--ds-field-*` set.
+
+<!-- inputs:ds-message-input -->
+All inputs: `value: string = ''`, `placeholder: string = ''`, `ariaLabel: string | null = null`, `minRows: number = 1`, `maxRows: number = 8`, `disabled: boolean = false`, `busy: boolean = false`, `busyLabel: string = ''`, `layout: MessageInputLayout = 'status-bar'`
+<!-- /inputs -->
+
 #### `<ds-number-stepper>` — `NumberStepperComponent`
 Spinbox for bounded quantities — −/+ buttons around a numeric value.
 Inputs: `value: model<number> = 0`, `min: number = 0`, `max: number | null = null`, `step: number = 1`, `size: 'sm' | 'md' | 'lg' = 'md'`, `disabled: boolean = false`
@@ -434,6 +447,15 @@ Input: `status: DsStatusKey` (same consumer-registered vocabulary as `ds-badge`;
 
 <!-- inputs:ds-status-dot -->
 All inputs: `status: DsStatusKey`, `ariaLabel: string | null = null`
+<!-- /inputs -->
+
+#### `<ds-attachment>` — `AttachmentComponent`
+A file attached to a message, for the `[chips]` slot of `<ds-message-input>`: a 24px type tile (PDF, DOC, IMG, FILE) or an image preview, the file name in bold and a muted second line.
+Inputs: `name: required string`, `meta: string = ''` (e.g. `'PDF · 240 KB'`), `kind: AttachmentKind = 'file'` (`'pdf' | 'doc' | 'image' | 'file'`), `previewUrl: string | null = null` (used when `kind` is `'image'`), `removable: boolean = false`. Output: `(removed): void`.
+Accessibility: the remove button is named `DS_INTL.attachment.remove(name)` ("Remove Brief.pdf"), the kind ("PDF document") is announced before `meta`, an image preview takes `name` as alt text.
+
+<!-- inputs:ds-attachment -->
+All inputs: `name: required string`, `meta: string = ''`, `kind: 'pdf' | 'doc' | 'image' | 'file' = 'file'`, `previewUrl: string | null = null`, `removable: boolean = false`
 <!-- /inputs -->
 
 #### `<ds-tag>` — `TagComponent`

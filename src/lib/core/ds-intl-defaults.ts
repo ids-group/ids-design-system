@@ -8,6 +8,8 @@ export const DS_INTL_DEFAULTS: DsIntl & {
   readonly toast: Required<DsIntl['toast']>;
   readonly timeline: Required<NonNullable<DsIntl['timeline']>>;
   readonly splitter: Required<NonNullable<DsIntl['splitter']>>;
+  readonly messageInput: Required<NonNullable<DsIntl['messageInput']>>;
+  readonly attachment: Required<NonNullable<DsIntl['attachment']>>;
 } = {
   field: {
     optional: '(optional)',
@@ -140,6 +142,17 @@ export const DS_INTL_DEFAULTS: DsIntl & {
     hide: 'Hide',
     dismissAll: 'Dismiss all',
     repeated: (message, count) => `${message}, ${count} times`,
+  },
+  attachment: {
+    remove: (name) => `Remove ${name}`,
+    pdf: 'PDF document',
+    doc: 'Word document',
+    image: 'Image',
+    file: 'File',
+  },
+  messageInput: {
+    label: 'Message',
+    send: 'Send',
   },
   spinner: {
     label: 'Loading',

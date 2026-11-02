@@ -54,6 +54,7 @@ export const NAV: NavGroup[] = [
       { label: 'Dropzone', anchor: 'dropzone' },
       { label: 'Field group', anchor: 'field-group' },
       { label: 'Input', anchor: 'input' },
+      { label: 'Message input', anchor: 'message-input' },
       { label: 'Multi-select', anchor: 'multi-select' },
       { label: 'Number stepper', anchor: 'number-stepper' },
       { label: 'OTP input', anchor: 'otp-input' },
@@ -93,6 +94,7 @@ export const NAV: NavGroup[] = [
     kind: 'component',
     items: [
       { label: 'Accordion', anchor: 'accordion' },
+      { label: 'Attachment', anchor: 'attachment' },
       { label: 'Avatars', anchor: 'avatar' },
       { label: 'Cards', anchor: 'card' },
       { label: 'Description list', anchor: 'description-list' },

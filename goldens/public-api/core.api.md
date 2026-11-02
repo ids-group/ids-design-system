@@ -69,6 +69,8 @@ export const DS_INTL_DEFAULTS: DsIntl & {
     readonly toast: Required<DsIntl['toast']>;
     readonly timeline: Required<NonNullable<DsIntl['timeline']>>;
     readonly splitter: Required<NonNullable<DsIntl['splitter']>>;
+    readonly messageInput: Required<NonNullable<DsIntl['messageInput']>>;
+    readonly attachment: Required<NonNullable<DsIntl['attachment']>>;
 };
 
 export interface DsConfig {
@@ -291,6 +293,17 @@ export interface DsIntl {
         readonly hide?: string;
         readonly dismissAll?: string;
         readonly repeated?: (message: string, count: number) => string;
+    };
+    readonly attachment?: {
+        readonly remove?: (name: string) => string;
+        readonly pdf?: string;
+        readonly doc?: string;
+        readonly image?: string;
+        readonly file?: string;
+    };
+    readonly messageInput?: {
+        readonly label?: string;
+        readonly send?: string;
     };
     readonly spinner: {
         readonly label: string;

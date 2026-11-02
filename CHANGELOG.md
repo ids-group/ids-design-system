@@ -55,6 +55,30 @@
   type `TimelineStatus`, CSS hooks `--ds-timeline-toggle-icon-color` and
   `--ds-timeline-toggle-icon-color-hover`, and the optional `DsIntl.timeline` keys `done`,
   `running`, `pending`, `error` and `details(heading)`.
+- **`ds-message-input`, a message box for a chat or an instruction.** An auto-growing text area
+  (`minRows`, default `1`; `maxRows`, default `8`) with a two-way `value`, `placeholder`, `ariaLabel`
+  and `disabled`. Enter emits `(submitted)` with the trimmed text and Shift+Enter breaks the line; an
+  Enter that commits an IME composition, blank text, `busy` and `disabled` never submit. Elements
+  marked `attachments` sit on the page above the frame (a picked element with its snapshot), `chips`
+  above the text inside the frame, `actions` on the left of the bottom bar, and `send` replaces the
+  default send button on the right. That button is disabled while the text is blank; with `busy` it
+  shows a spinner and refuses the press. `layout` (`MessageInputLayout`, default `'status-bar'`) places
+  the buttons and the `busyLabel` step: `'status-bar'` keeps a 32px square send button and shows the
+  step beside it, `'status-above'` shows the step on a line above the box, `'split'` puts attach outside on
+  the left and send outside on the right with the step above, `'send-outside'` keeps attach and the
+  step inside and puts a round 40px send button outside on the right, and `'toolbar'` puts attach,
+  the step and send in a row under the box. `(filesPasted)` emits the
+  image files of a paste, which then inserts no text. `submit()`, `focus()` and `canSubmit` serve a
+  custom send area. The text is not cleared on submit: clear `value` once the message is accepted.
+  New optional `DsIntl.messageInput` keys `label` (`'Message'`) and `send` (`'Send'`), and CSS hooks
+  `--ds-message-input-bg-color`, `--ds-message-input-radius`, `--ds-message-input-padding` (default `--space-2`); the border, hover and
+  focus colours follow the `--ds-field-*` set and the focus shadow `--ds-field-focus-shadow`.
+- **`ds-attachment` (`AttachmentComponent`), a file attached to a message.** A type tile (`kind`: `'pdf' | 'doc' | 'image' |
+  'file'`, default `'file'`) or, for `'image'` with `previewUrl`, the image itself, then `name` and a
+  second line `meta` such as the size. `removable` shows a remove button named "Remove {name}" that
+  emits `(removed)`; the kind is announced before `meta`, and an image preview takes `name` as its
+  alt text. Place it in the `[chips]` slot of `ds-message-input`. New type `AttachmentKind` and the
+  optional `DsIntl.attachment` keys `remove(name)`, `pdf`, `doc`, `image` and `file`.
 
 ### Changed
 

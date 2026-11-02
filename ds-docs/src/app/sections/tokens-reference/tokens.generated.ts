@@ -2412,6 +2412,18 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
     ]
   },
   {
+    "component": "Attachment",
+    "selector": ".attachment",
+    "description": "",
+    "tokens": [
+      {
+        "name": "--ds-radius-inner",
+        "value": "—",
+        "notes": "Radius role for shapes INSIDE a control — the checkbox box, an option row, a tag. Defaults to --radius-sm."
+      }
+    ]
+  },
+  {
     "component": "Auth Layout",
     "selector": ".auth-layout",
     "description": "",
@@ -2552,11 +2564,6 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "name": "--ds-autocomplete-placeholder-color",
         "value": "var(--_field-placeholder-color)",
         "notes": "Placeholder colour of the filter input (default --ds-field-placeholder-color, then --text-tertiary - the same as ds-input; before this the placeholder was the browser's own grey)."
-      },
-      {
-        "name": "--ds-radius-inner",
-        "value": "—",
-        "notes": "Radius role for shapes INSIDE a control — the checkbox box, an option row, a tag. Defaults to --radius-sm."
       }
     ]
   },
@@ -5311,6 +5318,33 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "name": "--menu-sep-h",
         "value": "var(--border-width-default)",
         "notes": "Menu separator line thickness (var(--border-width-default))."
+      }
+    ]
+  },
+  {
+    "component": "Message Input",
+    "selector": ".message-input",
+    "description": "",
+    "tokens": [
+      {
+        "name": "--ds-message-input-bg-color",
+        "value": "var(--surface-default)",
+        "notes": ""
+      },
+      {
+        "name": "--ds-message-input-radius",
+        "value": "var(--ds-radius-control)",
+        "notes": ""
+      },
+      {
+        "name": "--ds-message-input-padding",
+        "value": "var(--space-2)",
+        "notes": ""
+      },
+      {
+        "name": "--ds-field-focus-shadow",
+        "value": "—",
+        "notes": "Field focus ring shadow — themeable (defaults to --focus-field)."
       }
     ]
   },
@@ -8848,11 +8882,6 @@ export const NEW_TOKENS: readonly NewToken[] = [
   {
     "name": "--ds-control-focus-shadow-error",
     "value": "var(--focus-ring-error)",
-    "kind": "color"
-  },
-  {
-    "name": "--ds-field-focus-shadow",
-    "value": "var(--focus-field)",
     "kind": "color"
   },
   {

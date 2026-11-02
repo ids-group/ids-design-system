@@ -29,6 +29,8 @@
       "text": "`ds-tree` takes `<ng-template dsTreeTrailing let-node>` (`TreeTrailingDirective`, `TreeTrailingContext`) drawn at the end of every row, a `(nodeHover)` output, and `selection: 'single' | 'multiple'` (`TreeSelection`) with a two-way `selectedIds` in multiple mode. Each row is a focusable `div role=\"treeitem\"` instead of a `button`, and a disabled row is reached by the arrow keys and announced as disabled. Nothing to change in your code unless your styles select the row as a `button`.",
       "verify": "Open a `ds-tree` with a disabled node: rows look as before, ArrowDown stops on the disabled row with a focus ring, and Enter on it selects nothing."
     },
+    "New component `ds-attachment` (`AttachmentComponent`): a file chip with a type tile or image preview, name and size, for the `[chips]` slot of `ds-message-input`. Adds `AttachmentKind` and the optional `DsIntl.attachment` keys. Nothing to change in your code.",
+    "New component `ds-message-input` (`MessageInputComponent`): an auto-growing message box with `[chips]`, `[actions]` and `[send]` slots, Enter to submit, `busy` / `busyLabel` and `(filesPasted)`. Adds the optional `DsIntl.messageInput` keys `label` and `send`. Nothing to change in your code.",
     {
       "text": "A focused `ds-table` resize handle draws no outline; its line becomes `--focus-ring-width` wide in `--focus-ring-color`, inset `--space-1` from the cell's top and bottom. Forced-colours mode keeps the outline.",
       "verify": "Tab to a column resize handle: the line at the column edge turns the focus colour and wider, with no ring around the handle."

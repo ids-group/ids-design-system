@@ -46,6 +46,7 @@ and token names.** These leaves are for orientation and usage.
 
 - [<ds-badge> — BadgeComponent](feedback/ds-badge.md) — Content: label text. Use for status pills, counts, lifecycle markers.
 - [<ds-status-dot> — StatusDotComponent](feedback/ds-status-dot.md) — <!-- inputs:ds-status-dot -->
+- [<ds-attachment> — AttachmentComponent](feedback/ds-attachment.md) — A file attached to a message, for the [chips] slot of <ds-message-input>: a 24px type tile (PDF, DOC, IMG, FIL
 - [<ds-tag> — TagComponent](feedback/ds-tag.md) — Content: label.
 - [<ds-avatar> — AvatarComponent](feedback/ds-avatar.md) — <!-- inputs:ds-avatar -->
 - [<ds-avatar-group> — AvatarGroupComponent](feedback/ds-avatar-group.md) — Content: project <ds-avatar> children.
@@ -72,6 +73,7 @@ and token names.** These leaves are for orientation and usage.
 - [<ds-icon-button> — IconButtonComponent](forms/ds-icon-button.md) — Icon-only action with its own taxonomy, distinct from ds-button. ariaLabel is required (icon-only must be labe
 - [<ds-input> — InputComponent](forms/ds-input.md) — Content slots — addon attributes apply to any child element:
 - [<ds-textarea> — TextareaComponent](forms/ds-textarea.md) — Multi-line counterpart to <ds-input> — same wrapper/states, reuses the --ds-input-* token family. No prefix/su
+- [<ds-message-input> — MessageInputComponent](forms/ds-message-input.md) — Message box for a chat or an instruction: chips above an auto-growing text area, a bottom bar with actions on 
 - [<ds-number-stepper> — NumberStepperComponent](forms/ds-number-stepper.md) — Spinbox for bounded quantities — −/+ buttons around a numeric value.
 - [<ds-checkbox> — CheckboxComponent](forms/ds-checkbox.md) — <!-- inputs:ds-checkbox -->
 - [<ds-radio> — RadioComponent](forms/ds-radio.md) — <!-- inputs:ds-radio -->

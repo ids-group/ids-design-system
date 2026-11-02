@@ -15,6 +15,8 @@ export { AnnounceState } from '@ids-group-ltd/ids-design-system/core'; // interf
 export { AppLayoutComponent } from '@ids-group-ltd/ids-design-system/components/app-layout'; // component
 export { AppLayoutNavigationService } from '@ids-group-ltd/ids-design-system/components/app-layout'; // injectable
 export { AppLayoutScrollService } from '@ids-group-ltd/ids-design-system/components/app-layout'; // injectable
+export { AttachmentComponent } from '@ids-group-ltd/ids-design-system/components/attachment'; // component
+export { AttachmentKind } from '@ids-group-ltd/ids-design-system/components/attachment'; // type
 export { AuthLayoutComponent } from '@ids-group-ltd/ids-design-system/components/auth-layout'; // component
 export { AutocompleteComponent } from '@ids-group-ltd/ids-design-system/components/autocomplete'; // component
 export { AutocompleteItem } from '@ids-group-ltd/ids-design-system/components/autocomplete'; // type
@@ -201,6 +203,8 @@ export { LoadingOverlayComponent } from '@ids-group-ltd/ids-design-system/compon
 export { MenuComponent } from '@ids-group-ltd/ids-design-system/components/menu'; // component
 export { MenuDividerComponent } from '@ids-group-ltd/ids-design-system/components/menu'; // component
 export { MenuItemComponent } from '@ids-group-ltd/ids-design-system/components/menu'; // component
+export { MessageInputComponent } from '@ids-group-ltd/ids-design-system/components/message-input'; // component
+export { MessageInputLayout } from '@ids-group-ltd/ids-design-system/components/message-input'; // type
 export { ModalCardComponent } from '@ids-group-ltd/ids-design-system/components/modal'; // component
 export { ModalComponent } from '@ids-group-ltd/ids-design-system/components/modal'; // component
 export { ModalConfirmActionDirective } from '@ids-group-ltd/ids-design-system/components/modal'; // directive

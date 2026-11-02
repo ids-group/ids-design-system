@@ -24,6 +24,7 @@ import { SearchSection } from './sections/components/search/search.section';
 import { SelectSection } from './sections/components/select/select.section';
 import { SliderSection } from './sections/components/slider/slider.section';
 import { SwitchSection } from './sections/components/switch/switch.section';
+import { MessageInputSection } from './sections/components/message-input/message-input.section';
 import { TextareaSection } from './sections/components/textarea/textarea.section';
 import { TimePickerSection } from './sections/components/time-picker/time-picker.section';
 import { W3wSection } from './sections/components/w3w/w3w.section';
@@ -47,6 +48,7 @@ import { IconSection } from './sections/components/icon/icon.section';
 import { ListSection } from './sections/components/list/list.section';
 import { StatSection } from './sections/components/stat/stat.section';
 import { TableSection } from './sections/components/table/table.section';
+import { AttachmentSection } from './sections/components/attachment/attachment.section';
 import { TagSection } from './sections/components/tag/tag.section';
 import { TimelineSection } from './sections/components/timeline/timeline.section';
 import { TreeSection } from './sections/components/tree/tree.section';
@@ -152,6 +154,7 @@ export const GROUP_PAGES: readonly GroupPageDef[] = [
       DropzoneSection,
       FieldGroupSection,
       InputSection,
+      MessageInputSection,
       MultiSelectSection,
       NumberStepperSection,
       OtpInputSection,
@@ -187,6 +190,7 @@ export const GROUP_PAGES: readonly GroupPageDef[] = [
     title: 'Data display',
     sections: [
       AccordionSection,
+      AttachmentSection,
       AvatarSection,
       CardSection,
       DescriptionListSection,
