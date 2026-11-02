@@ -3104,7 +3104,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "true",
         "required": false,
-        "description": "A new user message folds the steps of the reply before it (`ds-chat-message` `stepsFolded`). A reply with a failed step keeps its steps open."
+        "description": "A new user message folds the steps of the replies before it (`ds-chat-message` `stepsFolded`). A reply keeps its steps open while it has a failed step the reader has not opened."
       },
       {
         "name": "timeBreakMinutes",

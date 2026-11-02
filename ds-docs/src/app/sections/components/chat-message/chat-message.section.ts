@@ -65,6 +65,7 @@ export class ChatMessageSection {
       request: string;
       steps: readonly string[];
       reply: string;
+      failed?: boolean;
     }[]
   >([
     {
@@ -81,12 +82,18 @@ export class ChatMessageSection {
   ]);
 
   // The next request: the reader's message first, then the agent's steps one by one, then its reply.
-  protected sendFoldTurn(): void {
+  protected sendFoldTurn(failed = false): void {
     const id = this.foldTurns().length;
     const steps = ['Reading the page', 'Editing the header', 'Rebuilding'];
     this.foldTurns.update((turns) => [
       ...turns,
-      { id, request: 'And move the logo to the left.', steps: [], reply: '' },
+      {
+        id,
+        request: failed ? 'Publish it.' : 'And move the logo to the left.',
+        steps: [],
+        reply: '',
+        failed,
+      },
     ]);
     const patch = (change: object) =>
       this.foldTurns.update((turns) =>
@@ -99,7 +106,12 @@ export class ChatMessageSection {
       ),
     );
     this.later(
-      () => patch({ reply: 'Moved the logo to the left.' }),
+      () =>
+        patch({
+          reply: failed
+            ? 'The rebuild failed; open the step to see why.'
+            : 'Moved the logo to the left.',
+        }),
       500 + steps.length * 350,
     );
   }

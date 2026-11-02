@@ -328,8 +328,17 @@ error TS2322: Type 'string' is not assignable to type 'number'.
           density="compact">
           @for (step of turn.steps; track step) {
             <ds-timeline-item
-              status="done"
-              [heading]="step" />
+              [status]="turn.failed && step === 'Rebuilding' ? 'error' : 'done'"
+              [heading]="step">
+              @if (turn.failed && step === 'Rebuilding') {
+                <pre
+                  details
+                  class="t-mono-block">
+HTTP 503: service unavailable
+                </pre
+                >
+              }
+            </ds-timeline-item>
           }
         </ds-timeline>
         {{ turn.reply }}
@@ -341,6 +350,12 @@ error TS2322: Type 'string' is not assignable to type 'number'.
   <div class="chat-try-bar">
     <ds-button (pressed)="sendFoldTurn()">
       Send the next message
+    </ds-button>
+
+    <ds-button
+      variant="outline"
+      (pressed)="sendFoldTurn(true)">
+      Send a request that fails
     </ds-button>
   </div>
 
