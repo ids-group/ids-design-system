@@ -269,7 +269,7 @@
 :host([data-status='pending']) {
   --_timeline-node-bg-color: var(--surface-default);
   --_timeline-node-color: var(--text-tertiary);
-  --_timeline-node-border-color: var(--border-strong);
+  --_timeline-node-border-color: var(--text-tertiary);
 }
 :host([data-status='error']) {
   --_timeline-node-bg-color: var(--error);
