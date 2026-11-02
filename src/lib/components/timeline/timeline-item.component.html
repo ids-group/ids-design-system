@@ -68,7 +68,9 @@
     [id]="detailsId"
     [attr.inert]="expanded() ? null : ''">
     <div class="details-content">
-      <ng-content select="[details]"></ng-content>
+      <div class="details-body">
+        <ng-content select="[details]"></ng-content>
+      </div>
     </div>
   </div>
 </div>
