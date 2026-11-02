@@ -157,6 +157,9 @@
 
 ### Fixed
 
+- **The icon of a `ds-timeline-item` marker sits in the middle of the marker.** At the default
+  density the icon is 16px instead of 15px, so it is centred in the 24px inside the marker's ring;
+  at 15px the browser snapped it half a pixel right and down. Compact markers are unchanged.
 - **A `ds-timeline-item` inside a wrapper element keeps its connector.** The line to the next item
   disappeared from every item wrapped in its own element, because each one was the last child of its
   wrapper. `ds-timeline` now finds its items at any depth and only the last one draws no line.
