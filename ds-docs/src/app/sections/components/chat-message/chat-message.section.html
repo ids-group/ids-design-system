@@ -173,8 +173,7 @@
                   details
                   class="t-mono-block">
 error TS2322: Type 'string' is not assignable to type 'number'.
-                </pre
-                >
+                </pre>
               </ds-timeline-item>
 
               <ds-timeline-item
@@ -329,29 +328,30 @@ error TS2322: Type 'string' is not assignable to type 'number'.
                 <ds-timeline-item
                   heading="Read the page"
                   status="done" />
+
                 <ds-timeline-item
                   heading="Run the build"
                   status="error">
                   <div details>
-                    <div class="fail-summary">
-                      <span class="fail-code">
-                        TS2322
-                      </span>
-                      Type 'string' is not assignable to type 'number'.
-                    </div>
+                    <div class="fail-error">
+                      <div class="fail-summary">
+                        <span class="fail-code">
+                          TS2322
+                        </span>
+                        Type 'string' is not assignable to type 'number'.
+                      </div>
 
-                    <a
-                      class="fail-path"
-                      href="#"
-                      [title]="failPath"
-                      (click)="$event.preventDefault()">
-                      <span class="fail-path-text">
-                        {{ failPath }}
-                      </span>
-                    </a>
+                      <a
+                        class="fail-path"
+                        href="#"
+                        [title]="failPath"
+                        (click)="$event.preventDefault()">
+                        <span class="fail-path-text">
+                          {{ failPath }}
+                        </span>
+                      </a>
 
-                    @switch (variant) {
-                      @case ('a') {
+                      @if (variant === 'a') {
                         <div class="fail-frame">
                           @for (line of failFrame; track line.no) {
                             <span
@@ -362,11 +362,16 @@ error TS2322: Type 'string' is not assignable to type 'number'.
                             </span>
                           }
                         </div>
+                      }
+                    </div>
 
+                    @switch (variant) {
+                      @case ('a') {
                         <details class="fail-more">
                           <summary>
                             Show full log · {{ failLog.length }} lines
                           </summary>
+
                           <ng-container
                             [ngTemplateOutlet]="logPanel"
                             [ngTemplateOutletContext]="{ open: false }" />
@@ -387,6 +392,7 @@ error TS2322: Type 'string' is not assignable to type 'number'.
                             (pressed)="copyLog()">
                             Copy error
                           </ds-button>
+
                           <ds-button
                             variant="outline"
                             color="neutral"
@@ -399,6 +405,7 @@ error TS2322: Type 'string' is not assignable to type 'number'.
                     }
                   </div>
                 </ds-timeline-item>
+
                 <ds-timeline-item
                   heading="Fix the type"
                   status="pending" />
@@ -417,12 +424,14 @@ error TS2322: Type 'string' is not assignable to type 'number'.
         <span class="fail-log-title">
           Build log
         </span>
+
         <label class="fail-wrap">
           <input
             type="checkbox"
             checked />
           Wrap
         </label>
+
         <ds-icon-button
           icon="copy"
           size="sm"
@@ -430,9 +439,12 @@ error TS2322: Type 'string' is not assignable to type 'number'.
           ariaLabel="Copy log"
           (pressed)="copyLog()" />
       </div>
+
       <div class="fail-log-body">
-        <pre class="fail-pre">@for (line of failLog; track $index) {<span class="fail-log-line">{{ line }}</span>}</pre>
+        <pre
+          class="fail-pre">@for (line of failLog; track $index) {<span class="fail-log-line">{{ line }}</span>}</pre>
       </div>
+
       <a
         class="fail-log-full"
         href="#"
@@ -448,8 +460,8 @@ error TS2322: Type 'string' is not assignable to type 'number'.
 
   <p class="block-desc t-s">
     Send a few messages: the list follows them. Scroll up and press Reply, and
-    the list stays where you are and offers a jump button instead. Scroll to
-    the top to load earlier messages; the message you were reading stays put.
+    the list stays where you are and offers a jump button instead. Scroll to the
+    top to load earlier messages; the message you were reading stays put.
   </p>
 
   <ds-chat-thread

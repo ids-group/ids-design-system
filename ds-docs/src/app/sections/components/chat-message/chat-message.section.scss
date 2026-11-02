@@ -64,6 +64,16 @@
   color: var(--text-tertiary);
 }
 
+// The error itself: tinted so it stands apart from the open step's grey card.
+.fail-error {
+  display: grid;
+  gap: var(--space-1);
+  padding: var(--space-2) var(--space-3);
+  border: var(--border-width-default) solid var(--error-border);
+  border-radius: var(--ds-radius-control);
+  background-color: var(--error-subtitle);
+}
+
 .fail-summary {
   font-size: var(--font-size-s);
   line-height: var(--line-height-base);
