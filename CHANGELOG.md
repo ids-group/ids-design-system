@@ -8,7 +8,7 @@
   text and shows a pencil, with a "Rename" tooltip. Two-way `value`, `(saved)` with the trimmed new
   value, `placeholder`, `maxLength`, `disabled`, `ariaLabel` and `edit()`. New optional
   `DsIntl.inlineEdit` keys `rename` (`'Rename'`) and `saved` (`'Saved'`, announced after a save), and
-  CSS hooks `--ds-inline-edit-padding`, `--ds-inline-edit-hover-bg`, `--ds-inline-edit-border-color`
+  CSS hooks `--ds-inline-edit-padding`, `--ds-inline-edit-hover-bg-color`, `--ds-inline-edit-border-color`
   and `--ds-inline-edit-radius`.
 - **Repeated toasts can fold into one `×N` stack.** With
   `provideDsConfig({ toast: { groupDuplicates: true } })`, a `ToastService.show()` whose `variant`,

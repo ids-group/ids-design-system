@@ -34,7 +34,7 @@ export class InlineEditComponent {
 ```css
 ds-inline-edit {
     --ds-inline-edit-border-color: var(--primary);
-    --ds-inline-edit-hover-bg: var(--surface-muted);
+    --ds-inline-edit-hover-bg-color: var(--surface-muted);
     --ds-inline-edit-padding: var(--space-1);
     --ds-inline-edit-radius: var(--radius-sm);
 }

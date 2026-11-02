@@ -4913,7 +4913,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "notes": ""
       },
       {
-        "name": "--ds-inline-edit-hover-bg",
+        "name": "--ds-inline-edit-hover-bg-color",
         "value": "var(--surface-muted)",
         "notes": ""
       },
