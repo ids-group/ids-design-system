@@ -255,7 +255,14 @@ export class ChatThreadComponent {
     const atEnd =
       scroller.scrollHeight - scroller.scrollTop - scroller.clientHeight <=
       PIN_TOLERANCE_PX;
-    this.pinned.set(atEnd);
+    // Only the reader scrolling up unpins. The event for the thread's own scroll to the end can land
+    // a frame after the content grew again, which reads as "away from the end" without anyone
+    // scrolling up.
+    const scrolledUp = scroller.scrollTop < this.lastScrollTop - 1;
+    this.lastScrollTop = scroller.scrollTop;
+    if (atEnd || scrolledUp) {
+      this.pinned.set(atEnd);
+    }
     if (atEnd) {
       this.unseen.set(0);
     }
@@ -272,6 +279,7 @@ export class ChatThreadComponent {
   }
 
   private olderRequested = false;
+  private lastScrollTop = 0;
   private anchor: { element: Element; top: number } | null = null;
 
   // The first message still in view, and how far below the top of the viewport it sits.
