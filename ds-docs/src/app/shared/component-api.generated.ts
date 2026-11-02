@@ -244,80 +244,6 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
     "inputs": [],
     "outputs": []
   },
-  "attachment": {
-    "key": "attachment",
-    "selector": "ds-attachment",
-    "isElement": true,
-    "className": "AttachmentComponent",
-    "status": "stable",
-    "importName": "AttachmentComponent",
-    "importPath": "@ids-group-ltd/ids-design-system",
-    "entryPoint": "@ids-group-ltd/ids-design-system/components/attachment",
-    "summary": null,
-    "inputs": [
-      {
-        "name": "name",
-        "kind": "input-required",
-        "type": "string",
-        "union": null,
-        "default": null,
-        "required": true,
-        "description": "File name, shown on the first line and used in the remove button's accessible name."
-      },
-      {
-        "name": "meta",
-        "kind": "input",
-        "type": "string",
-        "union": null,
-        "default": "''",
-        "required": false,
-        "description": "Second line, such as `'PDF · 240 KB'`."
-      },
-      {
-        "name": "kind",
-        "kind": "input",
-        "type": "AttachmentKind",
-        "union": [
-          "pdf",
-          "doc",
-          "image",
-          "file"
-        ],
-        "default": "'file'",
-        "required": false,
-        "description": "Draws the type tile and is announced before `meta`."
-      },
-      {
-        "name": "previewUrl",
-        "kind": "input",
-        "type": "string | null",
-        "union": null,
-        "default": "null",
-        "required": false,
-        "description": "Image shown in place of the tile when `kind` is `'image'`."
-      },
-      {
-        "name": "removable",
-        "kind": "input",
-        "type": "boolean",
-        "union": null,
-        "default": "false",
-        "required": false,
-        "description": "Shows a remove button that emits `removed`."
-      }
-    ],
-    "outputs": [
-      {
-        "name": "removed",
-        "kind": "output",
-        "type": "void",
-        "union": null,
-        "default": null,
-        "required": false,
-        "description": "Fires when the remove button is pressed."
-      }
-    ]
-  },
   "auth-layout": {
     "key": "auth-layout",
     "selector": "ds-auth-layout",
@@ -2915,15 +2841,89 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       }
     ]
   },
-  "chat-message:ChatAttachmentComponent": {
-    "key": "chat-message",
+  "chat": {
+    "key": "chat",
+    "selector": "ds-attachment",
+    "isElement": true,
+    "className": "AttachmentComponent",
+    "status": "stable",
+    "importName": "AttachmentComponent",
+    "importPath": "@ids-group-ltd/ids-design-system",
+    "entryPoint": "@ids-group-ltd/ids-design-system/components/chat",
+    "summary": null,
+    "inputs": [
+      {
+        "name": "name",
+        "kind": "input-required",
+        "type": "string",
+        "union": null,
+        "default": null,
+        "required": true,
+        "description": "File name, shown on the first line and used in the remove button's accessible name."
+      },
+      {
+        "name": "meta",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "''",
+        "required": false,
+        "description": "Second line, such as `'PDF · 240 KB'`."
+      },
+      {
+        "name": "kind",
+        "kind": "input",
+        "type": "AttachmentKind",
+        "union": [
+          "pdf",
+          "doc",
+          "image",
+          "file"
+        ],
+        "default": "'file'",
+        "required": false,
+        "description": "Draws the type tile and is announced before `meta`."
+      },
+      {
+        "name": "previewUrl",
+        "kind": "input",
+        "type": "string | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Image shown in place of the tile when `kind` is `'image'`."
+      },
+      {
+        "name": "removable",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Shows a remove button that emits `removed`."
+      }
+    ],
+    "outputs": [
+      {
+        "name": "removed",
+        "kind": "output",
+        "type": "void",
+        "union": null,
+        "default": null,
+        "required": false,
+        "description": "Fires when the remove button is pressed."
+      }
+    ]
+  },
+  "chat:ChatAttachmentComponent": {
+    "key": "chat",
     "selector": "ds-chat-attachment",
     "isElement": true,
     "className": "ChatAttachmentComponent",
     "status": "stable",
     "importName": "ChatAttachmentComponent",
     "importPath": "@ids-group-ltd/ids-design-system",
-    "entryPoint": "@ids-group-ltd/ids-design-system/components/chat-message",
+    "entryPoint": "@ids-group-ltd/ids-design-system/components/chat",
     "summary": null,
     "inputs": [
       {
@@ -2965,15 +2965,135 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
     ],
     "outputs": []
   },
-  "chat-message": {
-    "key": "chat-message",
+  "chat:ChatInputComponent": {
+    "key": "chat",
+    "selector": "ds-chat-input",
+    "isElement": true,
+    "className": "ChatInputComponent",
+    "status": "stable",
+    "importName": "ChatInputComponent",
+    "importPath": "@ids-group-ltd/ids-design-system",
+    "entryPoint": "@ids-group-ltd/ids-design-system/components/chat",
+    "summary": null,
+    "inputs": [
+      {
+        "name": "value",
+        "kind": "model",
+        "type": "string",
+        "union": null,
+        "default": "''",
+        "required": false,
+        "description": "Message text, two-way bound. Not cleared on submit: clear it once the message is accepted."
+      },
+      {
+        "name": "placeholder",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "''",
+        "required": false,
+        "description": "Placeholder shown when empty."
+      },
+      {
+        "name": "ariaLabel",
+        "kind": "input",
+        "type": "string | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Accessible name of the text area; unset falls back to `DS_INTL.chatInput.label`."
+      },
+      {
+        "name": "minRows",
+        "kind": "input",
+        "type": "number",
+        "union": null,
+        "default": "1",
+        "required": false,
+        "description": "Height in lines the text area starts at."
+      },
+      {
+        "name": "maxRows",
+        "kind": "input",
+        "type": "number",
+        "union": null,
+        "default": "8",
+        "required": false,
+        "description": "Height in lines the text area grows to before it scrolls."
+      },
+      {
+        "name": "disabled",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Disables the text area and the send button. Projected controls are the consumer's to disable."
+      },
+      {
+        "name": "busy",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Work in flight: the send button keeps its place, shows a spinner and refuses to submit, and Enter does not submit. The text area stays editable."
+      },
+      {
+        "name": "busyLabel",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "''",
+        "required": false,
+        "description": "The current step while `busy`, such as \"Rebuilding\"; where it shows follows `layout`."
+      },
+      {
+        "name": "layout",
+        "kind": "input",
+        "type": "ChatInputLayout",
+        "union": [
+          "status-bar",
+          "status-above",
+          "split",
+          "send-outside",
+          "toolbar"
+        ],
+        "default": "'status-bar'",
+        "required": false,
+        "description": "Where the buttons and the step text sit. `'status-bar'`: buttons inside, the step text in the bar beside a fixed-size send button. `'status-above'`: the step text on a line above the box. `'split'`: attach outside on the left, send outside on the right, the step text above. `'send-outside'`: attach and the step inside, a round send button outside on the right. `'toolbar'`: the box holds the text, attach, the step and send sit in a row under it."
+      }
+    ],
+    "outputs": [
+      {
+        "name": "submitted",
+        "kind": "output",
+        "type": "string",
+        "union": null,
+        "default": null,
+        "required": false,
+        "description": "The trimmed text, on Enter or the send button. Never fires for blank text, while `busy` or while `disabled`."
+      },
+      {
+        "name": "filesPasted",
+        "kind": "output",
+        "type": "File[]",
+        "union": null,
+        "default": null,
+        "required": false,
+        "description": "Image files pasted into the text area. The paste inserts no text when it carries images."
+      }
+    ]
+  },
+  "chat:ChatMessageComponent": {
+    "key": "chat",
     "selector": "ds-chat-message",
     "isElement": true,
     "className": "ChatMessageComponent",
     "status": "stable",
     "importName": "ChatMessageComponent",
     "importPath": "@ids-group-ltd/ids-design-system",
-    "entryPoint": "@ids-group-ltd/ids-design-system/components/chat-message",
+    "entryPoint": "@ids-group-ltd/ids-design-system/components/chat",
     "summary": null,
     "inputs": [
       {
@@ -3044,19 +3164,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "The `[steps]` fold into a chip at the top of the bubble, which opens them again; two-way bound. Inside a `ds-chat-thread` the steps of the reply before a new user message fold on their own (`foldStepsOnSend`). Folds only steps given as `ds-timeline-item`s."
-      },
-      {
-        "name": "stepsEnter",
-        "kind": "input",
-        "type": "ChatStepsEnter",
-        "union": [
-          "together",
-          "stagger"
-        ],
-        "default": "'together'",
-        "required": false,
-        "description": "How steps that arrive together (a plan given at once) come in: `'together'` grows them in as one block, `'stagger'` one after another. Steps that arrive one at a time grow in either way."
+        "description": "The `[steps]` fold into a chip at the top of the bubble, which opens them again; two-way bound. Inside a `ds-chat-thread` the steps of the reply before a new user message fold on their own (`foldStepsOnSend`). Folds only steps given as `ds-chat-step`s."
       }
     ],
     "outputs": [
@@ -3071,15 +3179,97 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       }
     ]
   },
-  "chat-message:ChatThreadComponent": {
-    "key": "chat-message",
+  "chat:ChatStepComponent": {
+    "key": "chat",
+    "selector": "ds-chat-step",
+    "isElement": true,
+    "className": "ChatStepComponent",
+    "status": "stable",
+    "importName": "ChatStepComponent",
+    "importPath": "@ids-group-ltd/ids-design-system",
+    "entryPoint": "@ids-group-ltd/ids-design-system/components/chat",
+    "summary": null,
+    "inputs": [
+      {
+        "name": "heading",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "''",
+        "required": false,
+        "description": "What the step does, such as \"Run the build\"."
+      },
+      {
+        "name": "time",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "''",
+        "required": false,
+        "description": "Time or duration label under the content."
+      },
+      {
+        "name": "status",
+        "kind": "input",
+        "type": "ChatStepStatus | null",
+        "union": [
+          "done",
+          "running",
+          "pending",
+          "waiting",
+          "error"
+        ],
+        "default": "null",
+        "required": false,
+        "description": "Where the step is: draws the marker and is spoken before the heading."
+      },
+      {
+        "name": "expanded",
+        "kind": "model",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Whether the `[details]` area is open, two-way bound."
+      }
+    ],
+    "outputs": []
+  },
+  "chat:ChatStepsComponent": {
+    "key": "chat",
+    "selector": "ds-chat-steps",
+    "isElement": true,
+    "className": "ChatStepsComponent",
+    "status": "stable",
+    "importName": "ChatStepsComponent",
+    "importPath": "@ids-group-ltd/ids-design-system",
+    "entryPoint": "@ids-group-ltd/ids-design-system/components/chat",
+    "summary": null,
+    "inputs": [
+      {
+        "name": "enter",
+        "kind": "input",
+        "type": "ChatStepsEnter",
+        "union": [
+          "together",
+          "stagger"
+        ],
+        "default": "'together'",
+        "required": false,
+        "description": "How steps that arrive together (a plan given at once) come in: `'together'` grows them in as one block, `'stagger'` one after another. Steps that arrive one at a time grow in either way."
+      }
+    ],
+    "outputs": []
+  },
+  "chat:ChatThreadComponent": {
+    "key": "chat",
     "selector": "ds-chat-thread",
     "isElement": true,
     "className": "ChatThreadComponent",
     "status": "stable",
     "importName": "ChatThreadComponent",
     "importPath": "@ids-group-ltd/ids-design-system",
-    "entryPoint": "@ids-group-ltd/ids-design-system/components/chat-message",
+    "entryPoint": "@ids-group-ltd/ids-design-system/components/chat",
     "summary": null,
     "inputs": [
       {
@@ -6803,126 +6993,6 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": null,
         "required": false,
         "description": "Fires on click, unless the item is disabled or opens a submenu."
-      }
-    ]
-  },
-  "message-input": {
-    "key": "message-input",
-    "selector": "ds-message-input",
-    "isElement": true,
-    "className": "MessageInputComponent",
-    "status": "stable",
-    "importName": "MessageInputComponent",
-    "importPath": "@ids-group-ltd/ids-design-system",
-    "entryPoint": "@ids-group-ltd/ids-design-system/components/message-input",
-    "summary": null,
-    "inputs": [
-      {
-        "name": "value",
-        "kind": "model",
-        "type": "string",
-        "union": null,
-        "default": "''",
-        "required": false,
-        "description": "Message text, two-way bound. Not cleared on submit: clear it once the message is accepted."
-      },
-      {
-        "name": "placeholder",
-        "kind": "input",
-        "type": "string",
-        "union": null,
-        "default": "''",
-        "required": false,
-        "description": "Placeholder shown when empty."
-      },
-      {
-        "name": "ariaLabel",
-        "kind": "input",
-        "type": "string | null",
-        "union": null,
-        "default": "null",
-        "required": false,
-        "description": "Accessible name of the text area; unset falls back to `DS_INTL.messageInput.label`."
-      },
-      {
-        "name": "minRows",
-        "kind": "input",
-        "type": "number",
-        "union": null,
-        "default": "1",
-        "required": false,
-        "description": "Height in lines the text area starts at."
-      },
-      {
-        "name": "maxRows",
-        "kind": "input",
-        "type": "number",
-        "union": null,
-        "default": "8",
-        "required": false,
-        "description": "Height in lines the text area grows to before it scrolls."
-      },
-      {
-        "name": "disabled",
-        "kind": "input",
-        "type": "boolean",
-        "union": null,
-        "default": "false",
-        "required": false,
-        "description": "Disables the text area and the send button. Projected controls are the consumer's to disable."
-      },
-      {
-        "name": "busy",
-        "kind": "input",
-        "type": "boolean",
-        "union": null,
-        "default": "false",
-        "required": false,
-        "description": "Work in flight: the send button keeps its place, shows a spinner and refuses to submit, and Enter does not submit. The text area stays editable."
-      },
-      {
-        "name": "busyLabel",
-        "kind": "input",
-        "type": "string",
-        "union": null,
-        "default": "''",
-        "required": false,
-        "description": "The current step while `busy`, such as \"Rebuilding\"; where it shows follows `layout`."
-      },
-      {
-        "name": "layout",
-        "kind": "input",
-        "type": "MessageInputLayout",
-        "union": [
-          "status-bar",
-          "status-above",
-          "split",
-          "send-outside",
-          "toolbar"
-        ],
-        "default": "'status-bar'",
-        "required": false,
-        "description": "Where the buttons and the step text sit. `'status-bar'`: buttons inside, the step text in the bar beside a fixed-size send button. `'status-above'`: the step text on a line above the box. `'split'`: attach outside on the left, send outside on the right, the step text above. `'send-outside'`: attach and the step inside, a round send button outside on the right. `'toolbar'`: the box holds the text, attach, the step and send sit in a row under it."
-      }
-    ],
-    "outputs": [
-      {
-        "name": "submitted",
-        "kind": "output",
-        "type": "string",
-        "union": null,
-        "default": null,
-        "required": false,
-        "description": "The trimmed text, on Enter or the send button. Never fires for blank text, while `busy` or while `disabled`."
-      },
-      {
-        "name": "filesPasted",
-        "kind": "output",
-        "type": "File[]",
-        "union": null,
-        "default": null,
-        "required": false,
-        "description": "Image files pasted into the text area. The paste inserts no text when it carries images."
       }
     ]
   },
@@ -12838,20 +12908,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
     "importPath": "@ids-group-ltd/ids-design-system",
     "entryPoint": "@ids-group-ltd/ids-design-system/components/timeline",
     "summary": null,
-    "inputs": [
-      {
-        "name": "density",
-        "kind": "input",
-        "type": "TimelineDensity",
-        "union": [
-          "default",
-          "compact"
-        ],
-        "default": "'default'",
-        "required": false,
-        "description": "`'compact'` sets small markers, smaller text and tight rows with no connector, for the steps of an agent beside a chat message."
-      }
-    ],
+    "inputs": [],
     "outputs": []
   },
   "timeline:TimelineItemComponent": {
@@ -12916,7 +12973,6 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
           "done",
           "running",
           "pending",
-          "waiting",
           "error"
         ],
         "default": "null",

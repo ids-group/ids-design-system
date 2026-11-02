@@ -55,7 +55,6 @@ export const NAV: NavGroup[] = [
       { label: 'Field group', anchor: 'field-group' },
       { label: 'Inline edit', anchor: 'inline-edit' },
       { label: 'Input', anchor: 'input' },
-      { label: 'Message input', anchor: 'message-input' },
       { label: 'Multi-select', anchor: 'multi-select' },
       { label: 'Number stepper', anchor: 'number-stepper' },
       { label: 'OTP input', anchor: 'otp-input' },
@@ -95,10 +94,8 @@ export const NAV: NavGroup[] = [
     kind: 'component',
     items: [
       { label: 'Accordion', anchor: 'accordion' },
-      { label: 'Attachment', anchor: 'attachment' },
       { label: 'Avatars', anchor: 'avatar' },
       { label: 'Cards', anchor: 'card' },
-      { label: 'Chat', anchor: 'chat-message' },
       { label: 'Description list', anchor: 'description-list' },
       { label: 'Icon', anchor: 'icon' },
       { label: 'List', anchor: 'list' },
@@ -107,6 +104,18 @@ export const NAV: NavGroup[] = [
       { label: 'Tag', anchor: 'tag' },
       { label: 'Timeline', anchor: 'timeline' },
       { label: 'Tree view', anchor: 'tree' },
+    ],
+  },
+  {
+    title: 'Chat',
+    path: 'components/chat',
+    icon: 'inbox',
+    kind: 'component',
+    items: [
+      { label: 'Attachment', anchor: 'attachment' },
+      { label: 'Chat', anchor: 'chat-message' },
+      { label: 'Chat input', anchor: 'chat-input' },
+      { label: 'Chat steps', anchor: 'chat-steps' },
     ],
   },
   {

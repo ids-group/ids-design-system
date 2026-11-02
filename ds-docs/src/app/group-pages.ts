@@ -25,7 +25,7 @@ import { SearchSection } from './sections/components/search/search.section';
 import { SelectSection } from './sections/components/select/select.section';
 import { SliderSection } from './sections/components/slider/slider.section';
 import { SwitchSection } from './sections/components/switch/switch.section';
-import { MessageInputSection } from './sections/components/message-input/message-input.section';
+import { ChatInputSection } from './sections/components/chat-input/chat-input.section';
 import { TextareaSection } from './sections/components/textarea/textarea.section';
 import { TimePickerSection } from './sections/components/time-picker/time-picker.section';
 import { W3wSection } from './sections/components/w3w/w3w.section';
@@ -45,6 +45,7 @@ import { AccordionSection } from './sections/components/accordion/accordion.sect
 import { AvatarSection } from './sections/components/avatar/avatar.section';
 import { CardSection } from './sections/components/card/card.section';
 import { ChatMessageSection } from './sections/components/chat-message/chat-message.section';
+import { ChatStepsSection } from './sections/components/chat-steps/chat-steps.section';
 import { DescriptionListSection } from './sections/components/description-list/description-list.section';
 import { IconSection } from './sections/components/icon/icon.section';
 import { ListSection } from './sections/components/list/list.section';
@@ -157,7 +158,6 @@ export const GROUP_PAGES: readonly GroupPageDef[] = [
       FieldGroupSection,
       InlineEditSection,
       InputSection,
-      MessageInputSection,
       MultiSelectSection,
       NumberStepperSection,
       OtpInputSection,
@@ -193,10 +193,8 @@ export const GROUP_PAGES: readonly GroupPageDef[] = [
     title: 'Data display',
     sections: [
       AccordionSection,
-      AttachmentSection,
       AvatarSection,
       CardSection,
-      ChatMessageSection,
       DescriptionListSection,
       IconSection,
       ListSection,
@@ -205,6 +203,16 @@ export const GROUP_PAGES: readonly GroupPageDef[] = [
       TagSection,
       TimelineSection,
       TreeSection,
+    ],
+  },
+  {
+    path: 'components/chat',
+    title: 'Chat',
+    sections: [
+      AttachmentSection,
+      ChatMessageSection,
+      ChatInputSection,
+      ChatStepsSection,
     ],
   },
   {
