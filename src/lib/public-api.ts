@@ -202,6 +202,7 @@ export type {
   IconButtonVariant,
 } from '@ids-group-ltd/ids-design-system/components/icon-button';
 export { InfoHintComponent } from '@ids-group-ltd/ids-design-system/components/info-hint';
+export { InlineEditComponent } from '@ids-group-ltd/ids-design-system/components/inline-edit';
 export { InputComponent } from '@ids-group-ltd/ids-design-system/components/input';
 export type { InputType } from '@ids-group-ltd/ids-design-system/components/input';
 export {

@@ -5460,6 +5460,75 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
     ],
     "outputs": []
   },
+  "inline-edit": {
+    "key": "inline-edit",
+    "selector": "ds-inline-edit",
+    "isElement": true,
+    "className": "InlineEditComponent",
+    "status": "stable",
+    "importName": "InlineEditComponent",
+    "importPath": "@ids-group-ltd/ids-design-system",
+    "entryPoint": "@ids-group-ltd/ids-design-system/components/inline-edit",
+    "summary": null,
+    "inputs": [
+      {
+        "name": "value",
+        "kind": "model",
+        "type": "string",
+        "union": null,
+        "default": "''",
+        "required": false,
+        "description": "The text, two-way bound. Changes only on a save of a non-blank, different value."
+      },
+      {
+        "name": "placeholder",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "''",
+        "required": false,
+        "description": "Shown, muted, while the value is empty, and in the empty field."
+      },
+      {
+        "name": "maxLength",
+        "kind": "input",
+        "type": "number | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Longest value the field accepts, in characters; `null` for no limit."
+      },
+      {
+        "name": "disabled",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Shows the text without the edit affordance and refuses to edit."
+      },
+      {
+        "name": "ariaLabel",
+        "kind": "input",
+        "type": "string | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "What the text is, such as \"Chat title\"; names the text and the field. Unset falls back to `DS_INTL.inlineEdit.rename`."
+      }
+    ],
+    "outputs": [
+      {
+        "name": "saved",
+        "kind": "output",
+        "type": "string",
+        "union": null,
+        "default": null,
+        "required": false,
+        "description": "The trimmed new value, after a save that changed it."
+      }
+    ]
+  },
   "input": {
     "key": "input",
     "selector": "ds-input",

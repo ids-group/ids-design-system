@@ -69,6 +69,7 @@ export const DS_INTL_DEFAULTS: DsIntl & {
     readonly toast: Required<DsIntl['toast']>;
     readonly timeline: Required<NonNullable<DsIntl['timeline']>>;
     readonly splitter: Required<NonNullable<DsIntl['splitter']>>;
+    readonly inlineEdit: Required<NonNullable<DsIntl['inlineEdit']>>;
     readonly messageInput: Required<NonNullable<DsIntl['messageInput']>>;
     readonly attachment: Required<NonNullable<DsIntl['attachment']>>;
     readonly chat: Required<NonNullable<DsIntl['chat']>>;
@@ -311,6 +312,10 @@ export interface DsIntl {
     };
     readonly splitter?: {
         readonly label?: string;
+    };
+    readonly inlineEdit?: {
+        readonly rename?: string;
+        readonly saved?: string;
     };
     readonly breadcrumbs: {
         readonly label: string;

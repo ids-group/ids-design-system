@@ -1,0 +1,29 @@
+.state-cell-stage {
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.narrow {
+  inline-size: 160px;
+}
+
+.chat-header {
+  display: flex;
+  gap: var(--space-3);
+  align-items: center;
+  padding: var(--space-3) var(--space-4);
+  background-color: var(--surface-default);
+  border: var(--border-width-default) solid var(--border-default);
+  border-radius: var(--radius-md);
+}
+
+.chat-title {
+  flex: 1 1 auto;
+  min-inline-size: 0;
+  margin: 0;
+}
+
+.log {
+  margin: var(--space-2) 0 0;
+  color: var(--text-secondary);
+}

@@ -1,0 +1,91 @@
+@use '../../styles/focus' as focus;
+@use '../../styles/text-clip' as text-clip;
+@use '../../styles/visually-hidden' as visually-hidden;
+@use '../../styles/component-base' as component-base;
+@include component-base.rules;
+
+/* The text and the field share one box: the same border, padding and font, so switching between
+   them moves no glyph. A negative margin puts the text where it would sit without the box. */
+:host {
+  --_inline-edit-pad: var(--ds-inline-edit-padding, var(--space-1));
+  --_inline-edit-hover-bg: var(--ds-inline-edit-hover-bg, var(--surface-muted));
+  --_inline-edit-border-color: var(--ds-inline-edit-border-color, var(--primary));
+  --_inline-edit-radius: var(--ds-inline-edit-radius, var(--radius-sm));
+
+  position: relative;
+  display: flex;
+  min-inline-size: 0;
+  max-inline-size: 100%;
+}
+
+.box {
+  margin: calc(-1 * var(--border-width-default)) calc(-1 * (var(--_inline-edit-pad) + var(--border-width-default)));
+  padding: 0 var(--_inline-edit-pad);
+  font: inherit;
+  line-height: inherit;
+  letter-spacing: inherit;
+  color: inherit;
+  text-align: start;
+  background: transparent;
+  border: var(--border-width-default) solid transparent;
+  border-radius: var(--_inline-edit-radius);
+}
+
+.display {
+  display: inline-flex;
+  gap: var(--space-1);
+  align-items: center;
+  min-inline-size: 0;
+  max-inline-size: calc(100% + 2 * (var(--_inline-edit-pad) + var(--border-width-default)));
+  transition: background-color var(--duration-fast) var(--ease-standard);
+}
+
+button.display {
+  cursor: text;
+
+  &:hover {
+    background-color: var(--_inline-edit-hover-bg);
+  }
+}
+
+.text {
+  @include text-clip.single-line-ellipsis;
+
+  min-inline-size: 0;
+}
+
+.empty .text {
+  color: var(--text-tertiary);
+}
+
+/* Reserved at rest, so showing it on hover or focus moves nothing. */
+.pencil {
+  flex: none;
+  color: var(--text-tertiary);
+  opacity: 0;
+  transition: opacity var(--duration-fast) var(--ease-standard);
+}
+
+button.display:hover .pencil,
+button.display:focus-visible .pencil {
+  opacity: 1;
+}
+
+.field {
+  flex: 1 1 auto;
+  min-inline-size: 0;
+  border-color: var(--_inline-edit-border-color);
+
+  /* The border is the indicator; forced colours keeps the outline. */
+  &:focus-visible {
+    @include focus.own-indicator;
+  }
+
+  &::placeholder {
+    color: var(--text-tertiary);
+  }
+}
+
+.live {
+  @include visually-hidden.visually-hidden;
+}

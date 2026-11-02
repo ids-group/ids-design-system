@@ -2,6 +2,14 @@
 
 ### Added
 
+- **`ds-inline-edit`, text renamed in place.** Plain text that becomes a field of the same font and
+  size on a click, Enter, Space or F2, with the text selected; Enter or leaving the field saves,
+  Escape cancels, and a blank or unchanged value saves nothing. Hover tints the background behind the
+  text and shows a pencil, with a "Rename" tooltip. Two-way `value`, `(saved)` with the trimmed new
+  value, `placeholder`, `maxLength`, `disabled`, `ariaLabel` and `edit()`. New optional
+  `DsIntl.inlineEdit` keys `rename` (`'Rename'`) and `saved` (`'Saved'`, announced after a save), and
+  CSS hooks `--ds-inline-edit-padding`, `--ds-inline-edit-hover-bg`, `--ds-inline-edit-border-color`
+  and `--ds-inline-edit-radius`.
 - **Repeated toasts can fold into one `×N` stack.** With
   `provideDsConfig({ toast: { groupDuplicates: true } })`, a `ToastService.show()` whose `variant`,
   `title` and `body` match a toast on screen or queued adds an occurrence to that toast instead of a

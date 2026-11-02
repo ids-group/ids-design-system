@@ -53,6 +53,7 @@ export const NAV: NavGroup[] = [
       { label: 'Date picker', anchor: 'date-picker' },
       { label: 'Dropzone', anchor: 'dropzone' },
       { label: 'Field group', anchor: 'field-group' },
+      { label: 'Inline edit', anchor: 'inline-edit' },
       { label: 'Input', anchor: 'input' },
       { label: 'Message input', anchor: 'message-input' },
       { label: 'Multi-select', anchor: 'multi-select' },

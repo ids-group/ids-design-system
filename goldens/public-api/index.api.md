@@ -191,6 +191,7 @@ export { IconComponent } from '@ids-group-ltd/ids-design-system/icons'; // compo
 export { IconName } from '@ids-group-ltd/ids-design-system/core'; // type
 export { InfoHintComponent } from '@ids-group-ltd/ids-design-system/components/info-hint'; // component
 export { InlineComponent } from '@ids-group-ltd/ids-design-system/components/layout'; // component
+export { InlineEditComponent } from '@ids-group-ltd/ids-design-system/components/inline-edit'; // component
 export { InputComponent } from '@ids-group-ltd/ids-design-system/components/input'; // component
 export { InputType } from '@ids-group-ltd/ids-design-system/components/input'; // type
 export { LayoutAlign } from '@ids-group-ltd/ids-design-system/components/layout'; // type

@@ -14,6 +14,7 @@ import { CheckboxSection } from './sections/components/checkbox/checkbox.section
 import { ColorPickerSection } from './sections/components/color-picker/color-picker.section';
 import { DatePickerSection } from './sections/components/date-picker/date-picker.section';
 import { DropzoneSection } from './sections/components/dropzone/dropzone.section';
+import { InlineEditSection } from './sections/components/inline-edit/inline-edit.section';
 import { InputSection } from './sections/components/input/input.section';
 import { MultiSelectSection } from './sections/components/multi-select/multi-select.section';
 import { NumberStepperSection } from './sections/components/number-stepper/number-stepper.section';
@@ -154,6 +155,7 @@ export const GROUP_PAGES: readonly GroupPageDef[] = [
       DatePickerSection,
       DropzoneSection,
       FieldGroupSection,
+      InlineEditSection,
       InputSection,
       MessageInputSection,
       MultiSelectSection,
