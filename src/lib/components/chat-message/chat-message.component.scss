@@ -130,12 +130,6 @@
   min-width: 0;
 }
 
-.steps:not(:has(*)),
-.attachments:not(:has(*)),
-.actions:not(:has(*)),
-.body:empty {
-  display: none;
-}
 
 // The agent's steps stand on the thread's own surface above the bubble, where their status colours
 // read; a message that has only steps so far draws no empty bubble.
@@ -212,4 +206,13 @@
   .actions {
     opacity: 1;
   }
+}
+
+// Last, so an empty slot stays hidden over the display its own rule sets above; left in place it
+// would still take the bubble's row gap or the actions' margin.
+.steps:not(:has(*)),
+.attachments:not(:has(*)),
+.actions:not(:has(*)),
+.body:empty {
+  display: none;
 }
