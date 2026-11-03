@@ -63,6 +63,14 @@
   item with content or a `time` under its heading centred its marker on the whole item, below the
   heading. The marker now sits beside the heading's first line, and such an item is about 8px
   taller. An item with nothing under its heading renders as before. Nothing to change in your code.
+- **A `ds-button` clicked while `loading` keeps the focus.** The button took no pointer events while
+  loading, so a second click landed on the page and moved the focus off the button. The click now
+  reaches the button, which still refuses it, and the focus stays. Nothing to change in your code.
+- **Under `data-theme="dark"`, an element raised by `--shadow-1` has an edge.** The selected
+  `ds-segmented` segment, the active pill `ds-tabs` tab, the `ds-switch` and `ds-slider` thumbs and a
+  `raised` `ds-card` sit on a surface no darker than themselves, and with the dark shadow they lost
+  their outline. `--shadow-1` (and `--ds-elevation-raised`, `--shadow-card`) adds the 1px light hairline
+  at 8% alpha that `--shadow-4` draws. The light theme is unchanged. Nothing to change in your code.
 
 ## 1.1.0 — 2026-11-02
 

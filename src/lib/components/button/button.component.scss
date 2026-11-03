@@ -278,7 +278,7 @@
   /* aria-disabled is set while loading; keep the variant fill and label, not the disabled gray. */
   &.loading {
     color: var(--_button-label-color);
-    pointer-events: none;
+    cursor: default;
     background-color: var(--_button-bg-color);
     border-color: var(--_button-border-color);
   }
