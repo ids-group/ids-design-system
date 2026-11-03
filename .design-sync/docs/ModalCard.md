@@ -7,7 +7,7 @@ Bare dialog card — port of `ds-modal-card`: the modal surface with header, bod
 - `showClose` (default true) toggles the header × (fires `onClosed`). Static specimens usually set `showClose={false}`.
 - `icon` renders a circular icon badge before the title (accent-tinted; error-tinted with `error`).
 - `dialogRole`: `'dialog' | 'alertdialog'` (default `'dialog'`); `ariaDescribedBy` mirrors the host-level `aria-describedby` the confirm dialog uses.
-- Slots: `children` = body, `impact` (hidden when empty), `actions` (footer strip renders even when empty — omit-with-border is Angular-faithful).
+- Slots: `eyebrow` = small uppercase line above the title (hidden when empty), `titleBadge` = node beside the title on the same line (e.g. a Badge), `children` = body (`body` lands in the same body block, ahead of `children`), `impact` (hidden when empty), `actions` (footer strip renders even when empty — omit-with-border is Angular-faithful).
 
 ```tsx
 <ModalCard title="Delete depot?" size="sm" error showClose={false}

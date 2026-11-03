@@ -6,7 +6,7 @@ Centered dialog over a scrim — port of `ds-modal`. Renders INLINE (no portal):
 - `open` defaults to **true** (Angular defaults to false) so the dialog shows statically; controlled via `onOpenChange`, or leave uncontrolled and it manages itself. With `staticPreview` the card renders regardless of `open`.
 - `size`: `'sm' | 'md' | 'lg' | 'xl' | 'fullscreen'` (default `'md'`) — 480 / 640 / 800 / 1024 px / near-viewport.
 - `title` is required (header + `aria-labelledby`); `error: true` colours the title for danger confirmations.
-- Slots: `children` = body, `actions` = footer buttons (right-aligned; the footer strip renders even when empty), `impact` = affected-records block under the body (hidden when empty; put a `<ul className="list">` in it for the DS styling).
+- Slots: `children` = body, `actions` = footer buttons (right-aligned; the footer strip renders even when empty), `impact` = affected-records block under the body (hidden when empty; put a `<ul className="list">` in it for the DS styling). `body` = `[body]`, first in the body, before `children`; `eyebrow` = `[eyebrow]`, a small uppercase line above the title naming the record acted on (hidden when empty); `titleBadge` = `[title-badge]`, beside the title on the title line (a chip).
 - Dismissal: scrim click (off unless `closeOnBackdrop`, default true), Escape while focus is inside, and the header × — all fire `onClosed` immediately (no leave animation inline). `persistent: true` disables scrim + Escape, leaving only the × / programmatic close.
 - Not reproduced from Angular: focus trap, body scroll lock, enter/leave animations, and the `confirmed` output (which Angular never emits itself — call your own handler from your confirm button).
 

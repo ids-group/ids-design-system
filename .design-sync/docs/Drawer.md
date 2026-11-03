@@ -1,19 +1,19 @@
 ---
 category: Overlays
 ---
-Edge-anchored slide-in panel for inline edit flows — port of `ds-drawer`. Renders INLINE (no portal): `.drawer-root` is `position: fixed; inset: 0` (scrim + panel absolutely positioned inside it), so it covers the viewport unless an ancestor forms a containing block (`transform`, `filter` or `contain`) — wrap contained specimens in one sized like a mini viewport. Unlike Modal there is no `staticPreview` branch.
+Edge-anchored slide-in panel for inline edit flows — port of `ds-drawer`. Renders INLINE (no portal): `.drawer-root` is `position: fixed; inset: 0` (scrim + panel absolutely positioned inside it), so it covers the viewport unless an ancestor forms a containing block (`transform`, `filter` or `contain`) — wrap contained specimens in one sized like a mini viewport, or set `staticPreview` to render the bare panel in normal flow with no scrim.
 
 - `open` defaults to **true** (Angular defaults to false) so the panel shows statically; controlled via `onOpenChange`, or leave uncontrolled.
 - `placement`: `'right' | 'left' | 'top' | 'bottom'` (default `'right'`). Right/left use the width tokens; top/bottom span full width at up to 80vh.
 - `size`: `'sm' | 'md' | 'lg'` (default `'md'`) — 320 / 480 / 640 px wide, right/left placements only.
 - `title` required (header + `aria-labelledby`). Header always includes the × close button.
-- Slots: `children` = body (`[drawer-body]`), `footer` = right-aligned action buttons (`[drawer-footer]`; the footer strip renders even when empty — same as Angular).
+- Slots: `children` = the body. `body` (or its alias `drawerBody`) sits at the top of the body, before `children`. `actions` (or its alias `drawerFooter`) = right-aligned action buttons in the footer strip, which renders even when empty. All render only while the drawer is open or `staticPreview` is set.
 - Dismissal: scrim click, the ×, or Escape while focus is inside — all fire `onClosed` immediately (no slide-out inline). Focus trap, body scroll lock and document-level Escape are not reproduced.
 - Prefer a drawer over a modal when the form needs more vertical room or runs alongside the underlying page state.
 
 ```tsx
 <Drawer title="Edit collection" placement="right" size="md" open={open} onOpenChange={setOpen}
-  footer={<>
+  actions={<>
     <Button color="neutral" variant="outline" onPressed={() => setOpen(false)}>Cancel</Button>
     <Button onPressed={save}>Save</Button>
   </>}>

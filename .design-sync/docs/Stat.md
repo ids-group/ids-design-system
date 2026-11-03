@@ -6,6 +6,7 @@ KPI metric block: `label` above a headline `value`, then either a signed delta l
 - `unit` is appended flush after the value (e.g. `value={98} unit="%"`).
 - `delta` (number): sign picks the arrow and colour — positive = up/green, negative = down/red, 0 = no arrow. `deltaLabel` suffixes the magnitude ("vs last month"). `deltaTone="neutral" | "secondary"` overrides the automatic colouring (e.g. when down is good).
 - `caption` shows only when `delta` is unset; `deltaContent` (ReactNode) replaces the default "{magnitude} {deltaLabel}" text inside the delta line.
+- Slots: `valueContent` replaces the headline `value` + `unit` text with any node (a Badge, a status dot); `value` is the fallback when it is unset.
 - `variant="error"` colours the value red; `size` = `'sm' | 'md' | 'lg'` type scale.
 
 ```tsx
