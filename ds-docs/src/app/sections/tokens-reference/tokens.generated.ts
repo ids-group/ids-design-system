@@ -461,6 +461,16 @@ export const SEMANTIC_SURFACE: readonly ColourRow[] = [
     "notes": "What --surface-muted becomes inside a popover-class overlay: one step above --surface-overlay-raised-secondary in the dark theme, the same as --surface-muted in light."
   },
   {
+    "name": "--surface-overlay-tint",
+    "value": "var(--surface-tint)",
+    "notes": "What --surface-tint and --accent-surface-tint become inside a modal, a drawer and the app-layout rail below lg: lighter than --surface-overlay in the dark theme, the same as --surface-tint in light."
+  },
+  {
+    "name": "--surface-overlay-raised-tint",
+    "value": "var(--surface-tint)",
+    "notes": "What --surface-tint and --accent-surface-tint become inside a popover-class overlay: lighter than --surface-overlay-raised in the dark theme, the same as --surface-tint in light."
+  },
+  {
     "name": "--surface-scrim",
     "value": "hsl(var(--shadow-tint-h) var(--shadow-tint-s) var(--shadow-tint-l) / 55%)",
     "notes": "Modal/overlay backdrop tint (55% shadow-tinted black)."
@@ -675,6 +685,11 @@ export const SEMANTIC_SECONDARY: readonly ColourRow[] = [
 ];
 
 export const SEMANTIC_ACCENT: readonly ColourRow[] = [
+  {
+    "name": "--accent-strong-overlay",
+    "value": "var(--accent-strong)",
+    "notes": "What --accent-strong becomes inside a modal, a drawer and a popover-class overlay: lighter in the dark theme so accent text keeps 4.5:1 on the overlay tint, the same as --accent-strong in light."
+  },
   {
     "name": "--accent",
     "value": "var(--primary)",

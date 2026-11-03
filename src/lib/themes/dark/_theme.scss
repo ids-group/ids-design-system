@@ -33,6 +33,9 @@
   --surface-overlay-raised:    var(--neutral-150);
   --surface-overlay-raised-secondary: var(--neutral-200);
   --surface-overlay-raised-muted:     var(--neutral-300);
+  --surface-overlay-tint:             color-mix(in srgb, var(--primary) 30%, var(--surface-overlay));
+  --surface-overlay-raised-tint:      color-mix(in srgb, var(--primary) 30%, var(--surface-overlay-raised));
+  --accent-strong-overlay:            hsl(from var(--primary) h 90% 80%);
   --border-overlay:            var(--border-strong);
   --border-field:              var(--neutral-400);
   --border-field-hover:        var(--neutral-500);
