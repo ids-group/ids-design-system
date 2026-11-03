@@ -11,6 +11,14 @@
   visually hidden element carrying the name. Without the template a row renders as before. New
   exports `TreeLabelDirective` and `TreeLabelContext`.
 
+### Fixed
+
+- **Under `data-theme="dark"`, an element raised by `--shadow-1` has an edge.** The selected
+  `ds-segmented` segment, the active pill `ds-tabs` tab, the `ds-switch` and `ds-slider` thumbs and a
+  `raised` `ds-card` sit on a surface no darker than themselves, and with the dark shadow they lost
+  their outline. `--shadow-1` (and `--ds-elevation-raised`, `--shadow-card`) adds the 1px light hairline
+  at 8% alpha that `--shadow-4` draws. The light theme is unchanged. Nothing to change in your code.
+
 ## 1.1.0 — 2026-11-02
 
 ### Added
