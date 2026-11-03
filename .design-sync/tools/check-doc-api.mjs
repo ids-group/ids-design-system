@@ -139,8 +139,22 @@ for (const file of readdirSync(join(syncDir, 'docs')).filter((name) =>
 for (const name of accepted.keys()) {
   if (existsSync(join(syncDir, 'docs', `${name}.md`))) continue;
   problems.push(
-    `docs/${name}.md — missing; ${name} is in the surface, and build-cards needs its usage notes`,
+    `docs/${name}.md - missing; ${name} is in the surface, and build-cards needs its usage notes`,
   );
+}
+
+// A slot's prop says only that content can go there; where it renders and what belongs in it is
+// what the notes are for, so every slot is named in them in backticks.
+for (const component of surface.components) {
+  const path = join(syncDir, 'docs', `${component.name}.md`);
+  if (!existsSync(path)) continue;
+  const text = readFileSync(path, 'utf8');
+  for (const slot of component.slots) {
+    if (text.includes(`\`${slot.prop}\``)) continue;
+    problems.push(
+      `docs/${component.name}.md - slot \`${slot.prop}\` ([${slot.attribute}]) is never named; say where it renders and what goes in it`,
+    );
+  }
 }
 
 if (problems.length) {
