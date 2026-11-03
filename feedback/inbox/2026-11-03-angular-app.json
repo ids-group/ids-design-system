@@ -1,0 +1,25 @@
+[
+  {
+    "id": "finder-overlay-trace",
+    "target": "agent:ds-usage-finder",
+    "kind": "false-negative",
+    "severity": "should-fix",
+    "summary": "Overlay-scoped item: a class used both inline and inside a ds-popover was excluded by selector name",
+    "evidence": [
+      {
+        "loc": "projects/app/src/.../item-header.component.ts:858"
+      },
+      {
+        "loc": "projects/app/src/.../item-header.component.ts:297"
+      }
+    ],
+    "proposal": "Trace each candidate class to every template that renders it, ng-template outlets included, before excluding it.",
+    "run": {
+      "consumer": "angular-app",
+      "dsFrom": "1.0.3",
+      "dsTo": "1.1.0",
+      "pluginVersion": "1.19.2",
+      "date": "2026-11-03"
+    }
+  }
+]
