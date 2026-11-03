@@ -8,6 +8,10 @@
   --_splitter-drag-color: var(--ds-splitter-drag-color, var(--text-muted));
   --_splitter-grip-color: var(--ds-splitter-grip-color, var(--text-muted));
   --_splitter-overdrag-line-scale: var(--ds-splitter-overdrag-line-scale, 3);
+  --_splitter-fog-color: var(
+    --ds-splitter-fog-color,
+    color-mix(in srgb, var(--text-primary) 22%, transparent)
+  );
   --_splitter-grip-dot: calc(var(--border-width-strong) + var(--border-width-default));
   --_splitter-sized: min(var(--_splitter-size), 100% - var(--_splitter-gap));
   --_splitter-rest: minmax(0, 1fr);
@@ -30,11 +34,62 @@
 :host([data-orientation='horizontal']) {
   grid-template-columns: var(--_splitter-start) var(--_splitter-gap) var(--_splitter-end);
   grid-template-rows: minmax(0, 1fr);
+
+  /* Placed, not flowed: each fog layer shares its pane's cell. */
+  .pane-start,
+  .fog-start {
+    grid-area: 1 / 1;
+  }
+
+  .handle {
+    grid-area: 1 / 2;
+  }
+
+  .pane-end,
+  .fog-end {
+    grid-area: 1 / 3;
+  }
+
+  .fog-start {
+    background-image: linear-gradient(to left, var(--_splitter-fog-color), transparent 60%);
+  }
+
+  .fog-end {
+    background-image: linear-gradient(to right, var(--_splitter-fog-color), transparent 60%);
+  }
 }
 
 :host([data-orientation='vertical']) {
   grid-template-columns: minmax(0, 1fr);
   grid-template-rows: var(--_splitter-start) var(--_splitter-gap) var(--_splitter-end);
+
+  .pane-start,
+  .fog-start {
+    grid-area: 1 / 1;
+  }
+
+  .handle {
+    grid-area: 2 / 1;
+  }
+
+  .pane-end,
+  .fog-end {
+    grid-area: 3 / 1;
+  }
+
+  .fog-start {
+    background-image: linear-gradient(to top, var(--_splitter-fog-color), transparent 60%);
+  }
+
+  .fog-end {
+    background-image: linear-gradient(to bottom, var(--_splitter-fog-color), transparent 60%);
+  }
+}
+
+.fog {
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity var(--duration-slow) var(--ease-standard);
 }
 
 .pane {
@@ -45,21 +100,25 @@
 
 /* The rubber band scales each pane from its outer edge, so the edges at the host stay put. */
 :host([data-orientation='horizontal']) {
-  .pane-start {
+  .pane-start,
+  .fog-start {
     transform-origin: left center;
   }
 
-  .pane-end {
+  .pane-end,
+  .fog-end {
     transform-origin: right center;
   }
 }
 
 :host([data-orientation='vertical']) {
-  .pane-start {
+  .pane-start,
+  .fog-start {
     transform-origin: center top;
   }
 
-  .pane-end {
+  .pane-end,
+  .fog-end {
     transform-origin: center bottom;
   }
 }
@@ -67,6 +126,12 @@
 /* Released past a limit: the handle and the panes spring back with a small overshoot. */
 :host(.springing) :is(.pane, .handle) {
   transition: transform var(--duration-slower) var(--ease-spring);
+}
+
+:host(.springing) .fog {
+  transition:
+    opacity var(--duration-slow) var(--ease-standard),
+    transform var(--duration-slower) var(--ease-spring);
 }
 
 /* Pulled past a limit, the line thickens with the pull up to the scale, and springs back with it. */

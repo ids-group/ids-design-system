@@ -202,6 +202,51 @@
   </div>
 
   <h3 class="block-title t-h4">
+    Drag fog
+  </h3>
+
+  <p class="block-desc t-s">
+    With
+    <code class="t-mono-inline">
+      dragFog
+    </code>
+    a shade falls on the pane the handle moves towards, stronger the faster and
+    farther you drag. It turns when your hand turns, rides the rubber band past
+    a limit, and fades when you stop or let go. Off by default; reduced motion
+    turns it off.
+  </p>
+
+  <div class="states is-cols-2">
+    <div class="state-cell">
+      <div class="state-cell-stage">
+        <ds-splitter
+          class="frame"
+          dragFog
+          ariaLabel="List width"
+          [defaultSize]="140"
+          [min]="96"
+          [max]="200">
+          <div
+            start
+            class="pane-fill">
+            List
+          </div>
+
+          <div
+            end
+            class="pane-fill">
+            Detail
+          </div>
+        </ds-splitter>
+      </div>
+
+      <div class="state-cell-label">
+        dragFog
+      </div>
+    </div>
+  </div>
+
+  <h3 class="block-title t-h4">
     Try it
   </h3>
 

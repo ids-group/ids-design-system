@@ -1,6 +1,7 @@
 import { DOCUMENT } from '@angular/common';
 import {
   Component,
+  booleanAttribute,
   ElementRef,
   OnDestroy,
   NgZone,
@@ -33,6 +34,10 @@ const LARGE_STEP = 64;
 // than a third of the pane it squashes, whose content would otherwise read as distorted.
 const OVERDRAG_CAP = 100;
 const OVERDRAG_SQUASH = 1 / 3;
+// Fog strength is speed x distance, each 0.1..1: full from 1.2 px/ms and from 180px off the grab point.
+const FOG_FULL_SPEED = 1.2;
+const FOG_FULL_DISTANCE = 180;
+const FOG_IDLE = 180;
 
 /**
  * Two panes with a handle between them that resizes one of them. Slots: `[start]` and `[end]`.
@@ -60,6 +65,8 @@ export class SplitterComponent implements OnInit, OnDestroy {
   private readonly zone = inject(NgZone);
   private readonly handle =
     viewChild.required<ElementRef<HTMLElement>>('handle');
+  private readonly fogStart = viewChild<ElementRef<HTMLElement>>('fogStart');
+  private readonly fogEnd = viewChild<ElementRef<HTMLElement>>('fogEnd');
 
   /** `'horizontal'`: panes side by side. `'vertical'`: panes stacked. */
   readonly orientation = input<SplitterOrientation>('horizontal');
@@ -80,6 +87,10 @@ export class SplitterComponent implements OnInit, OnDestroy {
   /** Dragged past `min` or `max`: `'elastic'` follows the pointer with growing resistance and springs
    *  back on release, `'none'` stops at the limit. Off under `prefers-reduced-motion: reduce`. */
   readonly overdrag = input<SplitterOverdrag>('elastic');
+  /** While dragging, shades the pane the handle moves towards, stronger the faster and farther the drag;
+   *  the shade rides the rubber band past a limit and fades when the hand stops or lets go. Colour:
+   *  `--ds-splitter-fog-color`. Off under `prefers-reduced-motion: reduce`. */
+  readonly dragFog = input(false, { transform: booleanAttribute });
 
   protected readonly startId = nextControlId('ds-splitter-pane');
   protected readonly endId = nextControlId('ds-splitter-pane');
@@ -108,10 +119,21 @@ export class SplitterComponent implements OnInit, OnDestroy {
     box: DOMRect;
     elastic: boolean;
     pull: number;
+    fog: boolean;
+    // Pointer along the axis: at the grab, at the last frame, and when.
+    start: number;
+    last: number;
+    lastTime: number;
+    speed: number;
+    velocity: number;
+    // +1 towards the end pane, -1 towards the start pane, 0 before the first 2px of travel.
+    side: number;
+    reversalSince: number | null;
   } | null = null;
   private pendingMove: PointerEvent | null = null;
   private frame = 0;
   private springTimer = 0;
+  private fogTimer = 0;
 
   constructor() {
     retainStyles(SplitterDraggingStylesComponent);
@@ -146,17 +168,25 @@ export class SplitterComponent implements OnInit, OnDestroy {
     // A grab during the spring-back stops it where the layout puts the handle, before anything is measured.
     this.stopSpring();
     // The grab point's distance from the measured pane's edge stays fixed, so the handle never jumps.
+    const reduced = !!this.document.defaultView?.matchMedia(
+      '(prefers-reduced-motion: reduce)',
+    ).matches;
+    const at = this.alongAxis(event);
     this.drag = {
       pointerId: event.pointerId,
       grab: this.fromPaneEdge(event, handle.getBoundingClientRect()),
       size: this.current(),
       box: this.panesBox(),
-      elastic:
-        this.overdrag() === 'elastic' &&
-        !this.document.defaultView?.matchMedia(
-          '(prefers-reduced-motion: reduce)',
-        ).matches,
+      elastic: this.overdrag() === 'elastic' && !reduced,
       pull: 0,
+      fog: this.dragFog() && !reduced,
+      start: at,
+      last: at,
+      lastTime: event.timeStamp,
+      speed: 0,
+      velocity: 0,
+      side: 0,
+      reversalSince: null,
     };
     this.dragging.set(true);
     // Outside Angular: a move writes the DOM itself, so it must not start change detection per frame.
@@ -193,6 +223,9 @@ export class SplitterComponent implements OnInit, OnDestroy {
     if (this.drag.elastic) {
       // Against the unrounded limit: within min and max the excess is exactly 0, not the rounding.
       this.stretch(raw - this.clamp(raw, room));
+    }
+    if (this.drag.fog) {
+      this.shade(event);
     }
     if (size === this.drag.size) {
       return;
@@ -245,6 +278,83 @@ export class SplitterComponent implements OnInit, OnDestroy {
     );
     measured.style.transform = `${scale}(${(extent(measured) + pull) / extent(measured)})`;
     other.style.transform = `${scale}(${Math.max(0, extent(other) - pull) / extent(other)})`;
+    this.syncFogTransforms();
+  }
+
+  // The side is the pointer's direction, never where it stands: past a limit the pointer stays beyond
+  // the line while the hand already pulls back, and the fog has to turn with the hand.
+  private shade(event: PointerEvent): void {
+    const drag = this.drag!;
+    const at = this.alongAxis(event);
+    const step = at - drag.last;
+    const elapsed = Math.max(1, event.timeStamp - drag.lastTime);
+    drag.speed = drag.speed * 0.6 + (Math.abs(step) / elapsed) * 0.4;
+    drag.velocity +=
+      (1 - Math.exp(-elapsed / 100)) * (step / elapsed - drag.velocity);
+    drag.side = this.sideOf(drag, at, event.timeStamp);
+    drag.last = at;
+    drag.lastTime = event.timeStamp;
+    const start = this.fogStart()?.nativeElement;
+    const end = this.fogEnd()?.nativeElement;
+    if (step === 0 || drag.side === 0 || !start || !end) {
+      return;
+    }
+    const factor = (value: number) => Math.max(0.1, Math.min(1, value));
+    const strength =
+      factor(drag.speed / FOG_FULL_SPEED) *
+      factor(Math.abs(at - drag.start) / FOG_FULL_DISTANCE);
+    const [toward, away] = drag.side > 0 ? [end, start] : [start, end];
+    toward.style.opacity = String(strength);
+    away.style.removeProperty('opacity');
+    clearTimeout(this.fogTimer);
+    this.fogTimer = window.setTimeout(() => this.clearFog(), FOG_IDLE);
+  }
+
+  // Under 0.05 px/ms the side holds, and a reversal must last 100ms before it flips, so a slow or
+  // shaky hand never flickers the fog between the panes.
+  private sideOf(
+    drag: NonNullable<SplitterComponent['drag']>,
+    at: number,
+    now: number,
+  ): number {
+    if (drag.side === 0) {
+      return Math.abs(at - drag.start) >= 2 ? Math.sign(at - drag.start) : 0;
+    }
+    const wanted =
+      Math.abs(drag.velocity) < 0.05 ? 0 : Math.sign(drag.velocity);
+    if (wanted === 0 || wanted === drag.side) {
+      drag.reversalSince = null;
+
+      return drag.side;
+    }
+    drag.reversalSince ??= now;
+    if (now - drag.reversalSince < 100) {
+      return drag.side;
+    }
+    drag.reversalSince = null;
+
+    return wanted;
+  }
+
+  private clearFog(): void {
+    clearTimeout(this.fogTimer);
+    for (const fog of [this.fogStart(), this.fogEnd()]) {
+      fog?.nativeElement.style.removeProperty('opacity');
+    }
+  }
+
+  // Each fog layer takes its pane's rubber-band transform, so the shade stays on the pane's edge.
+  private syncFogTransforms(): void {
+    const handle = this.handle().nativeElement;
+    const pairs: [HTMLElement | undefined, Element | null][] = [
+      [this.fogStart()?.nativeElement, handle.previousElementSibling],
+      [this.fogEnd()?.nativeElement, handle.nextElementSibling],
+    ];
+    for (const [fog, pane] of pairs) {
+      if (fog) {
+        fog.style.transform = (pane as HTMLElement).style.transform;
+      }
+    }
   }
 
   // The handle, the pane `size` measures, then the other pane.
@@ -263,6 +373,7 @@ export class SplitterComponent implements OnInit, OnDestroy {
       element.style.transform = '';
     }
     this.handle().nativeElement.style.removeProperty('--_splitter-pull-ratio');
+    this.syncFogTransforms();
   }
 
   private stopSpring(): void {
@@ -375,6 +486,7 @@ export class SplitterComponent implements OnInit, OnDestroy {
       // The pointer can already be gone.
     }
     this.drag = null;
+    this.clearFog();
     this.dragging.set(false);
     const root = this.document.documentElement;
     root.removeAttribute('data-ds-splitter-dragging');
@@ -385,6 +497,10 @@ export class SplitterComponent implements OnInit, OnDestroy {
     const key = this.persistKey().trim();
 
     return key ? `ds-splitter:${key}` : null;
+  }
+
+  private alongAxis(event: PointerEvent): number {
+    return this.orientation() === 'horizontal' ? event.clientX : event.clientY;
   }
 
   // ponytail: left-to-right only; under `dir="rtl"` a horizontal start pane is measured from the left.
