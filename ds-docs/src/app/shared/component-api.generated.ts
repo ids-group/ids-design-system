@@ -10763,6 +10763,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "'elastic'",
         "required": false,
         "description": "Dragged past `min` or `max`: `'elastic'` follows the pointer with growing resistance and springs back on release, `'none'` stops at the limit. Off under `prefers-reduced-motion: reduce`."
+      },
+      {
+        "name": "dragFog",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "While dragging, shades the pane the handle moves towards, stronger the faster and farther the drag; the shade rides the rubber band past a limit and fades when the hand stops or lets go. Colour: `--ds-splitter-fog-color`. Off under `prefers-reduced-motion: reduce`."
       }
     ],
     "outputs": []
