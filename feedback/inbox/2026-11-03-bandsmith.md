@@ -51,3 +51,7 @@ Evidence:
 - git -C C:/Worktrees/bandsmith/ds-1-1-0-web log --oneline -3 -> 67cf67e2 style(overlays)..., 5c88dbe0 fix(teams-tab)..., 0fcdc199 chore(deps) v1.1.0
 
 Proposal: Allow split commits per version (bump first, then each migration), each staged by pathspec, with the verify run on the final tree of the version.
+
+## skill:auto-update-package
+
+- **should-fix (defect): `--from current` is rejected by the lint plugin.** SKILL.md step 11 says to pass `current` as the first step, but `lint-step.mjs` forwards it to the rule options and ESLint throws that the value should match a version pattern. Proposal: resolve `current` to the installed version in `lint-step.mjs`, or document passing the installed version.
