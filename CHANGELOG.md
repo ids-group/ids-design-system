@@ -52,6 +52,10 @@
 
 ### Fixed
 
+- **A `ds-icon` box is as large as its glyph.** `ds-icon` sets `--ds-icon-size` on itself as well
+  as on its `svg`, so a host that also carries the global `.icon` class takes the glyph's size
+  instead of `--icon-md` (16px). In `ds-banner` the icon box grows from 16px to 20px, the size its
+  glyph already drew, and the text beside it moves 4px further from the icon.
 - **The marker of a `ds-chat-step` sits beside the first line of its heading.** A step with
   content or a `time` under its heading, or a heading on two lines, centred its marker on the whole
   step, below the heading's first line; only a `waiting` step kept it on the heading row. Every

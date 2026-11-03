@@ -83,6 +83,10 @@
         "pixels:segmented/segmented-control",
         "pixels:switch/switch-states-showcase"
       ]
+    },
+    {
+      "text": "A `ds-icon` whose host also carries the global `.icon` class now has a box as large as its glyph: 20px in `ds-banner`, where the box was 16px around a 20px glyph, so the banner text sits 4px further from the icon. Nothing to change in your code.",
+      "verify": "Open a `ds-banner`: the icon box and its glyph are both 20px, and the title starts 4px further right than before."
     }
   ],
   "deleteList": []

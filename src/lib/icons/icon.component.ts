@@ -39,6 +39,10 @@ import { reportDevWarning } from '@ids-group-ltd/ids-design-system/core';
     `,
   ],
   templateUrl: './icon.component.html',
+  // A host given the global `.icon` class takes its width from this variable, so the box matches the glyph.
+  host: {
+    '[style.--ds-icon-size]': "sizeResolved() + 'px'",
+  },
 })
 export class IconComponent {
   private readonly sanitizer = inject(DomSanitizer);
