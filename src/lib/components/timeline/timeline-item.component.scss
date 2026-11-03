@@ -19,8 +19,8 @@
   --_timeline-open-bg-color: var(--ds-timeline-open-bg-color, var(--surface-secondary));
 
   // Row 1 holds the marker and the text (heading, content, time); row 2 holds the details and the
-  // gap to the next item. The marker centres on the text, or the text on the marker when the text
-  // is shorter, so the details opening never moves the marker.
+  // gap to the next item, so the details opening never moves the marker. A heading alone and the
+  // marker centre on each other; with something under the heading, see the rule further down.
   display: grid;
   grid-template-columns: var(--_timeline-node-size) 1fr;
   column-gap: var(--space-4);
