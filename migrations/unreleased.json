@@ -1,0 +1,11 @@
+{
+  "version": "unreleased",
+  "items": [],
+  "informational": [
+    {
+      "text": "A `ds-chat-step` with content or a `time` under its heading keeps its marker beside the heading's first line for every `status`, as a `waiting` step does, and is about 4px taller. A `waiting` step with a trailing action no longer draws its marker above the heading. A step with nothing under its heading renders as before. Nothing to change in your code.",
+      "verify": "Open a `ds-chat-step` with text or buttons under its heading: the marker sits level with the heading, not beside the text under it.",
+      "evidence": ["pixels:chat-steps/step-status", "pixels:chat-steps/waiting-for-the-reader"]
+    }
+  ]
+}
