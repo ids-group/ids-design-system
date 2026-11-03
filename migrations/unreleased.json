@@ -45,6 +45,10 @@
     {
       "text": "A `ds-timeline-item` with content or a `time` under its heading keeps its marker beside the heading's first line, and is about 8px taller. An item with nothing under its heading renders as before. Nothing to change in your code.",
       "verify": "Open a `ds-timeline` whose items carry a `time`: each marker sits level with its heading, not beside the time under it."
+    },
+    {
+      "text": "Under `data-theme=\"dark\"`, `--shadow-1` (and `--ds-elevation-raised`, `--shadow-card`) starts with a 1px light hairline at 8% alpha, so the selected `ds-segmented` segment, the active pill `ds-tabs` tab, the `ds-switch` and `ds-slider` thumbs and a `raised` `ds-card` show an edge. The light theme is unchanged. Nothing to change in your code.",
+      "verify": "In the dark theme, open a `ds-segmented` control: the selected segment shows a thin light outline against its track."
     }
   ],
   "deleteList": []
