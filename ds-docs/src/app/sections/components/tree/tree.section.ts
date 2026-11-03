@@ -1,7 +1,12 @@
 import { Component, ViewEncapsulation, signal } from '@angular/core';
 import { BadgeComponent } from 'ds/badge';
 import { IconButtonComponent } from 'ds/icon-button';
-import { TreeComponent, TreeTrailingDirective } from 'ds/tree';
+import { TooltipDirective } from 'ds/tooltip';
+import {
+  TreeComponent,
+  TreeLabelDirective,
+  TreeTrailingDirective,
+} from 'ds/tree';
 import type { TreeNode } from 'ds/tree';
 import { DocsSectionComponent } from '../../../shared/docs-section.component';
 
@@ -12,7 +17,9 @@ import { DocsSectionComponent } from '../../../shared/docs-section.component';
     BadgeComponent,
     DocsSectionComponent,
     IconButtonComponent,
+    TooltipDirective,
     TreeComponent,
+    TreeLabelDirective,
     TreeTrailingDirective,
   ],
   encapsulation: ViewEncapsulation.Emulated,
@@ -83,6 +90,42 @@ export class TreeSection {
   protected readonly layersSelected = signal(['header', 'summary', 'pay']);
   protected readonly hovered = signal<string | null>(null);
   protected readonly hidden = signal<string | null>(null);
+
+  protected readonly elements: TreeNode[] = [
+    {
+      id: 'page',
+      label: 'Checkout page',
+      children: [
+        {
+          id: 'card',
+          label: 'Order summary for the customer with delivery and VAT lines',
+          children: [
+            { id: 'heading', label: 'Order summary' },
+            { id: 'total', label: '£1,240.00' },
+          ],
+        },
+        {
+          id: 'actions',
+          label: 'Actions',
+          children: [{ id: 'pay', label: 'Pay now' }],
+        },
+      ],
+    },
+  ];
+
+  protected readonly tags: Record<string, string> = {
+    page: 'main',
+    card: 'ds-card',
+    heading: 'h2',
+    total: 'span.order-total.is-highlighted.with-currency-symbol',
+    actions: 'div',
+    pay: 'ds-button',
+  };
+
+  protected readonly elementsExpanded = signal(
+    new Set(['page', 'card', 'actions']),
+  );
+  protected readonly elementSelected = signal<string | null>('heading');
 
   protected readonly singleNode: TreeNode[] = [
     { id: 'node', label: 'Node label', icon: 'file' },

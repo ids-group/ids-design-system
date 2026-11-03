@@ -343,6 +343,8 @@ export { TooltipPanelComponent } from '@ids-group-ltd/ids-design-system/componen
 export { TooltipPlacement } from '@ids-group-ltd/ids-design-system/core'; // type
 export { TopBarComponent } from '@ids-group-ltd/ids-design-system/components/topbar'; // component
 export { TreeComponent } from '@ids-group-ltd/ids-design-system/components/tree'; // component
+export { TreeLabelContext } from '@ids-group-ltd/ids-design-system/components/tree'; // interface
+export { TreeLabelDirective } from '@ids-group-ltd/ids-design-system/components/tree'; // directive
 export { TreeNode } from '@ids-group-ltd/ids-design-system/components/tree'; // interface
 export { TreeSelection } from '@ids-group-ltd/ids-design-system/components/tree'; // type
 export { TreeTrailingContext } from '@ids-group-ltd/ids-design-system/components/tree'; // interface
