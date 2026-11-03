@@ -20,8 +20,8 @@
   --_step-open-bg-color: var(--surface-secondary);
 
   // Row 1 holds the marker and the text (heading, content, time); row 2 holds the details and the
-  // gap to the next step. The marker centres on the text, or the text on the marker when the text
-  // is shorter, so the details opening never moves the marker.
+  // gap to the next step, so the details opening never moves the marker. The marker sits beside the
+  // heading's first line (the rule further down).
   display: grid;
   grid-template-columns: var(--_step-node-size) 1fr;
   column-gap: var(--space-2);
@@ -231,18 +231,24 @@
   --_step-node-border-color: var(--text-secondary);
 }
 
-// A waiting step carries the reader's answer (Approve, Not now) under its heading, so its marker
-// stays beside the heading instead of centring on the taller row.
-:host([data-status='waiting']) {
-  --_step-heading-line: calc(var(--font-size-xs) * var(--line-height-base));
+// The marker sits beside the heading's first line, whatever wraps or sits under it.
+:host {
+  --_step-heading-centre: calc(var(--font-size-xs) * var(--line-height-base) / 2);
 
   .text {
     align-self: start;
-    padding-top: max(0px, var(--_step-node-size) / 2 + var(--space-1) - var(--_step-heading-line) / 2);
+    padding-top: max(0px, var(--_step-node-size) / 2 + var(--space-1) - var(--_step-heading-centre));
   }
 
   .lead {
     flex: none;
-    height: max(0px, var(--_step-heading-line) / 2 - var(--_step-node-size) / 2 - var(--space-1));
+    height: max(0px, var(--_step-heading-centre) - var(--_step-node-size) / 2 - var(--space-1));
   }
+}
+
+// The heading centres on a projected action, which is assumed to be a small control.
+:host:has(> .text > .head > .trailing > :not(.toggle)) {
+  --_step-heading-centre: calc(
+    var(--space-2) + max(var(--font-size-xs) * var(--line-height-base), var(--field-h-sm)) / 2
+  );
 }

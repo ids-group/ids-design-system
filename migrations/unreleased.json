@@ -33,6 +33,15 @@
       ]
     }
   ],
-  "informational": [],
+  "informational": [
+    {
+      "text": "A `ds-chat-step` keeps its marker beside the heading's first line for every `status`, as a `waiting` step does: with content or a `time` under the heading, and with a heading on two lines. A step with content under its heading is about 4px taller. A `waiting` step with a trailing action no longer draws its marker above the heading. A step with a one-line heading and nothing under it renders as before. Nothing to change in your code.",
+      "verify": "Open a `ds-chat-step` with text or buttons under its heading, and one with a two-line heading: the marker sits level with the heading's first line.",
+      "evidence": [
+        "pixels:chat-steps/step-status",
+        "pixels:chat-steps/waiting-for-the-reader"
+      ]
+    }
+  ],
   "deleteList": []
 }
