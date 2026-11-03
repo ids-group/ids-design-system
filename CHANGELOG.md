@@ -6,6 +6,14 @@
   `--neutral-500` in light and `--neutral-400` under `data-theme="dark"` (`#6B7388` in both), at
   least 3:1 against the page, a card, a modal or drawer and a popover. `--border-field-hover` is one
   step stronger: `--neutral-600` in light, `--neutral-500` on dark.
+- **`ds-tree` draws a row label of your own.** `<ng-template dsTreeLabel let-node>` replaces the
+  label of every row, for a label of two lines or one that mixes styles. Its context carries `node`
+  (also `$implicit`), `level` (`0` for a root node), `selected` and `disabled`. The row grows to the
+  template's height, and the label takes the width between the icon and the trailing content, so an
+  element inside it can cut its text with an ellipsis or pair it with `dsTooltipWhenClipped`. The
+  text the template renders is the row's accessible name: a template that draws no text needs a
+  visually hidden element carrying the name. Without the template a row renders as before. New
+  exports `TreeLabelDirective` and `TreeLabelContext`.
 
 ### Changed
 
@@ -20,7 +28,8 @@
   `--ds-otp-cell-border-color` and `--ds-field-group-border-color` default to them, and through
   them `--ds-input-border`, `--ds-search-border`, `--ds-select-border-color`,
   `--ds-multi-select-border-color` and `--ds-autocomplete-border-color` with their `-hover`
-  pairs. Nothing to change in your code, unless a screen must keep the faint outline: set `--border-field: var(--border-default)` and
+  pairs. Nothing to change in your code, unless a screen must keep the faint outline: set
+  `--border-field: var(--border-default)` and
   `--border-field-hover: var(--border-strong)` on `:root`.
 
 ## 1.1.0 — 2026-11-02
