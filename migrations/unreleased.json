@@ -83,7 +83,8 @@
         "pixels:segmented/segmented-control",
         "pixels:switch/switch-states-showcase"
       ]
-    }
+    },
+    "A `ds-splitter` drag released over an iframe or an embedded webview ends there: the resize cursor and the blocked text selection no longer stay on the page. While a handle is dragged, every `iframe`, `webview`, `embed` and `object` on the page ignores the pointer. Nothing to change in your code; a `pointer-events: none` you set on an embedded document during a drag can be removed."
   ],
   "deleteList": []
 }
