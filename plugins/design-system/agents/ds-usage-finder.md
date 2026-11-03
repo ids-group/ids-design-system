@@ -50,6 +50,12 @@ comes from the item; don't assume anything about particular components.
   search. Do not report an occurrence of an old value standing INSIDE an already-applied
   replacement (`outline` inside `color="neutral" variant="outline"`) — a half-migrated tree
   re-greps as old otherwise.
+- **Where it renders decides a context-bound item, not what the selector is called.** When
+  `appliesWhen` limits an item to where content renders (inside a `ds-popover`, a submenu, a
+  dropdown panel, a dialog), trace each matched class or element to every template that renders
+  it before leaving a hit out: `ng-template` content stamped by an outlet or projected into an
+  overlay counts. A class used both on the page and inside an overlay is a hit; record the
+  overlay's template as `el`.
 - **Value-bearing items** (`value-remap`, or any item whose `map`/`old` targets attribute VALUES):
   one item usually matches several distinct values across the codebase — report each occurrence
   with its own `match` so the applier can look each up in the `map`.
