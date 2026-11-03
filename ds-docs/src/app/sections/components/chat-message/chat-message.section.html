@@ -1,14 +1,22 @@
 <docs-section
   anchor="chat-message"
   eyebrow="Components"
-  title="Chat">
+  title="Chat"
+  [apiKeys]="[
+    'chat:ChatMessageComponent',
+    'chat:ChatThreadComponent',
+    'chat:ChatAttachmentComponent',
+  ]">
   <span lede>
     Message bubbles and the list that holds them. The window around them, the
     tabs and the composer stay with the app; the text inside a bubble is the
     app's too, rendered markdown included.
   </span>
 
-  <h3 class="block-title t-h4">
+  <h3
+    data-claude-design
+    class="block-title t-h4"
+    data-for="chat-attachment">
     States
   </h3>
 
