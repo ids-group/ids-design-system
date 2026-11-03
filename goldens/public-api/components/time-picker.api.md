@@ -117,7 +117,7 @@ ds-time-picker {
     --ds-time-picker-required-color: var(--error);
     --ds-time-picker-shadow: var(--ds-elevation-overlay);
     --ds-time-picker-trigger-bg-color: var(--surface-default);
-    --ds-time-picker-trigger-border: var(--border-default);
+    --ds-time-picker-trigger-border: var(--border-field);
     --ds-time-picker-trigger-color: var(--text-primary);
     --ds-time-picker-trigger-padding-x: var(--field-pad-x);
     --ds-time-picker-trigger-radius: var(--ds-radius-control);
