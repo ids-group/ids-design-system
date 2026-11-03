@@ -1,2 +1,19 @@
     /* State pins — force visual states on live ds-tree rows. */
     :host ::ng-deep .pin-hover .row:first-child { background-color: var(--surface-secondary); }
+
+.two-line-tree {
+  max-width: 240px;
+}
+
+.element-tag,
+.element-text {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.element-tag {
+  color: var(--text-tertiary);
+  font-size: var(--font-size-xs);
+}
