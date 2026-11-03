@@ -49,7 +49,7 @@ export type OtpMode = 'numeric' | 'alphanumeric';
 ```css
 ds-otp-input {
     --ds-otp-cell-bg-color: var(--surface-default);
-    --ds-otp-cell-border-color: var(--border-default);
+    --ds-otp-cell-border-color: var(--border-field);
     --ds-otp-cell-border-color-focus: var(--accent);
     --ds-otp-cell-height: var(--otp-cell-h);
     --ds-otp-cell-width: var(--otp-cell-w);

@@ -5,7 +5,7 @@
 /* Border, radius, focus ring and dividers live on `.row`, not the host: the group's message must sit outside the bordered box. */
 :host {
   --_field-group-bg-color: var(--ds-field-group-bg-color, var(--surface-default));
-  --_field-group-border-color: var(--ds-field-group-border-color, var(--border-default));
+  --_field-group-border-color: var(--ds-field-group-border-color, var(--border-field));
   --_field-group-border-color-focus: var(--ds-field-group-border-color-focus, var(--accent));
   --_field-group-border-color-error: var(--ds-field-group-border-color-error, var(--error));
   --_field-group-radius: var(--ds-field-group-radius, var(--ds-radius-control));
@@ -46,7 +46,7 @@
 
 /* `.invalid` is a plain host class and loses the specificity race to `:hover`/`:focus-within`, hence the `:not`. */
 :host(:not(.disabled, .invalid)) .row:hover {
-  border-color: var(--border-strong);
+  border-color: var(--border-field-hover);
 }
 
 /* focus-ring-guard: the group owns no control; each segment silences its own via focus.owns-the-focus-ring. */

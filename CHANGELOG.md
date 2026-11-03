@@ -2,6 +2,10 @@
 
 ### Added
 
+- **`--border-field` and `--border-field-hover`, the outline of a field.** `--border-field` is
+  `--neutral-500` in light and `--neutral-400` under `data-theme="dark"` (`#6B7388` in both), at
+  least 3:1 against the page, a card, a modal or drawer and a popover. `--border-field-hover` is one
+  step stronger: `--neutral-600` in light, `--neutral-500` on dark.
 - **`ds-tree` draws a row label of your own.** `<ng-template dsTreeLabel let-node>` replaces the
   label of every row, for a label of two lines or one that mixes styles. Its context carries `node`
   (also `$implicit`), `level` (`0` for a root node), `selected` and `disabled`. The row grows to the
@@ -10,6 +14,23 @@
   text the template renders is the row's accessible name: a template that draws no text needs a
   visually hidden element carrying the name. Without the template a row renders as before. New
   exports `TreeLabelDirective` and `TreeLabelContext`.
+
+### Changed
+
+- **Field outlines meet 3:1 (WCAG 1.4.11).** `ds-input`, `ds-textarea`, `ds-select`,
+  `ds-multi-select`, `ds-autocomplete`, `ds-search`, `ds-chat-input`, the `ds-date-picker`,
+  `ds-time-picker` and `ds-color-picker` triggers, `ds-number-stepper`, the `ds-otp-input` cells
+  and `ds-field-group` draw their resting border in `--border-field` and their hover border in
+  `--border-field-hover`, where they drew `--border-default` (1.38:1 on white, 1.19:1 on a dark
+  drawer) and `--border-strong`. `--ds-field-border-color`, `--ds-field-border-color-hover`,
+  `--ds-date-picker-trigger-border-color`, `--ds-time-picker-trigger-border`,
+  `--ds-color-picker-trigger-border-color`, `--ds-number-stepper-border-color`,
+  `--ds-otp-cell-border-color` and `--ds-field-group-border-color` default to them, and through
+  them `--ds-input-border`, `--ds-search-border`, `--ds-select-border-color`,
+  `--ds-multi-select-border-color` and `--ds-autocomplete-border-color` with their `-hover`
+  pairs. Nothing to change in your code, unless a screen must keep the faint outline: set
+  `--border-field: var(--border-default)` and
+  `--border-field-hover: var(--border-strong)` on `:root`.
 
 ### Fixed
 

@@ -46,7 +46,7 @@ export function inFieldGroup(): boolean;
 ```css
 ds-field-group {
     --ds-field-group-bg-color: var(--surface-default);
-    --ds-field-group-border-color: var(--border-default);
+    --ds-field-group-border-color: var(--border-field);
     --ds-field-group-border-color-error: var(--error);
     --ds-field-group-border-color-focus: var(--accent);
     --ds-field-group-divider-color: var(--border-divider);

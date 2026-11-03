@@ -181,7 +181,7 @@ ds-date-picker {
     --ds-date-picker-required-color: var(--error);
     --ds-date-picker-shadow: var(--ds-elevation-overlay);
     --ds-date-picker-trigger-bg-color: var(--surface-default);
-    --ds-date-picker-trigger-border-color: var(--border-default);
+    --ds-date-picker-trigger-border-color: var(--border-field);
     --ds-date-picker-trigger-label-color: var(--text-primary);
     --ds-date-picker-trigger-padding-x: var(--field-pad-x);
     --ds-date-picker-trigger-radius: var(--ds-radius-control);
