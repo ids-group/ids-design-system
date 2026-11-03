@@ -4,6 +4,15 @@ Versioning: **patch** = instruction/prompt fixes; **minor** = new capability (pi
 source, agent); **major** = a change to the workflow's behavior contract. Bump `plugin.json` +
 `marketplace.json` together on every published change.
 
+## 1.19.3 - 2026-11-03
+
+### Fixed
+
+- **`ds-usage-finder` decides an overlay-bound item by where the content renders.** For an item
+  whose `appliesWhen` names a rendering context, such as inside a `ds-popover` or a dropdown panel,
+  each matched class is traced to every template that renders it, `ng-template` outlets included,
+  before a hit is left out; a class used on the page and inside an overlay is reported.
+
 ## 1.19.2 - 2026-10-28
 
 ### Fixed
