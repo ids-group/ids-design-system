@@ -27,9 +27,15 @@ const WIDTHS: readonly WidthRow[] = [
 ];
 
 const ROLES: readonly RoleRow[] = [
-  { token: '--border-default', use: 'Card / table cell / divider-weight outline' },
+  {
+    token: '--border-default',
+    use: 'Card / table cell / divider-weight outline',
+  },
   { token: '--border-strong', use: 'Emphasised separation' },
-  { token: '--border-field', use: 'Field outline at rest, 3:1 against the page' },
+  {
+    token: '--border-field',
+    use: 'Field outline at rest, 3:1 against the page',
+  },
   { token: '--border-field-hover', use: 'Field outline on hover' },
   { token: '--border-subtitle', use: 'Faint section separation inside cards' },
   { token: '--border-divider', use: 'Horizontal rules, list-row separators' },
