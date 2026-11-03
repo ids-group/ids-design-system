@@ -160,9 +160,10 @@ export class SplitterComponent implements OnInit, OnDestroy {
     };
     this.dragging.set(true);
     // Outside Angular: a move writes the DOM itself, so it must not start change detection per frame.
-    this.zone.runOutsideAngular(() =>
-      handle.addEventListener('pointermove', this.onPointerMove),
-    );
+    this.zone.runOutsideAngular(() => {
+      handle.addEventListener('pointermove', this.onPointerMove);
+      this.document.defaultView?.addEventListener('blur', this.onWindowBlur);
+    });
     const root = this.document.documentElement;
     root.setAttribute('data-ds-splitter-dragging', '');
     root.style.setProperty('--_ds-splitter-cursor', this.cursor());
@@ -288,6 +289,15 @@ export class SplitterComponent implements OnInit, OnDestroy {
     if (event.pointerId !== this.drag?.pointerId) {
       return;
     }
+    this.finishDrag();
+  }
+
+  // A release over a document of its own (an iframe, an Electron webview) or outside the window can
+  // reach no listener here: losing capture or focus is then the only sign the drag is over.
+  private readonly finishDrag = (): void => {
+    if (!this.drag) {
+      return;
+    }
     if (this.frame) {
       cancelAnimationFrame(this.frame);
       this.applyMove();
@@ -300,7 +310,9 @@ export class SplitterComponent implements OnInit, OnDestroy {
     if (size !== this.current()) {
       this.commit(size);
     }
-  }
+  };
+
+  private readonly onWindowBlur = (): void => this.zone.run(this.finishDrag);
 
   protected onKeydown(event: KeyboardEvent): void {
     const horizontal = this.orientation() === 'horizontal';
@@ -353,6 +365,7 @@ export class SplitterComponent implements OnInit, OnDestroy {
     }
     const handle = this.handle().nativeElement;
     handle.removeEventListener('pointermove', this.onPointerMove);
+    this.document.defaultView?.removeEventListener('blur', this.onWindowBlur);
     cancelAnimationFrame(this.frame);
     this.frame = 0;
     this.pendingMove = null;

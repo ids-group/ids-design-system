@@ -21,6 +21,7 @@ export class SplitterComponent implements OnInit, OnDestroy {
     protected readonly dragging = signal(…);
     private endDrag;
     protected readonly endId = nextControlId(…);
+    private readonly finishDrag;
     private frame;
     private fromPaneEdge;
     private readonly handle;
@@ -37,6 +38,7 @@ export class SplitterComponent implements OnInit, OnDestroy {
     protected onPointerDown(event: PointerEvent): void;
     private readonly onPointerMove;
     protected onPointerUp(event: PointerEvent): void;
+    private readonly onWindowBlur;
     public readonly orientation = input<SplitterOrientation>('horizontal');
     public readonly overdrag = input<SplitterOverdrag>('elastic');
     public readonly pane = input<SplitterPane>('start');

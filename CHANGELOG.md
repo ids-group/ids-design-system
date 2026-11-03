@@ -52,6 +52,14 @@
 
 ### Fixed
 
+- **A `ds-splitter` drag ends when it is released over an iframe or an embedded webview.** Such a
+  document took the pointer away from the handle, so the release never arrived: the page kept the
+  resize cursor on every element and blocked text selection until the next click. While a handle is
+  dragged, every `iframe`, `webview`, `embed` and `object` on the page now ignores the pointer, and
+  the drag also ends when the handle loses pointer capture or the window loses focus. Nothing to
+  change in your code; a `pointer-events: none` you set on an embedded document during a drag can
+  be removed.
+
 - **The marker of a `ds-chat-step` sits beside the first line of its heading.** A step with
   content or a `time` under its heading, or a heading on two lines, centred its marker on the whole
   step, below the heading's first line; only a `waiting` step kept it on the heading row. Every
