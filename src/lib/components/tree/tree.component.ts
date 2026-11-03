@@ -13,6 +13,7 @@ import {
 } from '@angular/core';
 import { NgTemplateOutlet } from '@angular/common';
 import { IconComponent } from '@ids-group-ltd/ids-design-system/icons';
+import { TreeLabelDirective } from './tree-label.directive';
 import { TreeTrailingDirective } from './tree-trailing.directive';
 import type { TreeNode, TreeSelection } from './tree.types';
 
@@ -61,6 +62,7 @@ export class TreeComponent {
   /** Fires with the node under the pointer or newly focused, and `null` when the pointer leaves the tree. */
   readonly nodeHover = output<TreeNode | null>();
 
+  protected readonly label = contentChild(TreeLabelDirective);
   protected readonly trailing = contentChild(TreeTrailingDirective);
   protected readonly idPrefix = `ds-tree-${++nextId}`;
 

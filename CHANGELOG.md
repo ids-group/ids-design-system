@@ -1,5 +1,16 @@
 ## Unreleased
 
+### Added
+
+- **`ds-tree` draws a row label of your own.** `<ng-template dsTreeLabel let-node>` replaces the
+  label of every row, for a label of two lines or one that mixes styles. Its context carries `node`
+  (also `$implicit`), `level` (`0` for a root node), `selected` and `disabled`. The row grows to the
+  template's height, and the label takes the width between the icon and the trailing content, so an
+  element inside it can cut its text with an ellipsis or pair it with `dsTooltipWhenClipped`. The
+  text the template renders is the row's accessible name: a template that draws no text needs a
+  visually hidden element carrying the name. Without the template a row renders as before. New
+  exports `TreeLabelDirective` and `TreeLabelContext`.
+
 ## 1.1.0 — 2026-11-02
 
 ### Added
