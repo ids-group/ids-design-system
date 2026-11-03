@@ -103,6 +103,31 @@
       "verify": "A `ds-timeline-item` with no `status` and the default tone draws its marker ring in `--text-tertiary`, unless `--ds-timeline-node-border-color` is set."
     },
     {
+      "id": "tree-row-div-treeitem",
+      "kind": "behavior",
+      "old": "ds-tree .row",
+      "new": null,
+      "surface": [
+        "style",
+        "typescript"
+      ],
+      "searchHints": [
+        "ds-tree",
+        "button.row",
+        "treeitem"
+      ],
+      "detect": [
+        "ds-tree button",
+        "button.row",
+        "button[role=\"treeitem\"]"
+      ],
+      "action": "None, unless a style or a test of your own selects a `ds-tree` row as a `button`: select it as `[role=\"treeitem\"]` instead.",
+      "appliesWhen": "Stylesheets and tests that reach into `ds-tree` rows. The row keeps `role=\"treeitem\"` and the `row` class; only its element changed, from `button` to `div`.",
+      "pitfall": "A disabled row is no longer a disabled `button`: it carries `aria-disabled=\"true\"` instead of `disabled`, and the arrow keys stop on it, so a test that reads its `disabled` property or expects the keys to skip it fails.",
+      "restore": null,
+      "verify": "No style or test of the app selects a `ds-tree` row by `button`; rows are found by `[role=\"treeitem\"]`."
+    },
+    {
       "id": "toast-ref-update-member",
       "kind": "behavior",
       "old": "ToastRef",
