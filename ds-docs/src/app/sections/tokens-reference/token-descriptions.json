@@ -8,6 +8,7 @@
   "--accent-on": "Text/icon colour on accent-filled surfaces.",
   "--accent-pressed": "Scoped accent fill, pressed state.",
   "--accent-strong": "Scoped accent, stronger contrast variant (text on light surfaces).",
+  "--accent-strong-overlay": "What --accent-strong becomes inside a modal, a drawer and a popover-class overlay: lighter in the dark theme so accent text keeps 4.5:1 on the overlay tint, the same as --accent-strong in light.",
   "--accent-subtitle": "Scoped accent, low-emphasis tint (subtitles, soft backgrounds).",
   "--accent-surface-tint": "Scoped accent surface tint (page/panel background wash).",
   "--auth-card-w": "Card width in ds-auth-layout (default 420px). NOT a --ds-* token and deliberately so: it is the shared width the card and the masthead row both cap against, so the wordmark cannot outgrow the card. Retune the card alone with --ds-auth-layout-card-max-width.",
@@ -1628,5 +1629,7 @@
   "--surface-overlay-raised": "Popovers, menus, dropdown panels, picker panels, tooltips and toasts: one neutral step above --surface-overlay in the dark theme, equal to it in light.",
   "--surface-overlay-raised-secondary": "What --surface-secondary becomes inside a popover-class overlay: one step above --surface-overlay-raised in the dark theme, the same as --surface-secondary in light.",
   "--surface-overlay-raised-muted": "What --surface-muted becomes inside a popover-class overlay: one step above --surface-overlay-raised-secondary in the dark theme, the same as --surface-muted in light.",
+  "--surface-overlay-raised-tint": "What --surface-tint and --accent-surface-tint become inside a popover-class overlay: lighter than --surface-overlay-raised in the dark theme, the same as --surface-tint in light.",
+  "--surface-overlay-tint": "What --surface-tint and --accent-surface-tint become inside a modal, a drawer and the app-layout rail below lg: lighter than --surface-overlay in the dark theme, the same as --surface-tint in light.",
   "--text-tertiary-overlay": "Tertiary text inside a popover-class overlay (menu item descriptions, list item subtitles, dropdown group labels and no-results line, calendar weekdays, toast time): --text-tertiary in light, --neutral-700 in dark, so it stays above 4.5:1 on a hovered row of --surface-overlay-raised."
 }

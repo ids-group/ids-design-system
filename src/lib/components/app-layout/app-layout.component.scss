@@ -46,6 +46,9 @@
   @include bp.down(lg) {
     --surface-secondary: var(--surface-overlay-secondary);
     --surface-muted: var(--surface-overlay-muted);
+    --surface-tint: var(--surface-overlay-tint);
+    --accent-surface-tint: var(--surface-overlay-tint);
+    --accent-strong: var(--accent-strong-overlay);
 
     position: absolute;
     z-index: var(--layer-drawer);

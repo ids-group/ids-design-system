@@ -32,6 +32,9 @@
   --_dropdown-panel-border-color: var(--ds-dropdown-panel-border-color, var(--border-overlay));
   --surface-secondary: var(--surface-overlay-raised-secondary);
   --surface-muted: var(--surface-overlay-raised-muted);
+  --surface-tint: var(--surface-overlay-raised-tint);
+  --accent-surface-tint: var(--surface-overlay-raised-tint);
+  --accent-strong: var(--accent-strong-overlay);
   --_dropdown-panel-shadow: var(--ds-dropdown-panel-shadow, var(--shadow-popover));
   --_dropdown-panel-max-height: var(--ds-dropdown-panel-max-height, 320px);
 

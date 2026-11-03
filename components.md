@@ -31,7 +31,7 @@
 Loaded via `@use 'styles/tokens';` (when the consumer also `@use 'styles/ds';` the full aggregate is pulled in). Brand themes override Tier 1 palette + a few Tier 2 roles in their own `_brand-*.scss`.
 
 **Colour roles:**
-- Surfaces: `--surface-canvas`, `--surface-default`, `--surface-secondary`, `--surface-overlay`, `--surface-overlay-secondary`, `--surface-overlay-muted`, `--surface-overlay-raised`, `--surface-overlay-raised-secondary`, `--surface-overlay-raised-muted`, `--surface-tint`, `--surface-disabled`, `--surface-muted`, `--surface-inverted`, `--surface-inverted-hover`, `--surface-scrim`
+- Surfaces: `--surface-canvas`, `--surface-default`, `--surface-secondary`, `--surface-overlay`, `--surface-overlay-secondary`, `--surface-overlay-muted`, `--surface-overlay-raised`, `--surface-overlay-raised-secondary`, `--surface-overlay-raised-muted`, `--surface-overlay-tint`, `--surface-overlay-raised-tint`, `--surface-tint`, `--surface-disabled`, `--surface-muted`, `--surface-inverted`, `--surface-inverted-hover`, `--surface-scrim`
 - Borders: `--border-default`, `--border-strong`, `--border-overlay`, `--border-subtle`, `--border-divider`, `--border-disabled`, `--border-inverted`
 - Text: `--text-primary`, `--text-secondary`, `--text-tertiary`, `--text-tertiary-overlay`, `--text-muted`, `--text-disabled`, `--text-inverted`, `--text-link`, `--text-link-visited`, `--text-on-primary`, `--text-on-success`, `--text-on-error`
 - Icons: `--icon-default`, `--icon-strong`, `--icon-muted`, `--icon-on-primary`

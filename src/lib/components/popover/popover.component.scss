@@ -14,6 +14,9 @@
   --_popover-min-width:    var(--ds-popover-min-width,    auto);
   --surface-secondary: var(--surface-overlay-raised-secondary);
   --surface-muted: var(--surface-overlay-raised-muted);
+  --surface-tint: var(--surface-overlay-raised-tint);
+  --accent-surface-tint: var(--surface-overlay-raised-tint);
+  --accent-strong: var(--accent-strong-overlay);
 
   position: relative;
   background: var(--_popover-bg-color);
