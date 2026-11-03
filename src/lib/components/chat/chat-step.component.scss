@@ -20,8 +20,8 @@
   --_step-open-bg-color: var(--surface-secondary);
 
   // Row 1 holds the marker and the text (heading, content, time); row 2 holds the details and the
-  // gap to the next step, so the details opening never moves the marker. A heading alone and the
-  // marker centre on each other; with something under the heading, see the rule further down.
+  // gap to the next step, so the details opening never moves the marker. The marker sits beside the
+  // heading's first line (the rule further down).
   display: grid;
   grid-template-columns: var(--_step-node-size) 1fr;
   column-gap: var(--space-2);
@@ -231,10 +231,8 @@
   --_step-node-border-color: var(--text-secondary);
 }
 
-// A step with something under its heading (content, time) and a waiting step keep the marker beside
-// the heading's first line instead of centring it on the taller row.
-:host([data-status='waiting']),
-:host:has(> .text > .head ~ *) {
+// The marker sits beside the heading's first line, whatever wraps or sits under it.
+:host {
   --_step-heading-centre: calc(var(--font-size-xs) * var(--line-height-base) / 2);
 
   .text {

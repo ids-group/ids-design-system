@@ -13,12 +13,13 @@
 
 ### Fixed
 
-- **The marker of a `ds-chat-step` with content under its heading sits beside the heading.** A
-  step with content or a `time` under its heading centred its marker on the whole step, below the
-  heading; only a `waiting` step kept it on the heading row. Every status now keeps the
-  marker beside the heading's first line, as a `waiting` step does, and such a step is about 4px
-  taller. A `waiting` step with a trailing action no longer draws its marker above the heading. A
-  step with nothing under its heading renders as before. Nothing to change in your code.
+- **The marker of a `ds-chat-step` sits beside the first line of its heading.** A step with
+  content or a `time` under its heading, or a heading on two lines, centred its marker on the whole
+  step, below the heading's first line; only a `waiting` step kept it on the heading row. Every
+  status now keeps the marker beside the heading's first line, as a `waiting` step does, and a step
+  with content under its heading is about 4px taller. A `waiting` step with a trailing action no
+  longer draws its marker above the heading. A step with a one-line heading and nothing under it
+  renders as before. Nothing to change in your code.
 
 ## 1.1.0 — 2026-11-02
 
