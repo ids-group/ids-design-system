@@ -18,7 +18,7 @@
   );
   --_time-picker-trigger-border: var(
     --ds-time-picker-trigger-border,
-    var(--border-default)
+    var(--border-field)
   );
   --_time-picker-trigger-color: var(
     --ds-time-picker-trigger-color,
@@ -98,7 +98,7 @@
   transition: border-color var(--duration-fast) var(--ease-standard);
 
   &:hover {
-    border-color: var(--border-strong);
+    border-color: var(--border-field-hover);
   }
 
   &:focus-visible {

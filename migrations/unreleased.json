@@ -1,10 +1,43 @@
 {
   "version": "unreleased",
-  "items": [],
+  "items": [
+    {
+      "id": "field-border-default-color",
+      "kind": "behavior",
+      "old": "--ds-field-border-color",
+      "new": null,
+      "surface": [
+        "style"
+      ],
+      "searchHints": [
+        "--ds-field-border-color",
+        "--ds-date-picker-trigger-border-color",
+        "--ds-time-picker-trigger-border",
+        "--ds-color-picker-trigger-border-color",
+        "--ds-number-stepper-border-color",
+        "--ds-otp-cell-border-color",
+        "--ds-field-group-border-color",
+        "--border-default"
+      ],
+      "detect": [
+        "border: 1px solid var(--border-default)"
+      ],
+      "action": "None, unless a screen must keep the faint field outline: set `--border-field: var(--border-default)` and `--border-field-hover: var(--border-strong)` on `:root`. A field of your own drawn to match the library fields takes `--border-field` and `--border-field-hover` for its border.",
+      "appliesWhen": "`ds-input`, `ds-textarea`, `ds-select`, `ds-multi-select`, `ds-autocomplete`, `ds-search`, `ds-chat-input`, the `ds-date-picker`, `ds-time-picker` and `ds-color-picker` triggers, `ds-number-stepper`, `ds-otp-input` and `ds-field-group`, in both themes. Defaults that moved: `--ds-field-border-color`, `--ds-field-border-color-hover`, `--ds-input-border`, `--ds-input-border-hover`, `--ds-search-border`, `--ds-select-border-color`, `--ds-select-border-color-hover`, `--ds-multi-select-border-color`, `--ds-multi-select-border-color-hover`, `--ds-autocomplete-border-color`, `--ds-autocomplete-border-color-hover`, `--ds-date-picker-trigger-border-color`, `--ds-time-picker-trigger-border`, `--ds-color-picker-trigger-border-color`, `--ds-number-stepper-border-color`, `--ds-otp-cell-border-color` and `--ds-field-group-border-color`, each from `--border-default` (hover: `--border-strong`) to `--border-field` (hover: `--border-field-hover`). A value set on any of them still wins. Focus, error, success and disabled borders read other tokens.",
+      "pitfall": "A field of your own styled with `--border-default` to look like a library field now reads fainter than the library fields beside it.",
+      "restore": ":root { --border-field: var(--border-default); --border-field-hover: var(--border-strong); }",
+      "verify": "At rest a `ds-input` border computes to `--border-field` (`#6B7388` in both themes), and on hover to `--border-field-hover`, unless `--ds-field-border-color` or the component's own border token is set.",
+      "evidence": [
+        "tokens:--border-field",
+        "tokens:--border-field-hover"
+      ]
+    }
+  ],
   "informational": [
     {
       "text": "A `ds-timeline-item` with content or a `time` under its heading keeps its marker beside the heading's first line, and is about 8px taller. An item with nothing under its heading renders as before. Nothing to change in your code.",
       "verify": "Open a `ds-timeline` whose items carry a `time`: each marker sits level with its heading, not beside the time under it."
     }
-  ]
+  ],
+  "deleteList": []
 }

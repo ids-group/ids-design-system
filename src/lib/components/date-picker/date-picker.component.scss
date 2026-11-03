@@ -18,7 +18,7 @@
 :host {
   --_date-picker-focus-shadow: var(--ds-date-picker-focus-shadow, var(--ds-field-focus-shadow));
   --_date-picker-trigger-bg-color: var(--ds-date-picker-trigger-bg-color, var(--surface-default));
-  --_date-picker-trigger-border-color: var(--ds-date-picker-trigger-border-color, var(--border-default));
+  --_date-picker-trigger-border-color: var(--ds-date-picker-trigger-border-color, var(--border-field));
   --_date-picker-trigger-label-color: var(--ds-date-picker-trigger-label-color, var(--text-primary));
   --_date-picker-required-color: var(--ds-date-picker-required-color, var(--error));
   --_date-picker-placeholder-color: var(--ds-date-picker-placeholder-color, var(--text-tertiary));
@@ -102,7 +102,7 @@
   transition: border-color var(--duration-fast) var(--ease-standard);
 
   &:hover {
-    border-color: var(--border-strong);
+    border-color: var(--border-field-hover);
   }
 
   &:focus-visible {

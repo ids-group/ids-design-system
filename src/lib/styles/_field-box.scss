@@ -9,8 +9,8 @@
 // One `--ds-field-*` set retunes input, textarea, select, multi-select, autocomplete and search.
 // The date, time and colour pickers keep their own `-trigger-*` vocabulary.
 @mixin field-box-tokens {
-  --_field-border-color: var(--ds-field-border-color, var(--border-default));
-  --_field-border-color-hover: var(--ds-field-border-color-hover, var(--border-strong));
+  --_field-border-color: var(--ds-field-border-color, var(--border-field));
+  --_field-border-color-hover: var(--ds-field-border-color-hover, var(--border-field-hover));
   --_field-border-color-focus: var(--ds-field-border-color-focus, var(--accent));
   --_field-text-color: var(--ds-field-text-color, var(--text-primary));
   --_field-placeholder-color: var(--ds-field-placeholder-color, var(--text-tertiary));

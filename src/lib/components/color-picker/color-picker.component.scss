@@ -15,7 +15,7 @@
   --_color-picker-saturation-value-height: var(--ds-color-picker-saturation-value-height, var(--color-picker-sv-h));
   --_color-picker-hue-height: var(--ds-color-picker-hue-height, var(--color-picker-hue-h));
   --_color-picker-thumb: var(--ds-color-picker-thumb, var(--color-picker-thumb));
-  --_color-picker-trigger-border-color: var(--ds-color-picker-trigger-border-color, var(--border-default));
+  --_color-picker-trigger-border-color: var(--ds-color-picker-trigger-border-color, var(--border-field));
 }
 
 :host {
@@ -43,7 +43,7 @@
     box-shadow var(--duration-fast) var(--ease-standard);
 
   &:hover:not(:disabled) {
-    border-color: var(--border-strong);
+    border-color: var(--border-field-hover);
   }
 
   &:active:not(:disabled) {
