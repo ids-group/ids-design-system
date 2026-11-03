@@ -21,11 +21,18 @@
       "kind": "behavior",
       "old": "ds-date-picker",
       "new": null,
-      "surface": "template",
+      "surface": [
+        "template",
+        "typescript"
+      ],
       "searchHints": [
         "ds-date-picker",
         "role=\"textbox\"",
         "getByRole('textbox')"
+      ],
+      "detect": [
+        "getByRole('textbox'",
+        "[role=\"textbox\"]"
       ],
       "action": "None, unless a test or a selector finds the date input by the `textbox` role: query the `combobox` role instead.",
       "appliesWhen": "A test, a selector or a template that targets the text input of a `ds-date-picker` by role.",
@@ -49,6 +56,7 @@
     }
   ],
   "informational": [
+    "`ds-icon-button` takes an `ariaHasPopup` input (`'true'`, `'menu'`, `'listbox'`, `'tree'`, `'grid'`, `'dialog'` or `null`) that sets `aria-haspopup` on its inner `<button>`, and exposes `controlRef`, the inner `<button>` as an `ElementRef`, as `ds-button` does. Nothing to change in your code.",
     {
       "text": "New `[dsPopoverTrigger]` directive (`DsPopoverTrigger`, exported with `PopoverComponent`) opens a `ds-popover` from a button and sets `aria-haspopup`, `aria-expanded` and `aria-controls` on its inner `<button>`.",
       "verify": "A `ds-icon-button` with `[dsPopoverTrigger]` around a `ds-menu` popover: Enter opens the menu, the inner button reads aria-haspopup=\"menu\" and aria-expanded=\"true\", and Escape closes it and returns focus to the button."
