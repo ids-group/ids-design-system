@@ -458,9 +458,9 @@ styles/_dropdown-overlay.scss {
 }
 
 styles/_field-box.scss {
-    --ds-field-border-color: var(--border-default);
+    --ds-field-border-color: var(--border-field);
     --ds-field-border-color-focus: var(--accent);
-    --ds-field-border-color-hover: var(--border-strong);
+    --ds-field-border-color-hover: var(--border-field-hover);
     --ds-field-font-size: var(--font-size-s);
     --ds-field-height: var(--field-h-#{$size});
     --ds-field-placeholder-color: var(--text-tertiary);

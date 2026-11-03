@@ -72,7 +72,7 @@ ds-color-picker {
     --ds-color-picker-saturation-value-height: var(--color-picker-sv-h);
     --ds-color-picker-swatch: var(--color-picker-swatch);
     --ds-color-picker-thumb: var(--color-picker-thumb);
-    --ds-color-picker-trigger-border-color: var(--border-default);
+    --ds-color-picker-trigger-border-color: var(--border-field);
     --ds-radius-inner: (none);
 }
 ```
