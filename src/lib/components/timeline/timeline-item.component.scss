@@ -249,3 +249,26 @@
 
 // status decides the marker over tone.
 @include step-marker.statuses(timeline);
+
+// An item with something under its heading (content, time) keeps the marker beside the heading's
+// first line instead of centring it on the taller row.
+:host:has(> .text > .head ~ *) {
+  --_timeline-heading-centre: calc(var(--font-size-s) * var(--line-height-base) / 2);
+
+  .text {
+    align-self: start;
+    padding-top: max(0px, var(--_timeline-node-size) / 2 + var(--space-1) - var(--_timeline-heading-centre));
+  }
+
+  .lead {
+    flex: none;
+    height: max(0px, var(--_timeline-heading-centre) - var(--_timeline-node-size) / 2 - var(--space-1));
+  }
+}
+
+// The heading centres on a projected action, which is assumed to be a small control.
+:host:has(> .text > .head > .trailing > :not(.toggle)) {
+  --_timeline-heading-centre: calc(
+    var(--space-2) + max(var(--font-size-s) * var(--line-height-base), var(--field-h-sm)) / 2
+  );
+}

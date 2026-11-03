@@ -11,6 +11,13 @@
   visually hidden element carrying the name. Without the template a row renders as before. New
   exports `TreeLabelDirective` and `TreeLabelContext`.
 
+### Fixed
+
+- **The marker of a `ds-timeline-item` with content under its heading sits beside the heading.** An
+  item with content or a `time` under its heading centred its marker on the whole item, below the
+  heading. The marker now sits beside the heading's first line, and such an item is about 8px
+  taller. An item with nothing under its heading renders as before. Nothing to change in your code.
+
 ## 1.1.0 — 2026-11-02
 
 ### Added
