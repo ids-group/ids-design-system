@@ -11,6 +11,12 @@
   visually hidden element carrying the name. Without the template a row renders as before. New
   exports `TreeLabelDirective` and `TreeLabelContext`.
 
+### Fixed
+
+- **A `ds-button` clicked while `loading` keeps the focus.** The button took no pointer events while
+  loading, so a second click landed on the page and moved the focus off the button. The click now
+  reaches the button, which still refuses it, and the focus stays. Nothing to change in your code.
+
 ## 1.1.0 — 2026-11-02
 
 ### Added
