@@ -48,7 +48,11 @@
     },
     {
       "text": "Under `data-theme=\"dark\"`, `--shadow-1` (and `--ds-elevation-raised`, `--shadow-card`) starts with a 1px light hairline at 8% alpha, so the selected `ds-segmented` segment, the active pill `ds-tabs` tab, the `ds-switch` and `ds-slider` thumbs and a `raised` `ds-card` show an edge. The light theme is unchanged. Nothing to change in your code.",
-      "verify": "In the dark theme, open a `ds-segmented` control: the selected segment shows a thin light outline against its track."
+      "verify": "In the dark theme, open a `ds-segmented` control: the selected segment shows a thin light outline against its track.",
+      "evidence": [
+        "pixels:segmented/segmented-control",
+        "pixels:switch/switch-states-showcase"
+      ]
     }
   ],
   "deleteList": []
