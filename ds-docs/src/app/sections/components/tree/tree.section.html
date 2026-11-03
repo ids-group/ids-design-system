@@ -228,6 +228,70 @@
   <h3
     data-claude-design
     class="block-title t-h4">
+    Two-line label
+  </h3>
+
+  <ul class="block-desc t-s">
+    <li>
+      <code class="t-mono-inline">
+        &lt;ng-template dsTreeLabel let-node&gt;
+      </code>
+      replaces the row's label. The context carries
+      <code class="t-mono-inline">
+        node
+      </code>,
+      <code class="t-mono-inline">
+        level
+      </code>,
+      <code class="t-mono-inline">
+        selected
+      </code> and
+      <code class="t-mono-inline">
+        disabled
+      </code>.
+    </li>
+
+    <li>
+      The row grows to the label's height. Each line here cuts with an ellipsis
+      and shows its full text in a tooltip only while it is clipped, with
+      <code class="t-mono-inline">
+        dsTooltipWhenClipped
+      </code>.
+    </li>
+
+    <li>
+      The label's text is the row's accessible name.
+    </li>
+  </ul>
+
+  <div class="demo-panel">
+    <div class="two-line-tree">
+      <ds-tree
+        [nodes]="elements"
+        [(expandedIds)]="elementsExpanded"
+        [(selectedId)]="elementSelected">
+        <ng-template
+          let-node
+          dsTreeLabel>
+          <span
+            class="element-tag"
+            dsTooltipWhenClipped>
+            {{ tags[node.id] }}
+          </span>
+
+          <span
+            class="element-text"
+            dsTooltipWhenClipped>
+            {{ node.label }}
+          </span>
+        </ng-template>
+      </ds-tree>
+    </div>
+  </div>
+
+  <h3
+    data-claude-design
+    class="block-title t-h4">
     Single node states
   </h3>
 

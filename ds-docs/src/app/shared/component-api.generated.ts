@@ -13397,6 +13397,19 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       }
     ]
   },
+  "tree:TreeLabelDirective": {
+    "key": "tree",
+    "selector": "ng-template[dsTreeLabel]",
+    "isElement": true,
+    "className": "TreeLabelDirective",
+    "status": "stable",
+    "importName": "TreeLabelDirective",
+    "importPath": "@ids-group-ltd/ids-design-system",
+    "entryPoint": "@ids-group-ltd/ids-design-system/components/tree",
+    "summary": null,
+    "inputs": [],
+    "outputs": []
+  },
   "tree:TreeTrailingDirective": {
     "key": "tree",
     "selector": "ng-template[dsTreeTrailing]",

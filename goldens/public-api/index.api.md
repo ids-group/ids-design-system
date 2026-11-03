@@ -343,6 +343,8 @@ export { TooltipPanelComponent } from '@ids-group-ltd/ids-design-system/componen
 export { TooltipPlacement } from '@ids-group-ltd/ids-design-system/core'; // type
 export { TopBarComponent } from '@ids-group-ltd/ids-design-system/components/topbar'; // component
 export { TreeComponent } from '@ids-group-ltd/ids-design-system/components/tree'; // component
+export { TreeLabelContext } from '@ids-group-ltd/ids-design-system/components/tree'; // interface
+export { TreeLabelDirective } from '@ids-group-ltd/ids-design-system/components/tree'; // directive
 export { TreeNode } from '@ids-group-ltd/ids-design-system/components/tree'; // interface
 export { TreeSelection } from '@ids-group-ltd/ids-design-system/components/tree'; // type
 export { TreeTrailingContext } from '@ids-group-ltd/ids-design-system/components/tree'; // interface
@@ -458,9 +460,9 @@ styles/_dropdown-overlay.scss {
 }
 
 styles/_field-box.scss {
-    --ds-field-border-color: var(--border-default);
+    --ds-field-border-color: var(--border-field);
     --ds-field-border-color-focus: var(--accent);
-    --ds-field-border-color-hover: var(--border-strong);
+    --ds-field-border-color-hover: var(--border-field-hover);
     --ds-field-font-size: var(--font-size-s);
     --ds-field-height: var(--field-h-#{$size});
     --ds-field-placeholder-color: var(--text-tertiary);
