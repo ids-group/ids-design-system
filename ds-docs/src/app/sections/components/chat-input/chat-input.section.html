@@ -1,14 +1,17 @@
 <docs-section
   anchor="chat-input"
   eyebrow="Components"
-  title="Chat input">
+  title="Chat input"
+  [apiKeys]="['chat:ChatInputComponent']">
   <span lede>
     Message box for a chat or an instruction: chips above an auto-growing text,
     actions and the send button in the bar below. Enter sends, Shift+Enter
     breaks the line.
   </span>
 
-  <h3 class="block-title t-h4">
+  <h3
+    data-claude-design
+    class="block-title t-h4">
     States
   </h3>
 
@@ -169,7 +172,9 @@
     </div>
   </div>
 
-  <h3 class="block-title t-h4">
+  <h3
+    data-claude-design
+    class="block-title t-h4">
     Layout
   </h3>
 

@@ -24,6 +24,9 @@ holds an entry; what the release bot commits afterwards needs none.
   `SidenavItem`, `Stat` and `Table` say where each slot renders and what goes in it. The `Sidenav`,
   `SidenavGroup`, `SidenavItem` and `MenuItem` notes name `brandContent`, `dsGroupIcon` and
   `iconContent`, and the `Drawer` example passes its buttons in `actions`.
+- **`InlineEdit`, `ChatInput`, `ChatSteps`, `Attachment`, `ChatAttachment` and `Splitter` have
+  cards.** `InlineEdit`, `ChatInput` and `Attachment` publish two each, `Splitter`, `ChatSteps`
+  and `ChatAttachment` one.
 
 ### Build
 
