@@ -4,6 +4,19 @@ Versioning: **patch** = instruction/prompt fixes; **minor** = new capability (pi
 source, agent); **major** = a change to the workflow's behavior contract. Bump `plugin.json` +
 `marketplace.json` together on every published change.
 
+## 1.19.4 - 2026-11-03
+
+### Fixed
+
+- **`lint-step.mjs --from current` reads the version installed in the target.** The plugins'
+  rule options accept only a version, so `current` failed the lint step outright; with no
+  design-system package installed the script now says so.
+- **`ds-usage-finder` follows a child component rendered inside an overlay**, with every class of
+  its own stylesheet, and finds an element's input by the attribute alone, so a tag whose
+  attributes start on the next line is not missed.
+- **Phase B step 9 allows one commit per migration** when the consumer's rules require it: the
+  bump first, then each migration by pathspec, with only the version's last commit green.
+
 ## 1.19.3 - 2026-11-03
 
 ### Fixed

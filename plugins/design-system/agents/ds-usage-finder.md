@@ -54,8 +54,13 @@ comes from the item; don't assume anything about particular components.
   `appliesWhen` limits an item to where content renders (inside a `ds-popover`, a submenu, a
   dropdown panel, a dialog), trace each matched class or element to every template that renders
   it before leaving a hit out: `ng-template` content stamped by an outlet or projected into an
-  overlay counts. A class used both on the page and inside an overlay is a hit; record the
-  overlay's template as `el`.
+  overlay counts, and so does a child component whose selector sits inside the overlay, with
+  every class of its own stylesheet. A class used both on the page and inside an overlay is a hit;
+  record the overlay's template as `el`.
+- **An attribute on an element spans lines.** For an item about an element's input (`[loading]`
+  on `ds-button`), grep the attribute alone across the source root, then walk up from each match
+  to its enclosing tag; an `element attr` pattern misses every tag whose attributes start on the
+  next line.
 - **Value-bearing items** (`value-remap`, or any item whose `map`/`old` targets attribute VALUES):
   one item usually matches several distinct values across the codebase — report each occurrence
   with its own `match` so the applier can look each up in the `map`.
