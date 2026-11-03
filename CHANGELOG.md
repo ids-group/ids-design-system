@@ -2,6 +2,10 @@
 
 ### Added
 
+- **`--surface-overlay-tint`, `--surface-overlay-raised-tint` and `--accent-strong-overlay`, the
+  selected-row tint and its text inside an overlay.** Each equals `--surface-tint` in light. Under `data-theme="dark"` they mix 30% of
+  `--primary` into the overlay fill: `color-mix(in srgb, var(--primary) 30%, var(--surface-overlay))`
+  and the same over `--surface-overlay-raised`.
 - **`--border-field` and `--border-field-hover`, the outline of a field.** `--border-field` is
   `--neutral-500` in light and `--neutral-400` under `data-theme="dark"` (`#6B7388` in both), at
   least 3:1 against the page, a card, a modal or drawer and a popover. `--border-field-hover` is one
@@ -32,6 +36,20 @@
   `--border-field: var(--border-default)` and
   `--border-field-hover: var(--border-strong)` on `:root`.
 
+- **Selected and current rows inside dark overlays are lighter than the overlay.** Modals, drawers
+  and the `ds-app-layout` rail below `lg` set `--surface-tint` and `--accent-surface-tint` to
+  `--surface-overlay-tint` on themselves, and `ds-popover`, `ds-menu` in it and the dropdown panels
+  of `ds-select`, `ds-multi-select` and `ds-autocomplete` to `--surface-overlay-raised-tint`. Under
+  `data-theme="dark"` the selected `ds-list-item`, the selected `ds-tree` row, the `ds-empty-state`
+  tile and any row of your own painted with `--surface-tint` read about 1.31:1 against a drawer
+  and 1.29:1 against a popover, where `--surface-tint` was darker than both (1.05:1 and 1.15:1).
+  The same overlays set `--accent-strong` to `--accent-strong-overlay`, `--accent-strong` in light
+  and `hsl(from var(--primary) h 90% 80%)` on dark, so a selected label keeps 4.5:1 on the lighter
+  tint.
+  The light theme is unchanged. Nothing to change in your code, unless you set `--surface-tint`
+  on `:root` for a brand: set `--surface-overlay-tint` and `--surface-overlay-raised-tint` there
+  too, or the overlays keep the library tint.
+
 ### Fixed
 
 - **The marker of a `ds-chat-step` sits beside the first line of its heading.** A step with
@@ -45,6 +63,14 @@
   item with content or a `time` under its heading centred its marker on the whole item, below the
   heading. The marker now sits beside the heading's first line, and such an item is about 8px
   taller. An item with nothing under its heading renders as before. Nothing to change in your code.
+- **A `ds-button` clicked while `loading` keeps the focus.** The button took no pointer events while
+  loading, so a second click landed on the page and moved the focus off the button. The click now
+  reaches the button, which still refuses it, and the focus stays. Nothing to change in your code.
+- **Under `data-theme="dark"`, an element raised by `--shadow-1` has an edge.** The selected
+  `ds-segmented` segment, the active pill `ds-tabs` tab, the `ds-switch` and `ds-slider` thumbs and a
+  `raised` `ds-card` sit on a surface no darker than themselves, and with the dark shadow they lost
+  their outline. `--shadow-1` (and `--ds-elevation-raised`, `--shadow-card`) adds the 1px light hairline
+  at 8% alpha that `--shadow-4` draws. The light theme is unchanged. Nothing to change in your code.
 
 ## 1.1.0 — 2026-11-02
 

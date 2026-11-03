@@ -31,6 +31,35 @@
         "tokens:--border-field",
         "tokens:--border-field-hover"
       ]
+    },
+    {
+      "id": "dark-overlay-tint-raised",
+      "kind": "behavior",
+      "old": "--surface-tint",
+      "new": null,
+      "surface": [
+        "style"
+      ],
+      "searchHints": [
+        "--surface-tint",
+        "--accent-surface-tint",
+        "--ds-list-item-selected-bg-color",
+        "--ds-tree-row-selected-bg-color",
+        "--ds-empty-state-tile-bg-color"
+      ],
+      "detect": [
+        "var(--surface-tint)"
+      ],
+      "action": "None, unless your app sets `--surface-tint` for a brand: set `--surface-overlay-tint` and `--surface-overlay-raised-tint` beside it, for each theme it covers.",
+      "appliesWhen": "The dark theme (`data-theme=\"dark\"`) only. Inside `ds-modal`, `ds-drawer` and the `ds-app-layout` rail below `lg`, `--surface-tint` and `--accent-surface-tint` read `--surface-overlay-tint`; inside `ds-popover`, a `ds-menu` in it and the dropdown panels of `ds-select`, `ds-multi-select` and `ds-autocomplete` they read `--surface-overlay-raised-tint`. `--ds-list-item-selected-bg-color`, `--ds-tree-row-selected-bg-color` and `--ds-empty-state-tile-bg-color` follow there, and a value set on them still wins. The same overlays read `--accent-strong` from `--accent-strong-overlay`, lighter on dark, so the selected `ds-list-item` and `ds-tree` labels keep 4.5:1. Light values are unchanged.",
+      "pitfall": "A `--surface-tint` or `--accent-surface-tint` override on `:root` no longer reaches inside those overlays; override `--surface-overlay-tint` and `--surface-overlay-raised-tint` as well.",
+      "restore": ":root[data-theme='dark'] { --surface-overlay-tint: var(--surface-tint); --surface-overlay-raised-tint: var(--surface-tint);; --accent-strong-overlay: var(--accent-strong); }",
+      "verify": "In the dark theme a selected `ds-list-item` inside a `ds-popover` is lighter than the popover, and one inside a `ds-drawer` lighter than the drawer.",
+      "evidence": [
+        "tokens:--surface-overlay-tint",
+        "tokens:--surface-overlay-raised-tint",
+        "tokens:--accent-strong-overlay"
+      ]
     }
   ],
   "informational": [
@@ -45,6 +74,15 @@
     {
       "text": "A `ds-timeline-item` with content or a `time` under its heading keeps its marker beside the heading's first line, and is about 8px taller. An item with nothing under its heading renders as before. Nothing to change in your code.",
       "verify": "Open a `ds-timeline` whose items carry a `time`: each marker sits level with its heading, not beside the time under it."
+    },
+    "A `ds-button` clicked while `loading` keeps the focus: the click reaches the button, which still refuses it. Nothing to change in your code.",
+    {
+      "text": "Under `data-theme=\"dark\"`, `--shadow-1` (and `--ds-elevation-raised`, `--shadow-card`) starts with a 1px light hairline at 8% alpha, so the selected `ds-segmented` segment, the active pill `ds-tabs` tab, the `ds-switch` and `ds-slider` thumbs and a `raised` `ds-card` show an edge. The light theme is unchanged. Nothing to change in your code.",
+      "verify": "In the dark theme, open a `ds-segmented` control: the selected segment shows a thin light outline against its track.",
+      "evidence": [
+        "pixels:segmented/segmented-control",
+        "pixels:switch/switch-states-showcase"
+      ]
     }
   ],
   "deleteList": []
