@@ -17,6 +17,18 @@ holds an entry; what the release bot commits afterwards needs none.
 
 ## Unreleased
 
+### Cards
+
+- **Every slot is named in its component's usage notes.** `AuthLayout`, `Autocomplete`, `Chart`,
+  `Drawer`, `FilterBar`, `MenuItem`, `Modal`, `ModalCard`, `Sidenav`, `SidenavGroup`,
+  `SidenavItem`, `Stat` and `Table` say where each slot renders and what goes in it. The `Sidenav`,
+  `SidenavGroup`, `SidenavItem` and `MenuItem` notes name `brandContent`, `dsGroupIcon` and
+  `iconContent`, and the `Drawer` example passes its buttons in `actions`.
+
+### Build
+
+- **`check-doc-api` fails a slot the usage notes never name.**
+
 ## 1.1.0 — 2026-11-02
 
 ### Build

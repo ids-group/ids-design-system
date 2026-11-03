@@ -13,6 +13,7 @@ Data table with the full DS structure: horizontal scroll-wrap, sticky header (on
 - Inline editing: mark a column `editable`, double-click the cell, commit via Enter/blur → `onCellEdited({ row, key, value })`.
 - Pagination: set `pageSize={5}` to slice rows client-side and render the `Pagination` footer (`page` / `onPageChange` for the 1-based page, `pageSizeOptions` for the size dropdown; a size change resets to page 1). `pageSize` unset/`null` (default) renders every row with no footer. Select-all then scopes to the current page.
 - Not ported from Angular: the column-picker / set-filter / row-action popover menus (their trigger buttons render for structural parity; `rowActions` draws the kebab column only) and CSV export.
+- Slots: `toolbar` = row above the table for search, filters, refresh (the row hides when empty); `empty` = content of the single full-width row shown only when not loading and no rows match.
 - The table is WIDE — give it room (full-width layout or its own row).
 
 ```tsx
