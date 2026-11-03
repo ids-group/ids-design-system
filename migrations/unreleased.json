@@ -41,6 +41,10 @@
         "pixels:chat-steps/step-status",
         "pixels:chat-steps/waiting-for-the-reader"
       ]
+    },
+    {
+      "text": "A `ds-timeline-item` with content or a `time` under its heading keeps its marker beside the heading's first line, and is about 8px taller. An item with nothing under its heading renders as before. Nothing to change in your code.",
+      "verify": "Open a `ds-timeline` whose items carry a `time`: each marker sits level with its heading, not beside the time under it."
     }
   ],
   "deleteList": []

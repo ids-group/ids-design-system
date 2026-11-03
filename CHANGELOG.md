@@ -41,6 +41,10 @@
   with content under its heading is about 4px taller. A `waiting` step with a trailing action no
   longer draws its marker above the heading. A step with a one-line heading and nothing under it
   renders as before. Nothing to change in your code.
+- **The marker of a `ds-timeline-item` with content under its heading sits beside the heading.** An
+  item with content or a `time` under its heading centred its marker on the whole item, below the
+  heading. The marker now sits beside the heading's first line, and such an item is about 8px
+  taller. An item with nothing under its heading renders as before. Nothing to change in your code.
 
 ## 1.1.0 — 2026-11-02
 
