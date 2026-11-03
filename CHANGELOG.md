@@ -63,6 +63,9 @@
   item with content or a `time` under its heading centred its marker on the whole item, below the
   heading. The marker now sits beside the heading's first line, and such an item is about 8px
   taller. An item with nothing under its heading renders as before. Nothing to change in your code.
+- **A `ds-button` clicked while `loading` keeps the focus.** The button took no pointer events while
+  loading, so a second click landed on the page and moved the focus off the button. The click now
+  reaches the button, which still refuses it, and the focus stays. Nothing to change in your code.
 
 ## 1.1.0 — 2026-11-02
 
