@@ -24,9 +24,11 @@ const page = (
   hairColor = '#1a4fd6',
   panelColor = '#f8f9fb',
   firstLineColor = '#202124',
+  unreadToken = false,
 ) => `<!doctype html>
 <html><head><style>
   body { margin: 0; font: 16px sans-serif; }
+  ${unreadToken ? ':root { --unread-token: #123456; }' : ''}
   main.content { height: 100vh; overflow: auto; }
   .box { display: block; height: 40px; border-radius: 50%; background: #1a4fd6; }
   .plain-link { color: var(--text-link); }
@@ -62,6 +64,7 @@ for (const [
   hair,
   panel,
   firstLine,
+  unreadToken,
 ] of [
   ['before', 40, 40, true],
   ['token-removed', 40, 40, false],
@@ -71,11 +74,29 @@ for (const [
   ['hair-tinted', 40, 40, true, '#1c51d8'],
   ['panel-tinted', 40, 40, true, '#1a4fd6', '#f5f6f8'],
   ['first-line-recoloured', 40, 40, true, '#1a4fd6', '#f8f9fb', '#d62a1a'],
+  [
+    'first-line-recoloured-new-token',
+    40,
+    40,
+    true,
+    '#1a4fd6',
+    '#f8f9fb',
+    '#d62a1a',
+    true,
+  ],
 ]) {
   mkdirSync(join(work, name));
   writeFileSync(
     join(work, name, 'index.html'),
-    page(widgetHeight, gadgetWidth, linkToken, hair, panel, firstLine),
+    page(
+      widgetHeight,
+      gadgetWidth,
+      linkToken,
+      hair,
+      panel,
+      firstLine,
+      unreadToken,
+    ),
   );
 }
 
@@ -233,6 +254,14 @@ const cases = [
     status: 0,
     present: [/0 differ/, /1 block\(s\) differ by raster noise only/],
     absent: [/UNNAMED/, /differ by antialiasing only/],
+  },
+  {
+    name: 'HOLDS on that panel when the after side also declares a custom property no element reads',
+    after: 'first-line-recoloured-new-token',
+    manifest: { items: [] },
+    status: 0,
+    present: [/0 differ/, /1 block\(s\) differ by raster noise only/],
+    absent: [/UNNAMED/],
   },
 ];
 
