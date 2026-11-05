@@ -40,6 +40,13 @@ export const routes: Routes = [
             ),
         },
         {
+          path: 'harness/chat-steps-reveal',
+          loadComponent: () =>
+            import('./harness/chat-steps-reveal.page').then(
+              (m) => m.ChatStepsRevealHarnessPage,
+            ),
+        },
+        {
           path: 'harness/chat-input-placeholder',
           loadComponent: () =>
             import('./harness/chat-input-placeholder.page').then(

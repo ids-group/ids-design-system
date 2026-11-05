@@ -34,6 +34,14 @@
 
 ### Changed
 
+- **Steps of a `ds-chat-steps` that finish at once settle one after another.** A step that goes
+  from `pending` or `running` straight to `done` or `error` shows as running for at least 600ms,
+  and two steps show their final status at least 300ms apart, so a batch that finishes together
+  reads as a sequence. Under `prefers-reduced-motion: reduce` the final status shows at once. Only
+  what is drawn waits: `status` and everything bound to it change when you set them. New inputs
+  `minRunningMs` (default `600`) and `revealStaggerMs` (default `300`); set both to `0` to show
+  every final status at once.
+
 - **Field outlines meet 3:1 (WCAG 1.4.11).** `ds-input`, `ds-textarea`, `ds-select`,
   `ds-multi-select`, `ds-autocomplete`, `ds-search`, `ds-chat-input`, the `ds-date-picker`,
   `ds-time-picker` and `ds-color-picker` triggers, `ds-number-stepper`, the `ds-otp-input` cells

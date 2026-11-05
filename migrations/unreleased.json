@@ -104,6 +104,10 @@
     {
       "text": "When any node of a `ds-tree` has an `icon`, every row keeps a 16px slot for it, empty where the node has none, so the labels of rows with and without an icon line up. A tree where every node or no node has an icon renders as before. Nothing to change in your code.",
       "verify": "Open a `ds-tree` where only some nodes have an icon: the labels of sibling rows start at the same x."
+    },
+    {
+      "text": "A `ds-chat-step` that finishes at once shows as running for at least 600ms, and steps of one `ds-chat-steps` show their final status at least 300ms apart; `minRunningMs` and `revealStaggerMs` on `ds-chat-steps` set the two times, `0` turns each off. Under reduced motion the final status shows at once. Nothing to change in your code.",
+      "verify": "Set three steps of a `ds-chat-steps` from `pending` to `done` in one change: they turn done one after another, not together."
     }
   ],
   "deleteList": []
