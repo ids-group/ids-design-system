@@ -105,8 +105,10 @@ export class ChatInputComponent {
   protected onSendPressed(): void {
     if (this.stopShown()) {
       this.stopRequested.emit();
-    } else {
+    } else if (this.canSubmit()) {
       this.submit();
+    } else {
+      this.focus();
     }
   }
 

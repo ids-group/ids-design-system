@@ -64,6 +64,10 @@
   ],
   "informational": [
     "`ds-chat-input` takes `stoppable` and emits `stopRequested`: while `busy`, its send button becomes an enabled Stop button named by the optional `DsIntl.chatInput.stop`, with the new icon `stop`. Nothing to change in your code.",
+    {
+      "text": "The `ds-chat-input` send button stays enabled while the text is blank; pressed then, it sends nothing and moves the focus to the text area. Nothing to change in your code.",
+      "verify": "Open an empty `ds-chat-input` and press the send button: it keeps its colour, `submitted` does not fire and the caret lands in the text area."
+    },
     "`ds-alert` takes `fullWidth`, which stretches the alert across its container. Nothing to change in your code.",
     "`ds-tree` takes `<ng-template dsTreeLabel let-node>` (`TreeLabelDirective`, `TreeLabelContext`) for the label of every row. Nothing to change in your code.",
     "Six icons are added: `mouse-pointer`, `pencil-ruler`, `columns`, `history`, `flask` and `panel-right`. Nothing to change in your code.",
