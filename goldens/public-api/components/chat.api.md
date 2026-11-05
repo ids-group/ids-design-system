@@ -239,6 +239,7 @@ ds-chat-step {
 ds-chat-thread {
     --ds-chat-thread-gap: var(--space-4);
     --ds-chat-thread-group-gap: var(--space-1);
+    --ds-chat-thread-inset-bottom: 0px;
     --ds-chat-thread-padding: var(--space-4);
     --ds-radius-pill: (none);
 }

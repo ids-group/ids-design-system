@@ -3733,6 +3733,11 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "notes": ""
       },
       {
+        "name": "--ds-chat-thread-inset-bottom",
+        "value": "0px",
+        "notes": ""
+      },
+      {
         "name": "--chat-step-node-size",
         "value": "var(--spinner-md)",
         "notes": ""
