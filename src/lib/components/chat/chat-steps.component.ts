@@ -47,4 +47,31 @@ export class ChatStepsComponent {
 
   /** The step that draws no gap below it. */
   readonly lastStep = computed<object | undefined>(() => this.items().at(-1));
+
+  /** Shortest time a step shows as running before its final status, even when it finishes at once. */
+  readonly minRunningMs = input(0);
+  /** Shortest gap between two steps showing their final status, so steps that finish together
+   *  settle one after another. */
+  readonly revealStaggerMs = input(0);
+
+  private lastSettle = 0;
+
+  /** @internal */
+  settleDelay(runningSince: number): number {
+    if (
+      typeof matchMedia === 'function' &&
+      matchMedia('(prefers-reduced-motion: reduce)').matches
+    ) {
+      return 0;
+    }
+    const now = performance.now();
+    const at = Math.max(
+      now,
+      runningSince + this.minRunningMs(),
+      this.lastSettle + this.revealStaggerMs(),
+    );
+    this.lastSettle = at;
+
+    return at - now;
+  }
 }

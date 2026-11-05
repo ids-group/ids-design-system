@@ -1,10 +1,14 @@
 import {
   Component,
   ViewEncapsulation,
+  DestroyRef,
   computed,
+  effect,
   inject,
   input,
   model,
+  signal,
+  untracked,
 } from '@angular/core';
 import { IconComponent } from '@ids-group-ltd/ids-design-system/icons';
 import { SpinnerComponent } from '@ids-group-ltd/ids-design-system/components/spinner';
@@ -46,7 +50,7 @@ let nextId = 0;
   encapsulation: ViewEncapsulation.Emulated,
   host: {
     role: 'listitem',
-    '[attr.data-status]': 'status()',
+    '[attr.data-status]': 'shownStatus()',
     '[class.is-first]': 'isFirst()',
     '[class.is-last]': 'isLast()',
     '[class.is-expanded]': 'expanded()',
@@ -68,12 +72,47 @@ export class ChatStepComponent {
 
   protected readonly detailsId = `ds-chat-step-${++nextId}-details`;
 
+  /** The status on screen: `status`, held back while `ds-chat-steps` paces an instant finish. */
+  protected readonly shownStatus = signal<ChatStepStatus | null>(null);
+  private runningSince = 0;
+  private settleTimer: ReturnType<typeof setTimeout> | undefined;
+
+  constructor() {
+    let first = true;
+    effect(() => {
+      const next = this.status();
+      untracked(() => this.show(next, first));
+      first = false;
+    });
+    inject(DestroyRef).onDestroy(() => clearTimeout(this.settleTimer));
+  }
+
+  private show(next: ChatStepStatus | null, first: boolean): void {
+    clearTimeout(this.settleTimer);
+    const settles = next === 'done' || next === 'error';
+    if (first || !settles || !this.steps) {
+      if (next === 'running') this.runningSince = performance.now();
+      this.shownStatus.set(next);
+      return;
+    }
+    if (this.shownStatus() !== 'running') {
+      this.runningSince = performance.now();
+    }
+    const delay = this.steps.settleDelay(this.runningSince);
+    if (delay <= 0) {
+      this.shownStatus.set(next);
+      return;
+    }
+    this.shownStatus.set('running');
+    this.settleTimer = setTimeout(() => this.shownStatus.set(next), delay);
+  }
+
   protected readonly isFirst = computed(() => this.steps?.firstStep() === this);
 
   protected readonly isLast = computed(() => this.steps?.lastStep() === this);
 
   protected readonly nodeIcon = computed<IconName | null>(() => {
-    const status = this.status();
+    const status = this.shownStatus();
 
     return status ? (STATUS_ICONS[status] ?? null) : null;
   });
@@ -84,7 +123,7 @@ export class ChatStepComponent {
   }));
 
   protected readonly statusLabel = computed(() => {
-    const status = this.status();
+    const status = this.shownStatus();
 
     return status ? this.wording()[STATUS_WORDING[status]] : '';
   });

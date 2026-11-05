@@ -4,7 +4,7 @@
   <span class="spine lead"></span>
 
   <span class="node">
-    @if (status() === 'running') {
+    @if (shownStatus() === 'running') {
       <ds-spinner size="sm" />
     } @else if (nodeIcon(); as name) {
       <ds-icon

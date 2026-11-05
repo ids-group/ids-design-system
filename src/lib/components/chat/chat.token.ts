@@ -27,6 +27,8 @@ export interface ChatStepsContract {
   readonly firstStep: Signal<object | undefined>;
   /** The step that draws no gap below it. */
   readonly lastStep: Signal<object | undefined>;
+  /** Milliseconds from now before a step that settles now may show it, given when it began running. */
+  settleDelay(runningSince: number): number;
 }
 
 export const CHAT_STEPS = new InjectionToken<ChatStepsContract>('CHAT_STEPS');
