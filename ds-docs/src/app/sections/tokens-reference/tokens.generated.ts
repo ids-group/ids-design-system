@@ -3713,6 +3713,11 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "notes": ""
       },
       {
+        "name": "--ds-chat-message-system-color",
+        "value": "var(--text-secondary)",
+        "notes": ""
+      },
+      {
         "name": "--ds-chat-thread-gap",
         "value": "var(--space-4)",
         "notes": ""

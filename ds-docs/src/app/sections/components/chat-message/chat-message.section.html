@@ -322,6 +322,45 @@ error TS2322: Type 'string' is not assignable to type 'number'.
   </div>
 
   <h3 class="block-title t-h4">
+    A notice from the app
+  </h3>
+
+  <p class="block-desc t-s">
+    <code class="t-mono-inline">
+      role="system"
+    </code> is a line from the app rather than either speaker: quiet text on
+    the thread's surface, no bubble, centred. It splits a run of replies.
+  </p>
+
+  <div class="states is-cols-2">
+    <div class="state-cell">
+      <div class="state-cell-stage chat-stage">
+        <ds-chat-thread>
+          <ds-chat-message role="user">
+            Make the Sign In button full width.
+          </ds-chat-message>
+
+          <ds-chat-message>
+            Done. The button now spans the form.
+          </ds-chat-message>
+
+          <ds-chat-message role="system">
+            The prototype stopped building. The assistant is trying to fix it.
+          </ds-chat-message>
+
+          <ds-chat-message>
+            Fixed a misspelled tag. The build passes again.
+          </ds-chat-message>
+        </ds-chat-thread>
+      </div>
+
+      <div class="state-cell-label">
+        System notice between replies
+      </div>
+    </div>
+  </div>
+
+  <h3 class="block-title t-h4">
     Steps fold into the reply
   </h3>
 

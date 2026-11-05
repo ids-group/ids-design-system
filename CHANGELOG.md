@@ -31,6 +31,11 @@
 - **`ds-alert` can fill its container.** With `fullWidth` set the host becomes block-level and
   100% wide, and the alert stretches across it, for a bar along a panel or a preview. Without it the
   alert hugs its content as before.
+- **`ds-chat-message` takes `role="system"`, a notice from the app.** It draws quiet centred text in
+  `--text-secondary` at `--font-size-xs` on the thread's surface, with no bubble, and splits a run of
+  replies. Without `author` it is spoken as the new `DsIntl` key `chat.system` (`'Notice'`). Token
+  `--ds-chat-message-system-color`. `ChatMessageRole` gains `'system'`: a `switch` of yours that must
+  cover every role needs a case for it.
 
 ### Changed
 

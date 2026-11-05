@@ -3129,7 +3129,8 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "type": "ChatMessageRole",
         "union": [
           "user",
-          "assistant"
+          "assistant",
+          "system"
         ],
         "default": "'assistant'",
         "required": false,

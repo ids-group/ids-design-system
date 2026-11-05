@@ -102,7 +102,7 @@ export class ChatMessageComponent {
     protected readonly wording = computed(…);
 }
 
-export type ChatMessageRole = 'user' | 'assistant';
+export type ChatMessageRole = 'user' | 'assistant' | 'system';
 
 export type ChatMessageStatus = 'sending' | 'sent' | 'failed';
 
@@ -225,6 +225,7 @@ ds-chat-message {
     --ds-chat-message-max-width: 85%;
     --ds-chat-message-padding: var(--space-2) var(--space-3);
     --ds-chat-message-radius: var(--ds-radius-panel);
+    --ds-chat-message-system-color: var(--text-secondary);
     --ds-chat-message-user-bg-color: var(--primary);
     --ds-chat-message-user-color: var(--text-on-primary);
     --ds-radius-inner: (none);

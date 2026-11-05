@@ -251,6 +251,8 @@ export interface DsIntl {
     readonly user?: string;
     /** `'Assistant'` - the same for `role="assistant"`. */
     readonly assistant?: string;
+    /** `'Notice'` - the same for `role="system"`. */
+    readonly system?: string;
     /** `'Conversation'` - accessible name of the `ds-chat-thread` scroll area when `ariaLabel` is unset. */
     readonly thread?: string;
     /** `'Assistant is working'` - the working row when `workingLabel` is empty. */
