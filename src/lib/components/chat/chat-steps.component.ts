@@ -48,11 +48,12 @@ export class ChatStepsComponent {
   /** The step that draws no gap below it. */
   readonly lastStep = computed<object | undefined>(() => this.items().at(-1));
 
-  /** Shortest time a step shows as running before its final status, even when it finishes at once. */
-  readonly minRunningMs = input(0);
+  /** Shortest time a step shows as running before its final status, even when it finishes at once;
+   *  `0` shows the final status at once. */
+  readonly minRunningMs = input(600);
   /** Shortest gap between two steps showing their final status, so steps that finish together
-   *  settle one after another. */
-  readonly revealStaggerMs = input(0);
+   *  settle one after another; `0` lets them settle together. */
+  readonly revealStaggerMs = input(300);
 
   private lastSettle = 0;
 
