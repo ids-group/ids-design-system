@@ -371,7 +371,9 @@ const alignBlock = (index, target) => `() => {
 }`;
 
 // A hash of everything in block `index` that decides its pixels apart from rasterisation: each
-// element's tag, class, own text and attributes, its whole computed style, the pseudo-elements
+// element's tag, class, own text and attributes, its whole computed style but the custom properties
+// (every one inherits from :root, so a token the release adds there would change every block, and
+// what a custom property paints is already in the properties that read it), the pseudo-elements
 // that generate a box, inner scroll offsets and its box relative to the block's own origin. An
 // element with no area keeps its style but not its box: it paints nothing, and a fixed one moves
 // with the scroll position. A block holding an image, canvas, video or any url() paints content
@@ -387,7 +389,7 @@ const fingerprintBlock = (index) => `() => {
   const sectionLeft = section.getBoundingClientRect().left;
   const round = (value) => Math.round(value * 64) / 64;
   const replaced = ['img', 'canvas', 'video', 'audio', 'picture', 'iframe', 'object', 'embed', 'foreignobject', 'image'];
-  const styleText = (style) => { let text = ''; for (const name of [...style].sort()) text += name + ':' + style.getPropertyValue(name) + ';'; return text; };
+  const styleText = (style) => { let text = ''; for (const name of [...style].sort()) if (!name.startsWith('--')) text += name + ':' + style.getPropertyValue(name) + ';'; return text; };
   const newline = String.fromCharCode(10);
   let hasResource = false;
   let text = '';
