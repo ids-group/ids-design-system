@@ -65,6 +65,10 @@
 
 ### Fixed
 
+- **The `ds-alert` icon sits by the first line.** It centred on the whole alert, so with a title
+  and a message, a long message or actions it stood halfway down the alert. It now centres on the
+  title, or on the first line of the message when there is no title. A one-line alert at its own
+  height is unchanged.
 - **An empty `ds-chat-input`, or an empty `autosize` `ds-textarea`, is as tall as one character
   typed into it.** A placeholder longer than the field wrapped and set the height, so the field
   shrank on the first character. The placeholder takes one line and ends in an ellipsis; the height
