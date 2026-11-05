@@ -3137,6 +3137,39 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Who wrote it: `'user'` draws a filled bubble on the right, `'assistant'` a subtle one on the left."
       },
       {
+        "name": "tone",
+        "kind": "input",
+        "type": "ChatMessageTone",
+        "union": [
+          "neutral",
+          "info",
+          "success",
+          "warning",
+          "error"
+        ],
+        "default": "'neutral'",
+        "required": false,
+        "description": "What a `'system'` notice means. `'neutral'` is a quiet one-line plaque for a routine note (saved, switched, started); `'info'`, `'success'`, `'warning'` and `'error'` draw a card in that status colour with its icon, for a note the reader should not miss. Other roles ignore it."
+      },
+      {
+        "name": "title",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "''",
+        "required": false,
+        "description": "A bold first line of a `'system'` notice, for one that carries a detail under it."
+      },
+      {
+        "name": "icon",
+        "kind": "input",
+        "type": "IconName | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Icon at the start of a `'system'` notice. A toned notice shows its tone's icon without it; a `'neutral'` one shows none."
+      },
+      {
         "name": "author",
         "kind": "input",
         "type": "string",
@@ -3285,6 +3318,24 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "'together'",
         "required": false,
         "description": "How steps that arrive together (a plan given at once) come in: `'together'` grows them in as one block, `'stagger'` one after another. Steps that arrive one at a time grow in either way."
+      },
+      {
+        "name": "minRunningMs",
+        "kind": "input",
+        "type": "number",
+        "union": null,
+        "default": "600",
+        "required": false,
+        "description": "Shortest time a step shows as running before its final status, even when it finishes at once; `0` shows the final status at once."
+      },
+      {
+        "name": "revealStaggerMs",
+        "kind": "input",
+        "type": "number",
+        "union": null,
+        "default": "300",
+        "required": false,
+        "description": "Shortest gap between two steps showing their final status, so steps that finish together settle one after another; `0` lets them settle together."
       }
     ],
     "outputs": []

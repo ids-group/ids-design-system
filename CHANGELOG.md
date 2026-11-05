@@ -35,11 +35,16 @@
 - **`ds-alert` can fill its container.** With `fullWidth` set the host becomes block-level and
   100% wide, and the alert stretches across it, for a bar along a panel or a preview. Without it the
   alert hugs its content as before.
-- **`ds-chat-message` takes `role="system"`, a notice from the app.** It draws quiet centred text in
-  `--text-secondary` at `--font-size-xs` on the thread's surface, with no bubble, and splits a run of
-  replies. Without `author` it is spoken as the new `DsIntl` key `chat.system` (`'Notice'`). Token
-  `--ds-chat-message-system-color`. `ChatMessageRole` gains `'system'`: a `switch` of yours that must
-  cover every role needs a case for it.
+- **`ds-chat-message` takes `role="system"`, a notice from the app.** It sits centred and splits a
+  run of replies. `tone` (new type `ChatMessageTone`) says what it means: `'neutral'`, the default, is
+  a quiet plaque in `--text-secondary` at `--font-size-xs` for a routine note; `'info'`, `'success'`,
+  `'warning'` and `'error'` draw a card in that status colour (`--*-subtitle` fill, `--*-border`
+  outline, `--*-text`) with the tone's icon. `title` adds a bold first line; `icon` sets the icon, and
+  a neutral plaque shows one only when given. Without `author` it is spoken as the new `DsIntl` key
+  `chat.system` (`'Notice'`). Tokens `--ds-chat-message-system-color`,
+  `--ds-chat-message-system-bg-color` and `--ds-chat-message-system-border-color` style the neutral
+  plaque. `ChatMessageRole` gains `'system'`: a `switch` of yours that must cover every role needs a
+  case for it.
 
 ### Changed
 

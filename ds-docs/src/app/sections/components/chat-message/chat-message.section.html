@@ -328,8 +328,34 @@ error TS2322: Type 'string' is not assignable to type 'number'.
   <p class="block-desc t-s">
     <code class="t-mono-inline">
       role="system"
-    </code> is a line from the app rather than either speaker: quiet text on
-    the thread's surface, no bubble, centred. It splits a run of replies.
+    </code> is a line from the app rather than either speaker, centred, and it
+    splits a run of replies. Pick
+    <code class="t-mono-inline">
+      tone
+    </code> by what the note means: leave it
+    <code class="t-mono-inline">
+      neutral
+    </code> for a routine note (saved, switched, started), a quiet one-line
+    plaque that takes an
+    <code class="t-mono-inline">
+      icon
+    </code> if you give one. Set
+    <code class="t-mono-inline">
+      info
+    </code>,
+    <code class="t-mono-inline">
+      success
+    </code>,
+    <code class="t-mono-inline">
+      warning
+    </code> or
+    <code class="t-mono-inline">
+      error
+    </code> when the reader should not miss it: a card in that status colour with
+    its icon. Add a
+    <code class="t-mono-inline">
+      title
+    </code> when the note carries a detail under it.
   </p>
 
   <div class="states is-cols-2">
@@ -340,22 +366,78 @@ error TS2322: Type 'string' is not assignable to type 'number'.
             Make the Sign In button full width.
           </ds-chat-message>
 
+          <ds-chat-message
+            role="system"
+            icon="git">
+            Switched to branch sign-in-layout
+          </ds-chat-message>
+
           <ds-chat-message>
             Done. The button now spans the form.
           </ds-chat-message>
 
           <ds-chat-message role="system">
+            Saved 2 files
+          </ds-chat-message>
+        </ds-chat-thread>
+      </div>
+
+      <div class="state-cell-label">
+        Routine note: neutral plaque
+      </div>
+    </div>
+
+    <div class="state-cell">
+      <div class="state-cell-stage chat-stage">
+        <ds-chat-thread>
+          <ds-chat-message>
+            Done. The button now spans the form.
+          </ds-chat-message>
+
+          <ds-chat-message
+            role="system"
+            tone="warning">
             The prototype stopped building. The assistant is trying to fix it.
           </ds-chat-message>
 
           <ds-chat-message>
             Fixed a misspelled tag. The build passes again.
           </ds-chat-message>
+
+          <ds-chat-message
+            role="system"
+            tone="success">
+            Published to the review link.
+          </ds-chat-message>
         </ds-chat-thread>
       </div>
 
       <div class="state-cell-label">
-        System notice between replies
+        A note that matters: tone by meaning
+      </div>
+    </div>
+
+    <div class="state-cell">
+      <div class="state-cell-stage chat-stage">
+        <ds-chat-thread>
+          <ds-chat-message
+            role="system"
+            tone="info">
+            The preview reloads after every change.
+          </ds-chat-message>
+
+          <ds-chat-message
+            role="system"
+            tone="error"
+            title="The prototype could not be built">
+            The assistant tried twice. Ask it what went wrong, or undo the last
+            change.
+          </ds-chat-message>
+        </ds-chat-thread>
+      </div>
+
+      <div class="state-cell-label">
+        Info, and an error with a title
       </div>
     </div>
   </div>
