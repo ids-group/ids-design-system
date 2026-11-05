@@ -28,6 +28,10 @@
   pressed; its accessible name is the new `DsIntl` key `chatInput.stop` (`'Stop'`). Enter still
   does not submit while busy, and a `disabled` input keeps the spinner. Without `stoppable` the
   busy button renders as before. New icon `stop`.
+- **`ds-chat-thread` keeps room for something laid over its bottom edge.** Set
+  `--ds-chat-thread-inset-bottom` to the height of what floats over the thread, such as attachments
+  above the composer: the last message scrolls clear of it and the jump button sits above it. The
+  default `0px` renders as before.
 - **`ds-alert` can fill its container.** With `fullWidth` set the host becomes block-level and
   100% wide, and the alert stretches across it, for a bar along a panel or a preview. Without it the
   alert hugs its content as before.

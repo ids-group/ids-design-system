@@ -7,6 +7,7 @@
   --_chat-thread-gap: var(--ds-chat-thread-gap, var(--space-4));
   --_chat-thread-group-gap: var(--ds-chat-thread-group-gap, var(--space-1));
   --_chat-thread-padding: var(--ds-chat-thread-padding, var(--space-4));
+  --_chat-thread-inset-bottom: var(--ds-chat-thread-inset-bottom, 0px);
 
   position: relative;
   display: flex;
@@ -24,6 +25,7 @@
   // The thread keeps the reader's place itself; the browser's own anchoring would move it twice.
   overflow-anchor: none;
   padding: var(--_chat-thread-padding);
+  padding-block-end: calc(var(--_chat-thread-padding) + var(--_chat-thread-inset-bottom));
 }
 
 .content {
@@ -61,7 +63,7 @@
 
 .jump {
   position: absolute;
-  bottom: var(--space-3);
+  bottom: calc(var(--space-3) + var(--_chat-thread-inset-bottom));
   left: 50%;
   translate: -50% 0;
 
