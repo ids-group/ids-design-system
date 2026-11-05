@@ -35,6 +35,23 @@
     <div class="state-cell">
       <div class="state-cell-stage">
         <ds-chat-input
+          placeholder="Write anything: a question or a change for the whole screen, or pick something first to point at it.">
+          <ds-icon-button
+            actions
+            icon="paperclip"
+            size="sm"
+            ariaLabel="Attach a file" />
+        </ds-chat-input>
+      </div>
+
+      <div class="state-cell-label">
+        Long placeholder · one line
+      </div>
+    </div>
+
+    <div class="state-cell">
+      <div class="state-cell-stage">
+        <ds-chat-input
           placeholder="Describe a change…"
           [(value)]="typed">
           <ds-icon-button
