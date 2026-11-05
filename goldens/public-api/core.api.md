@@ -360,6 +360,7 @@ export interface DsIntl {
     readonly chat?: {
         readonly user?: string;
         readonly assistant?: string;
+        readonly system?: string;
         readonly thread?: string;
         readonly working?: string;
         readonly newMessages?: (count: number) => string;

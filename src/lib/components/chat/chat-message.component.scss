@@ -23,6 +23,21 @@
   align-items: flex-end;
 }
 
+// A notice from the app, not from either speaker: quiet text on the thread's surface, no bubble.
+:host([data-role='system']) {
+  --_chat-bubble-bg-color: transparent;
+  --_chat-bubble-color: var(--ds-chat-message-system-color, var(--text-secondary));
+  --_chat-bubble-padding: 0 var(--space-1);
+
+  align-items: center;
+  text-align: center;
+
+  .bubble {
+    font-size: var(--font-size-xs);
+    text-wrap: balance;
+  }
+}
+
 // Spacing between messages is the thread's: a full gap between speakers, a tight one inside a run.
 :host(.in-thread) {
   margin-top: var(--_chat-thread-gap);

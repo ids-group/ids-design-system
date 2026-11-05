@@ -209,6 +209,7 @@ export const DS_INTL_DEFAULTS: DsIntl & {
   chat: {
     user: 'You',
     assistant: 'Assistant',
+    system: 'Notice',
     thread: 'Conversation',
     working: 'Assistant is working',
     newMessages: (count) =>

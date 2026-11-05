@@ -63,7 +63,7 @@ and token names.** These leaves are for orientation and usage.
 - [<ds-loading-overlay> — LoadingOverlayComponent](feedback/ds-loading-overlay.md) — <!-- inputs:ds-loading-overlay -->
 - [<ds-timeline> — TimelineComponent](feedback/ds-timeline.md) — The list that holds ds-timeline-items, at any depth: it marks the first and last item so the connector stops a
 - [<ds-timeline-item> — TimelineItemComponent](feedback/ds-timeline-item.md) — Slots: default content below the heading; [trailing] at the end of the heading row (Undo, Stop, Retry); [detai
-- [<ds-chat-message> — ChatMessageComponent](feedback/ds-chat-message.md) — One message of a chat: role: ChatMessageRole = 'assistant' puts a filled bubble on the right ('user') or a sub
+- [<ds-chat-message> — ChatMessageComponent](feedback/ds-chat-message.md) — One message of a chat: role: ChatMessageRole = 'assistant' puts a filled bubble on the right ('user'), a subtl
 - [<ds-chat-thread> — ChatThreadComponent](feedback/ds-chat-thread.md) — Scrollable list of ds-chat-messages; give it a height (or flex: 1 in a column). Stays at the newest message as
 - [<ds-chat-attachment> — ChatAttachmentComponent](feedback/ds-chat-attachment.md) — Chip in a message's [attachments] slot (label required, source muted after it, icon default paperclip). Open, 
 - [<ds-chat-steps> — ChatStepsComponent](feedback/ds-chat-steps.md) — The steps of an agent's work, in the [steps] slot of a ds-chat-message: ds-chat-steps in order, at any depth, 
