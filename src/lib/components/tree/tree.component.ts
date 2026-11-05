@@ -71,6 +71,13 @@ export class TreeComponent {
 
   protected readonly multiple = computed(() => this.selection() === 'multiple');
 
+  protected readonly hasIcons = computed(() => {
+    const anyIcon = (list: readonly TreeNode[]): boolean =>
+      list.some((node) => !!node.icon || anyIcon(node.children ?? []));
+
+    return anyIcon(this.nodes());
+  });
+
   protected readonly visibleNodes = computed<VisibleNode[]>(() => {
     const out: VisibleNode[] = [];
     const walk = (list: readonly TreeNode[], level: number): void => {

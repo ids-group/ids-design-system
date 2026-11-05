@@ -100,6 +100,10 @@
     {
       "text": "The `ds-alert` icon centres on the title, or on the first line of the message when there is no title, where it centred on the whole alert. Nothing to change in your code.",
       "verify": "Open a `ds-alert` with a title and a message: the icon sits level with the title."
+    },
+    {
+      "text": "When any node of a `ds-tree` has an `icon`, every row keeps a 16px slot for it, empty where the node has none, so the labels of rows with and without an icon line up. A tree where every node or no node has an icon renders as before. Nothing to change in your code.",
+      "verify": "Open a `ds-tree` where only some nodes have an icon: the labels of sibling rows start at the same x."
     }
   ],
   "deleteList": []
