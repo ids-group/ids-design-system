@@ -251,7 +251,7 @@ Methods: `submit()`, `focus(options?)`; `canSubmit` signal. Text area name: `ari
 Tokens: `--ds-chat-input-bg-color`, `--ds-chat-input-radius`, `--ds-chat-input-padding`; border, hover and focus follow the `--ds-field-*` set.
 
 <!-- inputs:ds-chat-input -->
-All inputs: `value: string = ''`, `placeholder: string = ''`, `ariaLabel: string | null = null`, `minRows: number = 1`, `maxRows: number = 8`, `disabled: boolean = false`, `busy: boolean = false`, `busyLabel: string = ''`, `layout: ChatInputLayout = 'status-bar'`
+All inputs: `value: string = ''`, `placeholder: string = ''`, `ariaLabel: string | null = null`, `minRows: number = 1`, `maxRows: number = 8`, `disabled: boolean = false`, `busy: boolean = false`, `stoppable: boolean = false`, `busyLabel: string = ''`, `layout: ChatInputLayout = 'status-bar'`
 <!-- /inputs -->
 
 #### `<ds-number-stepper>` — `NumberStepperComponent`
@@ -552,14 +552,15 @@ All inputs: `variant: BannerVariant = 'info'`, `title: string = ''`, `dismissibl
 
 #### `<ds-alert>` — `AlertComponent`
 Inline message, `ds-banner`'s smaller twin — same anatomy, sized for placement inside a form or a card rather than across a page.
-Inputs: `variant: 'info' | 'success' | 'warning' | 'error' | 'neutral' = 'info'`, `title: string = ''`, `dismissible: boolean = false`, `icon: IconName | null = null` (variant-derived default)
+Inputs: `variant: 'info' | 'success' | 'warning' | 'error' | 'neutral' = 'info'`, `title: string = ''`, `dismissible: boolean = false`, `icon: IconName | null = null` (variant-derived default), `fullWidth: boolean = false` (fills the container; unset, the alert hugs its content)
 Output: `(closed): void`
 Content slots: default (body text), `[actions]` (trailing CTAs)
 - `announce` follows `DS_CONFIG.alert.announce` with the same two dev warnings as `ds-banner`, prefixed `[ds-alert]`.
 - Dismissing moves focus as `ds-banner` does: to the next control after the alert, else the one before it.
+- The icon centres on the first line: the title, else the first line of the message.
 
 <!-- inputs:ds-alert -->
-All inputs: `variant: 'info' | 'success' | 'warning' | 'error' | 'neutral' = 'info'`, `title: string = ''`, `dismissible: boolean = false`, `icon: IconName | null = null`, `announce: boolean | null = null`
+All inputs: `variant: 'info' | 'success' | 'warning' | 'error' | 'neutral' = 'info'`, `title: string = ''`, `dismissible: boolean = false`, `icon: IconName | null = null`, `fullWidth: boolean = false`, `announce: boolean | null = null`
 <!-- /inputs -->
 
 #### `<ds-toast>` — `ToastComponent`

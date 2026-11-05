@@ -47,6 +47,13 @@ export const routes: Routes = [
             ),
         },
         {
+          path: 'harness/chat-input-placeholder',
+          loadComponent: () =>
+            import('./harness/chat-input-placeholder.page').then(
+              (m) => m.ChatInputPlaceholderHarnessPage,
+            ),
+        },
+        {
           path: 'harness/splitter-iframe',
           loadComponent: () =>
             import('./harness/splitter-iframe.page').then(

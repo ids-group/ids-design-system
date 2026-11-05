@@ -49,14 +49,15 @@
     <div class="send">
       <ng-content select="[send]">
         <ds-button
-          icon="arrowUp"
           size="sm"
           class="send-button"
           loadingMode="icon"
-          [ariaLabel]="sendLabel()"
+          [class.stop]="stopShown()"
+          [icon]="stopShown() ? 'stop' : 'arrowUp'"
+          [ariaLabel]="stopShown() ? stopLabel() : sendLabel()"
           [disabled]="!busy() && !canSubmit()"
-          [loading]="busy()"
-          (pressed)="submit()" />
+          [loading]="busy() && !stopShown()"
+          (pressed)="onSendPressed()" />
       </ng-content>
     </div>
   </div>

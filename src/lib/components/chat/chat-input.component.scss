@@ -139,8 +139,45 @@ ds-textarea {
 /* One fixed square, idle or busy, so nothing moves. */
 .send-button {
   --ds-button-padding-x: 0;
+  --_send-radius: var(--ds-button-radius, var(--ds-radius-control));
 
   width: var(--field-h-sm);
+}
+
+/* The ring is drawn outside the button, so the button keeps its size and place. A conic arc rather
+   than a turning border, so the arc follows a rounded square instead of swinging its corners. */
+@property --_send-ring-angle {
+  syntax: '<angle>';
+  inherits: false;
+  initial-value: 0deg;
+}
+
+.send-button.stop {
+  position: relative;
+
+  &::after {
+    content: '';
+    position: absolute;
+    inset: calc(var(--space-1) * -1);
+    padding: var(--border-width-strong);
+    border-radius: calc(var(--_send-radius) + var(--space-1));
+    background: conic-gradient(
+      from var(--_send-ring-angle),
+      var(--primary) 0 30%,
+      var(--primary-muted) 30% 100%
+    );
+    mask:
+      linear-gradient(var(--primary) 0 0) content-box exclude,
+      linear-gradient(var(--primary) 0 0);
+    pointer-events: none;
+    animation: send-ring-turn var(--duration-loop-slow) linear infinite;
+  }
+}
+
+@keyframes send-ring-turn {
+  to {
+    --_send-ring-angle: 360deg;
+  }
 }
 
 /* Attach outside on the left, send outside on the right, on the last line of the text. */
@@ -189,6 +226,7 @@ ds-textarea {
   .send-button {
     --ds-button-height: var(--field-h-md);
     --ds-button-radius: 50%;
+    --_send-radius: 50%;
 
     width: var(--field-h-md);
   }

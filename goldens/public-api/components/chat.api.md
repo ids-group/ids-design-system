@@ -47,10 +47,15 @@ export class ChatInputComponent {
     public readonly minRows = input<number>(1);
     protected onKeydown(event: KeyboardEvent): void;
     protected onPaste(event: ClipboardEvent): void;
+    protected onSendPressed(): void;
     public readonly placeholder = input<string>('');
     protected readonly sendLabel = computed(…);
     protected readonly statusAbove = computed(…);
     protected readonly statusText = computed(…);
+    protected readonly stopLabel = computed(…);
+    public readonly stopRequested = output<void>();
+    protected readonly stopShown = computed(…);
+    public readonly stoppable = input(false, { transform: booleanAttribute });
     public submit(): void;
     public readonly submitted = output<string>();
     private readonly textarea;
@@ -207,6 +212,7 @@ ds-chat-attachment {
 }
 
 ds-chat-input {
+    --ds-button-radius: var(--ds-radius-control);
     --ds-chat-input-bg-color: var(--surface-default);
     --ds-chat-input-padding: var(--space-2);
     --ds-chat-input-radius: var(--ds-radius-control);

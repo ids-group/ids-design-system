@@ -126,6 +126,7 @@
     }
   ],
   "informational": [
+    "The development-mode warnings of `ds-button` are guarded by `typeof ngDevMode === 'undefined' || ngDevMode`, so an optimised production build drops them; development builds warn as before. Nothing to change in your code.",
     "All three pickers scroll the keyboard cursor into view by default; scrollActiveIntoView=\"false\" turns it off.",
     "Home and End now work on ds-multi-select and ds-autocomplete, which only ds-select had.",
     "ds-autocomplete takes compareWith for object values; the default stays === so string and number values are unaffected.",

@@ -1,11 +1,15 @@
 <div
   #alert
   [class]="classes()">
-  <ds-icon
-    class="a-icon"
-    [name]="resolvedIcon()"
-    [size]="16">
-  </ds-icon>
+  <span
+    class="a-lead"
+    [class.titled]="title()">
+    <ds-icon
+      class="a-icon"
+      [name]="resolvedIcon()"
+      [size]="16">
+    </ds-icon>
+  </span>
 
   <div class="a-body">
     @if (title()) {

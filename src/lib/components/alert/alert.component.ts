@@ -24,7 +24,7 @@ import type { AlertVariant } from './alert.types';
   imports: [IconComponent],
   templateUrl: './alert.component.html',
   styleUrl: './alert.component.scss',
-  host: { '[attr.title]': 'null' },
+  host: { '[attr.title]': 'null', '[class.full-width]': 'fullWidth()' },
   encapsulation: ViewEncapsulation.Emulated,
 })
 export class AlertComponent {
@@ -38,6 +38,8 @@ export class AlertComponent {
   readonly dismissible = input(false, { transform: booleanAttribute });
   /** Override the variant's default icon. */
   readonly icon = input<IconName | null>(null);
+  /** Fills the container instead of hugging its content. */
+  readonly fullWidth = input(false, { transform: booleanAttribute });
   /** Fires when the user dismisses the alert. */
   readonly closed = output<void>();
 

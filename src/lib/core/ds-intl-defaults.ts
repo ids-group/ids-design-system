@@ -155,6 +155,7 @@ export const DS_INTL_DEFAULTS: DsIntl & {
   chatInput: {
     label: 'Message',
     send: 'Send',
+    stop: 'Stop',
   },
   spinner: {
     label: 'Loading',

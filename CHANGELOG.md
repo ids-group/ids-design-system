@@ -18,6 +18,19 @@
   text the template renders is the row's accessible name: a template that draws no text needs a
   visually hidden element carrying the name. Without the template a row renders as before. New
   exports `TreeLabelDirective` and `TreeLabelContext`.
+- **Six icons: `mouse-pointer`, `pencil-ruler`, `columns`, `history`, `flask` and `panel-right`.**
+  An arrow cursor for picking an element, a pencil and ruler for opening a design, two columns for a
+  side-by-side compare, a clock with a back arrow for history and restore, a flask for an
+  experimental feature, and a frame with a right panel for showing or hiding a side panel. They
+  are drawn from Lucide (ISC) on the 24-unit grid and take the set's stroke.
+- **`ds-chat-input` offers Stop while it is busy.** With `stoppable` set and `busy` on, the default
+  send button shows a square inside a turning ring, stays enabled and emits `stopRequested` when
+  pressed; its accessible name is the new `DsIntl` key `chatInput.stop` (`'Stop'`). Enter still
+  does not submit while busy, and a `disabled` input keeps the spinner. Without `stoppable` the
+  busy button renders as before. New icon `stop`.
+- **`ds-alert` can fill its container.** With `fullWidth` set the host becomes block-level and
+  100% wide, and the alert stretches across it, for a bar along a panel or a preview. Without it the
+  alert hugs its content as before.
 
 ### Changed
 
@@ -33,7 +46,7 @@
   `ds-multi-select`, `ds-autocomplete`, `ds-search`, `ds-chat-input`, the `ds-date-picker`,
   `ds-time-picker` and `ds-color-picker` triggers, `ds-number-stepper`, the `ds-otp-input` cells
   and `ds-field-group` draw their resting border in `--border-field` and their hover border in
-  `--border-field-hover`, where they drew `--border-default` (1.38:1 on white, 1.19:1 on a dark
+  `--border-field-hover`, where they drew `--border-default` (1.31:1 on white, 1.19:1 on a dark
   drawer) and `--border-strong`. `--ds-field-border-color`, `--ds-field-border-color-hover`,
   `--ds-date-picker-trigger-border-color`, `--ds-time-picker-trigger-border`,
   `--ds-color-picker-trigger-border-color`, `--ds-number-stepper-border-color`,
@@ -60,6 +73,14 @@
 
 ### Fixed
 
+- **The `ds-alert` icon sits by the first line.** It centred on the whole alert, so with a title
+  and a message, a long message or actions it stood halfway down the alert. It now centres on the
+  title, or on the first line of the message when there is no title. Nothing to change in your
+  code.
+- **An empty `ds-chat-input`, or an empty `autosize` `ds-textarea`, is as tall as one character
+  typed into it.** A placeholder longer than the field wrapped and set the height, so the field
+  shrank on the first character. The placeholder takes one line and ends in an ellipsis; the height
+  follows `minRows` and the text.
 - **A `ds-splitter` drag ends when it is released over an iframe or an embedded webview.** Such a
   document took the pointer away from the handle, so the release never arrived: the page kept the
   resize cursor on every element and blocked text selection until the next click. While a handle is
@@ -69,8 +90,9 @@
   be removed.
 - **A `ds-icon` box is as large as its glyph.** `ds-icon` sets `--ds-icon-size` on itself as well
   as on its `svg`, so a host that also carries the global `.icon` class takes the glyph's size
-  instead of `--icon-md` (16px). In `ds-banner` the icon box grows from 16px to 20px, the size its
-  glyph already drew, and the text beside it moves 4px further from the icon.
+  instead of `--icon-md` (16px). In `ds-banner` and the file rows of `ds-dropzone` the icon box
+  grows from 16px to 20px, the size its glyph already drew, and the text beside it moves 4px further
+  from the icon; in `ds-chat-attachment` it shrinks from 16px to 14px.
 - **The marker of a `ds-chat-step` sits beside the first line of its heading.** A step with
   content or a `time` under its heading, or a heading on two lines, centred its marker on the whole
   step, below the heading's first line; only a `waiting` step kept it on the heading row. Every
