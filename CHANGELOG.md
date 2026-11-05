@@ -62,6 +62,10 @@
 
 ### Fixed
 
+- **An empty `ds-chat-input`, or an empty `autosize` `ds-textarea`, is as tall as one character
+  typed into it.** A placeholder longer than the field wrapped and set the height, so the field
+  shrank on the first character. The placeholder takes one line and ends in an ellipsis; the height
+  follows `minRows` and the text.
 - **A `ds-splitter` drag ends when it is released over an iframe or an embedded webview.** Such a
   document took the pointer away from the handle, so the release never arrived: the page kept the
   resize cursor on every element and blocked text selection until the next click. While a handle is
