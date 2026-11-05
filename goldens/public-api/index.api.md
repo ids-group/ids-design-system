@@ -92,6 +92,7 @@ export { ChatInputLayout } from '@ids-group-ltd/ids-design-system/components/cha
 export { ChatMessageComponent } from '@ids-group-ltd/ids-design-system/components/chat'; // component
 export { ChatMessageRole } from '@ids-group-ltd/ids-design-system/components/chat'; // type
 export { ChatMessageStatus } from '@ids-group-ltd/ids-design-system/components/chat'; // type
+export { ChatMessageTone } from '@ids-group-ltd/ids-design-system/components/chat'; // type
 export { ChatStepComponent } from '@ids-group-ltd/ids-design-system/components/chat'; // component
 export { ChatStepStatus } from '@ids-group-ltd/ids-design-system/components/chat'; // type
 export { ChatStepsComponent } from '@ids-group-ltd/ids-design-system/components/chat'; // component

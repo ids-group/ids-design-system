@@ -18,13 +18,26 @@ import {
 import {
   DS_INTL,
   DS_INTL_DEFAULTS,
+  type IconName,
 } from '@ids-group-ltd/ids-design-system/core';
 import { ButtonComponent } from '@ids-group-ltd/ids-design-system/components/button';
 import { IconComponent } from '@ids-group-ltd/ids-design-system/icons';
 import { CHAT_THREAD } from './chat.token';
 import { ChatStepComponent } from './chat-step.component';
 import { ChatStepsComponent } from './chat-steps.component';
-import type { ChatMessageRole, ChatMessageStatus } from './chat.types';
+import type {
+  ChatMessageRole,
+  ChatMessageStatus,
+  ChatMessageTone,
+} from './chat.types';
+
+const TONE_ICONS: Record<ChatMessageTone, IconName | null> = {
+  neutral: null,
+  info: 'info',
+  success: 'success',
+  warning: 'warn',
+  error: 'error',
+};
 
 /**
  * One message of a conversation: a bubble on the right for the user, on the left for the
@@ -42,7 +55,9 @@ import type { ChatMessageRole, ChatMessageStatus } from './chat.types';
   host: {
     // The `role` input would otherwise stay on the host as an invalid ARIA role.
     '[attr.role]': 'null',
+    '[attr.title]': 'null',
     '[attr.data-role]': 'role()',
+    '[attr.data-tone]': "role() === 'system' ? tone() : null",
     '[class.in-thread]': '!!thread',
     '[class.is-first]': 'isFirst()',
     '[class.is-grouped]': 'isGrouped()',
@@ -55,6 +70,15 @@ import type { ChatMessageRole, ChatMessageStatus } from './chat.types';
 export class ChatMessageComponent {
   /** Who wrote it: `'user'` draws a filled bubble on the right, `'assistant'` a subtle one on the left. */
   readonly role = input<ChatMessageRole>('assistant');
+  /** What a `'system'` notice means. `'neutral'` is a quiet one-line plaque for a routine note
+   *  (saved, switched, started); `'info'`, `'success'`, `'warning'` and `'error'` draw a card in that
+   *  status colour with its icon, for a note the reader should not miss. Other roles ignore it. */
+  readonly tone = input<ChatMessageTone>('neutral');
+  /** A bold first line of a `'system'` notice, for one that carries a detail under it. */
+  readonly title = input<string>('');
+  /** Icon at the start of a `'system'` notice. A toned notice shows its tone's icon without it; a
+   *  `'neutral'` one shows none. */
+  readonly icon = input<IconName | null>(null);
   /** Name shown above the bubble. Without it the role is spoken (`DS_INTL.chat.user` / `assistant`). */
   readonly author = input<string>('');
   /** Time label, already formatted, shown under the bubble. In a `ds-chat-thread` only the last message
@@ -140,6 +164,10 @@ export class ChatMessageComponent {
     ...DS_INTL_DEFAULTS.chat,
     ...this.intl().chat,
   }));
+
+  protected readonly noticeIcon = computed(
+    () => this.icon() ?? TONE_ICONS[this.tone()],
+  );
 
   protected readonly speaker = computed(
     () => this.author() || this.wording()[this.role()],

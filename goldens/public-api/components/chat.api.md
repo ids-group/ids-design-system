@@ -74,11 +74,13 @@ export class ChatMessageComponent {
     protected readonly folded = computed(…);
     private growIn;
     private readonly host;
+    public readonly icon = input<IconName | null>(null);
     private readonly intl;
     protected readonly isContinued = computed(…);
     protected readonly isFirst = computed(…);
     protected readonly isGrouped = computed(…);
     private motion;
+    protected readonly noticeIcon = computed(…);
     private readonly openedFailures;
     private readonly openedFailuresVersion;
     public readonly retry = output<void>();
@@ -97,7 +99,9 @@ export class ChatMessageComponent {
     protected readonly thread = inject(…);
     public readonly time = input<string>('');
     protected readonly timeBreak = computed(…);
+    public readonly title = input<string>('');
     protected toggleSteps(): void;
+    public readonly tone = input<ChatMessageTone>('neutral');
     public readonly unopenedFailedStepCount = computed(…);
     protected readonly wording = computed(…);
 }
@@ -105,6 +109,8 @@ export class ChatMessageComponent {
 export type ChatMessageRole = 'user' | 'assistant' | 'system';
 
 export type ChatMessageStatus = 'sending' | 'sent' | 'failed';
+
+export type ChatMessageTone = 'neutral' | 'info' | 'success' | 'warning' | 'error';
 
 @Component({ selector: 'ds-chat-step' })
 export class ChatStepComponent {
@@ -225,9 +231,12 @@ ds-chat-message {
     --ds-chat-message-max-width: 85%;
     --ds-chat-message-padding: var(--space-2) var(--space-3);
     --ds-chat-message-radius: var(--ds-radius-panel);
+    --ds-chat-message-system-bg-color: var(--surface-secondary);
+    --ds-chat-message-system-border-color: var(--border-default);
     --ds-chat-message-system-color: var(--text-secondary);
     --ds-chat-message-user-bg-color: var(--primary);
     --ds-chat-message-user-color: var(--text-on-primary);
+    --ds-radius-control: (none);
     --ds-radius-inner: (none);
     --ds-radius-pill: (none);
 }

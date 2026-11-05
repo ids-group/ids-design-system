@@ -141,6 +141,7 @@ export type {
   ChatInputLayout,
   ChatMessageRole,
   ChatMessageStatus,
+  ChatMessageTone,
   ChatStepStatus,
   ChatStepsEnter,
 } from '@ids-group-ltd/ids-design-system/components/chat';
