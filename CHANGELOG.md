@@ -46,8 +46,6 @@
   what is drawn waits: `status` and everything bound to it change when you set them. New inputs
   `minRunningMs` (default `600`) and `revealStaggerMs` (default `300`); set both to `0` to show
   every final status at once.
-    },
-    {
 - **The `ds-chat-input` send button stays enabled while the text is blank.** It keeps its colour
   from an empty box to a typed message and back, where it turned gray and disabled. Pressed while the
   text is blank it sends nothing and moves the focus to the text area; Enter on blank text sends
