@@ -63,6 +63,14 @@
     }
   ],
   "informational": [
+    "`ds-chat-input` takes `stoppable` and emits `stopRequested`: while `busy`, its send button becomes an enabled Stop button named by the optional `DsIntl.chatInput.stop`, with the new icon `stop`. Nothing to change in your code.",
+    "`ds-alert` takes `fullWidth`, which stretches the alert across its container. Nothing to change in your code.",
+    "`ds-tree` takes `<ng-template dsTreeLabel let-node>` (`TreeLabelDirective`, `TreeLabelContext`) for the label of every row. Nothing to change in your code.",
+    "Six icons are added: `mouse-pointer`, `pencil-ruler`, `columns`, `history`, `flask` and `panel-right`. Nothing to change in your code.",
+    {
+      "text": "An empty `ds-chat-input`, or an empty `autosize` `ds-textarea`, is one line of text tall: its placeholder takes one line and ends in an ellipsis, and the height follows `minRows` and the text. Nothing to change in your code.",
+      "verify": "Give a narrow `ds-chat-input` a placeholder longer than the field and type one character: the field keeps its height."
+    },
     {
       "text": "A `ds-chat-step` keeps its marker beside the heading's first line for every `status`, as a `waiting` step does: with content or a `time` under the heading, and with a heading on two lines. A step with content under its heading is about 4px taller. A `waiting` step with a trailing action no longer draws its marker above the heading. A step with a one-line heading and nothing under it renders as before. Nothing to change in your code.",
       "verify": "Open a `ds-chat-step` with text or buttons under its heading, and one with a two-line heading: the marker sits level with the heading's first line.",
@@ -86,8 +94,8 @@
     },
     "A `ds-splitter` drag released over an iframe or an embedded webview ends there: the resize cursor and the blocked text selection no longer stay on the page. While a handle is dragged, every `iframe`, `webview`, `embed` and `object` on the page ignores the pointer. Nothing to change in your code; a `pointer-events: none` you set on an embedded document during a drag can be removed.",
     {
-      "text": "A `ds-icon` whose host also carries the global `.icon` class now has a box as large as its glyph: 20px in `ds-banner`, where the box was 16px around a 20px glyph, so the banner text sits 4px further from the icon. Nothing to change in your code.",
-      "verify": "Open a `ds-banner`: the icon box and its glyph are both 20px, and the title starts 4px further right than before."
+      "text": "A `ds-icon` whose host also carries the global `.icon` class now has a box as large as its glyph: 20px in `ds-banner` and in the file rows of `ds-dropzone`, where the box was 16px around a 20px glyph, so the text beside it sits 4px further from the icon, and 14px in `ds-chat-attachment`, where it was 16px. Nothing to change in your code.",
+      "verify": "Open a `ds-banner`, a `ds-dropzone` with a file and a `ds-chat-attachment`: each icon box is as large as its glyph, 20px, 20px and 14px."
     },
     {
       "text": "The `ds-alert` icon centres on the title, or on the first line of the message when there is no title, where it centred on the whole alert. Nothing to change in your code.",

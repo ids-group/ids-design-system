@@ -38,7 +38,7 @@
   `ds-multi-select`, `ds-autocomplete`, `ds-search`, `ds-chat-input`, the `ds-date-picker`,
   `ds-time-picker` and `ds-color-picker` triggers, `ds-number-stepper`, the `ds-otp-input` cells
   and `ds-field-group` draw their resting border in `--border-field` and their hover border in
-  `--border-field-hover`, where they drew `--border-default` (1.38:1 on white, 1.19:1 on a dark
+  `--border-field-hover`, where they drew `--border-default` (1.31:1 on white, 1.19:1 on a dark
   drawer) and `--border-strong`. `--ds-field-border-color`, `--ds-field-border-color-hover`,
   `--ds-date-picker-trigger-border-color`, `--ds-time-picker-trigger-border`,
   `--ds-color-picker-trigger-border-color`, `--ds-number-stepper-border-color`,
@@ -82,8 +82,9 @@
   be removed.
 - **A `ds-icon` box is as large as its glyph.** `ds-icon` sets `--ds-icon-size` on itself as well
   as on its `svg`, so a host that also carries the global `.icon` class takes the glyph's size
-  instead of `--icon-md` (16px). In `ds-banner` the icon box grows from 16px to 20px, the size its
-  glyph already drew, and the text beside it moves 4px further from the icon.
+  instead of `--icon-md` (16px). In `ds-banner` and the file rows of `ds-dropzone` the icon box
+  grows from 16px to 20px, the size its glyph already drew, and the text beside it moves 4px further
+  from the icon; in `ds-chat-attachment` it shrinks from 16px to 14px.
 - **The marker of a `ds-chat-step` sits beside the first line of its heading.** A step with
   content or a `time` under its heading, or a heading on two lines, centred its marker on the whole
   step, below the heading's first line; only a `waiting` step kept it on the heading row. Every
