@@ -11,17 +11,12 @@ import { tmpdir } from 'node:os';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { sentenceHash } from './check-manifest-claims.mjs';
-import { releaseTags } from './release-tags.mjs';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const WORK = join(tmpdir(), `manifest-claims-selftest.${process.pid}`);
 const git = (args) =>
   execFileSync('git', ['-C', ROOT, ...args], { encoding: 'utf8' }).trim();
 
-const lastTag = releaseTags(ROOT).at(-1);
-const insideCommit = lastTag
-  ? git(['rev-list', '-n1', `${lastTag}..HEAD`])
-  : '';
 const rootCommit = git(['rev-list', '--max-parents=0', 'HEAD']).split('\n')[0];
 
 const item = (fields) => ({
@@ -129,7 +124,7 @@ const cases = [
     expect: 'evidence',
   },
   {
-    label: 'evidence naming a commit before the boundary fires',
+    label: 'evidence naming a commit fires',
     manifest: draft([item({ evidence: [`commit:${rootCommit}`] })]),
     expect: 'evidence',
   },
@@ -193,22 +188,6 @@ const cases = [
     expect: null,
   },
 ];
-if (insideCommit)
-  cases.push({
-    label: 'evidence naming a commit inside last tag..HEAD is quiet',
-    manifest: draft([
-      item({
-        note: 'It renders identically.',
-        evidence: [`commit:${insideCommit}`],
-      }),
-    ]),
-    expect: null,
-  });
-else
-  console.log(
-    `  skipped: HEAD is ${lastTag}, so no commit lies inside the unreleased boundary`,
-  );
-
 const prepare = ({ manifest, changelog, fixture }) => {
   rmSync(WORK, { recursive: true, force: true });
   mkdirSync(join(WORK, 'migrations', 'fixtures'), { recursive: true });
