@@ -7,6 +7,15 @@
   display: inline-flex;
 }
 
+:host(.full-width) {
+  display: flex;
+  width: 100%;
+
+  .alert {
+    flex: 1;
+  }
+}
+
 .alert {
   --_alert-bg-color:           var(--ds-alert-bg-color,           var(--info-subtitle));
   --_alert-text-color:         var(--ds-alert-text-color,         var(--info-text));
