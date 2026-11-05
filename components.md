@@ -552,14 +552,14 @@ All inputs: `variant: BannerVariant = 'info'`, `title: string = ''`, `dismissibl
 
 #### `<ds-alert>` — `AlertComponent`
 Inline message, `ds-banner`'s smaller twin — same anatomy, sized for placement inside a form or a card rather than across a page.
-Inputs: `variant: 'info' | 'success' | 'warning' | 'error' | 'neutral' = 'info'`, `title: string = ''`, `dismissible: boolean = false`, `icon: IconName | null = null` (variant-derived default)
+Inputs: `variant: 'info' | 'success' | 'warning' | 'error' | 'neutral' = 'info'`, `title: string = ''`, `dismissible: boolean = false`, `icon: IconName | null = null` (variant-derived default), `fullWidth: boolean = false` (fills the container; unset, the alert hugs its content)
 Output: `(closed): void`
 Content slots: default (body text), `[actions]` (trailing CTAs)
 - `announce` follows `DS_CONFIG.alert.announce` with the same two dev warnings as `ds-banner`, prefixed `[ds-alert]`.
 - Dismissing moves focus as `ds-banner` does: to the next control after the alert, else the one before it.
 
 <!-- inputs:ds-alert -->
-All inputs: `variant: 'info' | 'success' | 'warning' | 'error' | 'neutral' = 'info'`, `title: string = ''`, `dismissible: boolean = false`, `icon: IconName | null = null`, `announce: boolean | null = null`
+All inputs: `variant: 'info' | 'success' | 'warning' | 'error' | 'neutral' = 'info'`, `title: string = ''`, `dismissible: boolean = false`, `icon: IconName | null = null`, `fullWidth: boolean = false`, `announce: boolean | null = null`
 <!-- /inputs -->
 
 #### `<ds-toast>` — `ToastComponent`

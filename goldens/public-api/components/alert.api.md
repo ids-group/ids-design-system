@@ -14,6 +14,7 @@ export class AlertComponent {
     public readonly closed = output<void>();
     protected readonly defaultIcon = computed<IconName>(…);
     public readonly dismissible = input(false, { transform: booleanAttribute });
+    public readonly fullWidth = input(false, { transform: booleanAttribute });
     public readonly icon = input<IconName | null>(null);
     protected readonly intl = inject(…);
     private readonly liveRole;

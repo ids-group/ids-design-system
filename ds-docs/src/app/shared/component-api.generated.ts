@@ -135,6 +135,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Override the variant's default icon."
       },
       {
+        "name": "fullWidth",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Fills the container instead of hugging its content."
+      },
+      {
         "name": "announce",
         "kind": "input",
         "type": "boolean | null",
