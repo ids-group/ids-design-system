@@ -181,6 +181,8 @@ export interface DsIntl {
     readonly label?: string;
     /** `'Send'` - its default send button. */
     readonly send?: string;
+    /** `'Stop'` - the default send button while `busy` and `stoppable`. */
+    readonly stop?: string;
   };
   readonly spinner: {
     readonly label: string;

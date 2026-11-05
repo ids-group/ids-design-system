@@ -306,6 +306,7 @@ export interface DsIntl {
     readonly chatInput?: {
         readonly label?: string;
         readonly send?: string;
+        readonly stop?: string;
     };
     readonly spinner: {
         readonly label: string;
@@ -599,6 +600,7 @@ export const ICONS = {
     refresh: '<path d="M3 12a9 9 0 0 1 15-6.7L21 8" /><path d="M21 3v5h-5" /><path d="M21 12a9 9 0 0 1-15 6.7L3 16" /><path d="M3 21v-5h5" />',
     play: '<path d="M6 4l14 8-14 8z" />',
     pause: '<path d="M7 4v16M17 4v16" />',
+    stop: '<rect x="7" y="7" width="10" height="10" rx="1.5" fill="currentColor" />',
     cmd: '<path d="M9 9h6v6H9zM6 9V7a3 3 0 1 1 3 3H6zM6 15v2a3 3 0 1 0 3-3H6zM18 9V7a3 3 0 1 0-3 3h3zM18 15v2a3 3 0 1 1-3-3h3z" />',
     paperclip: '<path d="m21 11-9 9a5 5 0 0 1-7-7l9-9a3 3 0 0 1 4 4l-9 9a1 1 0 0 1-1-1l8-8" />',
     file: '<path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z" /><path d="M14 3v6h6" />',

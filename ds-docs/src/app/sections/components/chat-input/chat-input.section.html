@@ -155,6 +155,26 @@
       <div class="state-cell-stage">
         <ds-chat-input
           placeholder="Describe a change…"
+          busyLabel="Rebuilding"
+          busy
+          stoppable>
+          <ds-icon-button
+            actions
+            icon="paperclip"
+            size="sm"
+            ariaLabel="Attach a file" />
+        </ds-chat-input>
+      </div>
+
+      <div class="state-cell-label">
+        Busy · stoppable
+      </div>
+    </div>
+
+    <div class="state-cell">
+      <div class="state-cell-stage">
+        <ds-chat-input
+          placeholder="Describe a change…"
           value="Waiting for access"
           disabled>
           <ds-icon-button
@@ -272,7 +292,8 @@
 
   <p class="block-desc t-s">
     Type and press Enter to send, Shift+Enter for a new line, paste an image to
-    see it become a chip. Toggle busy to watch the button keep its place.
+    see it become a chip. Toggle busy to watch the button keep its place, and
+    press Stop to end the work.
   </p>
 
   <div class="playground">
@@ -283,8 +304,10 @@
     <ds-chat-input
       placeholder="Describe a change…"
       busyLabel="Rebuilding"
+      stoppable
       [busy]="busy()"
       [(value)]="draft"
+      (stopRequested)="busy.set(false)"
       (submitted)="send($event)"
       (filesPasted)="addPasted($event)">
       @for (name of pasted(); track name) {
