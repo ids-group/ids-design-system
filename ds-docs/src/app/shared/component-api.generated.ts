@@ -135,6 +135,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Override the variant's default icon."
       },
       {
+        "name": "fullWidth",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Fills the container instead of hugging its content."
+      },
+      {
         "name": "announce",
         "kind": "input",
         "type": "boolean | null",
@@ -3040,6 +3049,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Work in flight: the send button keeps its place, shows a spinner and refuses to submit, and Enter does not submit. The text area stays editable."
       },
       {
+        "name": "stoppable",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "While `busy`, the default send button becomes Stop: a square inside a turning ring that emits `stopRequested`."
+      },
+      {
         "name": "busyLabel",
         "kind": "input",
         "type": "string",
@@ -3073,6 +3091,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": null,
         "required": false,
         "description": "The trimmed text, on Enter or the send button. Never fires for blank text, while `busy` or while `disabled`."
+      },
+      {
+        "name": "stopRequested",
+        "kind": "output",
+        "type": "void",
+        "union": null,
+        "default": null,
+        "required": false,
+        "description": "The Stop button was pressed; fires only while `busy`, `stoppable` and not `disabled`."
       },
       {
         "name": "filesPasted",

@@ -12,5 +12,5 @@ Methods: `submit()`, `focus(options?)`; `canSubmit` signal. Text area name: `ari
 Tokens: `--ds-chat-input-bg-color`, `--ds-chat-input-radius`, `--ds-chat-input-padding`; border, hover and focus follow the `--ds-field-*` set.
 
 <!-- inputs:ds-chat-input -->
-All inputs: `value: string = ''`, `placeholder: string = ''`, `ariaLabel: string | null = null`, `minRows: number = 1`, `maxRows: number = 8`, `disabled: boolean = false`, `busy: boolean = false`, `busyLabel: string = ''`, `layout: ChatInputLayout = 'status-bar'`
+All inputs: `value: string = ''`, `placeholder: string = ''`, `ariaLabel: string | null = null`, `minRows: number = 1`, `maxRows: number = 8`, `disabled: boolean = false`, `busy: boolean = false`, `stoppable: boolean = false`, `busyLabel: string = ''`, `layout: ChatInputLayout = 'status-bar'`
 <!-- /inputs -->
