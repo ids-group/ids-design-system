@@ -55,7 +55,7 @@
           [class.stop]="stopShown()"
           [icon]="stopShown() ? 'stop' : 'arrowUp'"
           [ariaLabel]="stopShown() ? stopLabel() : sendLabel()"
-          [disabled]="!busy() && !canSubmit()"
+          [disabled]="disabled()"
           [loading]="busy() && !stopShown()"
           (pressed)="onSendPressed()" />
       </ng-content>

@@ -34,6 +34,12 @@
 
 ### Changed
 
+- **The `ds-chat-input` send button stays enabled while the text is blank.** It keeps its colour
+  from an empty box to a typed message and back, where it turned gray and disabled. Pressed while the
+  text is blank it sends nothing and moves the focus to the text area; Enter on blank text sends
+  nothing, as before. `disabled` still disables it. Nothing to change in your code; a `[send]` slot
+  of your own keeps the state you bind.
+
 - **Field outlines meet 3:1 (WCAG 1.4.11).** `ds-input`, `ds-textarea`, `ds-select`,
   `ds-multi-select`, `ds-autocomplete`, `ds-search`, `ds-chat-input`, the `ds-date-picker`,
   `ds-time-picker` and `ds-color-picker` triggers, `ds-number-stepper`, the `ds-otp-input` cells
