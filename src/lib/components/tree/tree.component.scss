@@ -66,7 +66,8 @@
   color: var(--_tree-caret-icon-color);
 }
 
-.caret-spacer {
+.caret-spacer,
+.icon-spacer {
   flex: none;
   width: var(--space-4);
 }
