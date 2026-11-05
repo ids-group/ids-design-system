@@ -13,7 +13,7 @@ One file per released version — `migrations/<version>.json` — mirroring that
                "verify": "<the positive assertion that proves this landed>",
                "restore": "<literal snippet that brings the old behaviour back | null>",
                "supersedes": ["<version>#<id>"],
-               "evidence": ["commit:<sha> | fixture:<path> | pixels:<block id> | tokens:<name> | command:<shell>"] } ],
+               "evidence": ["fixture:<path> | pixels:<block id> | tokens:<name> | command:<shell>"] } ],
   "deleteList": [ { "id": "<slug>", "surface": "<surface>", "find": ["<shape>", "..."],
                     "why": "<what made it unnecessary>",
                     "replaceWith": "<the API that replaces it>" } ],
@@ -52,11 +52,11 @@ One file per released version — `migrations/<version>.json` — mirroring that
 - **`pitfall`** — the way to apply the item mechanically correctly and still ship a broken app.
   Read it before deciding a clean build means done.
 - **`evidence`** - what measured the outcome the entry's prose asserts: that rendering or behaviour
-  did not change, a compile outcome, or a count of things. `commit:<sha>` inside the boundary the
-  manifest describes, `fixture:<path>` under `migrations/fixtures/`, `pixels:<docs block id>`
-  (`<section anchor>/<chapter slug>`, such as `button/sizes`, whose pixels did not change across
-  the boundary), `tokens:<token name>`, or `command:<shell command>`. Optional on an item and on an object-form
-  `informational` entry, and required wherever the prose makes such a claim.
+  did not change, a compile outcome, or a count of things. `fixture:<path>` under
+  `migrations/fixtures/`, `pixels:<docs block id>` (`<section anchor>/<chapter slug>`, such as
+  `button/sizes`, whose pixels did not change across the boundary), `tokens:<token name>`, or
+  `command:<shell command>`. Optional on an item and on an object-form `informational` entry, and
+  required wherever the prose makes such a claim.
 - **`deleteList`** - rows in published manifests; not written for new entries (see below).
 - **`informational`** — a non-actionable FYI, a bare string or `{ "text": "...", "verify": "..." }`
   where `verify` is the one eyeball check for a change to rendering alone (no symbol for a grep or

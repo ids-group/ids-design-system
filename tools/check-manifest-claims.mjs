@@ -15,9 +15,9 @@
 //                   pickers") far more often than a tally.
 //
 // A claim passes when its item or object-form informational entry carries `evidence`, an array
-// of `commit:<sha>` (inside the boundary the manifest describes), `fixture:<path>` (a file under
-// migrations/fixtures/), `pixels:<docs block id>`, `tokens:<token name>` or `command:<shell
-// command>`. Each entry's shape is checked, and the referent of `commit:` and `fixture:`.
+// of `fixture:<path>` (a file under migrations/fixtures/), `pixels:<docs block id>`,
+// `tokens:<token name>` or `command:<shell command>`. Each entry's shape is checked, and the
+// referent of `fixture:`. A manifest ships to readers without the repository, so no commit is cited.
 //
 // CHANGELOG prose cannot carry evidence. A `## Unreleased` entry whose sentence fires a rule
 // passes only when an evidence-carrying entry of `migrations/unreleased.json` fires the same rule
@@ -33,12 +33,10 @@
 //
 //   node tools/check-manifest-claims.mjs           # unreleased.json and ## Unreleased, fails on a hit
 //   node tools/check-manifest-claims.mjs --audit   # every published manifest and block, reports only
-import { execFileSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
 import { existsSync, readFileSync, readdirSync, statSync } from 'node:fs';
 import { dirname, join, relative, resolve, sep } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
-import { previousBoundary, releaseTags } from './release-tags.mjs';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 // Overridable so the selftest reads private copies and never writes a tracked file.
@@ -141,66 +139,23 @@ function claimsIn(text, field) {
   return found;
 }
 
-const git = (args) =>
-  execFileSync('git', ['-C', ROOT, ...args], {
-    encoding: 'utf8',
-    stdio: ['ignore', 'pipe', 'ignore'],
-  }).trim();
-const isAncestor = (commit, tag) => {
-  try {
-    git(['merge-base', '--is-ancestor', commit, tag]);
-    return true;
-  } catch {
-    return false;
-  }
-};
-
-const TAGS = releaseTags(ROOT);
-
-// `[from, to]`: the tag before the boundary and the ref at its end. `from` is null for the first
-// release, which has no earlier tag to exclude.
-function boundaryOf(name) {
-  if (name === 'unreleased') return [TAGS.at(-1) ?? null, 'HEAD'];
-  if (!TAGS.includes(`v${name}`)) return null;
-  return [previousBoundary(TAGS, name), `v${name}`];
-}
-
-function evidenceProblems(evidence, boundary) {
+function evidenceProblems(evidence) {
   if (evidence === undefined) return [];
   if (!Array.isArray(evidence) || !evidence.length)
     return ['`evidence` must be a non-empty array of strings'];
   const problems = [];
   for (const entry of evidence) {
-    const shape = /^(commit|fixture|pixels|tokens|command):(.+)$/s.exec(
+    const shape = /^(fixture|pixels|tokens|command):(.+)$/s.exec(
       typeof entry === 'string' ? entry.trim() : '',
     );
     if (!shape) {
       problems.push(
-        `evidence ${JSON.stringify(entry)} is not commit:, fixture:, pixels:, tokens: or command:`,
+        `evidence ${JSON.stringify(entry)} is not fixture:, pixels:, tokens: or command:`,
       );
       continue;
     }
     const [, kind, value] = shape;
-    if (kind === 'commit') {
-      let commit;
-      try {
-        commit = git(['rev-parse', '--verify', '--quiet', `${value}^{commit}`]);
-      } catch {
-        problems.push(`evidence ${entry}: no such commit`);
-        continue;
-      }
-      if (!boundary) {
-        problems.push(
-          `evidence ${entry}: this manifest has no tag to bound the commit`,
-        );
-        continue;
-      }
-      const [from, to] = boundary;
-      if (!isAncestor(commit, to) || (from && isAncestor(commit, from)))
-        problems.push(
-          `evidence ${entry}: not inside ${from ?? '<root>'}..${to}, the boundary this manifest describes`,
-        );
-    } else if (kind === 'fixture') {
+    if (kind === 'fixture') {
       // A leading `migrations/fixtures/` is accepted, so the path can be copied from the repository root.
       const path = resolve(
         FIXTURES,
@@ -255,11 +210,10 @@ function checkManifest(name) {
   // Named as in the repository even when DS_MIGRATIONS_DIR points elsewhere, so a ledger entry matches.
   const where = `migrations/${name}.json`;
   const manifest = JSON.parse(readFileSync(path, 'utf8'));
-  const boundary = boundaryOf(name);
   const hits = [];
   const backed = [];
   for (const record of entriesOf(manifest)) {
-    for (const problem of evidenceProblems(record.evidence, boundary))
+    for (const problem of evidenceProblems(record.evidence))
       hits.push({
         where,
         version: name,
@@ -472,7 +426,7 @@ function strict() {
   if (hits.length || changelogHits.length) {
     console.error(
       `\ncheck-manifest-claims: ${hits.length + changelogHits.length} unmeasured claim(s). Measure it and ` +
-        'add `evidence` to the manifest item or informational entry that makes the claim - commit:, ' +
+        'add `evidence` to the manifest item or informational entry that makes the claim - ' +
         'fixture:, pixels:, tokens: or command: (migrations/README.md). A CHANGELOG sentence is backed ' +
         'by an evidence-carrying entry of migrations/unreleased.json that makes the same claim and ' +
         'names one of its code spans. Or drop the claim.',
