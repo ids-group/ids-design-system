@@ -18,6 +18,11 @@
   text the template renders is the row's accessible name: a template that draws no text needs a
   visually hidden element carrying the name. Without the template a row renders as before. New
   exports `TreeLabelDirective` and `TreeLabelContext`.
+- **Six icons: `mouse-pointer`, `pencil-ruler`, `columns`, `history`, `flask` and `panel-right`.**
+  An arrow cursor for picking an element, a pencil and ruler for opening a design, two columns for a
+  side-by-side compare, a clock with a back arrow for history and restore, a flask for an
+  experimental feature, and a frame with a right panel for showing or hiding a side panel. They
+  are drawn from Lucide (ISC) on the 24-unit grid and take the set's stroke.
 
 ### Changed
 
