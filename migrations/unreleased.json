@@ -60,6 +60,53 @@
         "tokens:--surface-overlay-raised-tint",
         "tokens:--accent-strong-overlay"
       ]
+    },
+    {
+      "id": "chat-message-role-system-for-readers",
+      "kind": "behavior",
+      "old": "ChatMessageRole",
+      "new": null,
+      "surface": [
+        "typescript"
+      ],
+      "searchHints": [
+        "ChatMessageRole"
+      ],
+      "detect": [
+        "ChatMessageRole"
+      ],
+      "action": "None, unless code of yours reads a `ChatMessageRole` back and must cover every role: add a branch, a case or a key for `'system'` there.",
+      "appliesWhen": "Code that reads a `ChatMessageRole` back: a `switch` covering `'user'` and `'assistant'` in a function with a return type fails with TS2366, an exhaustiveness check against `never` with TS2322, and a `Record<ChatMessageRole, ...>` literal without a `system` key with TS2741. Code that only writes a role into `ds-chat-message` compiles as before.",
+      "pitfall": "The release reads as a new capability, and only the type-checker of whoever reads the role back finds it, after the bump is installed.",
+      "note": "`ChatMessageRole` went from `'user' | 'assistant'` to `'user' | 'assistant' | 'system'`.",
+      "verify": "Every place of yours that maps a `ChatMessageRole` to a label, a class or an avatar handles `'system'`.",
+      "evidence": [
+        "fixture:unreleased/chat-message-role-system-for-readers.ts"
+      ]
+    },
+    {
+      "id": "chat-steps-paced-by-default",
+      "kind": "behavior",
+      "old": "ds-chat-steps",
+      "new": null,
+      "surface": [
+        "template"
+      ],
+      "searchHints": [
+        "ds-chat-steps",
+        "ChatStepsComponent"
+      ],
+      "detect": [
+        "<ds-chat-steps"
+      ],
+      "action": "None, unless a screen or a test must draw a step's final status the moment `status` is set: set `[minRunningMs]=\"0\"` and `[revealStaggerMs]=\"0\"` on that `ds-chat-steps`.",
+      "appliesWhen": "A `ds-chat-step` inside a `ds-chat-steps` whose `status` turns to `done` or `error` keeps drawing as running until it has for at least `minRunningMs` (default `600`), and two steps of one `ds-chat-steps` draw their final status at least `revealStaggerMs` (default `300`) apart. A step outside a `ds-chat-steps`, the first render, a change to any other status and `prefers-reduced-motion: reduce` draw at once. The `status` input and everything bound to it change when you set them; only the drawn marker, label and host `data-status` wait.",
+      "pitfall": "A test that sets a step to `done` and at once asserts its `data-status`, its icon or its status label now sees `running` for up to 600ms.",
+      "restore": "<ds-chat-steps [minRunningMs]=\"0\" [revealStaggerMs]=\"0\">",
+      "verify": "Set three steps of a `ds-chat-steps` from `pending` to `done` in one change: they turn done one after another, not together.",
+      "evidence": [
+        "command:node tools/public-api-golden.mjs --diff v1.1.0"
+      ]
     }
   ],
   "informational": [
@@ -110,13 +157,14 @@
       "verify": "Open a `ds-tree` where only some nodes have an icon: the labels of sibling rows start at the same x."
     },
     {
-      "text": "A `ds-chat-step` that finishes at once shows as running for at least 600ms, and steps of one `ds-chat-steps` show their final status at least 300ms apart; `minRunningMs` and `revealStaggerMs` on `ds-chat-steps` set the two times, `0` turns each off. Under reduced motion the final status shows at once. Nothing to change in your code.",
-      "verify": "Set three steps of a `ds-chat-steps` from `pending` to `done` in one change: they turn done one after another, not together."
+      "text": "`minRows` and `maxRows` of an `autosize` `ds-textarea` (and `ds-chat-input`) count lines of text without the field's block padding: `minRows=\"2\"` shows two full lines, and a field with `maxRows` grows up to its block padding taller (24px at the default size, 8px in a `ds-chat-input`) before it scrolls. Nothing to change in your code.",
+      "verify": "Give an `autosize` `ds-textarea` `minRows=\"2\"`: the empty field shows two full lines."
     },
     {
-      "text": "`minRows` and `maxRows` of an `autosize` `ds-textarea` (and `ds-chat-input`) count lines of text without the field's block padding: `minRows=\"2\"` shows two full lines, and a field with `maxRows` grows up to its padding taller (8px at the default size) before it scrolls. Nothing to change in your code.",
-      "verify": "Give an `autosize` `ds-textarea` `minRows=\"2\"`: the empty field shows two full lines."
-    }
+      "text": "`ds-chat-message` takes `role=\"system\"` for a notice from the app: quiet centred text in `--text-secondary` at `--font-size-xs` with no bubble, coloured by the new `--ds-chat-message-system-color`, and spoken as the optional `DsIntl.chat.system` (`'Notice'`) when it has no `author`. Code that reads a `ChatMessageRole` back is the `chat-message-role-system-for-readers` item.",
+      "verify": "Put a `ds-chat-message` with `role=\"system\"` between two replies: it shows as centred small text without a bubble and splits the run."
+    },
+    "`ds-chat-thread` reads `--ds-chat-thread-inset-bottom` (default `0px`): set it to the height of what floats over the thread's bottom edge, and the last message scrolls clear of it and the jump button sits above it. Nothing to change in your code."
   ],
   "deleteList": []
 }

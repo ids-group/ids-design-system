@@ -43,8 +43,8 @@
 
 ### Changed
 
-- **Steps of a `ds-chat-steps` that finish at once settle one after another.** A step that goes
-  from `pending` or `running` straight to `done` or `error` shows as running for at least 600ms,
+- **Steps of a `ds-chat-steps` that finish at once settle one after another.** A step whose
+  `status` turns to `done` or `error` keeps showing as running until it has for at least 600ms,
   and two steps show their final status at least 300ms apart, so a batch that finishes together
   reads as a sequence. Under `prefers-reduced-motion: reduce` the final status shows at once. Only
   what is drawn waits: `status` and everything bound to it change when you set them. New inputs
@@ -55,7 +55,6 @@
   text is blank it sends nothing and moves the focus to the text area; Enter on blank text sends
   nothing, as before. `disabled` still disables it. Nothing to change in your code; a `[send]` slot
   of your own keeps the state you bind.
-
 - **Field outlines meet 3:1 (WCAG 1.4.11).** `ds-input`, `ds-textarea`, `ds-select`,
   `ds-multi-select`, `ds-autocomplete`, `ds-search`, `ds-chat-input`, the `ds-date-picker`,
   `ds-time-picker` and `ds-color-picker` triggers, `ds-number-stepper`, the `ds-otp-input` cells
@@ -91,7 +90,6 @@
   `icon` started its label 24px left of a sibling with one. When any node in `nodes` has an icon,
   every row keeps a 16px slot for it, empty where the node has none, and the label follows the slot.
   A tree where every node or no node has an icon renders as before. Nothing to change in your code.
-
 - **The `ds-alert` icon sits by the first line.** It centred on the whole alert, so with a title
   and a message, a long message or actions it stood halfway down the alert. It now centres on the
   title, or on the first line of the message when there is no title. Nothing to change in your
@@ -101,9 +99,10 @@
   shrank on the first character. The placeholder wraps over up to `minRows` lines and ends in an
   ellipsis after the last; the height follows `minRows` and the text.
 - **`minRows` and `maxRows` of an `autosize` `ds-textarea` count lines of text.** The field's
-  block padding counted against them, so `minRows="2"` showed 1.6 lines and `maxRows="8"` scrolled
-  after 7.6. An `autosize` field with `maxRows` now grows up to its padding taller before it
-  scrolls, by 8px at the default size. Nothing to change in your code.
+  block padding counted against them, so `minRows="2"` showed less than two lines of text and a
+  field with `maxRows` scrolled before that many. An `autosize` field with `maxRows` now grows up to
+  its block padding taller before it scrolls: 24px at the default size, 8px in a `ds-chat-input`.
+  Nothing to change in your code.
 - **A `ds-splitter` drag ends when it is released over an iframe or an embedded webview.** Such a
   document took the pointer away from the handle, so the release never arrived: the page kept the
   resize cursor on every element and blocked text selection until the next click. While a handle is
