@@ -23,6 +23,11 @@
   side-by-side compare, a clock with a back arrow for history and restore, a flask for an
   experimental feature, and a frame with a right panel for showing or hiding a side panel. They
   are drawn from Lucide (ISC) on the 24-unit grid and take the set's stroke.
+- **`ds-chat-input` offers Stop while it is busy.** With `stoppable` set and `busy` on, the default
+  send button shows a square inside a turning ring, stays enabled and emits `stopRequested` when
+  pressed; its accessible name is the new `DsIntl` key `chatInput.stop` (`'Stop'`). Enter still
+  does not submit while busy, and a `disabled` input keeps the spinner. Without `stoppable` the
+  busy button renders as before. New icon `stop`.
 
 ### Changed
 
