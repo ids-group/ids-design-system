@@ -68,7 +68,7 @@
     "`ds-tree` takes `<ng-template dsTreeLabel let-node>` (`TreeLabelDirective`, `TreeLabelContext`) for the label of every row. Nothing to change in your code.",
     "Six icons are added: `mouse-pointer`, `pencil-ruler`, `columns`, `history`, `flask` and `panel-right`. Nothing to change in your code.",
     {
-      "text": "An empty `ds-chat-input`, or an empty `autosize` `ds-textarea`, is one line of text tall: its placeholder takes one line and ends in an ellipsis, and the height follows `minRows` and the text. Nothing to change in your code.",
+      "text": "An empty `ds-chat-input`, or an empty `autosize` `ds-textarea`, is as tall as one character typed into it: its placeholder wraps over up to `minRows` lines and ends in an ellipsis after the last, and the height follows `minRows` and the text. Nothing to change in your code.",
       "verify": "Give a narrow `ds-chat-input` a placeholder longer than the field and type one character: the field keeps its height."
     },
     {
@@ -100,6 +100,10 @@
     {
       "text": "The `ds-alert` icon centres on the title, or on the first line of the message when there is no title, where it centred on the whole alert. Nothing to change in your code.",
       "verify": "Open a `ds-alert` with a title and a message: the icon sits level with the title."
+    },
+    {
+      "text": "`minRows` and `maxRows` of an `autosize` `ds-textarea` (and `ds-chat-input`) count lines of text without the field's block padding: `minRows=\"2\"` shows two full lines, and a field with `maxRows` grows up to its padding taller (8px at the default size) before it scrolls. Nothing to change in your code.",
+      "verify": "Give an `autosize` `ds-textarea` `minRows=\"2\"`: the empty field shows two full lines."
     }
   ],
   "deleteList": []

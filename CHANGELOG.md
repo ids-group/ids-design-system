@@ -71,8 +71,12 @@
   code.
 - **An empty `ds-chat-input`, or an empty `autosize` `ds-textarea`, is as tall as one character
   typed into it.** A placeholder longer than the field wrapped and set the height, so the field
-  shrank on the first character. The placeholder takes one line and ends in an ellipsis; the height
-  follows `minRows` and the text.
+  shrank on the first character. The placeholder wraps over up to `minRows` lines and ends in an
+  ellipsis after the last; the height follows `minRows` and the text.
+- **`minRows` and `maxRows` of an `autosize` `ds-textarea` count lines of text.** The field's
+  block padding counted against them, so `minRows="2"` showed 1.6 lines and `maxRows="8"` scrolled
+  after 7.6. An `autosize` field with `maxRows` now grows up to its padding taller before it
+  scrolls, by 8px at the default size. Nothing to change in your code.
 - **A `ds-splitter` drag ends when it is released over an iframe or an embedded webview.** Such a
   document took the pointer away from the handle, so the release never arrived: the page kept the
   resize cursor on every element and blocked text selection until the next click. While a handle is

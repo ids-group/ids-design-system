@@ -39,7 +39,9 @@
     @if (placeholderLineShown()) {
       <div
         class="placeholder-line"
-        aria-hidden="true">
+        aria-hidden="true"
+        [class.wraps]="placeholderRows() > 1"
+        [style.--_placeholder-rows]="placeholderRows()">
         {{ placeholder() }}
       </div>
     }

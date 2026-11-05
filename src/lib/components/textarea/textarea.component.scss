@@ -127,6 +127,9 @@
     textarea {
       field-sizing: content;
 
+      /* `minRows` and `maxRows` count lines of text, so the block padding sits outside them. */
+      box-sizing: content-box;
+
       // glyph-clip-guard: the textarea grows to its content, so nothing reaches the edge
       overflow: hidden;
 
@@ -150,6 +153,17 @@
     color: var(--_input-placeholder);
     pointer-events: none;
     user-select: none;
+
+    &.wraps {
+      display: -webkit-box;
+      -webkit-box-orient: vertical;
+
+      // glyph-clip-guard: the clip edge is the textarea's own line box, which clips its text at the same place
+      -webkit-line-clamp: var(--_placeholder-rows);
+      overflow: clip;
+      overflow-clip-margin: content-box;
+      white-space: normal;
+    }
   }
 
   .field-footer {
