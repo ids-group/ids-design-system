@@ -103,6 +103,7 @@ export type ChatMessageStatus = 'sending' | 'sent' | 'failed';
 
 @Component({ selector: 'ds-chat-step' })
 export class ChatStepComponent {
+    public constructor();
     protected readonly detailsId = `ds-chat-step-${++nextId}-details`;
     protected readonly detailsLabel = computed(…);
     public readonly expanded = model<boolean>(false);
@@ -111,6 +112,10 @@ export class ChatStepComponent {
     protected readonly isFirst = computed(…);
     protected readonly isLast = computed(…);
     protected readonly nodeIcon = computed<IconName | null>(…);
+    private runningSince;
+    private settleTimer;
+    private show;
+    protected readonly shownStatus = signal<ChatStepStatus | null>(…);
     public readonly status = input<ChatStepStatus | null>(null);
     protected readonly statusLabel = computed(…);
     protected readonly steps = inject(…);
@@ -126,7 +131,11 @@ export class ChatStepsComponent {
     public readonly enter = input<ChatStepsEnter>('together');
     public readonly firstStep = computed<object | undefined>(…);
     private readonly items;
+    private lastSettle;
     public readonly lastStep = computed<object | undefined>(…);
+    public readonly minRunningMs = input(600);
+    public readonly revealStaggerMs = input(300);
+    public settleDelay(runningSince: number): number;
 }
 
 export type ChatStepsEnter = 'together' | 'stagger';
