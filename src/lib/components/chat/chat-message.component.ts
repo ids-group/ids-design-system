@@ -287,9 +287,10 @@ export class ChatMessageComponent {
     });
   }
 
-  // Folding, the steps shrink toward the chip as the chip grows at the top of the bubble; opening,
-  // the steps grow back above it. Both run on height and the gap under the steps, so the bubble and
-  // its text move with the layout rather than jumping. The chip stays once shown, to fold the steps again.
+  // Folding, the chip at the top of the bubble rises into the steps: their height closes from the bottom, so
+  // the rows nearest the chip slide under it first, unsquashed, and the last ones fade as it reaches the
+  // top. The bubble rides up with the layout, and a new chip opens in the first third so it leads the move.
+  // Opening plays it back, the rows sliding out from under the chip. One duration and one easing throughout.
   private applyFold(folded: boolean, animate: boolean): void {
     const host = this.host.nativeElement;
     if (host.classList.contains('steps-folded') === folded) {
@@ -307,76 +308,35 @@ export class ChatMessageComponent {
       return;
     }
     const timing: KeyframeAnimationOptions = {
-      duration: 380,
-      easing: 'cubic-bezier(0.34, 1.25, 0.64, 1)',
+      duration: 360,
+      easing: 'cubic-bezier(0.2, 0, 0, 1)',
     };
     if (chip && chipNew) {
-      const chipHeight = chip.getBoundingClientRect().height;
+      const chipHeight = `${chip.getBoundingClientRect().height}px`;
       chip.animate(
         [
-          {
-            height: '0px',
-            opacity: 0,
-            transform: 'scale(0.9)',
-            overflow: 'hidden',
-          },
-          {
-            height: `${chipHeight}px`,
-            opacity: 1,
-            transform: 'none',
-            overflow: 'hidden',
-          },
-        ],
-        { ...timing, easing: 'cubic-bezier(0.2, 0, 0, 1)' },
-      );
-    }
-    if (folded) {
-      const height = steps.getBoundingClientRect().height;
-      const margin = getComputedStyle(steps).marginBottom;
-      steps.style.transformOrigin = 'bottom left';
-      steps.animate(
-        [
-          {
-            height: `${height}px`,
-            marginBottom: margin,
-            opacity: 1,
-            transform: 'none',
-            overflow: 'hidden',
-          },
-          {
-            height: '0px',
-            marginBottom: '0px',
-            opacity: 0,
-            transform: 'scale(0.6)',
-            overflow: 'hidden',
-          },
-        ],
-        { duration: 380, easing: 'cubic-bezier(0.2, 0, 0, 1)' },
-      ).onfinish = () => host.classList.toggle('steps-folded', this.folded());
-    } else {
-      host.classList.remove('steps-folded');
-      const height = steps.getBoundingClientRect().height;
-      const margin = getComputedStyle(steps).marginBottom;
-      steps.style.transformOrigin = 'bottom left';
-      steps.animate(
-        [
-          {
-            height: '0px',
-            marginBottom: '0px',
-            opacity: 0,
-            transform: 'scale(0.6)',
-            overflow: 'hidden',
-          },
-          {
-            height: `${height}px`,
-            marginBottom: margin,
-            opacity: 1,
-            transform: 'none',
-            overflow: 'hidden',
-          },
+          { height: '0px', opacity: 0, overflow: 'hidden' },
+          { height: chipHeight, opacity: 1, overflow: 'hidden', offset: 0.3 },
+          { height: chipHeight, opacity: 1, overflow: 'hidden' },
         ],
         timing,
       );
+    }
+    if (!folded) {
+      host.classList.remove('steps-folded');
+    }
+    const height = steps.getBoundingClientRect().height;
+    const margin = getComputedStyle(steps).marginBottom;
+    const open = { height: `${height}px`, marginBottom: margin, opacity: 1, overflow: 'hidden' };
+    const shut = { height: '0px', marginBottom: '0px', opacity: 0, overflow: 'hidden' };
+    const run = steps.animate(
+      folded
+        ? [open, { opacity: 1, offset: 0.7 }, shut]
+        : [shut, { opacity: 1, offset: 0.3 }, open],
+      timing,
+    );
+    if (folded) {
+      run.onfinish = () => host.classList.toggle('steps-folded', this.folded());
     }
   }
 }

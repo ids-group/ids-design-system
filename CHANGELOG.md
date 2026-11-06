@@ -54,6 +54,12 @@
 
 ### Changed
 
+- **Folding the steps of a `ds-chat-message` slides them under the chip.** The steps shrank toward a
+  corner at 60% scale while fading over 380ms, and the chip grew in on another easing. Now, over
+  360ms on one easing, their height closes from the bottom so the rows nearest the chip slide under it
+  first, unsquashed, and the last rows fade as the chip reaches the top; the bubble rides up with the
+  layout, and opening slides the rows back out. Under `prefers-reduced-motion: reduce` nothing
+  animates, as before. Nothing to change in your code.
 - **Steps of a `ds-chat-steps` that finish at once settle one after another.** A step whose
   `status` turns to `done` or `error` keeps showing as running until it has for at least 600ms,
   and two steps show their final status at least 300ms apart, so a batch that finishes together
@@ -98,6 +104,9 @@
 
 ### Fixed
 
+- **A `ds-chat-thread` is as wide on both sides with or without a scrollbar.** The scrollbar room it
+  keeps was added to the end padding, so the right side read wider than the left. The room, as wide as
+  the platform's scrollbar, now comes out of the end padding. Nothing to change in your code.
 - **A `ds-chat-thread` keeps its width when the messages start or stop overflowing it.** The
   scrollbar took its room from the messages only while they overflowed, so at the end of a fold that
   brought the list back inside the view every message rewrapped at a new width in one frame. The
