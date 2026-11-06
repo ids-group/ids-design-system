@@ -172,6 +172,10 @@
     {
       "text": "A `ds-chat-thread` keeps the room of its scrollbar while its messages fit, so they keep their width when the list starts or stops overflowing. Nothing to change in your code.",
       "verify": "Fill a `ds-chat-thread` until it scrolls, then remove messages until it fits: the messages keep their width and line breaks."
+    },
+    {
+      "text": "Folding the steps of a `ds-chat-message` fades them out over the first third of a 300ms fold while their height closes, with no scaling, and the chip fades in over the second half. Nothing to change in your code.",
+      "verify": "Send a message under a reply with steps: the steps fade without shrinking their text and the bubble rides up with no jump at the end."
     }
   ],
   "deleteList": []

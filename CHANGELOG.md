@@ -48,6 +48,12 @@
 
 ### Changed
 
+- **Folding the steps of a `ds-chat-message` fades them out and closes their height together.** The
+  steps shrank toward a corner at 60% scale while fading over 380ms, and the chip grew in on another
+  easing. Now the steps fade out over the first third of a 300ms fold while their height and the gap
+  under them close, the chip opens from the start and fades in over the second half, all on one
+  easing; opening plays it in reverse. Under `prefers-reduced-motion: reduce` nothing animates, as
+  before. Nothing to change in your code.
 - **Steps of a `ds-chat-steps` that finish at once settle one after another.** A step whose
   `status` turns to `done` or `error` keeps showing as running until it has for at least 600ms,
   and two steps show their final status at least 300ms apart, so a batch that finishes together
