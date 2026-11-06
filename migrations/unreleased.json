@@ -153,10 +153,6 @@
       "verify": "Open a `ds-alert` with a title and a message: the icon sits level with the title."
     },
     {
-      "text": "When any node of a `ds-tree` has an `icon`, every row keeps a 16px slot for it, empty where the node has none, so the labels of rows with and without an icon line up. A tree where every node or no node has an icon renders as before. Nothing to change in your code.",
-      "verify": "Open a `ds-tree` where only some nodes have an icon: the labels of sibling rows start at the same x."
-    },
-    {
       "text": "`minRows` and `maxRows` of an `autosize` `ds-textarea` (and `ds-chat-input`) count lines of text without the field's block padding: `minRows=\"2\"` shows two full lines, and a field with `maxRows` grows up to its block padding taller (24px at the default size, 8px in a `ds-chat-input`) before it scrolls. Nothing to change in your code.",
       "verify": "Give an `autosize` `ds-textarea` `minRows=\"2\"`: the empty field shows two full lines."
     },

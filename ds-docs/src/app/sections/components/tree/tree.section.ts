@@ -72,8 +72,8 @@ export class TreeSection {
       label: 'Checkout',
       icon: 'file',
       children: [
-        { id: 'summary', label: 'Order summary' },
-        { id: 'payment', label: 'Payment form' },
+        { id: 'summary', label: 'Order summary', icon: 'box' },
+        { id: 'payment', label: 'Payment form', icon: 'box' },
         { id: 'pay', label: 'Pay button', icon: 'box' },
       ],
     },

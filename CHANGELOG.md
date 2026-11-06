@@ -91,10 +91,6 @@
 
 ### Fixed
 
-- **`ds-tree` lines up the labels of rows with and without an icon.** A row whose node had no
-  `icon` started its label 24px left of a sibling with one. When any node in `nodes` has an icon,
-  every row keeps a 16px slot for it, empty where the node has none, and the label follows the slot.
-  A tree where every node or no node has an icon renders as before. Nothing to change in your code.
 - **The `ds-alert` icon sits by the first line.** It centred on the whole alert, so with a title
   and a message, a long message or actions it stood halfway down the alert. It now centres on the
   title, or on the first line of the message when there is no title. Nothing to change in your
