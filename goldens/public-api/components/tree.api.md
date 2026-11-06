@@ -12,7 +12,6 @@ export class TreeComponent {
     public readonly expandedIds = model<Set<string>>(new Set());
     private focusNode;
     private fromTrailing;
-    protected readonly hasIcons = computed(…);
     private readonly host;
     protected hover(node: TreeNode | null): void;
     private hoveredId;
