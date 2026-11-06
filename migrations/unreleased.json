@@ -164,6 +164,10 @@
     {
       "text": "Folding or opening the steps of a `ds-chat-message` animates the gap under the steps with their height, so the bubble no longer moves 8px in the last frame. Nothing to change in your code.",
       "verify": "Send a message under a reply with steps: the reply's steps fold and the messages below settle without a jump at the end."
+    },
+    {
+      "text": "A `ds-chat-thread` keeps the room of its scrollbar while its messages fit, so they keep their width when the list starts or stops overflowing. Nothing to change in your code.",
+      "verify": "Fill a `ds-chat-thread` until it scrolls, then remove messages until it fits: the messages keep their width and line breaks."
     }
   ],
   "deleteList": []

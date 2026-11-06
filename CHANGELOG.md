@@ -92,6 +92,10 @@
 
 ### Fixed
 
+- **A `ds-chat-thread` keeps its width when the messages start or stop overflowing it.** The
+  scrollbar took its room from the messages only while they overflowed, so at the end of a fold that
+  brought the list back inside the view every message rewrapped at a new width in one frame. The
+  room is now always kept. Nothing to change in your code.
 - **Folding or opening the steps of a `ds-chat-message` ends without a jump.** The gap under the
   steps appeared or vanished at once at the end of the motion, so the bubble and every message below
   it moved 8px in one frame. The gap now shrinks and grows with the steps. Nothing to change in your
