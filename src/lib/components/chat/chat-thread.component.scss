@@ -30,6 +30,10 @@
   overflow-anchor: none;
   padding: var(--_chat-thread-padding);
   padding-block-end: calc(var(--_chat-thread-padding) + var(--_chat-thread-inset-bottom));
+
+  // The kept scrollbar room comes out of the end padding, so both sides read the same with or without a
+  // scrollbar.
+  padding-inline-end: max(0px, calc(var(--_chat-thread-padding) - var(--_chat-thread-gutter, 0px)));
 }
 
 .content {
