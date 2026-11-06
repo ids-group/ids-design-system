@@ -48,12 +48,12 @@
 
 ### Changed
 
-- **Folding the steps of a `ds-chat-message` turns them into the chip.** The steps shrank toward a
+- **Folding the steps of a `ds-chat-message` slides them under the chip.** The steps shrank toward a
   corner at 60% scale while fading over 380ms, and the chip grew in on another easing. Now, over
-  340ms on one easing, the steps close onto the chip's box with their rows clipped toward it, their
-  height and the gap under them close so the bubble rides up, and the chip's label fades in at the
-  end; opening plays it from the chip back to the steps. Under `prefers-reduced-motion: reduce`
-  nothing animates, as before. Nothing to change in your code.
+  360ms on one easing, their height closes from the bottom so the rows nearest the chip slide under it
+  first, unsquashed, and the last rows fade as the chip reaches the top; the bubble rides up with the
+  layout, and opening slides the rows back out. Under `prefers-reduced-motion: reduce` nothing
+  animates, as before. Nothing to change in your code.
 - **Steps of a `ds-chat-steps` that finish at once settle one after another.** A step whose
   `status` turns to `done` or `error` keeps showing as running until it has for at least 600ms,
   and two steps show their final status at least 300ms apart, so a batch that finishes together

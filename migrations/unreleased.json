@@ -174,8 +174,8 @@
       "verify": "Fill a `ds-chat-thread` until it scrolls, then remove messages until it fits: the messages keep their width and line breaks."
     },
     {
-      "text": "Folding the steps of a `ds-chat-message` morphs them into the steps chip over 340ms: their box shrinks and travels into the chip while their height closes, and the chip's label fades in at the end; opening plays it back. Nothing to change in your code.",
-      "verify": "Send a message under a reply with steps: the steps shrink into the chip at the top of the bubble with no jump, and a click on the chip grows them back out of it."
+      "text": "Folding the steps of a `ds-chat-message` closes their height from the bottom over 360ms, so the rows slide under the chip at the top of the bubble without scaling; opening slides them back out. Nothing to change in your code.",
+      "verify": "Send a message under a reply with steps: the rows slide under the chip with their text intact and the bubble rides up with no jump; a click on the chip slides them back out."
     },
     {
       "text": "A `ds-chat-thread` takes its kept scrollbar room out of its end padding, so both sides read the same with or without a scrollbar. Nothing to change in your code.",

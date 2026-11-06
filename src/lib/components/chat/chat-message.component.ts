@@ -287,10 +287,10 @@ export class ChatMessageComponent {
     });
   }
 
-  // Folding is a container transform: a copy of the steps, laid over them, closes onto the chip's box, its
-  // rows clipped toward it and fading out late, while the steps' real height and gap close
-  // underneath so the bubble rides up with the layout; the chip's label fades in over the last part.
-  // Opening plays it back from the chip to the steps. One duration and one easing for every part.
+  // Folding, the chip at the top of the bubble rises into the steps: their height closes from the bottom, so
+  // the rows nearest the chip slide under it first, unsquashed, and the last ones fade as it reaches the
+  // top. The bubble rides up with the layout, and a new chip opens in the first third so it leads the move.
+  // Opening plays it back, the rows sliding out from under the chip. One duration and one easing throughout.
   private applyFold(folded: boolean, animate: boolean): void {
     const host = this.host.nativeElement;
     if (host.classList.contains('steps-folded') === folded) {
@@ -302,94 +302,39 @@ export class ChatMessageComponent {
     );
     const chipNew = folded && !host.classList.contains('steps-chip-shown');
     host.classList.add('steps-chip-shown');
-    if (!animate || !this.motion() || !steps || !chip) {
+    if (!animate || !this.motion() || !steps) {
       host.classList.toggle('steps-folded', folded);
 
       return;
     }
     const timing: KeyframeAnimationOptions = {
-      duration: 340,
+      duration: 360,
       easing: 'cubic-bezier(0.2, 0, 0, 1)',
     };
-    if (!folded) {
-      host.classList.remove('steps-folded');
-    }
-    const origin = host.getBoundingClientRect();
-    const stepsBox = steps.getBoundingClientRect();
-    const chipBox = chip.getBoundingClientRect();
-    const margin = getComputedStyle(steps).marginBottom;
-    const lift = stepsBox.height + parseFloat(margin);
-    const stepsAt = {
-      left: `${stepsBox.left - origin.left}px`,
-      top: `${stepsBox.top - origin.top}px`,
-      width: `${stepsBox.width}px`,
-      height: `${stepsBox.height}px`,
-    };
-    // Folding, the chip ends where it sits once the steps above it have closed; opening, it starts there.
-    const chipAt = {
-      left: `${chipBox.left - origin.left}px`,
-      top: `${chipBox.top - origin.top - (folded ? lift : 0)}px`,
-      width: `${chipBox.width}px`,
-      height: `${chipBox.height}px`,
-    };
-    const chipLook = getComputedStyle(chip);
-    // The copy keeps the steps' size so its rows never rewrap; a clip closes it onto the chip's box.
-    const top = Math.max(0, parseFloat(chipAt.top) - parseFloat(stepsAt.top));
-    const left = Math.max(0, parseFloat(chipAt.left) - parseFloat(stepsAt.left));
-    const right = Math.max(0, stepsBox.width - left - chipBox.width);
-    const bottom = Math.max(0, stepsBox.height - top - chipBox.height);
-    const asSteps = { clipPath: 'inset(0px 0px 0px 0px round 0px)', backgroundColor: 'transparent' };
-    const asChip = {
-      clipPath: `inset(${top}px ${right}px ${bottom}px ${left}px round ${chipLook.borderRadius})`,
-      backgroundColor: chipLook.backgroundColor,
-    };
-
-    const ghost = steps.cloneNode(true) as HTMLElement;
-    ghost.setAttribute('aria-hidden', 'true');
-    Object.assign(ghost.style, {
-      position: 'absolute',
-      ...stepsAt,
-      margin: '0',
-      pointerEvents: 'none',
-      zIndex: '1',
-      boxSizing: 'border-box',
-    });
-    const placed = getComputedStyle(host).position === 'static';
-    if (placed) {
-      host.style.position = 'relative';
-    }
-    host.append(ghost);
-    const ghostRun = ghost.animate(
-      folded
-        ? [{ ...asSteps, opacity: 1 }, { opacity: 1, offset: 0.6 }, { ...asChip, opacity: 0 }]
-        : [{ ...asChip, opacity: 0 }, { opacity: 1, offset: 0.4 }, { ...asSteps, opacity: 1 }],
-      timing,
-    );
-
-    const open = { height: `${stepsBox.height}px`, marginBottom: margin };
-    const shut = { height: '0px', marginBottom: '0px' };
-    const run = steps.animate(
-      folded
-        ? [{ ...open, opacity: 0, overflow: 'hidden' }, { ...shut, opacity: 0, overflow: 'hidden' }]
-        : [{ ...shut, opacity: 0, overflow: 'hidden' }, { opacity: 0, offset: 0.85 }, { ...open, opacity: 1, overflow: 'hidden' }],
-      timing,
-    );
-    if (folded) {
+    if (chip && chipNew) {
+      const chipHeight = `${chip.getBoundingClientRect().height}px`;
       chip.animate(
         [
-          { ...(chipNew ? { height: '0px' } : {}), opacity: 0, overflow: 'hidden' },
-          { opacity: 0, offset: 0.6 },
-          { ...(chipNew ? { height: `${chipBox.height}px` } : {}), opacity: 1, overflow: 'hidden' },
+          { height: '0px', opacity: 0, overflow: 'hidden' },
+          { height: chipHeight, opacity: 1, overflow: 'hidden', offset: 0.3 },
+          { height: chipHeight, opacity: 1, overflow: 'hidden' },
         ],
         timing,
       );
     }
-    ghostRun.onfinish = ghostRun.oncancel = () => {
-      ghost.remove();
-      if (placed) {
-        host.style.removeProperty('position');
-      }
-    };
+    if (!folded) {
+      host.classList.remove('steps-folded');
+    }
+    const height = steps.getBoundingClientRect().height;
+    const margin = getComputedStyle(steps).marginBottom;
+    const open = { height: `${height}px`, marginBottom: margin, opacity: 1, overflow: 'hidden' };
+    const shut = { height: '0px', marginBottom: '0px', opacity: 0, overflow: 'hidden' };
+    const run = steps.animate(
+      folded
+        ? [open, { opacity: 1, offset: 0.7 }, shut]
+        : [shut, { opacity: 1, offset: 0.3 }, open],
+      timing,
+    );
     if (folded) {
       run.onfinish = () => host.classList.toggle('steps-folded', this.folded());
     }
