@@ -288,8 +288,8 @@ export class ChatMessageComponent {
   }
 
   // Folding, the steps shrink toward the chip as the chip grows at the top of the bubble; opening,
-  // the steps grow back above it. Both run on height, so the bubble and its text move with the
-  // layout rather than jumping. The chip stays once shown, to fold the steps again.
+  // the steps grow back above it. Both run on height and the gap under the steps, so the bubble and
+  // its text move with the layout rather than jumping. The chip stays once shown, to fold the steps again.
   private applyFold(folded: boolean, animate: boolean): void {
     const host = this.host.nativeElement;
     if (host.classList.contains('steps-folded') === folded) {
@@ -332,17 +332,20 @@ export class ChatMessageComponent {
     }
     if (folded) {
       const height = steps.getBoundingClientRect().height;
+      const margin = getComputedStyle(steps).marginBottom;
       steps.style.transformOrigin = 'bottom left';
       steps.animate(
         [
           {
             height: `${height}px`,
+            marginBottom: margin,
             opacity: 1,
             transform: 'none',
             overflow: 'hidden',
           },
           {
             height: '0px',
+            marginBottom: '0px',
             opacity: 0,
             transform: 'scale(0.6)',
             overflow: 'hidden',
@@ -353,17 +356,20 @@ export class ChatMessageComponent {
     } else {
       host.classList.remove('steps-folded');
       const height = steps.getBoundingClientRect().height;
+      const margin = getComputedStyle(steps).marginBottom;
       steps.style.transformOrigin = 'bottom left';
       steps.animate(
         [
           {
             height: '0px',
+            marginBottom: '0px',
             opacity: 0,
             transform: 'scale(0.6)',
             overflow: 'hidden',
           },
           {
             height: `${height}px`,
+            marginBottom: margin,
             opacity: 1,
             transform: 'none',
             overflow: 'hidden',

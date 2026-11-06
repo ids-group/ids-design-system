@@ -160,7 +160,11 @@
       "text": "`ds-chat-message` takes `role=\"system\"` for a notice from the app, centred between replies. `tone` (`ChatMessageTone`, default `'neutral'`) picks a quiet plaque for a routine note, or a card in the `'info'`, `'success'`, `'warning'` or `'error'` status colour with its icon; `title` adds a bold first line and `icon` sets the icon. The plaque is styled by `--ds-chat-message-system-color`, `--ds-chat-message-system-bg-color` and `--ds-chat-message-system-border-color`. Without `author` it is spoken as the optional `DsIntl.chat.system` (`'Notice'`). Code that reads a `ChatMessageRole` back is the `chat-message-role-system-for-readers` item.",
       "verify": "Put a `ds-chat-message` with `role=\"system\"` between two replies: it shows as a centred plaque of small text and splits the run; with `tone=\"warning\"` it turns into a warning-coloured card with the warning icon."
     },
-    "`ds-chat-thread` reads `--ds-chat-thread-inset-bottom` (default `0px`): set it to the height of what floats over the thread's bottom edge, and the last message scrolls clear of it and the jump button sits above it. Nothing to change in your code."
+    "`ds-chat-thread` reads `--ds-chat-thread-inset-bottom` (default `0px`): set it to the height of what floats over the thread's bottom edge, and the last message scrolls clear of it and the jump button sits above it. Nothing to change in your code.",
+    {
+      "text": "Folding or opening the steps of a `ds-chat-message` animates the gap under the steps with their height, so the bubble no longer moves 8px in the last frame. Nothing to change in your code.",
+      "verify": "Send a message under a reply with steps: the reply's steps fold and the messages below settle without a jump at the end."
+    }
   ],
   "deleteList": []
 }
