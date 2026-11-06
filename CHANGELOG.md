@@ -48,12 +48,12 @@
 
 ### Changed
 
-- **Folding the steps of a `ds-chat-message` fades them out and closes their height together.** The
-  steps shrank toward a corner at 60% scale while fading over 380ms, and the chip grew in on another
-  easing. Now the steps fade out over the first third of a 300ms fold while their height and the gap
-  under them close, the chip opens from the start and fades in over the second half, all on one
-  easing; opening plays it in reverse. Under `prefers-reduced-motion: reduce` nothing animates, as
-  before. Nothing to change in your code.
+- **Folding the steps of a `ds-chat-message` turns them into the chip.** The steps shrank toward a
+  corner at 60% scale while fading over 380ms, and the chip grew in on another easing. Now, over
+  340ms on one easing, the steps close onto the chip's box with their rows clipped toward it, their
+  height and the gap under them close so the bubble rides up, and the chip's label fades in at the
+  end; opening plays it from the chip back to the steps. Under `prefers-reduced-motion: reduce`
+  nothing animates, as before. Nothing to change in your code.
 - **Steps of a `ds-chat-steps` that finish at once settle one after another.** A step whose
   `status` turns to `done` or `error` keeps showing as running until it has for at least 600ms,
   and two steps show their final status at least 300ms apart, so a batch that finishes together
@@ -98,6 +98,9 @@
 
 ### Fixed
 
+- **A `ds-chat-thread` is as wide on both sides with or without a scrollbar.** The scrollbar room it
+  keeps was added to the end padding, so the right side read wider than the left. The room, as wide as
+  the platform's scrollbar, now comes out of the end padding. Nothing to change in your code.
 - **A `ds-chat-thread` keeps its width when the messages start or stop overflowing it.** The
   scrollbar took its room from the messages only while they overflowed, so at the end of a fold that
   brought the list back inside the view every message rewrapped at a new width in one frame. The
