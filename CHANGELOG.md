@@ -2,6 +2,12 @@
 
 ### Added
 
+- **`ds-splitter` shades the pane you drag towards, with `dragFog`.** While the handle moves, a fog
+  falls on the pane it moves towards, stronger the faster and farther the drag, and turns when the
+  hand turns. Past `min` or `max` it rides the rubber band with its pane; it fades when the hand stops
+  or lets go, and a splitter at rest paints as before. Off by default and under
+  `prefers-reduced-motion: reduce`. Its colour is the new CSS hook `--ds-splitter-fog-color`
+  (default `--text-primary` at 22%).
 - **`--surface-overlay-tint`, `--surface-overlay-raised-tint` and `--accent-strong-overlay`, the
   selected-row tint and its text inside an overlay.** Each equals `--surface-tint` in light. Under `data-theme="dark"` they mix 30% of
   `--primary` into the overlay fill: `color-mix(in srgb, var(--primary) 30%, var(--surface-overlay))`

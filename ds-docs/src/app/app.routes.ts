@@ -60,6 +60,13 @@ export const routes: Routes = [
               (m) => m.SplitterIframeHarnessPage,
             ),
         },
+        {
+          path: 'harness/splitter-fog',
+          loadComponent: () =>
+            import('./harness/splitter-fog.page').then(
+              (m) => m.SplitterFogHarnessPage,
+            ),
+        },
       ]
     : []),
   { path: ':area/:anchor', loadComponent: load },

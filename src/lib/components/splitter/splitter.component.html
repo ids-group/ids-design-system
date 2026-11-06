@@ -30,3 +30,17 @@
   [id]="endId">
   <ng-content select="[end]" />
 </div>
+
+@if (dragFog()) {
+  <div
+    #fogStart
+    class="fog fog-start"
+    aria-hidden="true">
+  </div>
+
+  <div
+    #fogEnd
+    class="fog fog-end"
+    aria-hidden="true">
+  </div>
+}
