@@ -79,8 +79,9 @@
   and the `ds-app-layout` rail below `lg` set `--surface-tint` and `--accent-surface-tint` to
   `--surface-overlay-tint` on themselves, and `ds-popover`, `ds-menu` in it and the dropdown panels
   of `ds-select`, `ds-multi-select` and `ds-autocomplete` to `--surface-overlay-raised-tint`. Under
-  `data-theme="dark"` the selected `ds-list-item`, the selected `ds-tree` row, the `ds-empty-state`
-  tile and any row of your own painted with `--surface-tint` read about 1.31:1 against a drawer
+  `data-theme="dark"` the selected `ds-list-item`, the selected `ds-tree` row, the selected option
+  of those dropdown panels, the `ds-empty-state` tile and any row of your own painted with
+  `--surface-tint` read about 1.31:1 against a drawer
   and 1.29:1 against a popover, where `--surface-tint` was darker than both (1.05:1 and 1.15:1).
   The same overlays set `--accent-strong` to `--accent-strong-overlay`, `--accent-strong` in light
   and `hsl(from var(--primary) h 90% 80%)` on dark, so a selected label keeps 4.5:1 on the lighter

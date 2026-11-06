@@ -452,9 +452,9 @@ styles/_dropdown-overlay.scss {
     --ds-option-padding: var(--space-2) var(--space-2-5);
     --ds-option-radius: var(--ds-radius-inner);
     --ds-option-row-gap: 2px;
-    --ds-option-selected-bg-color: var(--primary-subtitle);
+    --ds-option-selected-bg-color: var(--surface-overlay-raised-tint);
     --ds-option-selected-bg-color-hover: var(--primary-muted);
-    --ds-option-selected-label-color: var(--primary-strong);
+    --ds-option-selected-label-color: var(--accent-strong-overlay);
     --ds-typography-s-font-family: var(--font-sans);
     --ds-typography-s-font-weight: var(--font-weight-regular);
     --ds-typography-s-line-height: var(--line-height-base);
