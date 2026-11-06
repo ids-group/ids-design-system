@@ -153,6 +153,10 @@
       "verify": "Open a `ds-alert` with a title and a message: the icon sits level with the title."
     },
     {
+      "text": "A `ds-tree` row without children shows its `icon` in the caret's place, so its label starts where a sibling without an icon starts its label. A row with children keeps the caret, the icon and then the label. Nothing to change in your code.",
+      "verify": "Open a `ds-tree` where only some sibling rows without children have an icon: their labels start at the same x."
+    },
+    {
       "text": "`minRows` and `maxRows` of an `autosize` `ds-textarea` (and `ds-chat-input`) count lines of text without the field's block padding: `minRows=\"2\"` shows two full lines, and a field with `maxRows` grows up to its block padding taller (24px at the default size, 8px in a `ds-chat-input`) before it scrolls. Nothing to change in your code.",
       "verify": "Give an `autosize` `ds-textarea` `minRows=\"2\"`: the empty field shows two full lines."
     },

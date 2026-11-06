@@ -96,6 +96,11 @@
   scrollbar took its room from the messages only while they overflowed, so at the end of a fold that
   brought the list back inside the view every message rewrapped at a new width in one frame. The
   room is now always kept. Nothing to change in your code.
+- **A `ds-tree` row without children shows its `icon` in the caret's place.** It drew the icon after
+  an empty caret slot, so its label started 24px right of a sibling without an icon. Its label now
+  starts where the sibling's does. A row with children keeps the caret, then the icon, then the
+  label. Nothing to change in your code.
+
 - **Folding or opening the steps of a `ds-chat-message` ends without a jump.** The gap under the
   steps appeared or vanished at once at the end of the motion, so the bubble and every message below
   it moved 8px in one frame. The gap now shrinks and grows with the steps. Nothing to change in your

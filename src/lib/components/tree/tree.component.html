@@ -23,7 +23,7 @@
         class="caret"
         [name]="entry.expanded ? 'chevronDown' : 'chevronRight'"
         [size]="16" />
-    } @else {
+    } @else if (!entry.node.icon) {
       <span class="caret-spacer"></span>
     }
 
