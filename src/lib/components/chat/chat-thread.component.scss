@@ -22,6 +22,10 @@
   overflow-y: auto;
   overscroll-behavior: contain;
 
+  // The scrollbar's room is kept while the list fits: when it appeared or went the messages rewrapped
+  // at a new width in one frame, at the end of every fold that brings the list back inside the view.
+  scrollbar-gutter: stable;
+
   // The thread keeps the reader's place itself; the browser's own anchoring would move it twice.
   overflow-anchor: none;
   padding: var(--_chat-thread-padding);
