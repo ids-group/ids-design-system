@@ -91,6 +91,10 @@
 
 ### Fixed
 
+- **Folding or opening the steps of a `ds-chat-message` ends without a jump.** The gap under the
+  steps appeared or vanished at once at the end of the motion, so the bubble and every message below
+  it moved 8px in one frame. The gap now shrinks and grows with the steps. Nothing to change in your
+  code.
 - **The `ds-alert` icon sits by the first line.** It centred on the whole alert, so with a title
   and a message, a long message or actions it stood halfway down the alert. It now centres on the
   title, or on the first line of the message when there is no title. Nothing to change in your
