@@ -110,8 +110,7 @@
 - **A `ds-chat-thread` keeps its width when the messages start or stop overflowing it.** The
   scrollbar took its room from the messages only while they overflowed, so at the end of a fold that
   brought the list back inside the view every message rewrapped at a new width in one frame. The
-  room is now always kept, and it comes out of the end padding, so both sides of the thread keep the
-  same gap with or without a scrollbar. Nothing to change in your code.
+  room is now always kept. Nothing to change in your code.
 - **A `ds-tree` row without children shows its `icon` in the caret's place.** It drew the icon after
   an empty caret slot, so its label started 24px right of a sibling without an icon. Its label now
   starts where the sibling's does. A row with children keeps the caret, then the icon, then the
