@@ -180,6 +180,10 @@
     {
       "text": "A `ds-chat-thread` takes its kept scrollbar room out of its end padding, so both sides read the same with or without a scrollbar. Nothing to change in your code.",
       "verify": "Compare a short and an overflowing `ds-chat-thread`: the messages keep the same width and the same space to both edges."
+    },
+    {
+      "text": "A `ds-popover` with `placement=\"left\"` or `placement=\"right\"` centres on its trigger and draws its arrow on the side facing it; a `ds-menu` submenu enters from the side of its item. Nothing to change in your code.",
+      "verify": "Open a `ds-popover` with `arrow` and `placement=\"left\"`: the panel is centred on the trigger and the arrow on its right edge points at the trigger's middle."
     }
   ],
   "deleteList": []

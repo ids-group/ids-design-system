@@ -163,6 +163,11 @@
   `raised` `ds-card` sit on a surface no darker than themselves, and with the dark shadow they lost
   their outline. `--shadow-1` (and `--ds-elevation-raised`, `--shadow-card`) adds the 1px light hairline
   at 8% alpha that `--shadow-4` draws. The light theme is unchanged. Nothing to change in your code.
+- **A `ds-popover` opened to the left or right points its arrow at the trigger.** A side panel lined
+  up with the trigger's top edge and drew its arrow on its own top edge, pointing up. It now centres
+  on the trigger and draws the arrow on the side that faces it, at its middle, on the side it flips to
+  as well. A submenu of `ds-menu` enters from the side of its item rather than from above. Nothing to
+  change in your code.
 
 ## 1.1.0 — 2026-11-02
 
