@@ -31,6 +31,7 @@ import {
   focusIsInside,
   forwardOverlayTokens,
   overlayPlacementOf,
+  pointArrowAtHost,
   prepareOverlayEnter,
 } from '@ids-group-ltd/ids-design-system/components';
 import { CdkTrapFocus } from '@angular/cdk/a11y';
@@ -169,6 +170,11 @@ export class PopoverComponent implements OnDestroy, DsOverlayCloseRef {
       }
     });
     this.ref.attach(new TemplatePortal(this.panelTpl()!, this.vcr));
+    const panel =
+      this.ref.overlayElement.querySelector<HTMLElement>('.popover');
+    if (this.arrow() && panel) {
+      pointArrowAtHost(this.ref, panel, trigger);
+    }
     this.resolvedPlacement.set(placement);
     this.opened.set(true);
     // A menu is operated from inside (APG menu button), so it takes focus without a panelRole.
