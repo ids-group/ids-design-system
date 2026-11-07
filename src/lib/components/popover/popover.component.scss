@@ -93,7 +93,7 @@
 [data-placement='right'] .arrow,
 [data-placement='right'] > .arrow {
   left: calc(var(--_popover-arrow-size) * -1);
-  top: var(--space-4);
+  top: calc(50% - var(--_popover-arrow-size));
 
   &::before {
     right: 0;
@@ -107,7 +107,7 @@
 [data-placement='left'] .arrow,
 [data-placement='left'] > .arrow {
   right: calc(var(--_popover-arrow-size) * -1);
-  top: var(--space-4);
+  top: calc(50% - var(--_popover-arrow-size));
 
   &::before {
     left: 0;

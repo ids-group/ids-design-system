@@ -243,16 +243,16 @@ function buildPositions(
       return [
         {
           originX: 'start',
-          originY: 'top',
+          originY: 'center',
           overlayX: 'end',
-          overlayY: 'top',
+          overlayY: 'center',
           offsetX: -offsetPx,
         },
         {
           originX: 'end',
-          originY: 'top',
+          originY: 'center',
           overlayX: 'start',
-          overlayY: 'top',
+          overlayY: 'center',
           offsetX: offsetPx,
         },
       ];
@@ -260,16 +260,16 @@ function buildPositions(
       return [
         {
           originX: 'end',
-          originY: 'top',
+          originY: 'center',
           overlayX: 'start',
-          overlayY: 'top',
+          overlayY: 'center',
           offsetX: offsetPx,
         },
         {
           originX: 'start',
-          originY: 'top',
+          originY: 'center',
           overlayX: 'end',
-          overlayY: 'top',
+          overlayY: 'center',
           offsetX: -offsetPx,
         },
       ];
