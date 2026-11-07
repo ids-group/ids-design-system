@@ -238,6 +238,34 @@ export function overlayPlacementOf({
   return 'left';
 }
 
+// Sets `--_overlay-arrow-x/y` on the panel: the trigger's centre in the panel's padding box.
+// positionChanges skips a re-apply that only pushes the pane; the styles CDK writes do not.
+// The pane is measured, not the panel: the panel's enter animation scales it.
+/** @internal */
+export function pointArrowAtHost(
+  ref: OverlayRef,
+  panel: HTMLElement,
+  host: HTMLElement,
+): void {
+  const pane = ref.overlayElement;
+  const point = () => {
+    const trigger = host.getBoundingClientRect();
+    const box = pane.getBoundingClientRect();
+    panel.style.setProperty(
+      '--_overlay-arrow-x',
+      `${trigger.left + trigger.width / 2 - box.left - panel.clientLeft}px`,
+    );
+    panel.style.setProperty(
+      '--_overlay-arrow-y',
+      `${trigger.top + trigger.height / 2 - box.top - panel.clientTop}px`,
+    );
+  };
+  const observer = new MutationObserver(point);
+  observer.observe(ref.hostElement, { attributeFilter: ['style'] });
+  observer.observe(pane, { attributeFilter: ['style'] });
+  ref.detachments().subscribe({ complete: () => observer.disconnect() });
+}
+
 /**
  * Primes a `ds-overlay-pane` for its enter animation. Call right after `overlay.create()`:
  * CDK positions in `afterNextRender`, so the placement stamp lands before the first painted

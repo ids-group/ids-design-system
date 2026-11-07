@@ -35,13 +35,10 @@ import {
   closeOnScroll,
   listenForEscape,
   overlayPlacementOf,
+  pointArrowAtHost,
   prepareOverlayEnter,
 } from '@ids-group-ltd/ids-design-system/components';
-import {
-  VIEWPORT_MARGIN_PX,
-  pointArrowAtHost,
-  positionsFor,
-} from './tooltip-position';
+import { VIEWPORT_MARGIN_PX, positionsFor } from './tooltip-position';
 import {
   DS_CONFIG,
   type DsConfig,
