@@ -182,8 +182,8 @@
       "verify": "Compare a short and an overflowing `ds-chat-thread`: the messages keep the same width and the same space to both edges."
     },
     {
-      "text": "A `ds-popover` with `placement=\"left\"` or `placement=\"right\"` centres on its trigger and draws its arrow on the side facing it; a `ds-menu` submenu enters from the side of its item. Nothing to change in your code.",
-      "verify": "Open a `ds-popover` with `arrow` and `placement=\"left\"`: the panel is centred on the trigger and the arrow on its right edge points at the trigger's middle."
+      "text": "The `arrow` of a `ds-popover` is a caret outside the panel edge facing the trigger, centred on the trigger, with the panel's fill and border; a `ds-popover` with `placement=\"left\"` or `placement=\"right\"` centres on its trigger, and a `ds-menu` submenu enters from the side of its item. `--ds-popover-arrow-size` sets the caret's edge length. Nothing to change in your code.",
+      "verify": "Open a `ds-popover` with `arrow` on each `placement`: the caret stands outside the panel edge facing the trigger and points at the trigger's middle, and the panel border runs round it."
     }
   ],
   "deleteList": []
