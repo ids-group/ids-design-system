@@ -133,12 +133,7 @@ export class PopoverComponent implements OnDestroy, DsOverlayCloseRef {
       .withViewportMargin(8);
 
     positionStrategy.positionChanges.subscribe((change) => {
-      this.resolvedPlacement.set(
-        overlayPlacementOf(
-          change.connectionPair.overlayY,
-          change.connectionPair.overlayX,
-        ),
-      );
+      this.resolvedPlacement.set(overlayPlacementOf(change.connectionPair));
     });
 
     const cfg: OverlayConfig = {

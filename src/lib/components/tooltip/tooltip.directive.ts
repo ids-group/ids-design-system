@@ -413,10 +413,7 @@ ${given}`;
     cmpRef.setInput('placement', placement);
     cmpRef.setInput('arrow', this.arrow());
     positionStrategy.positionChanges.subscribe(({ connectionPair }) =>
-      cmpRef.setInput(
-        'placement',
-        overlayPlacementOf(connectionPair.overlayY, connectionPair.overlayX),
-      ),
+      cmpRef.setInput('placement', overlayPlacementOf(connectionPair)),
     );
     cmpRef.setInput('panelId', this.tipId);
     pointArrowAtHost(this.ref, cmpRef.location.nativeElement, this.hostElement);

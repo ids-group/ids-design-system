@@ -1,4 +1,5 @@
 import type {
+  ConnectionPositionPair,
   FlexibleConnectedPositionStrategy,
   Overlay,
   OverlayConfig,
@@ -202,13 +203,28 @@ export function forwardOverlayTokens(
   }
 }
 
-/** `overlayY` is the panel edge pinned to the trigger, so `top` means the panel hangs BELOW it.
+/** The side of the trigger a connection pair puts the panel on. An axis decides only where the
+ * pair pins opposite edges together: a side pair aligning top edges keeps `overlayY: 'top'`.
+ * A pair covering the trigger falls back to `overlayY`, so `top` means it hangs BELOW.
  * @internal
  */
-export function overlayPlacementOf(
-  overlayY: string,
-  overlayX: string,
-): DsOverlayPlacement {
+export function overlayPlacementOf({
+  originX,
+  originY,
+  overlayX,
+  overlayY,
+}: Pick<
+  ConnectionPositionPair,
+  'originX' | 'originY' | 'overlayX' | 'overlayY'
+>): DsOverlayPlacement {
+  const opposite = (origin: string, overlay: string) =>
+    origin !== overlay && origin !== 'center' && overlay !== 'center';
+  if (opposite(originY, overlayY)) {
+    return overlayY === 'top' ? 'bottom' : 'top';
+  }
+  if (opposite(originX, overlayX)) {
+    return overlayX === 'start' ? 'right' : 'left';
+  }
   if (overlayY === 'top') {
     return 'bottom';
   }
@@ -238,10 +254,8 @@ export function prepareOverlayEnter(
   forwardOverlayTokens(overlayRef, host, OVERLAY_MOTION_TOKENS);
   forwardOverlayTokens(overlayRef, host, DROPDOWN_PANEL_TOKENS);
   positionStrategy?.positionChanges.subscribe(({ connectionPair }) => {
-    overlayRef.overlayElement.dataset['dsPlacement'] = overlayPlacementOf(
-      connectionPair.overlayY,
-      connectionPair.overlayX,
-    );
+    overlayRef.overlayElement.dataset['dsPlacement'] =
+      overlayPlacementOf(connectionPair);
   });
 }
 
