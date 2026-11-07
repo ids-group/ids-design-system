@@ -163,6 +163,13 @@
   `raised` `ds-card` sit on a surface no darker than themselves, and with the dark shadow they lost
   their outline. `--shadow-1` (and `--ds-elevation-raised`, `--shadow-card`) adds the 1px light hairline
   at 8% alpha that `--shadow-4` draws. The light theme is unchanged. Nothing to change in your code.
+- **The `arrow` of a `ds-popover` is a caret outside the panel, pointing at the middle of the
+  trigger.** It was a faint chevron drawn inside the panel near its corner, and a panel opened to the
+  left or right drew it on its top edge, pointing up. The caret now stands out of the edge that faces
+  the trigger, filled like the panel with the border running round it, as on `ds-tooltip`, and follows
+  the trigger when the panel flips or is pushed in from the viewport edge. A left or right panel
+  centres on its trigger. `--ds-popover-arrow-size` is the caret's edge length. A submenu of `ds-menu`
+  enters from the side of its item rather than from above. Nothing to change in your code.
 
 ## 1.1.0 — 2026-11-02
 

@@ -482,10 +482,13 @@ export function nextRovingIndex(key: string, current: number, count: number): nu
 export function niceDomain(domainMin: number, domainMax: number, targetCount: number): NiceDomain;
 
 // @internal
-export function overlayPlacementOf(overlayY: string, overlayX: string): DsOverlayPlacement;
+export function overlayPlacementOf({ originX, originY, overlayX, overlayY }: Pick<ConnectionPositionPair, 'originX' | 'originY' | 'overlayX' | 'overlayY'>): DsOverlayPlacement;
 
 // @internal
 export function panelClassesOf(panelClass: string | readonly string[]): readonly string[];
+
+// @internal
+export function pointArrowAtHost(ref: OverlayRef, panel: HTMLElement, host: HTMLElement): void;
 
 // @internal
 export function prepareOverlayEnter(overlayRef: OverlayRef, host: HTMLElement, positionStrategy?: FlexibleConnectedPositionStrategy): void;
