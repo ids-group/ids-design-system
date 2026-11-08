@@ -4,6 +4,16 @@ Versioning: **patch** = instruction/prompt fixes; **minor** = new capability (pi
 source, agent); **major** = a change to the workflow's behavior contract. Bump `plugin.json` +
 `marketplace.json` together on every published change.
 
+## 1.20.0 - 2026-11-08
+
+### Added
+
+- **A run starts by checking the plugin's own version.** Phase A step 0 refreshes the `ids`
+  marketplace and compares the installed `plugin.json` version with the published one; when a
+  newer one exists it offers to update now, runs `claude plugin update design-system@ids` and stops
+  so the run restarts after `/reload-plugins`. Offline or without credentials it says so and
+  continues on the installed version.
+
 ## 1.19.4 - 2026-11-03
 
 ### Fixed
