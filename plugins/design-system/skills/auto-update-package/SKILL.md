@@ -231,13 +231,30 @@ manifest:<V>#<itemId>` (or `tool:check-manifest-truth` when the tool, not the ma
 
 ## Phase A — Run setup (do once)
 
-Steps 1-6 are quick local reads and run in order until the chain is known. Everything after that
+Steps 0-6 are quick local reads and run in order until the chain is known. Everything after that
 is ONE parallel wave: start the clone (step 7), the peers fetch (step 6) and the baseline builds
 (step 9) together as background commands; the moment the clone lands, extract every tree and the
 lint plugin copy (step 11), start the manifest-truth check, dispatch a planner for every chain
 version without a manifest (step 10) and run the whole-chain pre-pass (step 12), all at once; the
 planners of the versions the pre-pass flags go out the moment it lands. Ask step 8's question
 while the wave runs. Collect the whole wave before Phase B.
+
+0. **Plugin version, before anything else.** A run on an outdated plugin applies the instructions
+   of an older release, so check it first, in every mode, dry-run included:
+   - Installed: `version` in `${CLAUDE_PLUGIN_ROOT}/.claude-plugin/plugin.json` (Read tool; the
+     variable is substituted in this text, not exported to Bash).
+   - Latest: run `claude plugin marketplace update ids`, then read `installLocation` of `ids` from
+     `plugins/known_marketplaces.json` in the Claude config directory (`$CLAUDE_CONFIG_DIR`, else
+     `~/.claude`) and the `version` in `<installLocation>/plugins/design-system/.claude-plugin/plugin.json`.
+     The marketplace is a private git repository, so this goes through the user's git credentials;
+     never fetch the file by URL.
+   - Latest semver-greater than installed → AskUserQuestion: "design-system plugin <installed>
+     is outdated, <latest> is published. Update now?" with **Update now (Recommended)** and
+     **Continue on <installed>**. On update, run `claude plugin update design-system@ids`, then
+     STOP and tell the user to type `/reload-plugins` and invoke this command again: the
+     instructions loaded for this run are the old ones, and no command can reload them from here.
+   - Equal, or the marketplace update or a read fails (offline, no credentials) → say so in one
+     line and continue on the installed version; this step never blocks a run.
 
 1. **Confirm consumer + find targets.** Read `package.json`; find `@ids-group-ltd/ids-design-system`
    in dependencies/devDependencies. In a monorepo, locate the declaring manifests by
