@@ -30,7 +30,9 @@ holds an entry; what the release bot commits afterwards needs none.
 
 ### Build
 
-- **`check-doc-api` fails a slot the usage notes never name.**
+- **`check-doc-api` fails a slot the usage notes never name.** Every slot of a component in the
+  surface has to appear in backticks in its `docs/<Name>.md`, so a slot added without saying where
+  it renders and what goes in it fails the PR check rather than reaching a card unexplained.
 
 ## 1.1.0 — 2026-11-02
 
