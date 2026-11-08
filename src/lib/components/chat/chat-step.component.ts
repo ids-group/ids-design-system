@@ -91,8 +91,11 @@ export class ChatStepComponent {
     clearTimeout(this.settleTimer);
     const settles = next === 'done' || next === 'error';
     if (first || !settles || !this.steps) {
-      if (next === 'running') this.runningSince = performance.now();
+      if (next === 'running') {
+        this.runningSince = performance.now();
+      }
       this.shownStatus.set(next);
+
       return;
     }
     if (this.shownStatus() !== 'running') {
@@ -101,6 +104,7 @@ export class ChatStepComponent {
     const delay = this.steps.settleDelay(this.runningSince);
     if (delay <= 0) {
       this.shownStatus.set(next);
+
       return;
     }
     this.shownStatus.set('running');

@@ -327,8 +327,18 @@ export class ChatMessageComponent {
     }
     const height = steps.getBoundingClientRect().height;
     const margin = getComputedStyle(steps).marginBottom;
-    const open = { height: `${height}px`, marginBottom: margin, opacity: 1, overflow: 'hidden' };
-    const shut = { height: '0px', marginBottom: '0px', opacity: 0, overflow: 'hidden' };
+    const open = {
+      height: `${height}px`,
+      marginBottom: margin,
+      opacity: 1,
+      overflow: 'hidden',
+    };
+    const shut = {
+      height: '0px',
+      marginBottom: '0px',
+      opacity: 0,
+      overflow: 'hidden',
+    };
     const run = steps.animate(
       folded
         ? [open, { opacity: 1, offset: 0.7 }, shut]

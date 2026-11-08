@@ -13,9 +13,7 @@ const params = new URLSearchParams(location.search);
         [minRunningMs]="minRunningMs"
         [revealStaggerMs]="revealStaggerMs">
         @for (heading of headings; track heading) {
-          <ds-chat-step
-            [heading]="heading"
-            [status]="status()" />
+          <ds-chat-step [heading]="heading" [status]="status()" />
         }
       </ds-chat-steps>
     </div>
@@ -24,7 +22,11 @@ const params = new URLSearchParams(location.search);
 export class ChatStepsRevealHarnessPage {
   protected readonly minRunningMs = Number(params.get('min') ?? 0);
   protected readonly revealStaggerMs = Number(params.get('stagger') ?? 0);
-  protected readonly headings = ['Read the screen', 'Find the button', 'Apply the colour'];
+  protected readonly headings = [
+    'Read the screen',
+    'Find the button',
+    'Apply the colour',
+  ];
   protected readonly status = signal<ChatStepStatus>('pending');
 
   constructor() {
