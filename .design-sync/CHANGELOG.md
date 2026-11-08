@@ -17,6 +17,8 @@ holds an entry; what the release bot commits afterwards needs none.
 
 ## Unreleased
 
+## 1.1.1 — 2026-11-08
+
 ### Cards
 
 - **Every slot is named in its component's usage notes.** `AuthLayout`, `Autocomplete`, `Chart`,

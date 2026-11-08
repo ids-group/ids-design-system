@@ -1,5 +1,7 @@
 ## Unreleased
 
+## 1.1.1 — 2026-11-08
+
 ### Added
 
 - **`ds-splitter` shades the pane you drag towards, with `dragFog`.** While the handle moves, a fog
