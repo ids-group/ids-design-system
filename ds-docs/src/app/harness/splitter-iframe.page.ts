@@ -11,7 +11,9 @@ import { SplitterComponent } from 'ds/splitter';
       [defaultSize]="300"
       [min]="120"
       [max]="600">
-      <div start style="height: 100%">List</div>
+      <div start style="height: 100%">
+        List
+      </div>
 
       <iframe
         end
