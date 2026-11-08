@@ -9,9 +9,11 @@
   `prefers-reduced-motion: reduce`. Its colour is the new CSS hook `--ds-splitter-fog-color`
   (default `--text-primary` at 22%).
 - **`--surface-overlay-tint`, `--surface-overlay-raised-tint` and `--accent-strong-overlay`, the
-  selected-row tint and its text inside an overlay.** Each equals `--surface-tint` in light. Under `data-theme="dark"` they mix 30% of
-  `--primary` into the overlay fill: `color-mix(in srgb, var(--primary) 30%, var(--surface-overlay))`
-  and the same over `--surface-overlay-raised`.
+  selected-row tint and its text inside an overlay.** In light the two surface tints equal
+  `--surface-tint` and `--accent-strong-overlay` equals `--accent-strong`. Under `data-theme="dark"`
+  the surface tints mix 30% of `--primary` into the overlay fill:
+  `color-mix(in srgb, var(--primary) 30%, var(--surface-overlay))` and the same over
+  `--surface-overlay-raised`, and `--accent-strong-overlay` is `hsl(from var(--primary) h 90% 80%)`.
 - **`--border-field` and `--border-field-hover`, the outline of a field.** `--border-field` is
   `--neutral-500` in light and `--neutral-400` under `data-theme="dark"` (`#6B7388` in both), at
   least 3:1 against the page, a card, a modal or drawer and a popover. `--border-field-hover` is one
@@ -55,7 +57,7 @@
 ### Changed
 
 - **Folding the steps of a `ds-chat-message` slides them under the chip.** The steps shrank toward a
-  corner at 60% scale while fading over 380ms, and the chip grew in on another easing. Now, over
+  corner at 60% scale while fading over 380ms, and opening overshot on another easing. Now, over
   360ms on one easing, their height closes from the bottom so the rows nearest the chip slide under it
   first, unsquashed, and the last rows fade as the chip reaches the top; the bubble rides up with the
   layout, and opening slides the rows back out. Under `prefers-reduced-motion: reduce` nothing
@@ -86,10 +88,9 @@
   pairs. Nothing to change in your code, unless a screen must keep the faint outline: set
   `--border-field: var(--border-default)` and
   `--border-field-hover: var(--border-strong)` on `:root`.
-
 - **Selected and current rows inside dark overlays are lighter than the overlay.** Modals, drawers
   and the `ds-app-layout` rail below `lg` set `--surface-tint` and `--accent-surface-tint` to
-  `--surface-overlay-tint` on themselves, and `ds-popover`, `ds-menu` in it and the dropdown panels
+  `--surface-overlay-tint` on themselves, and `ds-popover` and the dropdown panels
   of `ds-select`, `ds-multi-select` and `ds-autocomplete` to `--surface-overlay-raised-tint`. Under
   `data-theme="dark"` the selected `ds-list-item`, the selected `ds-tree` row, the selected option
   of those dropdown panels, the `ds-empty-state` tile and any row of your own painted with
@@ -148,13 +149,14 @@
   content or a `time` under its heading, or a heading on two lines, centred its marker on the whole
   step, below the heading's first line; only a `waiting` step kept it on the heading row. Every
   status now keeps the marker beside the heading's first line, as a `waiting` step does, and a step
-  with content under its heading is about 4px taller. A `waiting` step with a trailing action no
-  longer draws its marker above the heading. A step with a one-line heading and nothing under it
+  with content under its heading is about 4px taller. A step whose trailing action is not the toggle
+  centres its marker on that control, where a `waiting` one drew it above the heading. A step with a one-line heading and nothing under it
   renders as before. Nothing to change in your code.
 - **The marker of a `ds-timeline-item` with content under its heading sits beside the heading.** An
   item with content or a `time` under its heading centred its marker on the whole item, below the
   heading. The marker now sits beside the heading's first line, and such an item is about 8px
-  taller. An item with nothing under its heading renders as before. Nothing to change in your code.
+  taller. With a trailing action other than the toggle, such an item centres its marker on that control.
+  An item with nothing under its heading renders as before. Nothing to change in your code.
 - **A `ds-button` clicked while `loading` keeps the focus.** The button took no pointer events while
   loading, so a second click landed on the page and moved the focus off the button. The click now
   reaches the button, which still refuses it, and the focus stays. Nothing to change in your code.
