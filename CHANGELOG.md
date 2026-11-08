@@ -150,8 +150,8 @@
   step, below the heading's first line; only a `waiting` step kept it on the heading row. Every
   status now keeps the marker beside the heading's first line, as a `waiting` step does, and a step
   with content under its heading is about 4px taller. A step whose trailing action is not the toggle
-  centres its marker on that control, where a `waiting` one drew it above the heading. A step with a one-line heading and nothing under it
-  renders as before. Nothing to change in your code.
+  centres its marker on that control, where a `waiting` one drew it above the heading. A step with a
+  one-line heading and nothing under it renders as before. Nothing to change in your code.
 - **The marker of a `ds-timeline-item` with content under its heading sits beside the heading.** An
   item with content or a `time` under its heading centred its marker on the whole item, below the
   heading. The marker now sits beside the heading's first line, and such an item is about 8px
