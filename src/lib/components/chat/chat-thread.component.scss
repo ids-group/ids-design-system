@@ -7,6 +7,7 @@
   --_chat-thread-gap: var(--ds-chat-thread-gap, var(--space-4));
   --_chat-thread-group-gap: var(--ds-chat-thread-group-gap, var(--space-1));
   --_chat-thread-padding: var(--ds-chat-thread-padding, var(--space-4));
+  --_chat-thread-inset-bottom: var(--ds-chat-thread-inset-bottom, 0px);
 
   position: relative;
   display: flex;
@@ -21,9 +22,18 @@
   overflow-y: auto;
   overscroll-behavior: contain;
 
+  // The scrollbar's room is kept while the list fits: when it appeared or went the messages rewrapped
+  // at a new width in one frame, at the end of every fold that brings the list back inside the view.
+  scrollbar-gutter: stable;
+
   // The thread keeps the reader's place itself; the browser's own anchoring would move it twice.
   overflow-anchor: none;
   padding: var(--_chat-thread-padding);
+  padding-block-end: calc(var(--_chat-thread-padding) + var(--_chat-thread-inset-bottom));
+
+  // The kept scrollbar room comes out of the end padding, so both sides read the same with or without a
+  // scrollbar.
+  padding-inline-end: max(0px, calc(var(--_chat-thread-padding) - var(--_chat-thread-gutter, 0px)));
 }
 
 .content {
@@ -61,7 +71,7 @@
 
 .jump {
   position: absolute;
-  bottom: var(--space-3);
+  bottom: calc(var(--space-3) + var(--_chat-thread-inset-bottom));
   left: 50%;
   translate: -50% 0;
 

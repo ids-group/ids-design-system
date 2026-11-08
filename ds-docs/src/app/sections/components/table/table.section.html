@@ -202,9 +202,9 @@
     Hover and pressed tints need
     <code class="t-mono-inline">
       [rowInteractive]
-    </code>. Selected (checkbox) and
-    active (<code class="t-mono-inline">[activeRowId]</code>, the open detail
-    row) ignore the pointer.
+    </code>. Selected (checkbox)
+    and active (<code class="t-mono-inline">[activeRowId]</code>, the open
+    detail row) ignore the pointer.
   </p>
 
   <div class="states is-cols-4">
@@ -462,10 +462,8 @@
     radius. Off by default to avoid a double border in
     <code class="t-mono-inline">
       &lt;ds-card padding="none"&gt;
-    </code>. App-wide:
-    <code class="t-mono-inline">
-      DS_CONFIG.table.bordered
     </code>.
+    App-wide: <code class="t-mono-inline"> DS_CONFIG.table.bordered </code>.
   </p>
 
   <ds-table
@@ -877,9 +875,14 @@
     </code> never land. Use
     <code class="t-mono-inline">
       [cellTemplateMap]
-    </code> (key to template; beats
-    a projected one) and <code class="t-mono-inline">[emptyTemplate]</code>. Add
-    rows to see the <code class="t-mono-inline"> outcome </code> template.
+    </code> (key to template;
+    beats a projected one) and
+    <code class="t-mono-inline">
+      [emptyTemplate]
+    </code>. Add rows to see the
+    <code class="t-mono-inline">
+      outcome
+    </code> template.
   </p>
 
   <ng-template
@@ -1245,7 +1248,8 @@
       </code> explains it,
       <code class="t-mono-inline">
         hidden
-      </code> omits it; all hidden, no kebab.
+      </code> omits it; all hidden, no
+      kebab.
     </li>
 
     <li>
@@ -1574,11 +1578,12 @@
   <p class="block-desc t-s">
     <code class="t-mono-inline">
       layout
-    </code> defaults to <code class="t-mono-inline">'auto'</code>, the 0.15.0
-    widths: columns follow their content and
+    </code> defaults to
     <code class="t-mono-inline">
-      kind
-    </code> has no effect. It is deprecated and will be removed; set
+      'auto'
+    </code>, the 0.15.0 widths: columns follow
+    their content and <code class="t-mono-inline"> kind </code> has no effect.
+    It is deprecated and will be removed; set
     <code class="t-mono-inline">
       layout="fixed"
     </code> for the widths below.
@@ -1605,8 +1610,8 @@
     </code> 120px,
     <code class="t-mono-inline">
       status
-    </code> 110px), and text columns share the
-    rest, none narrower than its header or
+    </code> 110px), and text columns share
+    the rest, none narrower than its header or
     <code class="t-mono-inline">
       minWidth
     </code>. Dragging overrides it.
@@ -1677,11 +1682,9 @@
 
     <li>
       Host state:
-      <code class="t-mono-inline"
-        >
+      <code class="t-mono-inline">
         {{ twoWaySortKey() }} · {{ twoWaySortDir() ?? 'null' }}
-      </code
-      >
+      </code>
     </li>
   </ul>
 
@@ -1714,10 +1717,8 @@
       Rows narrow only with
       <code class="t-mono-inline">
         filterMode="client"
-      </code>; unset resolves to
-      <code class="t-mono-inline">
-        server
-      </code>, which only updates
+      </code>; unset resolves
+      to <code class="t-mono-inline"> server </code>, which only updates
       <code class="t-mono-inline">
         columnFilters
       </code>.
@@ -1917,9 +1918,11 @@
       Non-list criteria (date range, threshold) - project a panel with
       <code class="t-mono-inline">
         dsHeaderFilter
-      </code>; the table keeps button,
-      popover and styling. <code class="t-mono-inline">active</code> marks it
-      set.
+      </code>; the table keeps
+      button, popover and styling.
+      <code class="t-mono-inline">
+        active
+      </code> marks it set.
     </li>
   </ul>
 
@@ -2068,9 +2071,9 @@
     10 000 records, none loaded.
     <code class="t-mono-inline">
       [lazy]="true"
-    </code> requests the upcoming range
-    via <code class="t-mono-inline">(lazyLoad)</code>; unfilled indexes render
-    skeleton rows.
+    </code> requests the upcoming
+    range via <code class="t-mono-inline">(lazyLoad)</code>; unfilled indexes
+    render skeleton rows.
   </p>
 
   <p class="block-desc t-s">

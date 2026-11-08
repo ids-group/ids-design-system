@@ -22,7 +22,7 @@ export const routes: Routes = [
   { path: '', pathMatch: 'full', loadComponent: load, data: { path: '' } },
   { path: 'changelog', loadComponent: load, data: { path: 'changelog' } },
   ...areaRedirects,
-  // A regression harness driven by tools/table-clip-harness.mjs; dev server only, never deployed.
+  // A regression harness driven by tools/*-harness.mjs; dev server only, never deployed.
   ...(isDevMode()
     ? [
         {
@@ -37,6 +37,34 @@ export const routes: Routes = [
           loadComponent: () =>
             import('./harness/table-print.page').then(
               (m) => m.TablePrintHarnessPage,
+            ),
+        },
+        {
+          path: 'harness/chat-steps-reveal',
+          loadComponent: () =>
+            import('./harness/chat-steps-reveal.page').then(
+              (m) => m.ChatStepsRevealHarnessPage,
+            ),
+        },
+        {
+          path: 'harness/chat-input-placeholder',
+          loadComponent: () =>
+            import('./harness/chat-input-placeholder.page').then(
+              (m) => m.ChatInputPlaceholderHarnessPage,
+            ),
+        },
+        {
+          path: 'harness/splitter-iframe',
+          loadComponent: () =>
+            import('./harness/splitter-iframe.page').then(
+              (m) => m.SplitterIframeHarnessPage,
+            ),
+        },
+        {
+          path: 'harness/splitter-fog',
+          loadComponent: () =>
+            import('./harness/splitter-fog.page').then(
+              (m) => m.SplitterFogHarnessPage,
             ),
         },
       ]

@@ -167,6 +167,12 @@ export class ChatThreadComponent {
   constructor() {
     afterNextRender(() => {
       this.live.set(true);
+      // The kept scrollbar room is as wide as the platform's scrollbar, which no stylesheet can know.
+      const scroller = this.scroller().nativeElement;
+      scroller.style.setProperty(
+        '--_chat-thread-gutter',
+        `${scroller.offsetWidth - scroller.clientWidth}px`,
+      );
       this.toEnd();
       // Growth of the content (a new message, a streamed line, an opened snapshot) and a smaller
       // viewport both move the end away; a pinned thread follows it.

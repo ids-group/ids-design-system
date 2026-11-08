@@ -51,6 +51,9 @@ export class ChatInputComponent {
   /** Work in flight: the send button keeps its place, shows a spinner and refuses to submit, and
    *  Enter does not submit. The text area stays editable. */
   readonly busy = input(false, { transform: booleanAttribute });
+  /** While `busy`, the default send button becomes Stop: a square inside a turning ring that emits
+   *  `stopRequested`. */
+  readonly stoppable = input(false, { transform: booleanAttribute });
   /** The current step while `busy`, such as "Rebuilding"; where it shows follows `layout`. */
   readonly busyLabel = input<string>('');
   /** Where the buttons and the step text sit. `'status-bar'`: buttons inside, the step text in the
@@ -63,6 +66,8 @@ export class ChatInputComponent {
   /** The trimmed text, on Enter or the send button. Never fires for blank text, while `busy` or
    *  while `disabled`. */
   readonly submitted = output<string>();
+  /** The Stop button was pressed; fires only while `busy`, `stoppable` and not `disabled`. */
+  readonly stopRequested = output<void>();
   /** Image files pasted into the text area. The paste inserts no text when it carries images. */
   readonly filesPasted = output<File[]>();
 
@@ -79,6 +84,10 @@ export class ChatInputComponent {
     () => this.ariaLabel() || this.labels().label,
   );
   protected readonly sendLabel = computed(() => this.labels().send);
+  protected readonly stopLabel = computed(() => this.labels().stop);
+  protected readonly stopShown = computed(
+    () => this.busy() && this.stoppable() && !this.disabled(),
+  );
   protected readonly statusAbove = computed(
     () => this.layout() === 'status-above' || this.layout() === 'split',
   );
@@ -90,6 +99,16 @@ export class ChatInputComponent {
   submit(): void {
     if (this.canSubmit()) {
       this.submitted.emit(this.value().trim());
+    }
+  }
+
+  protected onSendPressed(): void {
+    if (this.stopShown()) {
+      this.stopRequested.emit();
+    } else if (this.canSubmit()) {
+      this.submit();
+    } else {
+      this.focus();
     }
   }
 

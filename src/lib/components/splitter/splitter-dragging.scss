@@ -5,3 +5,9 @@ html[data-ds-splitter-dragging] * {
   cursor: var(--_ds-splitter-cursor) !important;
   user-select: none !important;
 }
+
+// An embedded document takes the pointer away from the captured handle, release included.
+// stylelint-disable-next-line selector-type-no-unknown -- `webview` is Electron's embedded page.
+html[data-ds-splitter-dragging] :is(iframe, webview, embed, object) {
+  pointer-events: none !important;
+}

@@ -23,7 +23,7 @@
         class="caret"
         [name]="entry.expanded ? 'chevronDown' : 'chevronRight'"
         [size]="16" />
-    } @else {
+    } @else if (!entry.node.icon) {
       <span class="caret-spacer"></span>
     }
 
@@ -34,11 +34,29 @@
         [size]="16" />
     }
 
-    <span
-      class="label"
-      [id]="idPrefix + '-' + index">
-      {{ entry.node.label }}
-    </span>
+    @if (label(); as label) {
+      <span
+        class="custom-label"
+        [id]="idPrefix + '-' + index">
+        <ng-container
+          *ngTemplateOutlet="
+            label.template;
+            context: {
+              $implicit: entry.node,
+              node: entry.node,
+              level: entry.level,
+              selected: isSelected(entry.node.id),
+              disabled: !!entry.node.disabled,
+            }
+          " />
+      </span>
+    } @else {
+      <span
+        class="label"
+        [id]="idPrefix + '-' + index">
+        {{ entry.node.label }}
+      </span>
+    }
 
     @if (trailing(); as trailing) {
       <span

@@ -33,7 +33,12 @@
   --surface-overlay-raised:    var(--neutral-150);
   --surface-overlay-raised-secondary: var(--neutral-200);
   --surface-overlay-raised-muted:     var(--neutral-300);
+  --surface-overlay-tint:             color-mix(in srgb, var(--primary) 30%, var(--surface-overlay));
+  --surface-overlay-raised-tint:      color-mix(in srgb, var(--primary) 30%, var(--surface-overlay-raised));
+  --accent-strong-overlay:            hsl(from var(--primary) h 90% 80%);
   --border-overlay:            var(--border-strong);
+  --border-field:              var(--neutral-400);
+  --border-field-hover:        var(--neutral-500);
   --text-tertiary-overlay:     var(--neutral-700);
 
   --surface-tint:         hsl(from var(--primary) h 45% 16%);
@@ -81,9 +86,12 @@
 
   --surface-scrim: hsl(225deg 39% 4% / 70%);
 
-  // A shadow barely shows on a dark canvas, so the alphas are several times the light ones; the modal
-  // and drawer surface has no border of its own, so the top step adds a 1px light hairline as its edge.
-  --shadow-1: 0 1px 2px  hsl(var(--shadow-tint-h) var(--shadow-tint-s) var(--shadow-tint-l) / 30%),
+  // A shadow barely shows on a dark canvas, so the alphas are several times the light ones. What the first
+  // step raises (a selected segment, an active pill tab, a thumb, a raised card) and the modal and drawer
+  // surface have no border of their own and are no lighter than what is under them, so both steps add a
+  // 1px light hairline as the edge.
+  --shadow-1: 0 0 0 1px  hsl(var(--shadow-tint-h) var(--shadow-tint-s) 95% / 8%),
+              0 1px 2px  hsl(var(--shadow-tint-h) var(--shadow-tint-s) var(--shadow-tint-l) / 30%),
               0 1px 3px  hsl(var(--shadow-tint-h) var(--shadow-tint-s) var(--shadow-tint-l) / 40%);
   --shadow-2: 0 4px 8px  hsl(var(--shadow-tint-h) var(--shadow-tint-s) var(--shadow-tint-l) / 30%),
               0 4px 16px hsl(var(--shadow-tint-h) var(--shadow-tint-s) var(--shadow-tint-l) / 45%);

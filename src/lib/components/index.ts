@@ -127,6 +127,7 @@ export {
   listenForEscape,
   overlayPlacementOf,
   panelClassesOf,
+  pointArrowAtHost,
   prepareOverlayEnter,
 } from './overlay-motion';
 export type { DsOverlayCloseCause } from './overlay-motion';

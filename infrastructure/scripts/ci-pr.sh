@@ -107,6 +107,11 @@ node tools/check-docblock-drift.mjs
 echo "===== probes ====="
 node tools/run-probes.mjs
 
+# What ships, not how the source is formatted: clipped glyphs, abbreviated hook names, focus rings,
+# target sizes, chart ARIA. Unlike the report-only linters below, a failure here fails the build.
+echo "===== check group lint ====="
+node tools/check.mjs --group lint --keep-going
+
 log_dir="$(mktemp -d)"
 
 echo "Building (lib -> docs) and linting in parallel..."

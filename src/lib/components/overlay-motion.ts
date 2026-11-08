@@ -1,4 +1,5 @@
 import type {
+  ConnectionPositionPair,
   FlexibleConnectedPositionStrategy,
   Overlay,
   OverlayConfig,
@@ -202,13 +203,28 @@ export function forwardOverlayTokens(
   }
 }
 
-/** `overlayY` is the panel edge pinned to the trigger, so `top` means the panel hangs BELOW it.
+/** The side of the trigger a connection pair puts the panel on. An axis decides only where the
+ * pair pins opposite edges together: a side pair aligning top edges keeps `overlayY: 'top'`.
+ * A pair covering the trigger falls back to `overlayY`, so `top` means it hangs BELOW.
  * @internal
  */
-export function overlayPlacementOf(
-  overlayY: string,
-  overlayX: string,
-): DsOverlayPlacement {
+export function overlayPlacementOf({
+  originX,
+  originY,
+  overlayX,
+  overlayY,
+}: Pick<
+  ConnectionPositionPair,
+  'originX' | 'originY' | 'overlayX' | 'overlayY'
+>): DsOverlayPlacement {
+  const opposite = (origin: string, overlay: string) =>
+    origin !== overlay && origin !== 'center' && overlay !== 'center';
+  if (opposite(originY, overlayY)) {
+    return overlayY === 'top' ? 'bottom' : 'top';
+  }
+  if (opposite(originX, overlayX)) {
+    return overlayX === 'start' ? 'right' : 'left';
+  }
   if (overlayY === 'top') {
     return 'bottom';
   }
@@ -220,6 +236,34 @@ export function overlayPlacementOf(
   }
 
   return 'left';
+}
+
+// Sets `--_overlay-arrow-x/y` on the panel: the trigger's centre in the panel's padding box.
+// positionChanges skips a re-apply that only pushes the pane; the styles CDK writes do not.
+// The pane is measured, not the panel: the panel's enter animation scales it.
+/** @internal */
+export function pointArrowAtHost(
+  ref: OverlayRef,
+  panel: HTMLElement,
+  host: HTMLElement,
+): void {
+  const pane = ref.overlayElement;
+  const point = () => {
+    const trigger = host.getBoundingClientRect();
+    const box = pane.getBoundingClientRect();
+    panel.style.setProperty(
+      '--_overlay-arrow-x',
+      `${trigger.left + trigger.width / 2 - box.left - panel.clientLeft}px`,
+    );
+    panel.style.setProperty(
+      '--_overlay-arrow-y',
+      `${trigger.top + trigger.height / 2 - box.top - panel.clientTop}px`,
+    );
+  };
+  const observer = new MutationObserver(point);
+  observer.observe(ref.hostElement, { attributeFilter: ['style'] });
+  observer.observe(pane, { attributeFilter: ['style'] });
+  ref.detachments().subscribe({ complete: () => observer.disconnect() });
 }
 
 /**
@@ -238,10 +282,8 @@ export function prepareOverlayEnter(
   forwardOverlayTokens(overlayRef, host, OVERLAY_MOTION_TOKENS);
   forwardOverlayTokens(overlayRef, host, DROPDOWN_PANEL_TOKENS);
   positionStrategy?.positionChanges.subscribe(({ connectionPair }) => {
-    overlayRef.overlayElement.dataset['dsPlacement'] = overlayPlacementOf(
-      connectionPair.overlayY,
-      connectionPair.overlayX,
-    );
+    overlayRef.overlayElement.dataset['dsPlacement'] =
+      overlayPlacementOf(connectionPair);
   });
 }
 

@@ -6,17 +6,19 @@
 //   node lint-step.test.mjs     # exit 0 = every case matches
 import { spawnSync } from 'node:child_process';
 import {
+  mkdirSync,
   mkdtempSync,
   readdirSync,
   readFileSync,
   rmSync,
   symlinkSync,
+  writeFileSync,
 } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import assert from 'node:assert/strict';
-import { lintStep } from './lint-step.mjs';
+import { lintStep, resolveFrom } from './lint-step.mjs';
 
 const here = dirname(fileURLToPath(import.meta.url));
 const repository = join(here, '..', '..', '..');
@@ -67,6 +69,30 @@ await check('a range keeps only its releases', async () => {
     '0.7.0#app-shell-class-to-app-layout app/legacy.component.ts:1 AppShellComponent',
     '0.7.0#app-shell-selector-to-app-layout app/legacy.component.html:1 <ds-app-shell>',
   ]);
+});
+
+await check('--from current is the installed version', async () => {
+  const consumer = mkdtempSync(join(tmpdir(), 'lint-step-current-'));
+  const empty = mkdtempSync(join(tmpdir(), 'lint-step-none-'));
+  try {
+    const installed = join(
+      consumer,
+      'node_modules',
+      '@ids-group-ltd',
+      'ids-design-system',
+    );
+    mkdirSync(installed, { recursive: true });
+    writeFileSync(join(installed, 'package.json'), '{ "version": "1.0.3" }');
+    assert.equal(resolveFrom('current', consumer), '1.0.3');
+    assert.equal(resolveFrom('0.6.0', consumer), '0.6.0');
+    assert.throws(
+      () => resolveFrom('current', empty),
+      /no @ids-group-ltd\/ids-design-system/,
+    );
+  } finally {
+    rmSync(consumer, { recursive: true, force: true });
+    rmSync(empty, { recursive: true, force: true });
+  }
 });
 
 await check('an open range reports the releases before it too', async () => {

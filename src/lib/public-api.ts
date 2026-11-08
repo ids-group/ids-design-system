@@ -141,6 +141,7 @@ export type {
   ChatInputLayout,
   ChatMessageRole,
   ChatMessageStatus,
+  ChatMessageTone,
   ChatStepStatus,
   ChatStepsEnter,
 } from '@ids-group-ltd/ids-design-system/components/chat';
@@ -442,9 +443,11 @@ export type {
 export { TopBarComponent } from '@ids-group-ltd/ids-design-system/components/topbar';
 export {
   TreeComponent,
+  TreeLabelDirective,
   TreeTrailingDirective,
 } from '@ids-group-ltd/ids-design-system/components/tree';
 export type {
+  TreeLabelContext,
   TreeNode,
   TreeSelection,
   TreeTrailingContext,

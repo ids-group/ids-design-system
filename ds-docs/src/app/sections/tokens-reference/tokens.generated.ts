@@ -461,6 +461,16 @@ export const SEMANTIC_SURFACE: readonly ColourRow[] = [
     "notes": "What --surface-muted becomes inside a popover-class overlay: one step above --surface-overlay-raised-secondary in the dark theme, the same as --surface-muted in light."
   },
   {
+    "name": "--surface-overlay-tint",
+    "value": "var(--surface-tint)",
+    "notes": "What --surface-tint and --accent-surface-tint become inside a modal, a drawer and the app-layout rail below lg: lighter than --surface-overlay in the dark theme, the same as --surface-tint in light."
+  },
+  {
+    "name": "--surface-overlay-raised-tint",
+    "value": "var(--surface-tint)",
+    "notes": "What --surface-tint and --accent-surface-tint become inside a popover-class overlay: lighter than --surface-overlay-raised in the dark theme, the same as --surface-tint in light."
+  },
+  {
     "name": "--surface-scrim",
     "value": "hsl(var(--shadow-tint-h) var(--shadow-tint-s) var(--shadow-tint-l) / 55%)",
     "notes": "Modal/overlay backdrop tint (55% shadow-tinted black)."
@@ -477,6 +487,16 @@ export const SEMANTIC_BORDER: readonly ColourRow[] = [
     "name": "--border-strong",
     "value": "var(--neutral-300)",
     "notes": "Hover / emphasised border."
+  },
+  {
+    "name": "--border-field",
+    "value": "var(--neutral-500)",
+    "notes": "Resting outline of a text-entry field, picker trigger, number stepper and OTP cell; at least 3:1 against the page, a card, a modal or drawer and a popover."
+  },
+  {
+    "name": "--border-field-hover",
+    "value": "var(--neutral-600)",
+    "notes": "Hovered outline of the same fields, a step stronger than --border-field."
   },
   {
     "name": "--border-overlay",
@@ -665,6 +685,11 @@ export const SEMANTIC_SECONDARY: readonly ColourRow[] = [
 ];
 
 export const SEMANTIC_ACCENT: readonly ColourRow[] = [
+  {
+    "name": "--accent-strong-overlay",
+    "value": "var(--accent-strong)",
+    "notes": "What --accent-strong becomes inside a modal, a drawer and a popover-class overlay: lighter in the dark theme so accent text keeps 4.5:1 on the overlay tint, the same as --accent-strong in light."
+  },
   {
     "name": "--accent",
     "value": "var(--primary)",
@@ -2576,7 +2601,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       {
         "name": "--ds-autocomplete-border-color-hover",
         "value": "var(--_field-border-color-hover)",
-        "notes": "Autocomplete field border colour on hover (default --ds-field-border-color-hover, then --border-strong)."
+        "notes": "Autocomplete field border colour on hover (default --ds-field-border-color-hover, then --border-field-hover)."
       },
       {
         "name": "--ds-autocomplete-text-color",
@@ -3688,6 +3713,21 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "notes": ""
       },
       {
+        "name": "--ds-chat-message-system-bg-color",
+        "value": "var(--surface-secondary)",
+        "notes": ""
+      },
+      {
+        "name": "--ds-chat-message-system-color",
+        "value": "var(--text-secondary)",
+        "notes": ""
+      },
+      {
+        "name": "--ds-chat-message-system-border-color",
+        "value": "var(--border-default)",
+        "notes": ""
+      },
+      {
         "name": "--ds-chat-thread-gap",
         "value": "var(--space-4)",
         "notes": ""
@@ -3700,6 +3740,11 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       {
         "name": "--ds-chat-thread-padding",
         "value": "var(--space-4)",
+        "notes": ""
+      },
+      {
+        "name": "--ds-chat-thread-inset-bottom",
+        "value": "0px",
         "notes": ""
       },
       {
@@ -3873,7 +3918,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--ds-color-picker-trigger-border-color",
-        "value": "var(--border-default)",
+        "value": "var(--border-field)",
         "notes": "Colour picker trigger button border colour."
       },
       {
@@ -3957,7 +4002,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--ds-date-picker-trigger-border-color",
-        "value": "var(--border-default)",
+        "value": "var(--border-field)",
         "notes": "Date picker trigger field border colour."
       },
       {
@@ -4541,13 +4586,13 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--ds-field-border-color",
-        "value": "var(--border-default)",
-        "notes": "Resting border colour for the text-entry fields - input, textarea, select, multi-select, autocomplete and search - read under each one's own border token, so --ds-input-border or --ds-select-border-color still wins where set. Default --border-default. The date, time and colour pickers keep their own -trigger-* tokens."
+        "value": "var(--border-field)",
+        "notes": "Resting border colour for the text-entry fields - input, textarea, select, multi-select, autocomplete and search - read under each one's own border token, so --ds-input-border or --ds-select-border-color still wins where set. Default --border-field. The date, time and colour pickers keep their own -trigger-* tokens."
       },
       {
         "name": "--ds-field-border-color-hover",
-        "value": "var(--border-strong)",
-        "notes": "Hovered border colour for the same six fields, under each one's own token. Default --border-strong; ds-search keeps its border steady on hover unless --ds-search-border-hover is set."
+        "value": "var(--border-field-hover)",
+        "notes": "Hovered border colour for the same six fields, under each one's own token. Default --border-field-hover; ds-search keeps its border steady on hover unless --ds-search-border-hover is set."
       },
       {
         "name": "--ds-field-border-color-focus",
@@ -4623,7 +4668,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--ds-field-group-border-color",
-        "value": "var(--border-default)",
+        "value": "var(--border-field)",
         "notes": "The single border the group draws around all its segments."
       },
       {
@@ -5798,7 +5843,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       {
         "name": "--ds-multi-select-border-color-hover",
         "value": "var(--_field-border-color-hover)",
-        "notes": "Trigger border colour on hover (default --ds-field-border-color-hover, then --border-strong)."
+        "notes": "Trigger border colour on hover (default --ds-field-border-color-hover, then --border-field-hover)."
       },
       {
         "name": "--ds-multi-select-placeholder-color",
@@ -5844,8 +5889,8 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--ds-number-stepper-border-color",
-        "value": "var(--border-default)",
-        "notes": "Number stepper field border (defaults to --border-default)."
+        "value": "var(--border-field)",
+        "notes": "Number stepper field border (defaults to --border-field)."
       },
       {
         "name": "--ds-number-stepper-step-bg-color-active",
@@ -5886,8 +5931,8 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--ds-otp-cell-border-color",
-        "value": "var(--border-default)",
-        "notes": "OTP input cell border (defaults to --border-default)."
+        "value": "var(--border-field)",
+        "notes": "OTP input cell border (defaults to --border-field)."
       },
       {
         "name": "--ds-otp-cell-border-color-focus",
@@ -6543,7 +6588,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       {
         "name": "--ds-select-border-color-hover",
         "value": "var(--_field-border-color-hover)",
-        "notes": "Trigger border colour on hover (default --ds-field-border-color-hover, then --border-strong)."
+        "notes": "Trigger border colour on hover (default --ds-field-border-color-hover, then --border-field-hover)."
       },
       {
         "name": "--ds-select-border-color-focus",
@@ -8253,8 +8298,8 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--ds-time-picker-trigger-border",
-        "value": "var(--border-default)",
-        "notes": "Time-picker trigger border (defaults to --border-default)."
+        "value": "var(--border-field)",
+        "notes": "Time-picker trigger border (defaults to --border-field)."
       },
       {
         "name": "--ds-time-picker-trigger-color",

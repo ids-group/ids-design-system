@@ -1,14 +1,22 @@
 <docs-section
   anchor="chat-message"
   eyebrow="Components"
-  title="Chat">
+  title="Chat"
+  [apiKeys]="[
+    'chat:ChatMessageComponent',
+    'chat:ChatThreadComponent',
+    'chat:ChatAttachmentComponent',
+  ]">
   <span lede>
     Message bubbles and the list that holds them. The window around them, the
     tabs and the composer stay with the app; the text inside a bubble is the
     app's too, rendered markdown included.
   </span>
 
-  <h3 class="block-title t-h4">
+  <h3
+    data-claude-design
+    class="block-title t-h4"
+    data-for="chat-attachment">
     States
   </h3>
 
@@ -309,6 +317,128 @@ error TS2322: Type 'string' is not assignable to type 'number'.
 
       <div class="state-cell-label">
         Reply still streaming
+      </div>
+    </div>
+  </div>
+
+  <h3 class="block-title t-h4">
+    A notice from the app
+  </h3>
+
+  <p class="block-desc t-s">
+    <code class="t-mono-inline">
+      role="system"
+    </code> is a line from the app
+    rather than either speaker, centred, and it splits a run of replies. Pick
+    <code class="t-mono-inline">
+      tone
+    </code> by what the note means: leave it
+    <code class="t-mono-inline">
+      neutral
+    </code> for a routine note (saved,
+    switched, started), a quiet one-line plaque that takes an
+    <code class="t-mono-inline">
+      icon
+    </code> if you give one. Set
+    <code class="t-mono-inline">
+      info
+    </code>,
+    <code class="t-mono-inline">
+      success
+    </code>,
+    <code class="t-mono-inline">
+      warning
+    </code> or
+    <code class="t-mono-inline">
+      error
+    </code> when the reader should not miss
+    it: a card in that status colour with its icon. Add a
+    <code class="t-mono-inline">
+      title
+    </code> when the note carries a detail
+    under it.
+  </p>
+
+  <div class="states is-cols-2">
+    <div class="state-cell">
+      <div class="state-cell-stage chat-stage">
+        <ds-chat-thread>
+          <ds-chat-message role="user">
+            Make the Sign In button full width.
+          </ds-chat-message>
+
+          <ds-chat-message
+            role="system"
+            icon="refresh">
+            The prototype was rebuilt
+          </ds-chat-message>
+
+          <ds-chat-message>
+            Done. The button now spans the form.
+          </ds-chat-message>
+
+          <ds-chat-message role="system">
+            Changes saved for the team
+          </ds-chat-message>
+        </ds-chat-thread>
+      </div>
+
+      <div class="state-cell-label">
+        Routine note: neutral plaque
+      </div>
+    </div>
+
+    <div class="state-cell">
+      <div class="state-cell-stage chat-stage">
+        <ds-chat-thread>
+          <ds-chat-message>
+            Done. The button now spans the form.
+          </ds-chat-message>
+
+          <ds-chat-message
+            role="system"
+            tone="warning">
+            The prototype stopped building. The assistant is trying to fix it.
+          </ds-chat-message>
+
+          <ds-chat-message>
+            Fixed a misspelled tag. The build passes again.
+          </ds-chat-message>
+
+          <ds-chat-message
+            role="system"
+            tone="success">
+            Published to the review link.
+          </ds-chat-message>
+        </ds-chat-thread>
+      </div>
+
+      <div class="state-cell-label">
+        A note that matters: tone by meaning
+      </div>
+    </div>
+
+    <div class="state-cell">
+      <div class="state-cell-stage chat-stage">
+        <ds-chat-thread>
+          <ds-chat-message
+            role="system"
+            tone="info">
+            The assistant joins once the prototype starts.
+          </ds-chat-message>
+
+          <ds-chat-message
+            role="system"
+            tone="error"
+            title="The prototype could not be built">
+            The assistant tried twice. Ask it what went wrong, or undo the last
+            change.
+          </ds-chat-message>
+        </ds-chat-thread>
+      </div>
+
+      <div class="state-cell-label">
+        Info, and an error with a title
       </div>
     </div>
   </div>

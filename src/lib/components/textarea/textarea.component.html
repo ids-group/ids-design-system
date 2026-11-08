@@ -36,6 +36,16 @@
       </div>
     }
 
+    @if (placeholderLineShown()) {
+      <div
+        class="placeholder-line"
+        aria-hidden="true"
+        [class.wraps]="placeholderRows() > 1"
+        [style.--_placeholder-rows]="placeholderRows()">
+        {{ placeholder() }}
+      </div>
+    }
+
     <textarea
       #control
       [id]="uid"

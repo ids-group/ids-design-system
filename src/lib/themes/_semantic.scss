@@ -27,6 +27,9 @@
   --surface-overlay-raised:    var(--surface-overlay);
   --surface-overlay-raised-secondary: var(--surface-secondary);
   --surface-overlay-raised-muted:     var(--surface-muted);
+  --surface-overlay-tint:             var(--surface-tint);
+  --surface-overlay-raised-tint:      var(--surface-tint);
+  --accent-strong-overlay:            var(--accent-strong);
 
   /* Modal/drawer backdrop; the dark theme flips the tint. */
   --surface-scrim:     hsl(var(--shadow-tint-h) var(--shadow-tint-s) var(--shadow-tint-l) / 55%);
@@ -36,6 +39,8 @@
 
   --border-default:    var(--neutral-200);
   --border-strong:     var(--neutral-300);
+  --border-field:       var(--neutral-500);
+  --border-field-hover: var(--neutral-600);
   --border-overlay:    var(--border-default);
   --border-subtitle:     var(--neutral-150);
   --border-divider:    var(--neutral-150);

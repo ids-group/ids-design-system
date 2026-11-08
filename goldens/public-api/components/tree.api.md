@@ -19,6 +19,7 @@ export class TreeComponent {
     protected isActive(id: string): boolean;
     protected isExpanded(id: string): boolean;
     protected isSelected(id: string): boolean;
+    protected readonly label = contentChild(…);
     private moveActive;
     private moveToParent;
     protected readonly multiple = computed(…);
@@ -35,6 +36,20 @@ export class TreeComponent {
     private toggle;
     protected readonly trailing = contentChild(…);
     protected readonly visibleNodes = computed<VisibleNode[]>(…);
+}
+
+export interface TreeLabelContext {
+    readonly $implicit: TreeNode;
+    readonly node: TreeNode;
+    readonly level: number;
+    readonly selected: boolean;
+    readonly disabled: boolean;
+}
+
+@Directive({ selector: 'ng-template[dsTreeLabel]' })
+export class TreeLabelDirective {
+    public static ngTemplateContextGuard(_directive: TreeLabelDirective, _context: unknown): _context is TreeLabelContext;
+    public readonly template = inject<TemplateRef<TreeLabelContext>>(…);
 }
 
 export interface TreeNode {

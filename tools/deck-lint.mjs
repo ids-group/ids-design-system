@@ -14,7 +14,7 @@
 //
 //   node tools/deck-lint.mjs
 import { execFileSync } from 'node:child_process';
-import { readFileSync, readdirSync, existsSync } from 'node:fs';
+import { readFileSync, readdirSync, existsSync, realpathSync } from 'node:fs';
 import { join, dirname, relative, basename } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -24,6 +24,11 @@ const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 // `selftest-*.html` behind that `git add -A` would stage.
 const DECKS = process.env.DS_DECKS_DIR || join(ROOT, 'decks');
 const ARCHIVE = join(DECKS, 'implemented');
+// In a worktree `decks` links to the main checkout's decks, and their evidence paths name files of
+// that checkout, some of them untracked.
+const DECKS_HOME = existsSync(join(ROOT, 'decks'))
+  ? dirname(realpathSync(join(ROOT, 'decks')))
+  : ROOT;
 const STATUSES = ['open', 'implemented', 'tool'];
 
 const problems = [];
@@ -77,9 +82,7 @@ const stylesheet = existsSync(join(DECKS, 'ds.css'))
   ? readFileSync(join(DECKS, 'ds.css'), 'utf8')
   : '';
 if (stylesheet === '') {
-  console.error(
-    'deck-lint: decks/ds.css is missing — run build:deck-css.',
-  );
+  console.error('deck-lint: decks/ds.css is missing — run build:deck-css.');
   process.exit(1);
 }
 
@@ -200,6 +203,7 @@ for (const dir of [DECKS, ARCHIVE]) {
     ) ?? []) {
       const candidates = [
         join(ROOT, cited),
+        join(DECKS_HOME, cited),
         join(DECKS, cited),
         join(ARCHIVE, cited),
       ];

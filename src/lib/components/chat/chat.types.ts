@@ -1,4 +1,11 @@
-export type ChatMessageRole = 'user' | 'assistant';
+export type ChatMessageRole = 'user' | 'assistant' | 'system';
+
+export type ChatMessageTone =
+  | 'neutral'
+  | 'info'
+  | 'success'
+  | 'warning'
+  | 'error';
 
 export type ChatMessageStatus = 'sending' | 'sent' | 'failed';
 

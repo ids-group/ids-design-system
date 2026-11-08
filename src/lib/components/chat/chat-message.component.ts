@@ -18,13 +18,26 @@ import {
 import {
   DS_INTL,
   DS_INTL_DEFAULTS,
+  type IconName,
 } from '@ids-group-ltd/ids-design-system/core';
 import { ButtonComponent } from '@ids-group-ltd/ids-design-system/components/button';
 import { IconComponent } from '@ids-group-ltd/ids-design-system/icons';
 import { CHAT_THREAD } from './chat.token';
 import { ChatStepComponent } from './chat-step.component';
 import { ChatStepsComponent } from './chat-steps.component';
-import type { ChatMessageRole, ChatMessageStatus } from './chat.types';
+import type {
+  ChatMessageRole,
+  ChatMessageStatus,
+  ChatMessageTone,
+} from './chat.types';
+
+const TONE_ICONS: Record<ChatMessageTone, IconName | null> = {
+  neutral: null,
+  info: 'info',
+  success: 'success',
+  warning: 'warn',
+  error: 'error',
+};
 
 /**
  * One message of a conversation: a bubble on the right for the user, on the left for the
@@ -42,7 +55,9 @@ import type { ChatMessageRole, ChatMessageStatus } from './chat.types';
   host: {
     // The `role` input would otherwise stay on the host as an invalid ARIA role.
     '[attr.role]': 'null',
+    '[attr.title]': 'null',
     '[attr.data-role]': 'role()',
+    '[attr.data-tone]': "role() === 'system' ? tone() : null",
     '[class.in-thread]': '!!thread',
     '[class.is-first]': 'isFirst()',
     '[class.is-grouped]': 'isGrouped()',
@@ -55,6 +70,15 @@ import type { ChatMessageRole, ChatMessageStatus } from './chat.types';
 export class ChatMessageComponent {
   /** Who wrote it: `'user'` draws a filled bubble on the right, `'assistant'` a subtle one on the left. */
   readonly role = input<ChatMessageRole>('assistant');
+  /** What a `'system'` notice means. `'neutral'` is a quiet one-line plaque for a routine note
+   *  (saved, switched, started); `'info'`, `'success'`, `'warning'` and `'error'` draw a card in that
+   *  status colour with its icon, for a note the reader should not miss. Other roles ignore it. */
+  readonly tone = input<ChatMessageTone>('neutral');
+  /** A bold first line of a `'system'` notice, for one that carries a detail under it. */
+  readonly title = input<string>('');
+  /** Icon at the start of a `'system'` notice. A toned notice shows its tone's icon without it; a
+   *  `'neutral'` one shows none. */
+  readonly icon = input<IconName | null>(null);
   /** Name shown above the bubble. Without it the role is spoken (`DS_INTL.chat.user` / `assistant`). */
   readonly author = input<string>('');
   /** Time label, already formatted, shown under the bubble. In a `ds-chat-thread` only the last message
@@ -140,6 +164,10 @@ export class ChatMessageComponent {
     ...DS_INTL_DEFAULTS.chat,
     ...this.intl().chat,
   }));
+
+  protected readonly noticeIcon = computed(
+    () => this.icon() ?? TONE_ICONS[this.tone()],
+  );
 
   protected readonly speaker = computed(
     () => this.author() || this.wording()[this.role()],
@@ -259,9 +287,10 @@ export class ChatMessageComponent {
     });
   }
 
-  // Folding, the steps shrink toward the chip as the chip grows at the top of the bubble; opening,
-  // the steps grow back above it. Both run on height, so the bubble and its text move with the
-  // layout rather than jumping. The chip stays once shown, to fold the steps again.
+  // Folding, the chip at the top of the bubble rises into the steps: their height closes from the bottom, so
+  // the rows nearest the chip slide under it first, unsquashed, and the last ones fade as it reaches the
+  // top. The bubble rides up with the layout, and a new chip opens in the first third so it leads the move.
+  // Opening plays it back, the rows sliding out from under the chip. One duration and one easing throughout.
   private applyFold(folded: boolean, animate: boolean): void {
     const host = this.host.nativeElement;
     if (host.classList.contains('steps-folded') === folded) {
@@ -279,70 +308,45 @@ export class ChatMessageComponent {
       return;
     }
     const timing: KeyframeAnimationOptions = {
-      duration: 380,
-      easing: 'cubic-bezier(0.34, 1.25, 0.64, 1)',
+      duration: 360,
+      easing: 'cubic-bezier(0.2, 0, 0, 1)',
     };
     if (chip && chipNew) {
-      const chipHeight = chip.getBoundingClientRect().height;
+      const chipHeight = `${chip.getBoundingClientRect().height}px`;
       chip.animate(
         [
-          {
-            height: '0px',
-            opacity: 0,
-            transform: 'scale(0.9)',
-            overflow: 'hidden',
-          },
-          {
-            height: `${chipHeight}px`,
-            opacity: 1,
-            transform: 'none',
-            overflow: 'hidden',
-          },
-        ],
-        { ...timing, easing: 'cubic-bezier(0.2, 0, 0, 1)' },
-      );
-    }
-    if (folded) {
-      const height = steps.getBoundingClientRect().height;
-      steps.style.transformOrigin = 'bottom left';
-      steps.animate(
-        [
-          {
-            height: `${height}px`,
-            opacity: 1,
-            transform: 'none',
-            overflow: 'hidden',
-          },
-          {
-            height: '0px',
-            opacity: 0,
-            transform: 'scale(0.6)',
-            overflow: 'hidden',
-          },
-        ],
-        { duration: 380, easing: 'cubic-bezier(0.2, 0, 0, 1)' },
-      ).onfinish = () => host.classList.toggle('steps-folded', this.folded());
-    } else {
-      host.classList.remove('steps-folded');
-      const height = steps.getBoundingClientRect().height;
-      steps.style.transformOrigin = 'bottom left';
-      steps.animate(
-        [
-          {
-            height: '0px',
-            opacity: 0,
-            transform: 'scale(0.6)',
-            overflow: 'hidden',
-          },
-          {
-            height: `${height}px`,
-            opacity: 1,
-            transform: 'none',
-            overflow: 'hidden',
-          },
+          { height: '0px', opacity: 0, overflow: 'hidden' },
+          { height: chipHeight, opacity: 1, overflow: 'hidden', offset: 0.3 },
+          { height: chipHeight, opacity: 1, overflow: 'hidden' },
         ],
         timing,
       );
+    }
+    if (!folded) {
+      host.classList.remove('steps-folded');
+    }
+    const height = steps.getBoundingClientRect().height;
+    const margin = getComputedStyle(steps).marginBottom;
+    const open = {
+      height: `${height}px`,
+      marginBottom: margin,
+      opacity: 1,
+      overflow: 'hidden',
+    };
+    const shut = {
+      height: '0px',
+      marginBottom: '0px',
+      opacity: 0,
+      overflow: 'hidden',
+    };
+    const run = steps.animate(
+      folded
+        ? [open, { opacity: 1, offset: 0.7 }, shut]
+        : [shut, { opacity: 1, offset: 0.3 }, open],
+      timing,
+    );
+    if (folded) {
+      run.onfinish = () => host.classList.toggle('steps-folded', this.folded());
     }
   }
 }

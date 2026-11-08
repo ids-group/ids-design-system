@@ -6,10 +6,12 @@
 @Component({ selector: 'ds-splitter' })
 export class SplitterComponent implements OnInit, OnDestroy {
     public constructor();
+    private alongAxis;
     private applyMove;
     public readonly ariaLabel = input<string | null>(null);
     private clamp;
     private clampToBox;
+    private clearFog;
     private clearTransforms;
     private commit;
     protected readonly current = computed(…);
@@ -18,9 +20,14 @@ export class SplitterComponent implements OnInit, OnDestroy {
     public readonly defaultSize = input(320, { transform: numberAttribute });
     private readonly document;
     private drag;
+    public readonly dragFog = input(false, { transform: booleanAttribute });
     protected readonly dragging = signal(…);
     private endDrag;
     protected readonly endId = nextControlId(…);
+    private readonly finishDrag;
+    private readonly fogEnd;
+    private readonly fogStart;
+    private fogTimer;
     private frame;
     private fromPaneEdge;
     private readonly handle;
@@ -37,6 +44,7 @@ export class SplitterComponent implements OnInit, OnDestroy {
     protected onPointerDown(event: PointerEvent): void;
     private readonly onPointerMove;
     protected onPointerUp(event: PointerEvent): void;
+    private readonly onWindowBlur;
     public readonly orientation = input<SplitterOrientation>('horizontal');
     public readonly overdrag = input<SplitterOverdrag>('elastic');
     public readonly pane = input<SplitterPane>('start');
@@ -45,6 +53,8 @@ export class SplitterComponent implements OnInit, OnDestroy {
     public readonly persistKey = input<string>('');
     protected reset(): void;
     private room;
+    private shade;
+    private sideOf;
     public readonly size = model<number | null>(null);
     private springBack;
     private springTimer;
@@ -53,6 +63,7 @@ export class SplitterComponent implements OnInit, OnDestroy {
     private stopSpring;
     private storageKey;
     private stretch;
+    private syncFogTransforms;
     private readonly zone;
 }
 
@@ -68,6 +79,7 @@ export type SplitterPane = 'start' | 'end';
 ```css
 ds-splitter {
     --ds-splitter-drag-color: var(--text-muted);
+    --ds-splitter-fog-color: color-mix(in srgb, var(--text-primary) 22%, transparent);
     --ds-splitter-gap: var(--space-2);
     --ds-splitter-grip-color: var(--text-muted);
     --ds-splitter-line-color: var(--border-strong);

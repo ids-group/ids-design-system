@@ -181,6 +181,8 @@ export interface DsIntl {
     readonly label?: string;
     /** `'Send'` - its default send button. */
     readonly send?: string;
+    /** `'Stop'` - the default send button while `busy` and `stoppable`. */
+    readonly stop?: string;
   };
   readonly spinner: {
     readonly label: string;
@@ -249,6 +251,8 @@ export interface DsIntl {
     readonly user?: string;
     /** `'Assistant'` - the same for `role="assistant"`. */
     readonly assistant?: string;
+    /** `'Notice'` - the same for `role="system"`. */
+    readonly system?: string;
     /** `'Conversation'` - accessible name of the `ds-chat-thread` scroll area when `ariaLabel` is unset. */
     readonly thread?: string;
     /** `'Assistant is working'` - the working row when `workingLabel` is empty. */

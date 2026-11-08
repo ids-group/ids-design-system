@@ -1,0 +1,190 @@
+{
+  "version": "unreleased",
+  "items": [
+    {
+      "id": "field-border-default-color",
+      "kind": "behavior",
+      "old": "--ds-field-border-color",
+      "new": null,
+      "surface": [
+        "style"
+      ],
+      "searchHints": [
+        "--ds-field-border-color",
+        "--ds-date-picker-trigger-border-color",
+        "--ds-time-picker-trigger-border",
+        "--ds-color-picker-trigger-border-color",
+        "--ds-number-stepper-border-color",
+        "--ds-otp-cell-border-color",
+        "--ds-field-group-border-color",
+        "--border-default"
+      ],
+      "detect": [
+        "border: 1px solid var(--border-default)"
+      ],
+      "action": "None, unless a screen must keep the faint field outline: set `--border-field: var(--border-default)` and `--border-field-hover: var(--border-strong)` on `:root`. A field of your own drawn to match the library fields takes `--border-field` and `--border-field-hover` for its border.",
+      "appliesWhen": "`ds-input`, `ds-textarea`, `ds-select`, `ds-multi-select`, `ds-autocomplete`, `ds-search`, `ds-chat-input`, the `ds-date-picker`, `ds-time-picker` and `ds-color-picker` triggers, `ds-number-stepper`, `ds-otp-input` and `ds-field-group`, in both themes. Defaults that moved: `--ds-field-border-color`, `--ds-field-border-color-hover`, `--ds-input-border`, `--ds-input-border-hover`, `--ds-search-border`, `--ds-select-border-color`, `--ds-select-border-color-hover`, `--ds-multi-select-border-color`, `--ds-multi-select-border-color-hover`, `--ds-autocomplete-border-color`, `--ds-autocomplete-border-color-hover`, `--ds-date-picker-trigger-border-color`, `--ds-time-picker-trigger-border`, `--ds-color-picker-trigger-border-color`, `--ds-number-stepper-border-color`, `--ds-otp-cell-border-color` and `--ds-field-group-border-color`, each from `--border-default` (hover: `--border-strong`) to `--border-field` (hover: `--border-field-hover`). A value set on any of them still wins. Focus, error, success and disabled borders read other tokens.",
+      "pitfall": "A field of your own styled with `--border-default` to look like a library field now reads fainter than the library fields beside it.",
+      "restore": ":root { --border-field: var(--border-default); --border-field-hover: var(--border-strong); }",
+      "verify": "At rest a `ds-input` border computes to `--border-field` (`#6B7388` in both themes), and on hover to `--border-field-hover`, unless `--ds-field-border-color` or the component's own border token is set.",
+      "evidence": [
+        "tokens:--border-field",
+        "tokens:--border-field-hover"
+      ]
+    },
+    {
+      "id": "dark-overlay-tint-raised",
+      "kind": "behavior",
+      "old": "--surface-tint",
+      "new": null,
+      "surface": [
+        "style"
+      ],
+      "searchHints": [
+        "--surface-tint",
+        "--accent-surface-tint",
+        "--ds-list-item-selected-bg-color",
+        "--ds-tree-row-selected-bg-color",
+        "--ds-empty-state-tile-bg-color"
+      ],
+      "detect": [
+        "var(--surface-tint)"
+      ],
+      "action": "None, unless your app sets `--surface-tint` for a brand: set `--surface-overlay-tint` and `--surface-overlay-raised-tint` beside it, for each theme it covers.",
+      "appliesWhen": "The dark theme (`data-theme=\"dark\"`) only. Inside `ds-modal`, `ds-drawer` and the `ds-app-layout` rail below `lg`, `--surface-tint` and `--accent-surface-tint` read `--surface-overlay-tint`; inside `ds-popover`, a `ds-menu` in it and the dropdown panels of `ds-select`, `ds-multi-select` and `ds-autocomplete` they read `--surface-overlay-raised-tint`. `--ds-list-item-selected-bg-color`, `--ds-tree-row-selected-bg-color`, `--ds-empty-state-tile-bg-color` and the dropdown panels' `--ds-option-selected-bg-color` follow there, and a value set on them still wins. The same overlays read `--accent-strong` from `--accent-strong-overlay`, lighter on dark, so the selected `ds-list-item`, `ds-tree` and dropdown option labels keep 4.5:1. In those dropdown panels the default of `--ds-option-selected-bg-color` moved from `--primary-subtitle` to `--surface-overlay-raised-tint`, and of `--ds-option-selected-label-color` from `--primary-strong` to `--accent-strong-overlay`; both resolve as before in light. Light values are unchanged.",
+      "pitfall": "A `--surface-tint` or `--accent-surface-tint` override on `:root` no longer reaches inside those overlays; override `--surface-overlay-tint` and `--surface-overlay-raised-tint` as well.",
+      "restore": ":root[data-theme='dark'] { --surface-overlay-tint: var(--surface-tint); --surface-overlay-raised-tint: var(--surface-tint); --accent-strong-overlay: var(--accent-strong); } .ds-dropdown-panel { --ds-option-selected-bg-color: var(--primary-subtitle); --ds-option-selected-label-color: var(--primary-strong); }",
+      "verify": "In the dark theme a selected `ds-list-item` inside a `ds-popover` is lighter than the popover, and one inside a `ds-drawer` lighter than the drawer.",
+      "evidence": [
+        "tokens:--surface-overlay-tint",
+        "tokens:--surface-overlay-raised-tint",
+        "tokens:--accent-strong-overlay"
+      ]
+    },
+    {
+      "id": "chat-message-role-system-for-readers",
+      "kind": "behavior",
+      "old": "ChatMessageRole",
+      "new": null,
+      "surface": [
+        "typescript"
+      ],
+      "searchHints": [
+        "ChatMessageRole"
+      ],
+      "detect": [
+        "ChatMessageRole"
+      ],
+      "action": "None, unless code of yours reads a `ChatMessageRole` back and must cover every role: add a branch, a case or a key for `'system'` there.",
+      "appliesWhen": "Code that reads a `ChatMessageRole` back: a `switch` covering `'user'` and `'assistant'` in a function with a return type fails with TS2366, an exhaustiveness check against `never` with TS2322, and a `Record<ChatMessageRole, ...>` literal without a `system` key with TS2741. Code that only writes a role into `ds-chat-message` compiles as before.",
+      "pitfall": "The release reads as a new capability, and only the type-checker of whoever reads the role back finds it, after the bump is installed.",
+      "note": "`ChatMessageRole` went from `'user' | 'assistant'` to `'user' | 'assistant' | 'system'`.",
+      "verify": "Every place of yours that maps a `ChatMessageRole` to a label, a class or an avatar handles `'system'`.",
+      "evidence": [
+        "fixture:unreleased/chat-message-role-system-for-readers.ts"
+      ]
+    },
+    {
+      "id": "chat-steps-paced-by-default",
+      "kind": "behavior",
+      "old": "ds-chat-steps",
+      "new": null,
+      "surface": [
+        "template"
+      ],
+      "searchHints": [
+        "ds-chat-steps",
+        "ChatStepsComponent"
+      ],
+      "detect": [
+        "<ds-chat-steps"
+      ],
+      "action": "None, unless a screen or a test must draw a step's final status the moment `status` is set: set `[minRunningMs]=\"0\"` and `[revealStaggerMs]=\"0\"` on that `ds-chat-steps`.",
+      "appliesWhen": "A `ds-chat-step` inside a `ds-chat-steps` whose `status` turns to `done` or `error` keeps drawing as running until it has for at least `minRunningMs` (default `600`), and two steps of one `ds-chat-steps` draw their final status at least `revealStaggerMs` (default `300`) apart. A step outside a `ds-chat-steps`, the first render, a change to any other status and `prefers-reduced-motion: reduce` draw at once. The `status` input and everything bound to it change when you set them; only the drawn marker, label and host `data-status` wait.",
+      "pitfall": "A test that sets a step to `done` and at once asserts its `data-status`, its icon or its status label now sees `running` for up to 600ms.",
+      "restore": "<ds-chat-steps [minRunningMs]=\"0\" [revealStaggerMs]=\"0\">",
+      "verify": "Set three steps of a `ds-chat-steps` from `pending` to `done` in one change: they turn done one after another, not together.",
+      "evidence": [
+        "command:node tools/public-api-golden.mjs --diff v1.1.0"
+      ]
+    }
+  ],
+  "informational": [
+    "`ds-chat-input` takes `stoppable` and emits `stopRequested`: while `busy`, its send button becomes an enabled Stop button named by the optional `DsIntl.chatInput.stop`, with the new icon `stop`. Nothing to change in your code.",
+    {
+      "text": "The `ds-chat-input` send button stays enabled while the text is blank; pressed then, it sends nothing and moves the focus to the text area. Nothing to change in your code.",
+      "verify": "Open an empty `ds-chat-input` and press the send button: it keeps its colour, `submitted` does not fire and the caret lands in the text area."
+    },
+    "`ds-alert` takes `fullWidth`, which stretches the alert across its container. Nothing to change in your code.",
+    "`ds-tree` takes `<ng-template dsTreeLabel let-node>` (`TreeLabelDirective`, `TreeLabelContext`) for the label of every row. Nothing to change in your code.",
+    "Six icons are added: `mouse-pointer`, `pencil-ruler`, `columns`, `history`, `flask` and `panel-right`. Nothing to change in your code.",
+    {
+      "text": "An empty `ds-chat-input`, or an empty `autosize` `ds-textarea`, is as tall as one character typed into it: its placeholder wraps over up to `minRows` lines and ends in an ellipsis after the last, and the height follows `minRows` and the text. Nothing to change in your code.",
+      "verify": "Give a narrow `ds-chat-input` a placeholder longer than the field and type one character: the field keeps its height."
+    },
+    {
+      "text": "A `ds-chat-step` keeps its marker beside the heading's first line for every `status`, as a `waiting` step does: with content or a `time` under the heading, and with a heading on two lines. A step with content under its heading is about 4px taller. A step whose trailing action is not the toggle centres its marker on that control, where a `waiting` one drew it above the heading. A step with a one-line heading and nothing under it renders as before. Nothing to change in your code.",
+      "verify": "Open a `ds-chat-step` with text or buttons under its heading, and one with a two-line heading: the marker sits level with the heading's first line.",
+      "evidence": [
+        "pixels:chat-steps/step-status",
+        "pixels:chat-steps/waiting-for-the-reader"
+      ]
+    },
+    {
+      "text": "A `ds-timeline-item` with content or a `time` under its heading keeps its marker beside the heading's first line, and is about 8px taller. With a trailing action other than the toggle, such an item centres its marker on that control. An item with nothing under its heading renders as before. Nothing to change in your code.",
+      "verify": "Open a `ds-timeline` whose items carry a `time`: each marker sits level with its heading, not beside the time under it."
+    },
+    "A `ds-button` clicked while `loading` keeps the focus: the click reaches the button, which still refuses it. Nothing to change in your code.",
+    {
+      "text": "Under `data-theme=\"dark\"`, `--shadow-1` (and `--ds-elevation-raised`, `--shadow-card`) starts with a 1px light hairline at 8% alpha, so the selected `ds-segmented` segment, the active pill `ds-tabs` tab, the `ds-switch` and `ds-slider` thumbs and a `raised` `ds-card` show an edge. The light theme is unchanged. Nothing to change in your code.",
+      "verify": "In the dark theme, open a `ds-segmented` control: the selected segment shows a thin light outline against its track.",
+      "evidence": [
+        "pixels:segmented/segmented-control",
+        "pixels:switch/switch-states-showcase"
+      ]
+    },
+    "A `ds-splitter` drag released over an iframe or an embedded webview ends there: the resize cursor and the blocked text selection no longer stay on the page. While a handle is dragged, every `iframe`, `webview`, `embed` and `object` on the page ignores the pointer. Nothing to change in your code; a `pointer-events: none` you set on an embedded document during a drag can be removed.",
+    {
+      "text": "A `ds-icon` whose host also carries the global `.icon` class now has a box as large as its glyph: 20px in `ds-banner` and in the file rows of `ds-dropzone`, where the box was 16px around a 20px glyph, so the text beside it sits 4px further from the icon, and 14px in `ds-chat-attachment`, where it was 16px. Nothing to change in your code.",
+      "verify": "Open a `ds-banner`, a `ds-dropzone` with a file and a `ds-chat-attachment`: each icon box is as large as its glyph, 20px, 20px and 14px."
+    },
+    {
+      "text": "The `ds-alert` icon centres on the title, or on the first line of the message when there is no title, where it centred on the whole alert. Nothing to change in your code.",
+      "verify": "Open a `ds-alert` with a title and a message: the icon sits level with the title."
+    },
+    {
+      "text": "A `ds-tree` row without children shows its `icon` in the caret's place, so its label starts where a sibling without an icon starts its label. A row with children keeps the caret, the icon and then the label. Nothing to change in your code.",
+      "verify": "Open a `ds-tree` where only some sibling rows without children have an icon: their labels start at the same x."
+    },
+    {
+      "text": "`minRows` and `maxRows` of an `autosize` `ds-textarea` (and `ds-chat-input`) count lines of text without the field's block padding: `minRows=\"2\"` shows two full lines, and a field with `maxRows` grows up to its block padding taller (24px at the default size, 8px in a `ds-chat-input`) before it scrolls. Nothing to change in your code.",
+      "verify": "Give an `autosize` `ds-textarea` `minRows=\"2\"`: the empty field shows two full lines."
+    },
+    {
+      "text": "`ds-chat-message` takes `role=\"system\"` for a notice from the app, centred between replies. `tone` (`ChatMessageTone`, default `'neutral'`) picks a quiet plaque for a routine note, or a card in the `'info'`, `'success'`, `'warning'` or `'error'` status colour with its icon; `title` adds a bold first line and `icon` sets the icon. The plaque is styled by `--ds-chat-message-system-color`, `--ds-chat-message-system-bg-color` and `--ds-chat-message-system-border-color`. Without `author` it is spoken as the optional `DsIntl.chat.system` (`'Notice'`). Code that reads a `ChatMessageRole` back is the `chat-message-role-system-for-readers` item.",
+      "verify": "Put a `ds-chat-message` with `role=\"system\"` between two replies: it shows as a centred plaque of small text and splits the run; with `tone=\"warning\"` it turns into a warning-coloured card with the warning icon."
+    },
+    "`ds-chat-thread` reads `--ds-chat-thread-inset-bottom` (default `0px`): set it to the height of what floats over the thread's bottom edge, and the last message scrolls clear of it and the jump button sits above it. Nothing to change in your code.",
+    {
+      "text": "Folding or opening the steps of a `ds-chat-message` animates the gap under the steps with their height, so the bubble no longer moves 8px in the last frame. Nothing to change in your code.",
+      "verify": "Send a message under a reply with steps: the reply's steps fold and the messages below settle without a jump at the end."
+    },
+    {
+      "text": "A `ds-chat-thread` keeps the room of its scrollbar while its messages fit, so they keep their width when the list starts or stops overflowing. Nothing to change in your code.",
+      "verify": "Fill a `ds-chat-thread` until it scrolls, then remove messages until it fits: the messages keep their width and line breaks."
+    },
+    {
+      "text": "Folding the steps of a `ds-chat-message` closes their height from the bottom over 360ms, so the rows slide under the chip at the top of the bubble without scaling; opening slides them back out. Nothing to change in your code.",
+      "verify": "Send a message under a reply with steps: the rows slide under the chip with their text intact and the bubble rides up with no jump; a click on the chip slides them back out."
+    },
+    {
+      "text": "A `ds-chat-thread` takes its kept scrollbar room out of its end padding, so both sides read the same with or without a scrollbar. Nothing to change in your code.",
+      "verify": "Compare a short and an overflowing `ds-chat-thread`: the messages keep the same width and the same space to both edges."
+    },
+    {
+      "text": "The `arrow` of a `ds-popover` is a caret outside the panel edge facing the trigger, centred on the trigger, with the panel's fill and border; a `ds-popover` with `placement=\"left\"` or `placement=\"right\"` centres on its trigger, and a `ds-menu` submenu enters from the side of its item. `--ds-popover-arrow-size` sets the caret's edge length. Nothing to change in your code.",
+      "verify": "Open a `ds-popover` with `arrow` on each `placement`: the caret stands outside the panel edge facing the trigger and points at the trigger's middle, and the panel border runs round it."
+    }
+  ],
+  "deleteList": []
+}

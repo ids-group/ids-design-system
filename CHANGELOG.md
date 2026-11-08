@@ -1,5 +1,178 @@
 ## Unreleased
 
+### Added
+
+- **`ds-splitter` shades the pane you drag towards, with `dragFog`.** While the handle moves, a fog
+  falls on the pane it moves towards, stronger the faster and farther the drag, and turns when the
+  hand turns. Past `min` or `max` it rides the rubber band with its pane; it fades when the hand stops
+  or lets go, and a splitter at rest paints as before. Off by default and under
+  `prefers-reduced-motion: reduce`. Its colour is the new CSS hook `--ds-splitter-fog-color`
+  (default `--text-primary` at 22%).
+- **`--surface-overlay-tint`, `--surface-overlay-raised-tint` and `--accent-strong-overlay`, the
+  selected-row tint and its text inside an overlay.** In light the two surface tints equal
+  `--surface-tint` and `--accent-strong-overlay` equals `--accent-strong`. Under `data-theme="dark"`
+  the surface tints mix 30% of `--primary` into the overlay fill:
+  `color-mix(in srgb, var(--primary) 30%, var(--surface-overlay))` and the same over
+  `--surface-overlay-raised`, and `--accent-strong-overlay` is `hsl(from var(--primary) h 90% 80%)`.
+- **`--border-field` and `--border-field-hover`, the outline of a field.** `--border-field` is
+  `--neutral-500` in light and `--neutral-400` under `data-theme="dark"` (`#6B7388` in both), at
+  least 3:1 against the page, a card, a modal or drawer and a popover. `--border-field-hover` is one
+  step stronger: `--neutral-600` in light, `--neutral-500` on dark.
+- **`ds-tree` draws a row label of your own.** `<ng-template dsTreeLabel let-node>` replaces the
+  label of every row, for a label of two lines or one that mixes styles. Its context carries `node`
+  (also `$implicit`), `level` (`0` for a root node), `selected` and `disabled`. The row grows to the
+  template's height, and the label takes the width between the icon and the trailing content, so an
+  element inside it can cut its text with an ellipsis or pair it with `dsTooltipWhenClipped`. The
+  text the template renders is the row's accessible name: a template that draws no text needs a
+  visually hidden element carrying the name. Without the template a row renders as before. New
+  exports `TreeLabelDirective` and `TreeLabelContext`.
+- **Six icons: `mouse-pointer`, `pencil-ruler`, `columns`, `history`, `flask` and `panel-right`.**
+  An arrow cursor for picking an element, a pencil and ruler for opening a design, two columns for a
+  side-by-side compare, a clock with a back arrow for history and restore, a flask for an
+  experimental feature, and a frame with a right panel for showing or hiding a side panel. They
+  are drawn from Lucide (ISC) on the 24-unit grid and take the set's stroke.
+- **`ds-chat-input` offers Stop while it is busy.** With `stoppable` set and `busy` on, the default
+  send button shows a square inside a turning ring, stays enabled and emits `stopRequested` when
+  pressed; its accessible name is the new `DsIntl` key `chatInput.stop` (`'Stop'`). Enter still
+  does not submit while busy, and a `disabled` input keeps the spinner. Without `stoppable` the
+  busy button renders as before. New icon `stop`.
+- **`ds-chat-thread` keeps room for something laid over its bottom edge.** Set
+  `--ds-chat-thread-inset-bottom` to the height of what floats over the thread, such as attachments
+  above the composer: the last message scrolls clear of it and the jump button sits above it. The
+  default `0px` renders as before.
+- **`ds-alert` can fill its container.** With `fullWidth` set the host becomes block-level and
+  100% wide, and the alert stretches across it, for a bar along a panel or a preview. Without it the
+  alert hugs its content as before.
+- **`ds-chat-message` takes `role="system"`, a notice from the app.** It sits centred and splits a
+  run of replies. `tone` (new type `ChatMessageTone`) says what it means: `'neutral'`, the default, is
+  a quiet plaque in `--text-secondary` at `--font-size-xs` for a routine note; `'info'`, `'success'`,
+  `'warning'` and `'error'` draw a card in that status colour (`--*-subtitle` fill, `--*-border`
+  outline, `--*-text`) with the tone's icon. `title` adds a bold first line; `icon` sets the icon, and
+  a neutral plaque shows one only when given. Without `author` it is spoken as the new `DsIntl` key
+  `chat.system` (`'Notice'`). Tokens `--ds-chat-message-system-color`,
+  `--ds-chat-message-system-bg-color` and `--ds-chat-message-system-border-color` style the neutral
+  plaque. `ChatMessageRole` gains `'system'`: a `switch` of yours that must cover every role needs a
+  case for it.
+
+### Changed
+
+- **Folding the steps of a `ds-chat-message` slides them under the chip.** The steps shrank toward a
+  corner at 60% scale while fading over 380ms, and opening overshot on another easing. Now, over
+  360ms on one easing, their height closes from the bottom so the rows nearest the chip slide under it
+  first, unsquashed, and the last rows fade as the chip reaches the top; the bubble rides up with the
+  layout, and opening slides the rows back out. Under `prefers-reduced-motion: reduce` nothing
+  animates, as before. Nothing to change in your code.
+- **Steps of a `ds-chat-steps` that finish at once settle one after another.** A step whose
+  `status` turns to `done` or `error` keeps showing as running until it has for at least 600ms,
+  and two steps show their final status at least 300ms apart, so a batch that finishes together
+  reads as a sequence. Under `prefers-reduced-motion: reduce` the final status shows at once. Only
+  what is drawn waits: `status` and everything bound to it change when you set them. New inputs
+  `minRunningMs` (default `600`) and `revealStaggerMs` (default `300`); set both to `0` to show
+  every final status at once.
+- **The `ds-chat-input` send button stays enabled while the text is blank.** It keeps its colour
+  from an empty box to a typed message and back, where it turned gray and disabled. Pressed while the
+  text is blank it sends nothing and moves the focus to the text area; Enter on blank text sends
+  nothing, as before. `disabled` still disables it. Nothing to change in your code; a `[send]` slot
+  of your own keeps the state you bind.
+- **Field outlines meet 3:1 (WCAG 1.4.11).** `ds-input`, `ds-textarea`, `ds-select`,
+  `ds-multi-select`, `ds-autocomplete`, `ds-search`, `ds-chat-input`, the `ds-date-picker`,
+  `ds-time-picker` and `ds-color-picker` triggers, `ds-number-stepper`, the `ds-otp-input` cells
+  and `ds-field-group` draw their resting border in `--border-field` and their hover border in
+  `--border-field-hover`, where they drew `--border-default` (1.31:1 on white, 1.19:1 on a dark
+  drawer) and `--border-strong`. `--ds-field-border-color`, `--ds-field-border-color-hover`,
+  `--ds-date-picker-trigger-border-color`, `--ds-time-picker-trigger-border`,
+  `--ds-color-picker-trigger-border-color`, `--ds-number-stepper-border-color`,
+  `--ds-otp-cell-border-color` and `--ds-field-group-border-color` default to them, and through
+  them `--ds-input-border`, `--ds-search-border`, `--ds-select-border-color`,
+  `--ds-multi-select-border-color` and `--ds-autocomplete-border-color` with their `-hover`
+  pairs. Nothing to change in your code, unless a screen must keep the faint outline: set
+  `--border-field: var(--border-default)` and
+  `--border-field-hover: var(--border-strong)` on `:root`.
+- **Selected and current rows inside dark overlays are lighter than the overlay.** Modals, drawers
+  and the `ds-app-layout` rail below `lg` set `--surface-tint` and `--accent-surface-tint` to
+  `--surface-overlay-tint` on themselves, and `ds-popover` and the dropdown panels
+  of `ds-select`, `ds-multi-select` and `ds-autocomplete` to `--surface-overlay-raised-tint`. Under
+  `data-theme="dark"` the selected `ds-list-item`, the selected `ds-tree` row, the selected option
+  of those dropdown panels, the `ds-empty-state` tile and any row of your own painted with
+  `--surface-tint` read about 1.31:1 against a drawer
+  and 1.29:1 against a popover, where `--surface-tint` was darker than both (1.05:1 and 1.15:1).
+  The same overlays set `--accent-strong` to `--accent-strong-overlay`, `--accent-strong` in light
+  and `hsl(from var(--primary) h 90% 80%)` on dark, so a selected label keeps 4.5:1 on the lighter
+  tint.
+  The light theme is unchanged. Nothing to change in your code, unless you set `--surface-tint`
+  on `:root` for a brand: set `--surface-overlay-tint` and `--surface-overlay-raised-tint` there
+  too, or the overlays keep the library tint.
+
+### Fixed
+
+- **A `ds-chat-thread` is as wide on both sides with or without a scrollbar.** The scrollbar room it
+  keeps was added to the end padding, so the right side read wider than the left. The room, as wide as
+  the platform's scrollbar, now comes out of the end padding. Nothing to change in your code.
+- **A `ds-chat-thread` keeps its width when the messages start or stop overflowing it.** The
+  scrollbar took its room from the messages only while they overflowed, so at the end of a fold that
+  brought the list back inside the view every message rewrapped at a new width in one frame. The
+  room is now always kept. Nothing to change in your code.
+- **A `ds-tree` row without children shows its `icon` in the caret's place.** It drew the icon after
+  an empty caret slot, so its label started 24px right of a sibling without an icon. Its label now
+  starts where the sibling's does. A row with children keeps the caret, then the icon, then the
+  label. Nothing to change in your code.
+- **Folding or opening the steps of a `ds-chat-message` ends without a jump.** The gap under the
+  steps appeared or vanished at once at the end of the motion, so the bubble and every message below
+  it moved 8px in one frame. The gap now shrinks and grows with the steps. Nothing to change in your
+  code.
+- **The `ds-alert` icon sits by the first line.** It centred on the whole alert, so with a title
+  and a message, a long message or actions it stood halfway down the alert. It now centres on the
+  title, or on the first line of the message when there is no title. Nothing to change in your
+  code.
+- **An empty `ds-chat-input`, or an empty `autosize` `ds-textarea`, is as tall as one character
+  typed into it.** A placeholder longer than the field wrapped and set the height, so the field
+  shrank on the first character. The placeholder wraps over up to `minRows` lines and ends in an
+  ellipsis after the last; the height follows `minRows` and the text.
+- **`minRows` and `maxRows` of an `autosize` `ds-textarea` count lines of text.** The field's
+  block padding counted against them, so `minRows="2"` showed less than two lines of text and a
+  field with `maxRows` scrolled before that many. An `autosize` field with `maxRows` now grows up to
+  its block padding taller before it scrolls: 24px at the default size, 8px in a `ds-chat-input`.
+  Nothing to change in your code.
+- **A `ds-splitter` drag ends when it is released over an iframe or an embedded webview.** Such a
+  document took the pointer away from the handle, so the release never arrived: the page kept the
+  resize cursor on every element and blocked text selection until the next click. While a handle is
+  dragged, every `iframe`, `webview`, `embed` and `object` on the page now ignores the pointer, and
+  the drag also ends when the handle loses pointer capture or the window loses focus. Nothing to
+  change in your code; a `pointer-events: none` you set on an embedded document during a drag can
+  be removed.
+- **A `ds-icon` box is as large as its glyph.** `ds-icon` sets `--ds-icon-size` on itself as well
+  as on its `svg`, so a host that also carries the global `.icon` class takes the glyph's size
+  instead of `--icon-md` (16px). In `ds-banner` and the file rows of `ds-dropzone` the icon box
+  grows from 16px to 20px, the size its glyph already drew, and the text beside it moves 4px further
+  from the icon; in `ds-chat-attachment` it shrinks from 16px to 14px.
+- **The marker of a `ds-chat-step` sits beside the first line of its heading.** A step with
+  content or a `time` under its heading, or a heading on two lines, centred its marker on the whole
+  step, below the heading's first line; only a `waiting` step kept it on the heading row. Every
+  status now keeps the marker beside the heading's first line, as a `waiting` step does, and a step
+  with content under its heading is about 4px taller. A step whose trailing action is not the toggle
+  centres its marker on that control, where a `waiting` one drew it above the heading. A step with a
+  one-line heading and nothing under it renders as before. Nothing to change in your code.
+- **The marker of a `ds-timeline-item` with content under its heading sits beside the heading.** An
+  item with content or a `time` under its heading centred its marker on the whole item, below the
+  heading. The marker now sits beside the heading's first line, and such an item is about 8px
+  taller. With a trailing action other than the toggle, such an item centres its marker on that control.
+  An item with nothing under its heading renders as before. Nothing to change in your code.
+- **A `ds-button` clicked while `loading` keeps the focus.** The button took no pointer events while
+  loading, so a second click landed on the page and moved the focus off the button. The click now
+  reaches the button, which still refuses it, and the focus stays. Nothing to change in your code.
+- **Under `data-theme="dark"`, an element raised by `--shadow-1` has an edge.** The selected
+  `ds-segmented` segment, the active pill `ds-tabs` tab, the `ds-switch` and `ds-slider` thumbs and a
+  `raised` `ds-card` sit on a surface no darker than themselves, and with the dark shadow they lost
+  their outline. `--shadow-1` (and `--ds-elevation-raised`, `--shadow-card`) adds the 1px light hairline
+  at 8% alpha that `--shadow-4` draws. The light theme is unchanged. Nothing to change in your code.
+- **The `arrow` of a `ds-popover` is a caret outside the panel, pointing at the middle of the
+  trigger.** It was a faint chevron drawn inside the panel near its corner, and a panel opened to the
+  left or right drew it on its top edge, pointing up. The caret now stands out of the edge that faces
+  the trigger, filled like the panel with the border running round it, as on `ds-tooltip`, and follows
+  the trigger when the panel flips or is pushed in from the viewport edge. A left or right panel
+  centres on its trigger. `--ds-popover-arrow-size` is the caret's edge length. A submenu of `ds-menu`
+  enters from the side of its item rather than from above. Nothing to change in your code.
+
 ## 1.1.0 — 2026-11-02
 
 ### Added

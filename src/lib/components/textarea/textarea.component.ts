@@ -263,6 +263,13 @@ export class TextareaComponent extends DsControlValueAccessor<string> {
     this.autosize() && this.maxRows() ? `${this.maxRows()}lh` : null,
   );
 
+  protected readonly placeholderLineShown = computed(
+    () => this.autosize() && this.placeholder() !== '' && !this.value(),
+  );
+  protected readonly placeholderRows = computed(() =>
+    Math.max(1, this.minRows() ?? 1),
+  );
+
   protected readonly effectiveResize = computed<TextareaResize>(() =>
     this.autosize() ? 'none' : this.resize(),
   );

@@ -23,6 +23,83 @@
   align-items: flex-end;
 }
 
+// A notice from the app, not from either speaker: a quiet plaque by default, a card in its status
+// colour when its tone says it matters.
+:host([data-role='system']) {
+  --_chat-bubble-bg-color: var(--ds-chat-message-system-bg-color, var(--surface-secondary));
+  --_chat-bubble-color: var(--ds-chat-message-system-color, var(--text-secondary));
+  --_chat-bubble-radius: var(--ds-radius-control);
+  --_chat-bubble-padding: var(--space-1) var(--space-2);
+  --_chat-notice-border-color: var(--ds-chat-message-system-border-color, var(--border-default));
+
+  align-items: center;
+
+  .bubble {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0;
+    border: var(--border-width-default) solid var(--_chat-notice-border-color);
+    font-size: var(--font-size-xs);
+    text-wrap: pretty;
+  }
+
+  .bubble:has(> .notice-lead) {
+    grid-template-columns: auto minmax(0, 1fr);
+    column-gap: var(--space-2);
+  }
+
+  .notice-title,
+  .body,
+  .attachments {
+    grid-column: -2;
+  }
+
+  .attachments {
+    margin-top: var(--space-2);
+  }
+}
+
+:host([data-role='system']:not([data-tone='neutral'])) {
+  --_chat-bubble-padding: var(--space-2) var(--space-3);
+}
+
+:host([data-tone='info']) {
+  --_chat-bubble-bg-color: var(--info-subtitle);
+  --_chat-bubble-color: var(--info-text);
+  --_chat-notice-border-color: var(--info-border);
+}
+
+:host([data-tone='success']) {
+  --_chat-bubble-bg-color: var(--success-subtitle);
+  --_chat-bubble-color: var(--success-text);
+  --_chat-notice-border-color: var(--success-border);
+}
+
+:host([data-tone='warning']) {
+  --_chat-bubble-bg-color: var(--warning-subtitle);
+  --_chat-bubble-color: var(--warning-text);
+  --_chat-notice-border-color: var(--warning-border);
+}
+
+:host([data-tone='error']) {
+  --_chat-bubble-bg-color: var(--error-subtitle);
+  --_chat-bubble-color: var(--error-text);
+  --_chat-notice-border-color: var(--error-border);
+}
+
+// One line box tall, so the icon centres on the first line however many follow.
+.notice-lead {
+  grid-row: 1 / span 3;
+  display: flex;
+  align-items: center;
+  block-size: 1lh;
+}
+
+.notice-title {
+  font-weight: var(--font-weight-semibold);
+  color: var(--text-primary);
+}
+
 // Spacing between messages is the thread's: a full gap between speakers, a tight one inside a run.
 :host(.in-thread) {
   margin-top: var(--_chat-thread-gap);

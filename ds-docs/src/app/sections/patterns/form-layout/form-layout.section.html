@@ -209,8 +209,8 @@
 
     <li>
       Check validity in the submit handler; a failed attempt shows the errors
-      inline, focuses the first invalid field and disables the button while
-      the form stays invalid. An early
+      inline, focuses the first invalid field and disables the button while the
+      form stays invalid. An early
       <code class="t-mono-inline">
         return
       </code> that renders nothing is a
@@ -218,24 +218,22 @@
     </li>
 
     <li>
-      From then on validation is live until the form is reset: a fix enables
-      the button at once, a new error disables it at once, with no second
-      submit.
+      From then on validation is live until the form is reset: a fix enables the
+      button at once, a new error disables it at once, with no second submit.
     </li>
 
     <li>
       <code class="t-mono-inline">
         [disabled]="submitted() &amp;&amp; invalid()"
-      </code>, with
-      <code class="t-mono-inline">
-        submitted = signal(false)
-      </code> set at the start of the submit handler and reset with the form.
+      </code
+      >, with <code class="t-mono-inline"> submitted = signal(false) </code> set
+      at the start of the submit handler and reset with the form.
     </li>
 
     <li>
-      In flight: <code class="t-mono-inline">[loading]</code>, never the
-      loading flag inside <code class="t-mono-inline">[disabled]</code>; a
-      loading button keeps focus and blocks presses.
+      In flight: <code class="t-mono-inline">[loading]</code>, never the loading
+      flag inside <code class="t-mono-inline">[disabled]</code>; a loading
+      button keeps focus and blocks presses.
     </li>
 
     <li>
@@ -254,8 +252,8 @@
       Stack reserved fields in
       <code class="t-mono-inline">
         &lt;ds-stack gap="none"&gt;
-      </code>: a reserved
-      row carries ~23px of trailing rhythm
+      </code>: a
+      reserved row carries ~23px of trailing rhythm
     </li>
 
     <li>

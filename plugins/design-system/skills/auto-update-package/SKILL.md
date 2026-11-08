@@ -403,7 +403,8 @@ while the wave runs. Collect the whole wave before Phase B.
     report the reason once.
     The step runs `node <plugin-root>/scripts/lint-step.mjs <target root> <source root> <lint copy> --from <F> --to <V> --tools <tools dir>`
     (`<plugin-root>` as for the drift scan in Phase B step 5; `<F>` is the chain version before V,
-    or `current` for the first step). It resolves eslint, stylelint, `typescript-eslint` or
+    or `current` for the first step, which the script reads as the version installed in the
+    target). It resolves eslint, stylelint, `typescript-eslint` or
     `@typescript-eslint/parser`, `@angular-eslint/template-parser` (and the inline-template
     processor) and `postcss-scss` from the consumer's own `node_modules` first, then from
     `<tools dir>`; passes its config through the linters' Node API; never reads or writes the
@@ -768,8 +769,11 @@ spanning all targets. (Single-target repos: the plain per-target loop below is f
    lint step ran. Stage EXACTLY the touched-files union (step 3) plus the target's
    `package.json` plus the lockfile, by explicit pathspec (never `git add -A`, never a bare
    directory). Commit `chore(deps): update @ids-group-ltd/ids-design-system to vV`, migration
-   summary in the body (`-m` subject, `-m` body). Do not run any git command containing the word
-   "push". Next version.
+   summary in the body (`-m` subject, `-m` body). When the consumer's own rules require one change
+   per commit, split the version instead: the bump (`package.json` and the lockfile) first, then
+   one commit per migration, each staged by pathspec. Only the version's last commit has to be
+   green; the commits before it are not built on their own. Do not run any git command containing
+   the word "push". Next version.
 10. **Stuck — LAST RESORT (cap hit, an identical-edit short-circuit, re-check still disagrees, or
     peer unsatisfied).** **Stop the
     run.** Leave the partial edits in the working tree (do NOT roll back). Report the version reached,

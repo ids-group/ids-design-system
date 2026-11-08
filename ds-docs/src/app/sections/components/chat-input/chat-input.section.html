@@ -1,14 +1,17 @@
 <docs-section
   anchor="chat-input"
   eyebrow="Components"
-  title="Chat input">
+  title="Chat input"
+  [apiKeys]="['chat:ChatInputComponent']">
   <span lede>
     Message box for a chat or an instruction: chips above an auto-growing text,
     actions and the send button in the bar below. Enter sends, Shift+Enter
     breaks the line.
   </span>
 
-  <h3 class="block-title t-h4">
+  <h3
+    data-claude-design
+    class="block-title t-h4">
     States
   </h3>
 
@@ -25,7 +28,24 @@
       </div>
 
       <div class="state-cell-label">
-        Empty · send disabled
+        Empty · send stays on
+      </div>
+    </div>
+
+    <div class="state-cell">
+      <div class="state-cell-stage">
+        <ds-chat-input
+          placeholder="Write anything: a question or a change for the whole screen, or pick something first to point at it.">
+          <ds-icon-button
+            actions
+            icon="paperclip"
+            size="sm"
+            ariaLabel="Attach a file" />
+        </ds-chat-input>
+      </div>
+
+      <div class="state-cell-label">
+        Long placeholder · one line
       </div>
     </div>
 
@@ -152,6 +172,26 @@
       <div class="state-cell-stage">
         <ds-chat-input
           placeholder="Describe a change…"
+          busyLabel="Rebuilding"
+          busy
+          stoppable>
+          <ds-icon-button
+            actions
+            icon="paperclip"
+            size="sm"
+            ariaLabel="Attach a file" />
+        </ds-chat-input>
+      </div>
+
+      <div class="state-cell-label">
+        Busy · stoppable
+      </div>
+    </div>
+
+    <div class="state-cell">
+      <div class="state-cell-stage">
+        <ds-chat-input
+          placeholder="Describe a change…"
           value="Waiting for access"
           disabled>
           <ds-icon-button
@@ -169,7 +209,9 @@
     </div>
   </div>
 
-  <h3 class="block-title t-h4">
+  <h3
+    data-claude-design
+    class="block-title t-h4">
     Layout
   </h3>
 
@@ -177,8 +219,8 @@
     <code class="t-mono-inline">
       layout
     </code>
-    decides where the buttons and the busy step sit. Every layout keeps the
-    send button at one size, idle or busy.
+    decides where the buttons and the busy step sit. Every layout keeps the send
+    button at one size, idle or busy.
   </p>
 
   <div class="states is-cols-2">
@@ -267,7 +309,8 @@
 
   <p class="block-desc t-s">
     Type and press Enter to send, Shift+Enter for a new line, paste an image to
-    see it become a chip. Toggle busy to watch the button keep its place.
+    see it become a chip. Toggle busy to watch the button keep its place, and
+    press Stop to end the work.
   </p>
 
   <div class="playground">
@@ -278,8 +321,10 @@
     <ds-chat-input
       placeholder="Describe a change…"
       busyLabel="Rebuilding"
+      stoppable
       [busy]="busy()"
       [(value)]="draft"
+      (stopRequested)="busy.set(false)"
       (submitted)="send($event)"
       (filesPasted)="addPasted($event)">
       @for (name of pasted(); track name) {

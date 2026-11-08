@@ -8,6 +8,7 @@ export { AttachmentComponent } from './attachment.component';
 export type {
   ChatMessageRole,
   ChatMessageStatus,
+  ChatMessageTone,
   ChatStepStatus,
   ChatStepsEnter,
 } from './chat.types';

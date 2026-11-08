@@ -56,6 +56,22 @@
     </button>
   }
 
+  @if (role() === 'system') {
+    @if (noticeIcon(); as name) {
+      <span class="notice-lead">
+        <ds-icon
+          [name]="name"
+          [size]="14" />
+      </span>
+    }
+
+    @if (title()) {
+      <div class="notice-title">
+        {{ title() }}
+      </div>
+    }
+  }
+
   <div class="body">
     <ng-content></ng-content>
   </div>
@@ -98,7 +114,11 @@
       </span>
     }
 
-    @if (time() && !isContinued() && !streaming()) {
+    @if (
+        time() &&
+        !isContinued() &&
+        !streaming()
+      ) {
       <div class="status time">
         {{ time() }}
       </div>

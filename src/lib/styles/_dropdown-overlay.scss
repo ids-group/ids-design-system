@@ -8,8 +8,8 @@
 @use 'visually-hidden' as visually-hidden;
 
 .ds-dropdown-panel {
-  --_option-selected-bg-color: var(--ds-option-selected-bg-color, var(--primary-subtitle));
-  --_option-selected-label-color: var(--ds-option-selected-label-color, var(--primary-strong));
+  --_option-selected-bg-color: var(--ds-option-selected-bg-color, var(--surface-overlay-raised-tint));
+  --_option-selected-label-color: var(--ds-option-selected-label-color, var(--accent-strong-overlay));
   --_option-selected-bg-color-hover: var(--ds-option-selected-bg-color-hover, var(--primary-muted));
   --_option-check-color: var(--ds-option-check-color, var(--primary));
 
@@ -32,6 +32,9 @@
   --_dropdown-panel-border-color: var(--ds-dropdown-panel-border-color, var(--border-overlay));
   --surface-secondary: var(--surface-overlay-raised-secondary);
   --surface-muted: var(--surface-overlay-raised-muted);
+  --surface-tint: var(--surface-overlay-raised-tint);
+  --accent-surface-tint: var(--surface-overlay-raised-tint);
+  --accent-strong: var(--accent-strong-overlay);
   --_dropdown-panel-shadow: var(--ds-dropdown-panel-shadow, var(--shadow-popover));
   --_dropdown-panel-max-height: var(--ds-dropdown-panel-max-height, 320px);
 

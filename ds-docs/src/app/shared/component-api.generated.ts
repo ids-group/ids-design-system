@@ -135,6 +135,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Override the variant's default icon."
       },
       {
+        "name": "fullWidth",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Fills the container instead of hugging its content."
+      },
+      {
         "name": "announce",
         "kind": "input",
         "type": "boolean | null",
@@ -3040,6 +3049,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Work in flight: the send button keeps its place, shows a spinner and refuses to submit, and Enter does not submit. The text area stays editable."
       },
       {
+        "name": "stoppable",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "While `busy`, the default send button becomes Stop: a square inside a turning ring that emits `stopRequested`."
+      },
+      {
         "name": "busyLabel",
         "kind": "input",
         "type": "string",
@@ -3075,6 +3093,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "The trimmed text, on Enter or the send button. Never fires for blank text, while `busy` or while `disabled`."
       },
       {
+        "name": "stopRequested",
+        "kind": "output",
+        "type": "void",
+        "union": null,
+        "default": null,
+        "required": false,
+        "description": "The Stop button was pressed; fires only while `busy`, `stoppable` and not `disabled`."
+      },
+      {
         "name": "filesPasted",
         "kind": "output",
         "type": "File[]",
@@ -3102,11 +3129,45 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "type": "ChatMessageRole",
         "union": [
           "user",
-          "assistant"
+          "assistant",
+          "system"
         ],
         "default": "'assistant'",
         "required": false,
         "description": "Who wrote it: `'user'` draws a filled bubble on the right, `'assistant'` a subtle one on the left."
+      },
+      {
+        "name": "tone",
+        "kind": "input",
+        "type": "ChatMessageTone",
+        "union": [
+          "neutral",
+          "info",
+          "success",
+          "warning",
+          "error"
+        ],
+        "default": "'neutral'",
+        "required": false,
+        "description": "What a `'system'` notice means. `'neutral'` is a quiet one-line plaque for a routine note (saved, switched, started); `'info'`, `'success'`, `'warning'` and `'error'` draw a card in that status colour with its icon, for a note the reader should not miss. Other roles ignore it."
+      },
+      {
+        "name": "title",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "''",
+        "required": false,
+        "description": "A bold first line of a `'system'` notice, for one that carries a detail under it."
+      },
+      {
+        "name": "icon",
+        "kind": "input",
+        "type": "IconName | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Icon at the start of a `'system'` notice. A toned notice shows its tone's icon without it; a `'neutral'` one shows none."
       },
       {
         "name": "author",
@@ -3257,6 +3318,24 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "'together'",
         "required": false,
         "description": "How steps that arrive together (a plan given at once) come in: `'together'` grows them in as one block, `'stagger'` one after another. Steps that arrive one at a time grow in either way."
+      },
+      {
+        "name": "minRunningMs",
+        "kind": "input",
+        "type": "number",
+        "union": null,
+        "default": "600",
+        "required": false,
+        "description": "Shortest time a step shows as running before its final status, even when it finishes at once; `0` shows the final status at once."
+      },
+      {
+        "name": "revealStaggerMs",
+        "kind": "input",
+        "type": "number",
+        "union": null,
+        "default": "300",
+        "required": false,
+        "description": "Shortest gap between two steps showing their final status, so steps that finish together settle one after another; `0` lets them settle together."
       }
     ],
     "outputs": []
@@ -10763,6 +10842,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "'elastic'",
         "required": false,
         "description": "Dragged past `min` or `max`: `'elastic'` follows the pointer with growing resistance and springs back on release, `'none'` stops at the limit. Off under `prefers-reduced-motion: reduce`."
+      },
+      {
+        "name": "dragFog",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "While dragging, shades the pane the handle moves towards, stronger the faster and farther the drag; the shade rides the rubber band past a limit and fades when the hand stops or lets go. Colour: `--ds-splitter-fog-color`. Off under `prefers-reduced-motion: reduce`."
       }
     ],
     "outputs": []
@@ -13396,6 +13484,19 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Fires with the node under the pointer or newly focused, and `null` when the pointer leaves the tree."
       }
     ]
+  },
+  "tree:TreeLabelDirective": {
+    "key": "tree",
+    "selector": "ng-template[dsTreeLabel]",
+    "isElement": true,
+    "className": "TreeLabelDirective",
+    "status": "stable",
+    "importName": "TreeLabelDirective",
+    "importPath": "@ids-group-ltd/ids-design-system",
+    "entryPoint": "@ids-group-ltd/ids-design-system/components/tree",
+    "summary": null,
+    "inputs": [],
+    "outputs": []
   },
   "tree:TreeTrailingDirective": {
     "key": "tree",

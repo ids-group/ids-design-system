@@ -44,6 +44,8 @@ export class TextareaComponent extends DsControlValueAccessor<string> {
     protected readonly patternAttribute = computed(…);
     protected readonly pendingShown = this.fieldMessage.pending;
     public readonly placeholder = input<string>('');
+    protected readonly placeholderLineShown = computed(…);
+    protected readonly placeholderRows = computed(…);
     public readonly readOnly = input(false, { transform: booleanAttribute });
     public readonly readonlyBinding = input(false, { alias: 'readonly', transform: booleanAttribute });
     public readonly required = input(false, { transform: booleanAttribute });

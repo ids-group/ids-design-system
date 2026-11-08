@@ -46,26 +46,49 @@ const pickExport = (target) => {
 };
 
 // Node resolution from <consumer-root>, without a file of ours inside the consumer to resolve from.
-export const resolvePackage = (fromDirectory, name) => {
-  for (let directory = resolve(fromDirectory); ;) {
+const findPackageDirectory = (fromDirectory, name) => {
+  for (let directory = resolve(fromDirectory); ; ) {
     const packageDirectory = join(directory, 'node_modules', name);
-    const manifestPath = join(packageDirectory, 'package.json');
-    if (existsSync(manifestPath)) {
-      const manifest = JSON.parse(readFileSync(manifestPath, 'utf8'));
-      const exported =
-        typeof manifest.exports === 'object' && !Array.isArray(manifest.exports)
-          ? '.' in manifest.exports
-            ? manifest.exports['.']
-            : manifest.exports
-          : manifest.exports;
-      const entry = pickExport(exported) ?? manifest.main ?? 'index.js';
-
-      return join(packageDirectory, entry);
-    }
+    if (existsSync(join(packageDirectory, 'package.json')))
+      return packageDirectory;
     const parent = dirname(directory);
     if (parent === directory) return undefined;
     directory = parent;
   }
+};
+
+const readManifest = (packageDirectory) =>
+  JSON.parse(readFileSync(join(packageDirectory, 'package.json'), 'utf8'));
+
+export const resolvePackage = (fromDirectory, name) => {
+  const packageDirectory = findPackageDirectory(fromDirectory, name);
+  if (!packageDirectory) return undefined;
+  const manifest = readManifest(packageDirectory);
+  const exported =
+    typeof manifest.exports === 'object' && !Array.isArray(manifest.exports)
+      ? '.' in manifest.exports
+        ? manifest.exports['.']
+        : manifest.exports
+      : manifest.exports;
+  const entry = pickExport(exported) ?? manifest.main ?? 'index.js';
+
+  return join(packageDirectory, entry);
+};
+
+// `--from current` is the design-system version the consumer has installed now; the plugins'
+// rule options accept only a version.
+export const resolveFrom = (from, consumerRoot) => {
+  if (from !== 'current') return from;
+  const packageDirectory = findPackageDirectory(
+    consumerRoot,
+    '@ids-group-ltd/ids-design-system',
+  );
+  if (!packageDirectory)
+    throw new Error(
+      `--from current: no @ids-group-ltd/ids-design-system is installed under ${consumerRoot}`,
+    );
+
+  return readManifest(packageDirectory).version;
 };
 
 const importFirst = async (sources, toolsSource, candidates) => {
@@ -97,10 +120,11 @@ export const lintStep = async ({
   consumerRoot,
   sourceRoot,
   pluginDirectory,
-  from,
+  from: requestedFrom,
   to,
   toolsDirectory,
 }) => {
+  const from = resolveFrom(requestedFrom, consumerRoot);
   const sources = [['consumer', consumerRoot]];
   if (toolsDirectory) sources.push(['tools', dirname(resolve(toolsDirectory))]);
   const range = to ? { from, to } : { from };

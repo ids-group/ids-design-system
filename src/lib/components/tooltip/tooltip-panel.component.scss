@@ -13,8 +13,8 @@
   --_tooltip-max-width:  var(--ds-tooltip-max-width,  var(--tooltip-maxw));
   --_tooltip-padding:    var(--ds-tooltip-padding,    var(--space-1-5) var(--space-2-5));
   --_tooltip-arrow-inset: calc(var(--_tooltip-radius) + var(--tooltip-arrow));
-  --_tooltip-arrow-left:  clamp(min(var(--_tooltip-arrow-inset), 50%), var(--_tooltip-arrow-x, 50%), max(100% - var(--_tooltip-arrow-inset), 50%));
-  --_tooltip-arrow-top:   clamp(min(var(--_tooltip-arrow-inset), 50%), var(--_tooltip-arrow-y, 50%), max(100% - var(--_tooltip-arrow-inset), 50%));
+  --_tooltip-arrow-left:  clamp(min(var(--_tooltip-arrow-inset), 50%), var(--_overlay-arrow-x, 50%), max(100% - var(--_tooltip-arrow-inset), 50%));
+  --_tooltip-arrow-top:   clamp(min(var(--_tooltip-arrow-inset), 50%), var(--_overlay-arrow-y, 50%), max(100% - var(--_tooltip-arrow-inset), 50%));
 
   display: block;
   position: relative;

@@ -28,7 +28,7 @@ export class NumberStepperComponent {
 ```css
 ds-number-stepper {
     --ds-number-stepper-bg-color: var(--surface-default);
-    --ds-number-stepper-border-color: var(--border-default);
+    --ds-number-stepper-border-color: var(--border-field);
     --ds-number-stepper-field-width: calc(var(--_field-height) * 1.25);
     --ds-number-stepper-focus-shadow: var(--ds-field-focus-shadow);
     --ds-number-stepper-step-bg-color-active: var(--accent-muted);
