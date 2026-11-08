@@ -181,8 +181,17 @@ for (const file of walk(join(repo, 'src', 'lib'), '.component.ts')) {
   const renderedByUs = libTemplates.some((template) =>
     template.includes(`<${match[1]}`),
   );
-  if (source.includes('@internal') && !renderedByUs) continue;
+  if (isInternalClass(source) && !renderedByUs) continue;
   componentTags.add(match[1]);
+}
+
+// Only the docblock right above `@Component(` marks the class; an `@internal` on one of its
+// members leaves a public component public.
+function isInternalClass(source) {
+  const decorator = source.indexOf('@Component(');
+  if (decorator < 0) return false;
+  const docblock = /\/\*\*((?:(?!\*\/)[\s\S])*)\*\/\s*$/.exec(source.slice(0, decorator));
+  return Boolean(docblock?.[1].includes('@internal'));
 }
 const docNames = new Set(
   readdirSync(join(repo, '.design-sync', 'docs'))

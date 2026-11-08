@@ -417,7 +417,8 @@ for (const file of walk(join(repo, 'src/lib'), '.component.ts').sort()) {
     // tag. Registering it buys nothing - no caller can write one - and risks the nested
     // custom-element defect the alias exists to avoid, since Angular's own createComponent
     // makes a node the browser would then upgrade a second time.
-    if (source.getText().includes('@internal')) return;
+    // Only the class's own docblock counts; an `@internal` member leaves the component public.
+    if (ts.getJSDocTags(node).some((tag) => tag.tagName.text === 'internal')) return;
 
     // A generic component's own type parameters can't cross into a non-generic
     // React wrapper — widen them rather than emit unbound names.
