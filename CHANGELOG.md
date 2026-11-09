@@ -101,6 +101,11 @@
 
 ### Fixed
 
+- **`ds-banner` wraps a long unbroken word.** A file path or a URL with no spaces ran past the
+  banner's edge and under its action buttons; the title and the message now break inside such a word
+  at the banner's width, and the actions and the dismiss button keep their places. A compact
+  banner's title stays one line with an ellipsis. Remove an `overflow-wrap` workaround on the
+  projected text if you added one; nothing else to change.
 - **The `ds-textarea` resize handle sits in the corner.** It touched the bottom edge but stood 12px
   in from the right edge (8px at `size="sm"`), because the side padding sat on the frame rather than
   on the text. The padding now sits on the text, so the handle and a scrollbar reach the frame's
