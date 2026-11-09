@@ -31,6 +31,7 @@
   animation: ds-tree-row-expand var(--duration-base) var(--ease-standard);
 
   > .row {
+    // glyph-clip-guard: folds the row in or out; at rest it has no clip
     overflow: hidden;
     min-height: 0;
     animation: ds-tree-row-padding-in var(--duration-base) var(--ease-standard);
@@ -54,6 +55,7 @@
   animation: ds-tree-row-collapse max(var(--duration-base), 1ms) var(--ease-standard) both;
 
   > .row {
+    // glyph-clip-guard: folds the row in or out; at rest it has no clip
     overflow: hidden;
     min-height: 0;
     animation: ds-tree-row-padding-out max(var(--duration-base), 1ms) var(--ease-standard) both;
