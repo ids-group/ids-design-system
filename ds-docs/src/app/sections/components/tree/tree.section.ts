@@ -7,7 +7,7 @@ import {
   TreeLabelDirective,
   TreeTrailingDirective,
 } from 'ds/tree';
-import type { TreeNode } from 'ds/tree';
+import type { TreeNode, TreeToggleOn } from 'ds/tree';
 import { DocsSectionComponent } from '../../../shared/docs-section.component';
 
 @Component({
@@ -56,6 +56,22 @@ export class TreeSection {
   protected readonly expanded = signal(new Set(['src', 'components']));
   protected readonly selected = signal<string | null>('tokens');
   protected readonly selectedLabel = signal('tokens.scss');
+
+  protected readonly toggleModes: readonly TreeToggleOn[] = [
+    'row',
+    'caret',
+    'doubleClick',
+  ];
+  protected readonly toggleExpanded = {
+    row: signal(new Set(['src'])),
+    caret: signal(new Set(['src'])),
+    doubleClick: signal(new Set(['src'])),
+  };
+  protected readonly toggleSelected = {
+    row: signal<string | null>(null),
+    caret: signal<string | null>(null),
+    doubleClick: signal<string | null>(null),
+  };
 
   protected readonly layers: TreeNode[] = [
     {

@@ -163,6 +163,60 @@
     </p>
   </div>
 
+  <h3 class="block-title t-h4">
+    What toggles a parent
+  </h3>
+
+  <ul class="block-desc t-s">
+    <li>
+      <code class="t-mono-inline">
+        toggleOn="row"
+      </code>, the default: a click,
+      Enter or Space on a parent selects it and expands or collapses it.
+    </li>
+
+    <li>
+      <code class="t-mono-inline">
+        toggleOn="caret"
+      </code>: the row only
+      selects; the chevron is a button of its own, named "Expand" or
+      "Collapse" with the row's label, that toggles. Use it where selecting a
+      parent opens it somewhere else, such as the layers of a canvas.
+    </li>
+
+    <li>
+      <code class="t-mono-inline">
+        toggleOn="doubleClick"
+      </code>: a click
+      selects, a double click toggles.
+    </li>
+
+    <li>
+      In every mode ArrowRight expands and ArrowLeft collapses the focused row,
+      and Shift- or Ctrl-click in multiple selection only adds or removes it.
+    </li>
+  </ul>
+
+  <div class="states is-cols-3">
+    @for (mode of toggleModes; track mode) {
+      <div class="state-cell">
+        <div class="state-cell-stage">
+          <ds-tree
+            [nodes]="nodes"
+            [toggleOn]="mode"
+            [expandedIds]="toggleExpanded[mode]()"
+            [selectedId]="toggleSelected[mode]()"
+            (expandedIdsChange)="toggleExpanded[mode].set($event)"
+            (selectedIdChange)="toggleSelected[mode].set($event)" />
+        </div>
+
+        <div class="state-cell-label">
+          {{ mode }} · selected: {{ toggleSelected[mode]() ?? 'none' }}
+        </div>
+      </div>
+    }
+  </div>
+
   <h3
     data-claude-design
     class="block-title t-h4">
