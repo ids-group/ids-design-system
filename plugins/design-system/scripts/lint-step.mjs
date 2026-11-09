@@ -20,6 +20,7 @@ import {
   cpSync,
   existsSync,
   mkdtempSync,
+  readdirSync,
   readFileSync,
   realpathSync,
   rmSync,
@@ -270,20 +271,30 @@ export const lintStep = async ({
     output.toolsSource.stylelint = stylelintSource;
     const stylelintUrl = pathToFileURL(stylelintPath).href;
     const stylelint = (await import(stylelintUrl)).default;
-    // The plugin imports `stylelint` by name, which resolves from where the plugin file sits; a
+    // The plugin's modules import `stylelint` by name, which resolves from where the file sits; a
     // copy pointed at the consumer's stylelint loads outside any node_modules and shares one
-    // instance with the linter that runs it.
+    // instance with the linter that runs it. The token tables read the library beside the plugin
+    // folder, so the copy reads it from the original one.
     const copy = mkdtempSync(join(tmpdir(), 'ds-lint-step-'));
+    const libraryUrl = pathToFileURL(join(pluginDirectory, '/')).href;
     try {
       cpSync(join(pluginDirectory, 'stylelint'), copy, { recursive: true });
+      for (const name of readdirSync(copy).filter((file) =>
+        file.endsWith('.mjs'),
+      )) {
+        const file = join(copy, name);
+        writeFileSync(
+          file,
+          readFileSync(file, 'utf8')
+            .replaceAll("from 'stylelint'", `from '${stylelintUrl}'`)
+            .replaceAll("import.meta.resolve('stylelint')", `'${stylelintUrl}'`)
+            .replaceAll(
+              "new URL('..', import.meta.url)",
+              `new URL('${libraryUrl}')`,
+            ),
+        );
+      }
       const copiedPlugin = join(copy, 'index.mjs');
-      writeFileSync(
-        copiedPlugin,
-        readFileSync(copiedPlugin, 'utf8').replace(
-          /from 'stylelint'/,
-          `from '${stylelintUrl}'`,
-        ),
-      );
       const plugin = (await import(pathToFileURL(copiedPlugin).href)).default;
       const scss = await importFirst(sources, output.toolsSource, [
         ['postcss-scss', (module) => module.parse && module],

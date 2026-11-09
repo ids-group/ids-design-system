@@ -4,6 +4,16 @@ Versioning: **patch** = instruction/prompt fixes; **minor** = new capability (pi
 source, agent); **major** = a change to the workflow's behavior contract. Bump `plugin.json` +
 `marketplace.json` together on every published change.
 
+## 1.20.1 - 2026-11-09
+
+### Fixed
+
+- **The lint step loads a stylelint plugin whose rules sit in several modules.** It pointed only
+  the plugin's `index.mjs` at the target's `stylelint`, so a release whose plugin adds rule modules
+  (`known-tokens`, `use-tokens`) failed the step with `Cannot find package 'stylelint'`; every
+  module of the copy now resolves `stylelint`, and the token tables read the library from the
+  release itself.
+
 ## 1.20.0 - 2026-11-08
 
 ### Added
