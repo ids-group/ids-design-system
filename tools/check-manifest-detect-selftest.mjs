@@ -95,6 +95,7 @@ try {
     'fixtures/1.0.0/button-variant-remap.ignored.html': BADGE,
     'fixtures/1.0.0/sort-key-kept.found.ts': STORE,
     'fixtures/unreleased/draft-item.found.ts': STORE,
+    'fixtures/unreleased/draft-item.found.json': STORE,
     'fixtures/1.0.0/reserve-message-false.found.html': OPT_OUT,
     'fixtures/1.0.0/reserve-message-false.multi-line.found.html':
       '<ds-input\n  label="Name"\n  [reserveMessage]="false" />\n',
@@ -106,8 +107,8 @@ try {
   );
   expect('exits 0', good.status === 0);
   expect(
-    'runs all seven fixtures',
-    /7 locator fixture\(s\) run/.test(good.output),
+    'runs all eight fixtures',
+    /8 locator fixture\(s\) run/.test(good.output),
   );
   expect(
     'a deleteList row finds each spelling of its workaround and skips the look-alike',
@@ -120,6 +121,10 @@ try {
   expect(
     'a hint inside a multi-line tag with `>` in a binding is located',
     good.output.includes('button-variant-remap.found.html: located'),
+  );
+  expect(
+    'a .json fixture is read like any other',
+    good.output.includes('draft-item.found.json: located'),
   );
   expect(
     'a detect shape on a typescript surface is not element-scoped',
