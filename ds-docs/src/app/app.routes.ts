@@ -54,6 +54,13 @@ export const routes: Routes = [
             ),
         },
         {
+          path: 'harness/density-overlay',
+          loadComponent: () =>
+            import('./harness/density-overlay.page').then(
+              (m) => m.DensityOverlayHarnessPage,
+            ),
+        },
+        {
           path: 'harness/splitter-iframe',
           loadComponent: () =>
             import('./harness/splitter-iframe.page').then(

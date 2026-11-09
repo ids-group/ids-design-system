@@ -7,6 +7,13 @@
   `--text-tertiary`, for an empty section among others on a page. An `error` or `success` icon
   keeps its status colour. The `--ds-empty-state-*` hooks still win where set. The default
   `'tile'` renders as before. New export `EmptyStateAppearance`.
+- **`ds-tree` and `ds-popover` follow `[data-density]`.** Under `compact` and `ultra-compact` a tree
+  row takes 4px by 8px of padding (was 6px by 12px) and each level indents 16px (was 20px), through
+  `--tree-row-pad-y`, `--tree-row-pad-x` and `--tree-indent`. A popover's padding is the new token
+  `--popover-pad`: 12px, and 8px under `ultra-compact`. The popover panel takes the tier of the
+  nearest `[data-density]` around `ds-popover`, so a tree inside it follows the screen that opens
+  it. `--ds-tree-row-padding-y`, `--ds-tree-row-padding-x`, `--ds-tree-indent` and
+  `--ds-popover-padding` still win where set; without `[data-density]` both render as before.
 - **Two icons: `maximize` and `minimize`.** Four corners pointing out and in, for entering and
   leaving full screen. They are drawn from Lucide (ISC) on the 24-unit grid and take the set's
   stroke.
