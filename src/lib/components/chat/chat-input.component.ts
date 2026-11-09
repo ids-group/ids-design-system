@@ -14,7 +14,9 @@ import {
   DS_INTL_DEFAULTS,
 } from '@ids-group-ltd/ids-design-system/core';
 import { ButtonComponent } from '@ids-group-ltd/ids-design-system/components/button';
+import { IconButtonComponent } from '@ids-group-ltd/ids-design-system/components/icon-button';
 import { TextareaComponent } from '@ids-group-ltd/ids-design-system/components/textarea';
+import { TooltipDirective } from '@ids-group-ltd/ids-design-system/components/tooltip';
 import { FieldClickFocusDirective } from '@ids-group-ltd/ids-design-system/components';
 import type { ChatInputBusyAction, ChatInputLayout } from './chat-input.types';
 
@@ -22,12 +24,18 @@ import type { ChatInputBusyAction, ChatInputLayout } from './chat-input.types';
  * Message box for a chat or an instruction: an auto-growing text area with chips above it, actions
  * on the left of a bottom bar and a send button on the right. Enter submits, Shift+Enter breaks the
  * line. Slots: `[attachments]` above the frame, `[chips]`, `[actions]`, `[send]` (replaces the default send
- * button), `[busyActions]` (beside the Queue button while it shows).
+ * button).
  */
 @Component({
   selector: 'ds-chat-input',
   standalone: true,
-  imports: [TextareaComponent, ButtonComponent, FieldClickFocusDirective],
+  imports: [
+    TextareaComponent,
+    ButtonComponent,
+    IconButtonComponent,
+    TooltipDirective,
+    FieldClickFocusDirective,
+  ],
   templateUrl: './chat-input.component.html',
   styleUrl: './chat-input.component.scss',
   encapsulation: ViewEncapsulation.Emulated,
@@ -54,9 +62,9 @@ export class ChatInputComponent {
   /** While `busy`, the default send button becomes Stop: a square inside a turning ring that emits
    *  `stopRequested`. */
   readonly stoppable = input(false, { transform: booleanAttribute });
-  /** What the default send button does while `busy` once text is typed. `'stop'`: it stays Stop
-   *  (or the spinner). `'queue'`: it becomes Queue and emits `queued`, Enter queues too, and Stop
-   *  (with `stoppable`) and the `[busyActions]` slot sit beside it. With no text it is Stop again. */
+  /** What the default buttons offer while `busy` once text is typed. `'stop'`: the send button stays
+   *  Stop (or the spinner). `'queue'`: Redirect, Stop (with `stoppable`) and Queue, left to right;
+   *  Queue is the main button and Enter queues. With no text it is Stop again. */
   readonly busyAction = input<ChatInputBusyAction>('stop');
   /** The current step while `busy`, such as "Rebuilding"; where it shows follows `layout`. */
   readonly busyLabel = input<string>('');
@@ -74,6 +82,8 @@ export class ChatInputComponent {
   readonly stopRequested = output<void>();
   /** The trimmed text, on Enter or the Queue button; fires only while the Queue button shows. */
   readonly queued = output<string>();
+  /** The trimmed text, on the Redirect button; fires only while the Queue button shows. */
+  readonly redirected = output<string>();
   /** Image files pasted into the text area. The paste inserts no text when it carries images. */
   readonly filesPasted = output<File[]>();
 
@@ -92,6 +102,7 @@ export class ChatInputComponent {
   protected readonly sendLabel = computed(() => this.labels().send);
   protected readonly stopLabel = computed(() => this.labels().stop);
   protected readonly queueLabel = computed(() => this.labels().queue);
+  protected readonly redirectLabel = computed(() => this.labels().redirect);
   protected readonly queueShown = computed(
     () =>
       this.busy() &&
@@ -110,6 +121,9 @@ export class ChatInputComponent {
         ? this.stopLabel()
         : this.sendLabel(),
   );
+  protected readonly mainIcon = computed(() =>
+    this.queueShown() ? 'list-plus' : this.stopShown() ? 'stop' : 'arrowUp',
+  );
   protected readonly statusAbove = computed(
     () => this.layout() === 'status-above' || this.layout() === 'split',
   );
@@ -126,6 +140,10 @@ export class ChatInputComponent {
 
   private queue(): void {
     this.queued.emit(this.value().trim());
+  }
+
+  protected redirect(): void {
+    this.redirected.emit(this.value().trim());
   }
 
   protected onSendPressed(): void {

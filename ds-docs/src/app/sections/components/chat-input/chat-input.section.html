@@ -255,23 +255,40 @@
     With
     <code class="t-mono-inline">
       busyAction="queue"
-    </code>, text typed while the agent works turns the button into Queue:
-    Enter or a press emits
-    <code class="t-mono-inline">
-      queued
-    </code>. Stop moves beside it, and an element marked
-    <code class="t-mono-inline">
-      busyActions
-    </code>
-    joins them, here Redirect. Clear the text and the button is Stop again.
+    </code>, text typed while the agent works shows Redirect, Stop and Queue.
+    Queue is the main button and Enter queues; clear the text and the button is
+    Stop again.
   </p>
 
   <ds-chat-input
     placeholder="Describe a change…"
-    busyLabel="Rebuilding"
     busyAction="queue"
     busy
     stoppable
+    [(value)]="queueText">
+    <ds-icon-button
+      actions
+      icon="paperclip"
+      size="sm"
+      ariaLabel="Attach a file" />
+  </ds-chat-input>
+
+  <h3 class="block-title t-h4">
+    Your own send area
+  </h3>
+
+  <p class="block-desc t-s">
+    An element marked
+    <code class="t-mono-inline">
+      send
+    </code>
+    replaces the default button. Here, while an agent is busy and text is typed,
+    the box offers to queue the message, redirect the agent or stop it.
+  </p>
+
+  <ds-chat-input
+    placeholder="Describe a change…"
+    busy
     [(value)]="studioText">
     <ds-tag
       chips
@@ -286,21 +303,31 @@
       size="sm"
       ariaLabel="Attach a file" />
 
-    <ds-button
-      busyActions
-      size="sm"
-      variant="ghost">
-      Redirect now
-    </ds-button>
-  </ds-chat-input>
-
-  <p class="block-desc t-s">
-    An element marked
-    <code class="t-mono-inline">
+    <div
       send
-    </code>
-    replaces the default button altogether.
-  </p>
+      class="studio-send">
+      <ds-button
+        size="sm"
+        variant="outline"
+        [disabled]="!studioText().trim()">
+        Queue
+      </ds-button>
+
+      <ds-button
+        size="sm"
+        variant="tonal"
+        [disabled]="!studioText().trim()">
+        Redirect now
+      </ds-button>
+
+      <ds-button
+        size="sm"
+        color="error"
+        variant="outline">
+        Stop
+      </ds-button>
+    </div>
+  </ds-chat-input>
 
   <h3 class="block-title t-h4">
     Try it

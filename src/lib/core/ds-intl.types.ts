@@ -185,6 +185,8 @@ export interface DsIntl {
     readonly stop?: string;
     /** `'Queue'` - the default send button while `busy`, with `busyAction="queue"` and text typed. */
     readonly queue?: string;
+    /** `'Redirect now'` - the button beside Queue that sends the text to the agent at once. */
+    readonly redirect?: string;
   };
   readonly spinner: {
     readonly label: string;

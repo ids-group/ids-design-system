@@ -3067,7 +3067,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         ],
         "default": "'stop'",
         "required": false,
-        "description": "What the default send button does while `busy` once text is typed. `'stop'`: it stays Stop (or the spinner). `'queue'`: it becomes Queue and emits `queued`, Enter queues too, and Stop (with `stoppable`) and the `[busyActions]` slot sit beside it. With no text it is Stop again."
+        "description": "What the default buttons offer while `busy` once text is typed. `'stop'`: the send button stays Stop (or the spinner). `'queue'`: Redirect, Stop (with `stoppable`) and Queue, left to right; Queue is the main button and Enter queues. With no text it is Stop again."
       },
       {
         "name": "busyLabel",
@@ -3121,6 +3121,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": null,
         "required": false,
         "description": "The trimmed text, on Enter or the Queue button; fires only while the Queue button shows."
+      },
+      {
+        "name": "redirected",
+        "kind": "output",
+        "type": "string",
+        "union": null,
+        "default": null,
+        "required": false,
+        "description": "The trimmed text, on the Redirect button; fires only while the Queue button shows."
       },
       {
         "name": "filesPasted",

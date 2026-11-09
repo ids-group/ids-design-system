@@ -1,10 +1,9 @@
 import { Component, signal } from '@angular/core';
-import { ButtonComponent } from 'ds/button';
 import { ChatInputComponent } from 'ds/chat';
 
 @Component({
   selector: 'app-chat-input-busy-action-harness',
-  imports: [ButtonComponent, ChatInputComponent],
+  imports: [ChatInputComponent],
   template: `
     <ds-chat-input
       style="display: block; width: 480px"
@@ -13,15 +12,9 @@ import { ChatInputComponent } from 'ds/chat';
       stoppable
       [(value)]="text"
       (queued)="events.set(events() + 'queued:' + $event + ';')"
+      (redirected)="events.set(events() + 'redirected:' + $event + ';')"
       (stopRequested)="events.set(events() + 'stop;')"
-      (submitted)="events.set(events() + 'submitted;')">
-      <ds-button
-        busyActions
-        size="sm"
-        variant="ghost">
-        Redirect now
-      </ds-button>
-    </ds-chat-input>
+      (submitted)="events.set(events() + 'submitted;')" />
     <output id="events">{{ events() }}</output>
   `,
 })

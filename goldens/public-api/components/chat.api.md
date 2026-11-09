@@ -46,6 +46,7 @@ export class ChatInputComponent {
     private readonly intl;
     private readonly labels;
     public readonly layout = input<ChatInputLayout>('status-bar');
+    protected readonly mainIcon = computed(…);
     protected readonly mainLabel = computed(…);
     public readonly maxRows = input<number>(8);
     public readonly minRows = input<number>(1);
@@ -57,6 +58,9 @@ export class ChatInputComponent {
     protected readonly queueLabel = computed(…);
     protected readonly queueShown = computed(…);
     public readonly queued = output<string>();
+    protected redirect(): void;
+    protected readonly redirectLabel = computed(…);
+    public readonly redirected = output<string>();
     protected readonly sendLabel = computed(…);
     protected readonly statusAbove = computed(…);
     protected readonly statusText = computed(…);

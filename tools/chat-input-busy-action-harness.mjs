@@ -1,6 +1,7 @@
 // Drives ds-chat-input with busyAction="queue" on the docs app's dev-only
 // /harness/chat-input-busy-action page: empty, the only button is Stop; typed, the buttons are
-// Redirect, Stop and Queue, and Enter and Queue emit `queued` while Stop emits `stopRequested`.
+// Redirect, Stop and Queue with the send, stop and list-plus icons, Enter and Queue emit `queued`,
+// Redirect emits `redirected` and Stop emits `stopRequested`.
 // Exits 1 on any mismatch.
 //
 //   node tools/chat-input-busy-action-harness.mjs <docsUrl>
@@ -16,6 +17,9 @@ const read = () =>
   page.evaluate(() => ({
     buttons: [...document.querySelectorAll('ds-chat-input .send button')].map(
       (button) => button.getAttribute('aria-label') || button.textContent.trim(),
+    ),
+    icons: [...document.querySelectorAll('ds-chat-input .send button svg')].map(
+      (svg) => svg.firstElementChild?.getAttribute('d') ?? svg.firstElementChild?.localName,
     ),
     events: document.querySelector('#events').textContent,
   }));
@@ -37,15 +41,18 @@ try {
   await page.s('Input.insertText', { text: 'Queue me' });
   await wait(200);
   expect('typed', (await read()).buttons, ['Redirect now', 'Stop', 'Queue']);
+  expect('icons', (await read()).icons.map((d) => d.slice(0, 7)), ['M14.536', 'rect', 'M11 12H']);
 
   await page.s('Input.dispatchKeyEvent', { type: 'keyDown', key: 'Enter', code: 'Enter', windowsVirtualKeyCode: 13 });
   await page.s('Input.dispatchKeyEvent', { type: 'keyUp', key: 'Enter', code: 'Enter', windowsVirtualKeyCode: 13 });
   await wait(200);
   await press('Queue');
   await wait(100);
+  await press('Redirect now');
+  await wait(100);
   await press('Stop');
   await wait(200);
-  expect('events', (await read()).events, 'queued:Queue me;queued:Queue me;stop;');
+  expect('events', (await read()).events, 'queued:Queue me;queued:Queue me;redirected:Queue me;stop;');
 
   console.log(failures.length ? failures.join('\n') : 'OK');
   process.exitCode = failures.length ? 1 : 0;

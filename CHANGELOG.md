@@ -14,13 +14,17 @@
   nearest `[data-density]` around `ds-popover`, so a tree inside it follows the screen that opens
   it. `--ds-tree-row-padding-y`, `--ds-tree-row-padding-x`, `--ds-tree-indent` and
   `--ds-popover-padding` still win where set; without `[data-density]` both render as before.
-- **`ds-chat-input` offers Queue while it is busy, with `busyAction="queue"`.** Once text is typed
-  while `busy`, the default send button becomes Queue: it and Enter emit the new output `queued`
-  with the trimmed text, and its accessible name is the new `DsIntl` key `chatInput.queue`
-  (`'Queue'`). Stop, with `stoppable`, moves beside it with its square in a turning ring, and an
-  element marked `busyActions`, such as a Redirect button, sits beside them. With the text cleared
-  the button is Stop again. The default `'stop'` renders as before. New export
-  `ChatInputBusyAction`.
+- **`ds-chat-input` offers Queue and Redirect while it is busy, with `busyAction="queue"`.** Once
+  text is typed while `busy`, three buttons stand on the right, left to right: Redirect, a `send`
+  icon button that emits the new output `redirected` with the trimmed text; Stop, a `stop` icon
+  button that emits `stopRequested` (with `stoppable`); and Queue, the main button with a
+  `list-plus` icon, which emits the new output `queued` with the trimmed text, as Enter does. Their
+  accessible names, each also shown in a tooltip, are the new `DsIntl` keys `chatInput.redirect`
+  (`'Redirect now'`) and `chatInput.queue` (`'Queue'`) and the existing `chatInput.stop`; the Stop
+  state of the main button shows its name in a tooltip too. With the text cleared the main button
+  is Stop again. The default `'stop'` renders as before. New export `ChatInputBusyAction`.
+- **Two icons: `send` and `list-plus`.** A paper plane and a list with a plus, from Lucide (ISC),
+  with the set's stroke.
 - **Two icons: `maximize` and `minimize`.** Two diagonal arrows pointing out and in, for entering
   and leaving full screen. They are drawn from Lucide (ISC) on the 24-unit grid and take the set's
   stroke.
