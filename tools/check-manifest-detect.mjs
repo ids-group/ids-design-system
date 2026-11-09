@@ -4,7 +4,7 @@
 // re-check grep agrees. This check runs each item's locators over consumer snippets that MUST be
 // located and over look-alikes that must NOT count, the way the plugin's usage finder does.
 //
-// Reads `migrations/fixtures/<version>/<id>.found.<html|ts|scss>` and `<id>.ignored.<ext>`
+// Reads `migrations/fixtures/<version>/<id>.found.<html|ts|scss|json>` and `<id>.ignored.<ext>`
 // (`unreleased/` for the draft), named by an item id of `migrations/<version>.json`, or by a
 // `deleteList` row id: then `.found` is a spelling of the workaround the row deletes, `.ignored`
 // unrelated code that resembles it, and the row's `find` shapes are the only locators. A variant
@@ -45,7 +45,7 @@ const FIXTURES = join(MIGRATIONS, 'fixtures');
 const NEUTRAL = '_neutral';
 const AUDIT = process.argv.includes('--audit');
 const FIXTURE_NAME =
-  /^([a-z0-9-]+)(?:\.[a-z0-9-]+)?\.(found|ignored)\.(html|ts|scss)$/;
+  /^([a-z0-9-]+)(?:\.[a-z0-9-]+)?\.(found|ignored)\.(html|ts|scss|json)$/;
 const MANIFEST_NAME = /^(\d+\.\d+\.\d+(?:-[0-9A-Za-z.]+)?|unreleased)\.json$/;
 const ELEMENT_OF_OLD = /^(ds-[a-z0-9-]+)(?:\[([^\]]+)\]$|[\s.])/;
 const NEUTRAL_ALLOWED = new Set([
@@ -175,7 +175,7 @@ if (existsSync(FIXTURES)) {
       const parts = FIXTURE_NAME.exec(file);
       if (!parts) {
         problems.push(
-          `${name}: a locator fixture is <id>.found.<ext> or <id>.ignored.<ext>, ext html, ts or scss`,
+          `${name}: a locator fixture is <id>.found.<ext> or <id>.ignored.<ext>, ext html, ts, scss or json`,
         );
         continue;
       }
@@ -229,7 +229,7 @@ const uncovered = (version) =>
 problems.push(
   ...uncovered('unreleased').map(
     (gap) =>
-      `${gap}\n      add the consumer code it targets as migrations/fixtures/unreleased/<id>.found.<html|ts|scss>`,
+      `${gap}\n      add the consumer code it targets as migrations/fixtures/unreleased/<id>.found.<html|ts|scss|json>`,
   ),
 );
 
