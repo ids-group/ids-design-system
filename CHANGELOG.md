@@ -1,5 +1,16 @@
 ## Unreleased
 
+### Added
+
+- **`ds-tree` takes `toggleOn`, what expands and collapses a parent.** `'row'`, the default, keeps
+  today's behaviour: a click, Enter or Space selects the row and toggles it. With `'caret'` the
+  row only selects, and the chevron is a button of its own that toggles; it sits outside the tab
+  order, so the tree keeps one tab stop, and is named by the new `DsIntl` keys `tree.expand` and
+  `tree.collapse` (`` `Expand ${label}` `` and `` `Collapse ${label}` ``). With `'doubleClick'` a
+  click selects and a double click toggles. ArrowRight expands and ArrowLeft collapses the focused
+  row in every mode, and Shift- or Ctrl-click in multiple selection only adds or removes the row.
+  New export `TreeToggleOn`.
+
 ## 1.1.1 — 2026-11-08
 
 ### Added
