@@ -80,6 +80,69 @@
     </tbody>
   </table>
 
+  <h3 class="block-title t-h4">
+    Control boundaries
+  </h3>
+
+  <p class="block-desc t-s">
+    Every control is told apart from what it sits on at 3:1 or more, by one of
+    two rules.
+  </p>
+
+  <ul class="block-desc t-s">
+    <li>
+      <strong>
+        A choice inside a track
+      </strong>
+      (<code class="t-mono-inline">ds-segmented</code>): the track and its
+      segments draw no border; the selected segment is a solid
+      <code class="t-mono-inline">
+        --segmented-selected
+      </code> fill, at least 3:1
+      against the track, with its label in
+      <code class="t-mono-inline">
+        --segmented-selected-on
+      </code>.
+      <code class="t-mono-inline">
+        joined
+      </code> has no track and keeps its
+      segment borders.
+    </li>
+
+    <li>
+      <strong>
+        A standalone control
+      </strong>
+      (<code class="t-mono-inline">ds-input</code>,
+      <code class="t-mono-inline">
+        ds-select
+      </code>,
+      <code class="t-mono-inline">
+        ds-textarea
+      </code>,
+      <code class="t-mono-inline">
+        ds-number-stepper
+      </code>,
+      <code class="t-mono-inline">
+        ds-toggle-button
+      </code>,
+      <code class="t-mono-inline">
+        ds-checkbox
+      </code>,
+      <code class="t-mono-inline">
+        ds-radio
+      </code>,
+      <code class="t-mono-inline">
+        ds-switch
+      </code>): a
+      <code class="t-mono-inline">
+        --border-field
+      </code> boundary at rest, at
+      least 3:1 against the page, a card, an overlay and their secondary fills;
+      the selected or checked state takes the accent.
+    </li>
+  </ul>
+
   <h3
     data-claude-design
     class="block-title t-h4"

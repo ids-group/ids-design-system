@@ -9,11 +9,11 @@
   --_segmented-bg-color: var(--ds-segmented-bg-color, var(--surface-secondary));
   --_segmented-selected-bg-color: var(
     --ds-segmented-selected-bg-color,
-    var(--surface-default)
+    var(--segmented-selected)
   );
   --_segmented-selected-label-color: var(
     --ds-segmented-selected-label-color,
-    var(--text-primary)
+    var(--segmented-selected-on)
   );
   --_segmented-label-color: var(--ds-segmented-label-color, var(--text-secondary));
   --_segmented-padding: var(--ds-segmented-padding, var(--segmented-pad));
@@ -24,7 +24,6 @@
     calc(var(--_segmented-radius-inner) + var(--_segmented-padding))
   );
   --_segmented-selected-shadow: var(--ds-segmented-selected-shadow, var(--ds-elevation-raised));
-  --_segmented-selected-border-color: var(--ds-segmented-selected-border-color, var(--border-field));
   --_segmented-segment-border: var(--ds-segmented-segment-border, 0);
   --_segmented-segment-padding-x: var(--ds-segmented-segment-padding-x, var(--space-4));
   --_segmented-label-font-weight: var(--ds-segmented-label-font-weight, var(--font-weight-semibold));
@@ -100,12 +99,6 @@
     color: var(--_segmented-selected-label-color);
 
     @include focus.state-shadow(var(--_segmented-selected-shadow));
-
-    // An outline keeps the segment's size, and stays when a consumer sets the shadow to `none`.
-    &:not(:focus-visible) {
-      outline: var(--border-width-default) solid var(--_segmented-selected-border-color);
-      outline-offset: calc(-1 * var(--border-width-default));
-    }
   }
 
   &:focus-visible {

@@ -1,5 +1,13 @@
 ## Unreleased
 
+### Added
+
+- **`--segmented-selected` and `--segmented-selected-on`**, the fill of the selected `ds-segmented`
+  segment and its label. Light: `--accent` with `--accent-on`. Dark: `--accent-strong-overlay` with
+  `--surface-default`, because `--accent` is under 3:1 against the dark track. Both are declared with
+  the theme, so a `ds-color` zone does not recolour them; set `--ds-segmented-selected-bg-color` and
+  `--ds-segmented-selected-label-color` there.
+
 ### Changed
 
 - **`--border-field` is softer in the light theme.** It is now
@@ -8,21 +16,25 @@
   a modal, a drawer and a popover, and 3.06:1 against `--surface-secondary`. Under
   `data-theme="dark"` it stays `--neutral-400`, and `--border-field-hover` is unchanged in both
   themes. To keep the darker outline, set `--border-field: var(--neutral-500)` on `:root`.
-- **Checkbox, radio, switch, toggle button, segmented control and the number stepper dividers draw
-  their boundary in `--border-field`, at least 3:1 against the surfaces they sit on.** One token
-  serves fields and controls because both mark the edge of something you operate, against the same
-  surfaces; `--border-field-hover` is the hover outline where a control has one. Defaults that
+- **Checkbox, radio, switch, toggle button and the number stepper dividers draw their boundary in
+  `--border-field`, at least 3:1 against the surfaces they sit on.** Standalone fields and controls
+  share it; `--border-field-hover` is the hover outline where a control has one. Defaults that
   moved: `--ds-checkbox-border-color` and `--ds-radio-border-color` from `--border-strong` (1.66:1),
   `--ds-switch-track-off-bg-color` from `--border-strong`, and `--ds-toggle-button-border-color`
   from `--border-default` (1.31:1); a hovered `ds-toggle-button` takes `--border-field-hover`. The
   unchecked boxes in `ds-multi-select` and `ds-autocomplete` options, `ds-table` selection,
   `ds-table-columns` and `ds-chart-legend` follow. The dividers beside the `ds-number-stepper`
-  buttons take `--ds-number-stepper-border-color` instead of `--border-default`. The selected
-  `ds-segmented` segment draws a 1px outline inside its edge in the new hook
-  `--ds-segmented-selected-border-color` (default `--border-field`); its size does not change. A
+  buttons take `--ds-number-stepper-border-color` instead of `--border-default`. A
   value set on any of these hooks still wins. To keep the faint look on a screen, set the hook back,
-  for example `--ds-checkbox-border-color: var(--border-strong)`, or
-  `--ds-segmented-selected-border-color: transparent` on `ds-segmented`.
+  for example `--ds-checkbox-border-color: var(--border-strong)`.
+- **The selected `ds-segmented` segment is a solid accent fill, at least 3:1 against the track.**
+  `--ds-segmented-selected-bg-color` now defaults to `--segmented-selected` instead of
+  `--surface-default`, and `--ds-segmented-selected-label-color` to `--segmented-selected-on`
+  instead of `--text-primary`: light 4.98:1 against the track, dark 7.45:1. The track and its
+  segments draw no border. A `joined` row has no track and keeps the borders it draws through
+  `--ds-segmented-segment-border`; its selected segment takes the same fill. To keep the white chip,
+  set `--ds-segmented-selected-bg-color: var(--surface-default)` and
+  `--ds-segmented-selected-label-color: var(--text-primary)` on `ds-segmented`.
 
 ## 1.1.1 — 2026-11-08
 

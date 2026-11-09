@@ -37,17 +37,23 @@
       "evidence": ["tokens:--border-field"]
     },
     {
-      "id": "segmented-selected-border",
+      "id": "segmented-selected-accent-fill",
       "kind": "behavior",
-      "old": "ds-segmented",
+      "old": "--ds-segmented-selected-bg-color",
       "new": null,
       "surface": ["style"],
-      "searchHints": ["ds-segmented", "--ds-segmented-selected-shadow", "--ds-segmented-selected-bg-color"],
-      "action": "None, unless a screen must keep the selected segment without an outline: set `--ds-segmented-selected-border-color: transparent` on `ds-segmented`.",
-      "appliesWhen": "`ds-segmented`, both the padded track and `joined`: the selected segment draws a 1px inset outline in the new hook `--ds-segmented-selected-border-color` (default `--border-field`) under its raised shadow. The segment keeps its size. Unselected segments, the track and `--ds-segmented-segment-border` are unchanged.",
-      "pitfall": "An outline of your own added to the selected segment through `--ds-segmented-selected-shadow` now draws twice.",
-      "restore": "ds-segmented { --ds-segmented-selected-border-color: transparent; }",
-      "verify": "The selected segment of a `ds-segmented` shows a 1px outline in `--border-field` inside its edge, unless `--ds-segmented-selected-border-color` is set."
+      "searchHints": [
+        "ds-segmented",
+        "--ds-segmented-selected-bg-color",
+        "--ds-segmented-selected-label-color",
+        "--ds-segmented-selected-shadow"
+      ],
+      "action": "None, unless a screen must keep the white selected chip: set `--ds-segmented-selected-bg-color: var(--surface-default)` and `--ds-segmented-selected-label-color: var(--text-primary)` on `ds-segmented`. A label colour of your own set through `--ds-segmented-selected-label-color` must read on the new fill, or be removed.",
+      "appliesWhen": "`ds-segmented`, both the padded track and `joined`: the selected segment fills with `--segmented-selected` (`--accent` in light, `--accent-strong-overlay` under `data-theme=\"dark\"`) and its label takes `--segmented-selected-on` (`--accent-on` in light, `--surface-default` on dark), at least 3:1 against the track. Defaults that moved: `--ds-segmented-selected-bg-color` from `--surface-default`, `--ds-segmented-selected-label-color` from `--text-primary`. The track, unselected segments, `--ds-segmented-selected-shadow` and `--ds-segmented-segment-border` are unchanged; a `joined` row keeps the borders that hook draws. A `ds-color` zone does not recolour the new fill.",
+      "pitfall": "Setting only `--ds-segmented-selected-bg-color` back to a light fill leaves the label in `--segmented-selected-on`, white in the light theme, so the selected label disappears.",
+      "restore": "ds-segmented { --ds-segmented-selected-bg-color: var(--surface-default); --ds-segmented-selected-label-color: var(--text-primary); }",
+      "verify": "The selected segment of a `ds-segmented` computes its background to `--segmented-selected` and its label to `--segmented-selected-on`, unless those hooks are set; no border is drawn on the track or on a padded segment.",
+      "evidence": ["tokens:--segmented-selected"]
     }
   ],
   "informational": [],

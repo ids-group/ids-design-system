@@ -34,7 +34,7 @@ const ROLES: readonly RoleRow[] = [
   { token: '--border-strong', use: 'Emphasised separation' },
   {
     token: '--border-field',
-    use: 'Field and control outline at rest, 3:1 against the page',
+    use: 'Standalone field and control outline at rest, 3:1 against the page',
   },
   {
     token: '--border-field-hover',
