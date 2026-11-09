@@ -73,6 +73,11 @@ export class TreeSection {
     doubleClick: signal<string | null>(null),
   };
 
+  protected readonly motionExpanded = {
+    on: signal(new Set(['src'])),
+    off: signal(new Set(['src'])),
+  };
+
   protected readonly layers: TreeNode[] = [
     {
       id: 'shell',

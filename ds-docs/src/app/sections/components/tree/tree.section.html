@@ -217,6 +217,48 @@
     }
   </div>
 
+  <h3 class="block-title t-h4">
+    Motion
+  </h3>
+
+  <p class="block-desc t-s">
+    Revealed rows slide open and shut and the chevron turns with them, on
+    <code class="t-mono-inline">
+      --duration-base
+    </code> and
+    <code class="t-mono-inline">
+      --ease-standard
+    </code>, the timing of
+    <code class="t-mono-inline">
+      ds-accordion
+    </code>. The first render does not animate, and nothing moves under
+    <code class="t-mono-inline">
+      prefers-reduced-motion: reduce
+    </code>. Set
+    <code class="t-mono-inline">
+      [animate]="false"
+    </code> for an instant toggle.
+  </p>
+
+  <div class="states is-cols-2">
+    @for (animated of [true, false]; track animated) {
+      <div
+        class="state-cell"
+        [attr.data-motion]="animated ? 'on' : 'off'">
+        <div class="state-cell-stage">
+          <ds-tree
+            [nodes]="nodes"
+            [animate]="animated"
+            [(expandedIds)]="motionExpanded[animated ? 'on' : 'off']" />
+        </div>
+
+        <div class="state-cell-label">
+          animate: {{ animated }}
+        </div>
+      </div>
+    }
+  </div>
+
   <h3
     data-claude-design
     class="block-title t-h4">
