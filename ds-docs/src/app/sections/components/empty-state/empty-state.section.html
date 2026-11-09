@@ -82,6 +82,50 @@
     </div>
   </div>
 
+  <h3 class="block-title t-h4">
+    Appearance
+  </h3>
+
+  <p class="block-desc t-s">
+    <code class="t-mono-inline">
+      tile
+    </code>, the default, sets the icon on a
+    tinted tile under a bold title, for a page or region that is empty.
+    <code class="t-mono-inline">
+      plain
+    </code> draws the icon alone, a semibold
+    title and a quiet body, for an empty section among others on a page.
+  </p>
+
+  <div class="variants-grid">
+    <div class="variant-card">
+      <ds-empty-state
+        appearance="tile"
+        icon="folder"
+        title="No prototypes yet"
+        body="Prototypes you open appear here.">
+      </ds-empty-state>
+    </div>
+
+    <div class="variant-card">
+      <ds-empty-state
+        appearance="plain"
+        icon="folder"
+        title="No prototypes yet"
+        body="Prototypes you open appear here.">
+      </ds-empty-state>
+    </div>
+
+    <div class="variant-card">
+      <ds-empty-state
+        appearance="plain"
+        variant="error"
+        title="Couldn't load prototypes"
+        body="The request timed out after 30 seconds.">
+      </ds-empty-state>
+    </div>
+  </div>
+
   <h3
     data-claude-design
     class="block-title t-h4">

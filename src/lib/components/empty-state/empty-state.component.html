@@ -3,12 +3,20 @@
   [loading]="variant() === 'loading'"
   [blur]="true">
   <span [class]="classes()">
-    <span class="icon-tile">
+    @if (appearance() === 'plain') {
       <ds-icon
+        class="icon"
         [name]="resolvedIcon()"
-        [size]="28">
+        [size]="32">
       </ds-icon>
-    </span>
+    } @else {
+      <span class="icon-tile">
+        <ds-icon
+          [name]="resolvedIcon()"
+          [size]="28">
+        </ds-icon>
+      </span>
+    }
 
     @if (title()) {
       <span

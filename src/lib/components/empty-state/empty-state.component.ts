@@ -4,6 +4,7 @@ import { LoadingOverlayComponent } from '@ids-group-ltd/ids-design-system/compon
 import { TooltipDirective } from '@ids-group-ltd/ids-design-system/components/tooltip';
 import type { IconName } from '@ids-group-ltd/ids-design-system/core';
 import type {
+  EmptyStateAppearance,
   EmptyStateTitleOverflow,
   EmptyStateVariant,
 } from './empty-state.types';
@@ -29,12 +30,20 @@ export class EmptyStateComponent {
   readonly titleOverflow = input<EmptyStateTitleOverflow>('wrap');
   /** Optional supporting text below the title. */
   readonly body = input<string>('');
+  /** `'tile'` draws the icon on a tinted tile under a bold title; `'plain'` draws a 32px icon with
+   *  no tile, a semibold `--font-size-l` title and the body in `--text-tertiary`, for an empty
+   *  section inside a page rather than an empty page. */
+  readonly appearance = input<EmptyStateAppearance>('tile');
 
-  protected readonly classes = computed(() => {
-    const variant = this.variant();
-
-    return variant === 'none' ? 'empty-state' : `empty-state ${variant}`;
-  });
+  protected readonly classes = computed(() =>
+    [
+      'empty-state',
+      this.variant() === 'none' ? '' : this.variant(),
+      this.appearance() === 'plain' ? 'plain' : '',
+    ]
+      .filter(Boolean)
+      .join(' '),
+  );
 
   protected readonly resolvedIcon = computed<IconName>(() => {
     const explicit = this.icon();

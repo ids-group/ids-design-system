@@ -1,5 +1,13 @@
 ## Unreleased
 
+### Added
+
+- **`ds-empty-state` draws a quiet look with `appearance="plain"`.** The icon sits alone at 32px in
+  `--text-tertiary`, with no tile, the title is semibold at `--font-size-l` and the body is in
+  `--text-tertiary`, for an empty section among others on a page. An `error` or `success` icon
+  keeps its status colour. The `--ds-empty-state-*` hooks still win where set. The default
+  `'tile'` renders as before. New export `EmptyStateAppearance`.
+
 ### Fixed
 
 - **The `ds-textarea` resize handle sits in the corner.** It touched the bottom edge but stood 12px

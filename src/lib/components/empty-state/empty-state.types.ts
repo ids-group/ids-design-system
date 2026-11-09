@@ -6,3 +6,5 @@ export type EmptyStateVariant =
   | 'success';
 
 export type EmptyStateTitleOverflow = 'wrap' | 'clip';
+
+export type EmptyStateAppearance = 'tile' | 'plain';

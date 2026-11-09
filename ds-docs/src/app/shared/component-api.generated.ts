@@ -4871,6 +4871,18 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "''",
         "required": false,
         "description": "Optional supporting text below the title."
+      },
+      {
+        "name": "appearance",
+        "kind": "input",
+        "type": "EmptyStateAppearance",
+        "union": [
+          "tile",
+          "plain"
+        ],
+        "default": "'tile'",
+        "required": false,
+        "description": "`'tile'` draws the icon on a tinted tile under a bold title; `'plain'` draws a 32px icon with no tile, a semibold `--font-size-l` title and the body in `--text-tertiary`, for an empty section inside a page rather than an empty page."
       }
     ],
     "outputs": []
