@@ -3058,6 +3058,18 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "While `busy`, the default send button becomes Stop: a square inside a turning ring that emits `stopRequested`."
       },
       {
+        "name": "busyAction",
+        "kind": "input",
+        "type": "ChatInputBusyAction",
+        "union": [
+          "stop",
+          "queue"
+        ],
+        "default": "'stop'",
+        "required": false,
+        "description": "What the default send button does while `busy` once text is typed. `'stop'`: it stays Stop (or the spinner). `'queue'`: it becomes Queue and emits `queued`, Enter queues too, and Stop (with `stoppable`) and the `[busyActions]` slot sit beside it. With no text it is Stop again."
+      },
+      {
         "name": "busyLabel",
         "kind": "input",
         "type": "string",
@@ -3100,6 +3112,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": null,
         "required": false,
         "description": "The Stop button was pressed; fires only while `busy`, `stoppable` and not `disabled`."
+      },
+      {
+        "name": "queued",
+        "kind": "output",
+        "type": "string",
+        "union": null,
+        "default": null,
+        "required": false,
+        "description": "The trimmed text, on Enter or the Queue button; fires only while the Queue button shows."
       },
       {
         "name": "filesPasted",

@@ -156,6 +156,7 @@ export const DS_INTL_DEFAULTS: DsIntl & {
     label: 'Message',
     send: 'Send',
     stop: 'Stop',
+    queue: 'Queue',
   },
   spinner: {
     label: 'Loading',

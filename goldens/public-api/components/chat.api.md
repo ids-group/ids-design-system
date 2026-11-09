@@ -31,10 +31,13 @@ export class ChatAttachmentComponent {
     protected toggle(): void;
 }
 
+export type ChatInputBusyAction = 'stop' | 'queue';
+
 @Component({ selector: 'ds-chat-input' })
 export class ChatInputComponent {
     public readonly ariaLabel = input<string | null>(null);
     public readonly busy = input(false, { transform: booleanAttribute });
+    public readonly busyAction = input<ChatInputBusyAction>('stop');
     public readonly busyLabel = input<string>('');
     public readonly canSubmit = computed(…);
     public readonly disabled = input(false, { transform: booleanAttribute });
@@ -43,12 +46,17 @@ export class ChatInputComponent {
     private readonly intl;
     private readonly labels;
     public readonly layout = input<ChatInputLayout>('status-bar');
+    protected readonly mainLabel = computed(…);
     public readonly maxRows = input<number>(8);
     public readonly minRows = input<number>(1);
     protected onKeydown(event: KeyboardEvent): void;
     protected onPaste(event: ClipboardEvent): void;
     protected onSendPressed(): void;
     public readonly placeholder = input<string>('');
+    private queue;
+    protected readonly queueLabel = computed(…);
+    protected readonly queueShown = computed(…);
+    public readonly queued = output<string>();
     protected readonly sendLabel = computed(…);
     protected readonly statusAbove = computed(…);
     protected readonly statusText = computed(…);

@@ -47,6 +47,20 @@
     }
 
     <div class="send">
+      @if (queueShown()) {
+        <ng-content select="[busyActions]" />
+
+        @if (stoppable()) {
+          <ds-button
+            size="sm"
+            variant="tonal"
+            class="send-button stop"
+            icon="stop"
+            [ariaLabel]="stopLabel()"
+            (pressed)="stopRequested.emit()" />
+        }
+      }
+
       <ng-content select="[send]">
         <ds-button
           size="sm"
@@ -54,9 +68,9 @@
           loadingMode="icon"
           [class.stop]="stopShown()"
           [icon]="stopShown() ? 'stop' : 'arrowUp'"
-          [ariaLabel]="stopShown() ? stopLabel() : sendLabel()"
+          [ariaLabel]="mainLabel()"
           [disabled]="disabled()"
-          [loading]="busy() && !stopShown()"
+          [loading]="busy() && !stopShown() && !queueShown()"
           (pressed)="onSendPressed()" />
       </ng-content>
     </div>

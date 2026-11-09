@@ -183,6 +183,8 @@ export interface DsIntl {
     readonly send?: string;
     /** `'Stop'` - the default send button while `busy` and `stoppable`. */
     readonly stop?: string;
+    /** `'Queue'` - the default send button while `busy`, with `busyAction="queue"` and text typed. */
+    readonly queue?: string;
   };
   readonly spinner: {
     readonly label: string;

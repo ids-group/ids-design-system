@@ -54,6 +54,13 @@ export const routes: Routes = [
             ),
         },
         {
+          path: 'harness/chat-input-busy-action',
+          loadComponent: () =>
+            import('./harness/chat-input-busy-action.page').then(
+              (m) => m.ChatInputBusyActionHarnessPage,
+            ),
+        },
+        {
           path: 'harness/density-overlay',
           loadComponent: () =>
             import('./harness/density-overlay.page').then(

@@ -14,6 +14,13 @@
   nearest `[data-density]` around `ds-popover`, so a tree inside it follows the screen that opens
   it. `--ds-tree-row-padding-y`, `--ds-tree-row-padding-x`, `--ds-tree-indent` and
   `--ds-popover-padding` still win where set; without `[data-density]` both render as before.
+- **`ds-chat-input` offers Queue while it is busy, with `busyAction="queue"`.** Once text is typed
+  while `busy`, the default send button becomes Queue: it and Enter emit the new output `queued`
+  with the trimmed text, and its accessible name is the new `DsIntl` key `chatInput.queue`
+  (`'Queue'`). Stop, with `stoppable`, moves beside it with its square in a turning ring, and an
+  element marked `busyActions`, such as a Redirect button, sits beside them. With the text cleared
+  the button is Stop again. The default `'stop'` renders as before. New export
+  `ChatInputBusyAction`.
 - **Two icons: `maximize` and `minimize`.** Four corners pointing out and in, for entering and
   leaving full screen. They are drawn from Lucide (ISC) on the 24-unit grid and take the set's
   stroke.

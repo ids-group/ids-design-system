@@ -138,6 +138,7 @@ export {
 } from '@ids-group-ltd/ids-design-system/components/chat';
 export type {
   AttachmentKind,
+  ChatInputBusyAction,
   ChatInputLayout,
   ChatMessageRole,
   ChatMessageStatus,

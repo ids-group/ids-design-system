@@ -307,6 +307,7 @@ export interface DsIntl {
         readonly label?: string;
         readonly send?: string;
         readonly stop?: string;
+        readonly queue?: string;
     };
     readonly spinner: {
         readonly label: string;

@@ -16,13 +16,13 @@ import {
 import { ButtonComponent } from '@ids-group-ltd/ids-design-system/components/button';
 import { TextareaComponent } from '@ids-group-ltd/ids-design-system/components/textarea';
 import { FieldClickFocusDirective } from '@ids-group-ltd/ids-design-system/components';
-import type { ChatInputLayout } from './chat-input.types';
+import type { ChatInputBusyAction, ChatInputLayout } from './chat-input.types';
 
 /**
  * Message box for a chat or an instruction: an auto-growing text area with chips above it, actions
  * on the left of a bottom bar and a send button on the right. Enter submits, Shift+Enter breaks the
  * line. Slots: `[attachments]` above the frame, `[chips]`, `[actions]`, `[send]` (replaces the default send
- * button).
+ * button), `[busyActions]` (beside the Queue button while it shows).
  */
 @Component({
   selector: 'ds-chat-input',
@@ -54,6 +54,10 @@ export class ChatInputComponent {
   /** While `busy`, the default send button becomes Stop: a square inside a turning ring that emits
    *  `stopRequested`. */
   readonly stoppable = input(false, { transform: booleanAttribute });
+  /** What the default send button does while `busy` once text is typed. `'stop'`: it stays Stop
+   *  (or the spinner). `'queue'`: it becomes Queue and emits `queued`, Enter queues too, and Stop
+   *  (with `stoppable`) and the `[busyActions]` slot sit beside it. With no text it is Stop again. */
+  readonly busyAction = input<ChatInputBusyAction>('stop');
   /** The current step while `busy`, such as "Rebuilding"; where it shows follows `layout`. */
   readonly busyLabel = input<string>('');
   /** Where the buttons and the step text sit. `'status-bar'`: buttons inside, the step text in the
@@ -68,6 +72,8 @@ export class ChatInputComponent {
   readonly submitted = output<string>();
   /** The Stop button was pressed; fires only while `busy`, `stoppable` and not `disabled`. */
   readonly stopRequested = output<void>();
+  /** The trimmed text, on Enter or the Queue button; fires only while the Queue button shows. */
+  readonly queued = output<string>();
   /** Image files pasted into the text area. The paste inserts no text when it carries images. */
   readonly filesPasted = output<File[]>();
 
@@ -85,8 +91,24 @@ export class ChatInputComponent {
   );
   protected readonly sendLabel = computed(() => this.labels().send);
   protected readonly stopLabel = computed(() => this.labels().stop);
+  protected readonly queueLabel = computed(() => this.labels().queue);
+  protected readonly queueShown = computed(
+    () =>
+      this.busy() &&
+      this.busyAction() === 'queue' &&
+      !this.disabled() &&
+      this.value().trim() !== '',
+  );
   protected readonly stopShown = computed(
-    () => this.busy() && this.stoppable() && !this.disabled(),
+    () =>
+      this.busy() && this.stoppable() && !this.disabled() && !this.queueShown(),
+  );
+  protected readonly mainLabel = computed(() =>
+    this.queueShown()
+      ? this.queueLabel()
+      : this.stopShown()
+        ? this.stopLabel()
+        : this.sendLabel(),
   );
   protected readonly statusAbove = computed(
     () => this.layout() === 'status-above' || this.layout() === 'split',
@@ -102,8 +124,14 @@ export class ChatInputComponent {
     }
   }
 
+  private queue(): void {
+    this.queued.emit(this.value().trim());
+  }
+
   protected onSendPressed(): void {
-    if (this.stopShown()) {
+    if (this.queueShown()) {
+      this.queue();
+    } else if (this.stopShown()) {
       this.stopRequested.emit();
     } else if (this.canSubmit()) {
       this.submit();
@@ -128,7 +156,11 @@ export class ChatInputComponent {
       return;
     }
     event.preventDefault();
-    this.submit();
+    if (this.queueShown()) {
+      this.queue();
+    } else {
+      this.submit();
+    }
   }
 
   protected onPaste(event: ClipboardEvent): void {
