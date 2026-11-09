@@ -28,6 +28,7 @@ const PUBLISHED = [
   'keywords',
   'publishConfig',
   'exports',
+  'bin',
   'peerDependencies',
   'dependencies',
   'sideEffects',
