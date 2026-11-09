@@ -180,6 +180,7 @@ export type {
 } from '@ids-group-ltd/ids-design-system/components/dropzone';
 export { EmptyStateComponent } from '@ids-group-ltd/ids-design-system/components/empty-state';
 export type {
+  EmptyStateAppearance,
   EmptyStateTitleOverflow,
   EmptyStateVariant,
 } from '@ids-group-ltd/ids-design-system/components/empty-state';

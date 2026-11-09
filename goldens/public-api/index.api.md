@@ -174,6 +174,7 @@ export { DsToastPosition } from '@ids-group-ltd/ids-design-system/core'; // inte
 export { DsToastVerticalPosition } from '@ids-group-ltd/ids-design-system/core'; // type
 export { DsTooltipConfig } from '@ids-group-ltd/ids-design-system/components/tooltip'; // interface
 export { DsTriggerDisplay } from '@ids-group-ltd/ids-design-system/core'; // type
+export { EmptyStateAppearance } from '@ids-group-ltd/ids-design-system/components/empty-state'; // type
 export { EmptyStateComponent } from '@ids-group-ltd/ids-design-system/components/empty-state'; // component
 export { EmptyStateTitleOverflow } from '@ids-group-ltd/ids-design-system/components/empty-state'; // type
 export { EmptyStateVariant } from '@ids-group-ltd/ids-design-system/components/empty-state'; // type
