@@ -7,6 +7,16 @@
   `--text-tertiary`, for an empty section among others on a page. An `error` or `success` icon
   keeps its status colour. The `--ds-empty-state-*` hooks still win where set. The default
   `'tile'` renders as before. New export `EmptyStateAppearance`.
+- **The stylelint plugin reports raw values where a token exists, and tokens nothing declares.**
+  `ids-design-system/use-tokens` covers colour, radius, spacing, type size, line height and weight,
+  `box-shadow`, `z-index` and motion, and names the exact token (`use var(--space-2)`) or the nearest
+  step, said as nearest; a colour names the role of its property (`--text-*`, `--surface-*`,
+  `--border-*`). `ids-design-system/known-tokens` reports a `var(--name)` that neither the library
+  nor your stylesheets declare, such as `--radius-s` for `--radius-sm`. Both are off until you add
+  them; `categories` sets each category to `false`, `"warning"` or `"error"`, `allow` and `ignore`
+  exempt values and files. `npx ids-design-system-token-report "<glob>"` prints the findings and the
+  counts per category, property, file and value without changing anything. The README has the
+  setup.
 
 ### Fixed
 
