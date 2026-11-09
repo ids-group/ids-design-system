@@ -239,7 +239,7 @@
   width: var(--check-size);
   height: var(--check-size);
   border-radius: var(--ds-radius-inner);
-  border: var(--check-bw) solid var(--border-strong);
+  border: var(--check-bw) solid var(--border-field);
 
   // ds-checkbox paints its own surface; an unchecked box stays white over a hovered or selected row.
   background-color: var(--surface-default);

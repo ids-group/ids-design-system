@@ -51,6 +51,8 @@
   }
 
   &.disabled {
+    --_number-stepper-border-color: var(--border-disabled);
+
     background: var(--surface-disabled);
     border-color: var(--border-disabled);
 
@@ -90,12 +92,12 @@
   }
 
   &.minus {
-    border-right: var(--border-width-default) solid var(--border-default);
+    border-right: var(--border-width-default) solid var(--_number-stepper-border-color);
     border-radius: var(--_number-stepper-inner-radius) 0 0 var(--_number-stepper-inner-radius);
   }
 
   &.plus {
-    border-left: var(--border-width-default) solid var(--border-default);
+    border-left: var(--border-width-default) solid var(--_number-stepper-border-color);
     border-radius: 0 var(--_number-stepper-inner-radius) var(--_number-stepper-inner-radius) 0;
   }
 }

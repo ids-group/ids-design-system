@@ -5,7 +5,7 @@
 // override (error, warning) and pin the resting colour.
 @mixin resolvers {
   --_checkbox-bg-color: var(--ds-checkbox-bg-color, var(--surface-default));
-  --_checkbox-border-color: var(--ds-checkbox-border-color, var(--border-strong));
+  --_checkbox-border-color: var(--ds-checkbox-border-color, var(--border-field));
   --_checkbox-hover-border-color: var(--ds-checkbox-hover-border-color, var(--accent));
   --_checkbox-selected-bg-color: var(--ds-checkbox-selected-bg-color, var(--accent));
   --_checkbox-selected-border-color: var(--ds-checkbox-selected-border-color, var(--accent));
@@ -20,7 +20,7 @@
   width: var(--_checkbox-glyph, var(--check-size));
   height: var(--_checkbox-glyph, var(--check-size));
   border: var(--check-bw) solid
-    var(--_checkbox-border-color, var(--ds-checkbox-border-color, var(--border-strong)));
+    var(--_checkbox-border-color, var(--ds-checkbox-border-color, var(--border-field)));
   background: var(--_checkbox-bg-color, var(--ds-checkbox-bg-color, var(--surface-default)));
   cursor: pointer;
   display: inline-grid;

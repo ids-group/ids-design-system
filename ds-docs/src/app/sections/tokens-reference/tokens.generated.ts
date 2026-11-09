@@ -490,8 +490,8 @@ export const SEMANTIC_BORDER: readonly ColourRow[] = [
   },
   {
     "name": "--border-field",
-    "value": "var(--neutral-500)",
-    "notes": "Resting outline of a text-entry field, picker trigger, number stepper and OTP cell; at least 3:1 against the page, a card, a modal or drawer and a popover."
+    "value": "color-mix(in srgb, var(--neutral-500) 48%, var(--neutral-400))",
+    "notes": "Resting outline of a field or control: text-entry field, picker trigger, number stepper and its dividers, OTP cell, checkbox, radio, off switch track, toggle button, selected segment. At least 3:1 against the page, a card, a modal or drawer, a popover and their secondary fills."
   },
   {
     "name": "--border-field-hover",
@@ -3801,8 +3801,8 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--ds-checkbox-border-color",
-        "value": "var(--border-strong)",
-        "notes": "Checkbox unchecked border colour."
+        "value": "var(--border-field)",
+        "notes": "Checkbox unchecked border colour (defaults to --border-field)."
       },
       {
         "name": "--ds-checkbox-hover-border-color",
@@ -4310,12 +4310,12 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
     "tokens": [
       {
         "name": "--ds-option-selected-bg-color",
-        "value": "var(--primary-subtitle)",
+        "value": "var(--surface-overlay-raised-tint)",
         "notes": "Fill of the selected row in a dropdown panel (default --primary-subtitle). Panel-level: one partial paints select, autocomplete and multi-select alike."
       },
       {
         "name": "--ds-option-selected-label-color",
-        "value": "var(--primary-strong)",
+        "value": "var(--accent-strong-overlay)",
         "notes": "Label and icon colour of the selected row (default --primary-strong)."
       },
       {
@@ -6334,8 +6334,8 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--ds-radio-border-color",
-        "value": "var(--border-strong)",
-        "notes": "Radio ring colour (defaults to --border-strong)."
+        "value": "var(--border-field)",
+        "notes": "Radio ring colour (defaults to --border-field)."
       },
       {
         "name": "--ds-radio-label-color",
@@ -6512,6 +6512,11 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "name": "--ds-segmented-selected-shadow",
         "value": "var(--ds-elevation-raised)",
         "notes": "Selected segment shadow (defaults to --ds-elevation-raised)."
+      },
+      {
+        "name": "--ds-segmented-selected-border-color",
+        "value": "var(--border-field)",
+        "notes": "Selected segment outline, drawn inside its edge (defaults to --border-field)."
       },
       {
         "name": "--ds-segmented-segment-border",
@@ -7065,6 +7070,11 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "name": "--ds-splitter-overdrag-line-scale",
         "value": "3",
         "notes": ""
+      },
+      {
+        "name": "--ds-splitter-fog-color",
+        "value": "color-mix(in srgb, var(--text-primary) 22%, transparent)",
+        "notes": ""
       }
     ]
   },
@@ -7231,8 +7241,8 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--ds-switch-track-off-bg-color",
-        "value": "var(--border-strong)",
-        "notes": "Switch track fill, off state (defaults to --border-strong)."
+        "value": "var(--border-field)",
+        "notes": "Switch track fill, off state (defaults to --border-field)."
       },
       {
         "name": "--ds-switch-thumb-bg-color",
@@ -8594,8 +8604,8 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--ds-toggle-button-border-color",
-        "value": "var(--border-default)",
-        "notes": "Toggle button border colour (defaults to --border-default)."
+        "value": "var(--border-field)",
+        "notes": "Toggle button border colour (defaults to --border-field)."
       },
       {
         "name": "--ds-toggle-button-color",
