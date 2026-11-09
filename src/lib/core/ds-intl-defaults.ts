@@ -12,6 +12,7 @@ export const DS_INTL_DEFAULTS: DsIntl & {
   readonly chatInput: Required<NonNullable<DsIntl['chatInput']>>;
   readonly attachment: Required<NonNullable<DsIntl['attachment']>>;
   readonly chat: Required<NonNullable<DsIntl['chat']>>;
+  readonly tree: Required<NonNullable<DsIntl['tree']>>;
 } = {
   field: {
     optional: '(optional)',
@@ -233,6 +234,10 @@ export const DS_INTL_DEFAULTS: DsIntl & {
     stepWaiting: 'Waiting for your approval',
     stepFailed: 'Failed',
     stepDetails: (heading) => (heading ? `Details: ${heading}` : 'Details'),
+  },
+  tree: {
+    expand: (label) => `Expand ${label}`,
+    collapse: (label) => `Collapse ${label}`,
   },
   tabs: {
     close: (label) => `Close ${label}`,

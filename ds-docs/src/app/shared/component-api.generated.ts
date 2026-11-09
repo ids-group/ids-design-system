@@ -13474,6 +13474,28 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "[]",
         "required": false,
         "description": "Ids of the selected nodes, in `'multiple'` selection."
+      },
+      {
+        "name": "toggleOn",
+        "kind": "input",
+        "type": "TreeToggleOn",
+        "union": [
+          "row",
+          "caret",
+          "doubleClick"
+        ],
+        "default": "'row'",
+        "required": false,
+        "description": "What expands and collapses a parent. `'row'`: activating the row (click, Enter, Space) selects it and toggles it. `'caret'`: activating the row only selects it, and the chevron is a button of its own that toggles. `'doubleClick'`: a click selects, a double click toggles. In every mode ArrowRight expands and ArrowLeft collapses the focused row."
+      },
+      {
+        "name": "animate",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "true",
+        "required": false,
+        "description": "Rows slide open and shut and the chevron turns when a parent expands or collapses. Off under `prefers-reduced-motion: reduce`."
       }
     ],
     "outputs": [

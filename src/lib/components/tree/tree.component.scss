@@ -1,6 +1,7 @@
 @use '../../styles/focus' as focus;
 @use '../../styles/text-clip' as text-clip;
 @use '../../styles/component-base' as component-base;
+@use '../../styles/target' as target;
 @include component-base.rules;
 
 :host {
@@ -16,6 +17,73 @@
 
   display: flex;
   flex-direction: column;
+}
+
+/* The rows are one flat list, so each revealed row folds on its own: a keyframe, not a transition,
+   because the row is inserted when its parent opens and has no previous state. The padding folds
+   with the track, or it survives the 0fr crush and leaks a sliver. */
+.row-shell {
+  display: grid;
+  grid-template-rows: 1fr;
+}
+
+.row-shell.is-entering {
+  animation: ds-tree-row-expand var(--duration-base) var(--ease-standard);
+
+  > .row {
+    overflow: hidden;
+    min-height: 0;
+    animation: ds-tree-row-padding-in var(--duration-base) var(--ease-standard);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    &,
+    > .row {
+      animation: none;
+    }
+  }
+}
+
+// Angular removes the row on this animation's `animationend`, which a 0s animation does not fire reliably;
+// the 1ms floor keeps reduced motion from holding the row for Angular's 4s fallback.
+// A shrink-to-fit tree is as wide as its widest row, so a leaving row stops counting at once, as with
+// `animate` off, instead of narrowing every row when it is removed.
+.row-shell.is-leaving {
+  contain: inline-size;
+  pointer-events: none;
+  animation: ds-tree-row-collapse max(var(--duration-base), 1ms) var(--ease-standard) both;
+
+  > .row {
+    overflow: hidden;
+    min-height: 0;
+    animation: ds-tree-row-padding-out max(var(--duration-base), 1ms) var(--ease-standard) both;
+  }
+}
+
+@keyframes ds-tree-row-expand {
+  from {
+    grid-template-rows: 0fr;
+    opacity: 0;
+  }
+}
+
+@keyframes ds-tree-row-collapse {
+  to {
+    grid-template-rows: 0fr;
+    opacity: 0;
+  }
+}
+
+@keyframes ds-tree-row-padding-in {
+  from {
+    padding-block: 0;
+  }
+}
+
+@keyframes ds-tree-row-padding-out {
+  to {
+    padding-block: 0;
+  }
 }
 
 .row {
@@ -64,6 +132,32 @@
 .caret {
   flex: none;
   color: var(--_tree-caret-icon-color);
+
+  &.expanded {
+    transform: rotate(90deg);
+  }
+}
+
+:host(.is-animated) .caret {
+  transition: transform var(--duration-base) var(--ease-standard);
+}
+
+.caret-button {
+  display: grid;
+  flex: none;
+  place-items: center;
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+
+  &:disabled {
+    cursor: not-allowed;
+  }
+
+  @include target.min-size;
 }
 
 .caret-spacer {

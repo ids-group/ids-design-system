@@ -67,6 +67,13 @@ export const routes: Routes = [
               (m) => m.SplitterFogHarnessPage,
             ),
         },
+        {
+          path: 'harness/tree-toggle',
+          loadComponent: () =>
+            import('./harness/tree-toggle.page').then(
+              (m) => m.TreeToggleHarnessPage,
+            ),
+        },
       ]
     : []),
   { path: ':area/:anchor', loadComponent: load },

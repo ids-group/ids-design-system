@@ -451,6 +451,7 @@ export type {
   TreeLabelContext,
   TreeNode,
   TreeSelection,
+  TreeToggleOn,
   TreeTrailingContext,
 } from '@ids-group-ltd/ids-design-system/components/tree';
 export { W3wComponent } from '@ids-group-ltd/ids-design-system/components/w3w';

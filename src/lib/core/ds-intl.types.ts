@@ -293,6 +293,12 @@ export interface DsIntl {
     /** `` `Details: ${heading}` `` - the toggle of a step's `[details]` area; `'Details'` without a heading. */
     readonly stepDetails?: (heading: string) => string;
   };
+  readonly tree?: {
+    /** `` `Expand ${label}` `` - the caret button of a collapsed row under `toggleOn="caret"`. */
+    readonly expand?: (label: string) => string;
+    /** `` `Collapse ${label}` `` - the same button on an expanded row. */
+    readonly collapse?: (label: string) => string;
+  };
   readonly tabs: {
     readonly close: (label: string) => string;
   };
