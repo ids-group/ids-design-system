@@ -7,6 +7,9 @@
   `--text-tertiary`, for an empty section among others on a page. An `error` or `success` icon
   keeps its status colour. The `--ds-empty-state-*` hooks still win where set. The default
   `'tile'` renders as before. New export `EmptyStateAppearance`.
+- **Two icons: `maximize` and `minimize`.** Four corners pointing out and in, for entering and
+  leaving full screen. They are drawn from Lucide (ISC) on the 24-unit grid and take the set's
+  stroke.
 
 ### Fixed
 
