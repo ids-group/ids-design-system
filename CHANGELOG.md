@@ -46,6 +46,11 @@
   click selects and a double click toggles. ArrowRight expands and ArrowLeft collapses the focused
   row in every mode, and Shift- or Ctrl-click in multiple selection only adds or removes the row.
   New export `TreeToggleOn`.
+- **`--segmented-selected` and `--segmented-selected-on`**, the fill of the selected `ds-segmented`
+  segment and its label. Light: `--accent` with `--accent-on`. Dark: `--accent-strong-overlay` with
+  `--surface-default`, because `--accent` is under 3:1 against the dark track. Both are declared with
+  the theme, so a `ds-color` zone does not recolour them; set `--ds-segmented-selected-bg-color` and
+  `--ds-segmented-selected-label-color` there.
 
 ### Changed
 
@@ -80,8 +85,9 @@
   `--ds-switch-track-off-bg-color` from `--border-strong`, and `--ds-toggle-button-border-color`
   from `--border-default` (1.31:1); a hovered `ds-toggle-button` takes `--border-field-hover`. The
   unchecked boxes in `ds-multi-select` and `ds-autocomplete` options, `ds-table` selection,
-  `ds-table-columns` and `ds-chart-legend` follow. The dividers beside the `ds-number-stepper`
-  buttons take `--ds-number-stepper-border-color` instead of `--border-default`. A
+  `ds-table-columns-panel` and `ds-chart-legend` follow. The dividers beside the `ds-number-stepper`
+  buttons take `--ds-number-stepper-border-color` instead of `--border-default`, and
+  `--border-disabled` when disabled. A
   value set on any of these hooks still wins. To keep the faint look on a screen, set the hook back,
   for example `--ds-checkbox-border-color: var(--border-strong)`.
 - **The selected `ds-segmented` segment is a solid accent fill, at least 3:1 against the track.**
@@ -100,11 +106,6 @@
   on the text. The padding now sits on the text, so the handle and a scrollbar reach the frame's
   edges on both sides, as on a native textarea; the text, the placeholder and the pending or changed
   mark keep their places. Nothing to change in your code.
-- **`--segmented-selected` and `--segmented-selected-on`**, the fill of the selected `ds-segmented`
-  segment and its label. Light: `--accent` with `--accent-on`. Dark: `--accent-strong-overlay` with
-  `--surface-default`, because `--accent` is under 3:1 against the dark track. Both are declared with
-  the theme, so a `ds-color` zone does not recolour them; set `--ds-segmented-selected-bg-color` and
-  `--ds-segmented-selected-label-color` there.
 
 ## 1.1.1 — 2026-11-08
 

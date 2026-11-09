@@ -43,7 +43,7 @@
       "verify": "Expanding a parent in a `ds-tree` without `[animate]=\"false\"` grows its child rows from zero height over `--duration-base`, and a tree bound `[animate]=\"false\"` shows them at full height in the next frame."
     },
     {
-      "id": "field-border-softer-light",
+      "id": "field-border-3-to-1",
       "kind": "behavior",
       "old": "--border-field",
       "new": null,
