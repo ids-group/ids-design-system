@@ -4,6 +4,15 @@ Versioning: **patch** = instruction/prompt fixes; **minor** = new capability (pi
 source, agent); **major** = a change to the workflow's behavior contract. Bump `plugin.json` +
 `marketplace.json` together on every published change.
 
+## 1.21.0 - 2026-11-09
+
+### Added
+
+- **Each version's commit records the upgrade in `.ids-design-system-upgrade.json`.** Beside the
+  target's `package.json`: the version, the one before it, the plugin version, `git config
+  user.name` and the date, replaced on every version. The design-system team reads it across
+  repositories to find who upgrades which project with which plugin.
+
 ## 1.20.1 - 2026-11-09
 
 ### Fixed

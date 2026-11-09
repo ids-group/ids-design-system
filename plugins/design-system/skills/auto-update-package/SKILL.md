@@ -445,6 +445,7 @@ while the wave runs. Collect the whole wave before Phase B.
     It never runs with `--fix`: the step-2 script is the one writer of mechanical renames, and an
     autofix would rewrite exactly the occurrences that script deliberately leaves (a type imported
     from a secondary entry point, whose new name may live in another one).
+
 12. **Whole-chain pre-pass (per target, before any per-item agent).** Most items of a long chain
     find nothing in one consumer; this pass proves which, once, so per-item planners, finders and
     re-checks go only where there is something. The items are the clone's manifests (a version
@@ -783,9 +784,13 @@ spanning all targets. (Single-target repos: the plain per-target loop below is f
    consumer's case, keep when unsure. Its result is keyed `item:<id>` and is recorded and reported
    with the rows.
 9. **Green → commit.** Green includes a clean lint re-check (step 7) on the final tree, where the
-   lint step ran. Stage EXACTLY the touched-files union (step 3) plus the target's
-   `package.json` plus the lockfile, by explicit pathspec (never `git add -A`, never a bare
-   directory). Commit `chore(deps): update @ids-group-ltd/ids-design-system to vV`, migration
+   lint step ran. Write `.ids-design-system-upgrade.json` beside the target's `package.json`,
+   replacing any earlier one: `{ "version": "<V>", "from": "<the version before V>",
+"plugin": "<installed plugin.json version>", "by": "<git config user.name>",
+"date": "<YYYY-MM-DD>" }`. It is how the design-system team finds who upgrades which project with
+   which plugin, so it is never skipped. Stage EXACTLY the touched-files union (step 3) plus the
+   target's `package.json`, the lockfile and that file, by explicit pathspec (never `git add -A`,
+   never a bare directory). Commit `chore(deps): update @ids-group-ltd/ids-design-system to vV`, migration
    summary in the body (`-m` subject, `-m` body). When the consumer's own rules require one change
    per commit, split the version instead: the bump (`package.json` and the lockfile) first, then
    one commit per migration, each staged by pathspec. Only the version's last commit has to be

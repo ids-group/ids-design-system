@@ -23,7 +23,9 @@ It first checks that the plugin itself is the latest published version and offer
 (then `/reload-plugins` and run again). It detects the installed version, computes the chain of published versions up to the latest,
 asks once for a git strategy (feature branch vs current branch), then runs autonomously —
 committing one version at a time — and stops (leaving edits in place) on any version it cannot
-make green. Migration plans come from the DS's shipped `migrations/<version>.json` manifests when
+make green. Each version's commit also writes `.ids-design-system-upgrade.json` beside the
+`package.json` (version, previous version, plugin version, who, when), so the design-system team
+can find which projects upgrade with which plugin. Migration plans come from the DS's shipped `migrations/<version>.json` manifests when
 a version has one (deterministic), falling back to reading the prose changelog. A skill-scoped
 hook hard-blocks `git push` for the duration of a run — you review the branch and push yourself.
 
