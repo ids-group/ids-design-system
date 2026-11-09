@@ -10,7 +10,7 @@
   --_switch-thumb-pad: var(--switch-thumb-pad);
   --_switch-label-fs: var(--font-size-s);
   --_switch-track-on-bg-color: var(--ds-switch-track-on-bg-color, var(--accent));
-  --_switch-track-off-bg-color: var(--ds-switch-track-off-bg-color, var(--border-strong));
+  --_switch-track-off-bg-color: var(--ds-switch-track-off-bg-color, var(--border-field));
   --_switch-thumb-bg-color: var(--ds-switch-thumb-bg-color, var(--surface-default));
 
   display: inline-flex;

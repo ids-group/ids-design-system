@@ -48,8 +48,8 @@ ds-segmented {
     --ds-segmented-segment-border: 0;
     --ds-segmented-segment-height: var(--segmented-btn-h);
     --ds-segmented-segment-padding-x: var(--space-4);
-    --ds-segmented-selected-bg-color: var(--surface-default);
-    --ds-segmented-selected-label-color: var(--text-primary);
+    --ds-segmented-selected-bg-color: var(--segmented-selected);
+    --ds-segmented-selected-label-color: var(--segmented-selected-on);
     --ds-segmented-selected-shadow: var(--ds-elevation-raised);
 }
 ```

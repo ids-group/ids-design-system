@@ -17,7 +17,7 @@ export class ToggleButtonComponent {
 ```css
 ds-toggle-button {
     --ds-toggle-button-bg-color: var(--surface-default);
-    --ds-toggle-button-border-color: var(--border-default);
+    --ds-toggle-button-border-color: var(--border-field);
     --ds-toggle-button-color: var(--text-secondary);
     --ds-toggle-button-selected-bg-color: var(--accent-subtitle);
     --ds-toggle-button-selected-border-color: var(--accent);

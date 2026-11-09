@@ -415,7 +415,7 @@ styles/_chart-motion.scss {
 
 styles/_check-box.scss {
     --ds-checkbox-bg-color: var(--surface-default);
-    --ds-checkbox-border-color: var(--border-strong);
+    --ds-checkbox-border-color: var(--border-field);
     --ds-checkbox-hover-border-color: var(--accent);
     --ds-checkbox-radius: var(--ds-radius-inner);
     --ds-checkbox-selected-bg-color: var(--accent);

@@ -6,7 +6,7 @@
 :host {
   display: inline-flex;
   --_toggle-button-bg-color: var(--ds-toggle-button-bg-color, var(--surface-default));
-  --_toggle-button-border-color: var(--ds-toggle-button-border-color, var(--border-default));
+  --_toggle-button-border-color: var(--ds-toggle-button-border-color, var(--border-field));
   --_toggle-button-color: var(--ds-toggle-button-color, var(--text-secondary));
   --_toggle-button-selected-bg-color: var(--ds-toggle-button-selected-bg-color, var(--accent-subtitle));
   --_toggle-button-selected-border-color: var(--ds-toggle-button-selected-border-color, var(--accent));
@@ -32,6 +32,7 @@
 
   &:hover {
     background: var(--surface-secondary);
+    border-color: var(--border-field-hover);
     color: var(--text-primary);
   }
 

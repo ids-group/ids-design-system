@@ -39,8 +39,15 @@
 
   --border-default:    var(--neutral-200);
   --border-strong:     var(--neutral-300);
-  --border-field:       var(--neutral-500);
+  /* Every field and control boundary: at least 3:1 against the page, a card, an overlay and their
+     secondary fills. Lowest pair --surface-secondary, 3.06:1 (measured 2026-11-09). */
+  --border-field:       color-mix(in srgb, var(--neutral-500) 48%, var(--neutral-400));
   --border-field-hover: var(--neutral-600);
+  /* Selected segment inside a ds-segmented track, which draws no border: the fill is the boundary, at
+     least 3:1 against the track (4.98:1, measured 2026-11-09). Declared with the theme, so a ds-color
+     zone does not recolour it. */
+  --segmented-selected:    var(--accent);
+  --segmented-selected-on: var(--accent-on);
   --border-overlay:    var(--border-default);
   --border-subtitle:     var(--neutral-150);
   --border-divider:    var(--neutral-150);

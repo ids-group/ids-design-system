@@ -9,11 +9,11 @@
   --_segmented-bg-color: var(--ds-segmented-bg-color, var(--surface-secondary));
   --_segmented-selected-bg-color: var(
     --ds-segmented-selected-bg-color,
-    var(--surface-default)
+    var(--segmented-selected)
   );
   --_segmented-selected-label-color: var(
     --ds-segmented-selected-label-color,
-    var(--text-primary)
+    var(--segmented-selected-on)
   );
   --_segmented-label-color: var(--ds-segmented-label-color, var(--text-secondary));
   --_segmented-padding: var(--ds-segmented-padding, var(--segmented-pad));

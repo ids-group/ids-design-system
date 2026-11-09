@@ -41,7 +41,7 @@ ds-switch {
     --ds-switch-label-color: var(--text-primary);
     --ds-switch-label-font-size: var(--_switch-label-fs);
     --ds-switch-thumb-bg-color: var(--surface-default);
-    --ds-switch-track-off-bg-color: var(--border-strong);
+    --ds-switch-track-off-bg-color: var(--border-field);
     --ds-switch-track-on-bg-color: var(--accent);
 }
 ```

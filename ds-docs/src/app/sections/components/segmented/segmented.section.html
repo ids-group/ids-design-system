@@ -36,6 +36,26 @@
   </div>
 
   <p class="block-desc t-s">
+    A choice inside a track: the track and its segments draw no border, and the
+    selected segment is a solid
+    <code class="t-mono-inline">
+      --segmented-selected
+    </code> fill, at least 3:1
+    against the track (<code class="t-mono-inline">--accent</code> in light,
+    <code class="t-mono-inline">
+      --accent-strong-overlay
+    </code> on dark), its
+    label in <code class="t-mono-inline">--segmented-selected-on</code>. A
+    standalone control such as
+    <code class="t-mono-inline">
+      ds-toggle-button
+    </code> draws a
+    <code class="t-mono-inline">
+      --border-field
+    </code> boundary instead.
+  </p>
+
+  <p class="block-desc t-s">
     A form control: binds <code class="t-mono-inline">[formControl]</code> and
     <code class="t-mono-inline">
       ngModel
@@ -61,13 +81,14 @@
 
     <li>
       Needs <code class="t-mono-inline">--ds-segmented-segment-border</code> to
-      draw the shared edge.
+      draw the shared edge. With no track behind it, a joined row keeps these
+      borders; the selected segment takes the same fill.
     </li>
   </ul>
 
   <div
     class="demo-panel"
-    style="--ds-segmented-segment-border: 1px solid var(--border-default)">
+    style="--ds-segmented-segment-border: 1px solid var(--border-field)">
     <ds-segmented
       ariaLabel="View mode, joined"
       joined

@@ -24,6 +24,75 @@
       "pitfall": "A test that counts rows right after a collapse still finds the leaving rows for the length of the animation: wait for it, or set `[animate]=\"false\"` in the test.",
       "restore": "<ds-tree [animate]=\"false\" />",
       "verify": "Expanding a parent in a `ds-tree` without `[animate]=\"false\"` grows its child rows from zero height over `--duration-base`, and a tree bound `[animate]=\"false\"` shows them at full height in the next frame."
+    },
+    {
+      "id": "field-border-softer-light",
+      "kind": "behavior",
+      "old": "--border-field",
+      "new": null,
+      "surface": [
+        "style"
+      ],
+      "searchHints": [
+        "--border-field",
+        "--neutral-500"
+      ],
+      "action": "None, unless a screen must keep the darker light-theme field outline: set `--border-field: var(--neutral-500)` on `:root`.",
+      "appliesWhen": "The light theme only: `--border-field` moved from `--neutral-500` (`#6B7388`) to `color-mix(in srgb, var(--neutral-500) 48%, var(--neutral-400))` (`#848C9F` on the default neutrals). Every field outline and every control boundary that reads `--border-field` follows it. Under `data-theme=\"dark\"` it stays `--neutral-400`, and `--border-field-hover` is unchanged in both themes.",
+      "pitfall": "A border of your own hard-coded to `--neutral-500` to match the library fields now reads darker than the library fields beside it.",
+      "restore": ":root { --border-field: var(--neutral-500); }",
+      "verify": "In the light theme a resting `ds-input` border computes to `#848C9F` on the default neutrals, and on hover to `--border-field-hover`.",
+      "evidence": [
+        "tokens:--border-field"
+      ]
+    },
+    {
+      "id": "control-boundary-border-field",
+      "kind": "behavior",
+      "old": "--ds-checkbox-border-color",
+      "new": null,
+      "surface": [
+        "style"
+      ],
+      "searchHints": [
+        "--ds-checkbox-border-color",
+        "--ds-radio-border-color",
+        "--ds-switch-track-off-bg-color",
+        "--ds-toggle-button-border-color",
+        "--border-strong",
+        "--border-default"
+      ],
+      "action": "None, unless a screen must keep the faint control outline: set `--ds-checkbox-border-color: var(--border-strong)`, `--ds-radio-border-color: var(--border-strong)`, `--ds-switch-track-off-bg-color: var(--border-strong)` and `--ds-toggle-button-border-color: var(--border-default)` where you need it. A control of your own drawn to match takes `--border-field` for its outline and `--border-field-hover` for its hover outline.",
+      "appliesWhen": "Defaults that moved to `--border-field`: `--ds-checkbox-border-color` (from `--border-strong`), the unchecked box in `ds-checkbox`, in the option rows of `ds-multi-select` and `ds-autocomplete`, in `ds-table` selection, in `ds-table-columns` and in `ds-chart-legend`; `--ds-radio-border-color` (from `--border-strong`); `--ds-switch-track-off-bg-color` (from `--border-strong`), the fill of an off `ds-switch` track; `--ds-toggle-button-border-color` (from `--border-default`), which also takes `--border-field-hover` on hover. The dividers beside the `ds-number-stepper` buttons follow `--ds-number-stepper-border-color` instead of `--border-default`, and `--border-disabled` when disabled. A value set on any of these hooks still wins. Checked, selected, hover-accent, error and warning colours are unchanged.",
+      "pitfall": "A checkbox, radio or toggle of your own styled with `--border-strong` or `--border-default` to look like a library control now reads fainter than the library controls beside it.",
+      "restore": ":root { --ds-checkbox-border-color: var(--border-strong); --ds-radio-border-color: var(--border-strong); --ds-switch-track-off-bg-color: var(--border-strong); --ds-toggle-button-border-color: var(--border-default); }",
+      "verify": "An unchecked `ds-checkbox` box border, an unselected `ds-radio` ring, an off `ds-switch` track and a resting `ds-toggle-button` border each compute to `--border-field`, unless their hook is set.",
+      "evidence": [
+        "tokens:--border-field"
+      ]
+    },
+    {
+      "id": "segmented-selected-accent-fill",
+      "kind": "behavior",
+      "old": "--ds-segmented-selected-bg-color",
+      "new": null,
+      "surface": [
+        "style"
+      ],
+      "searchHints": [
+        "ds-segmented",
+        "--ds-segmented-selected-bg-color",
+        "--ds-segmented-selected-label-color",
+        "--ds-segmented-selected-shadow"
+      ],
+      "action": "None, unless a screen must keep the white selected chip: set `--ds-segmented-selected-bg-color: var(--surface-default)` and `--ds-segmented-selected-label-color: var(--text-primary)` on `ds-segmented`. A label colour of your own set through `--ds-segmented-selected-label-color` must read on the new fill, or be removed.",
+      "appliesWhen": "`ds-segmented`, both the padded track and `joined`: the selected segment fills with `--segmented-selected` (`--accent` in light, `--accent-strong-overlay` under `data-theme=\"dark\"`) and its label takes `--segmented-selected-on` (`--accent-on` in light, `--surface-default` on dark), at least 3:1 against the track. Defaults that moved: `--ds-segmented-selected-bg-color` from `--surface-default`, `--ds-segmented-selected-label-color` from `--text-primary`. The track, unselected segments, `--ds-segmented-selected-shadow` and `--ds-segmented-segment-border` are unchanged; a `joined` row keeps the borders that hook draws. A `ds-color` zone does not recolour the new fill.",
+      "pitfall": "Setting only `--ds-segmented-selected-bg-color` back to a light fill leaves the label in `--segmented-selected-on`, white in the light theme, so the selected label disappears.",
+      "restore": "ds-segmented { --ds-segmented-selected-bg-color: var(--surface-default); --ds-segmented-selected-label-color: var(--text-primary); }",
+      "verify": "The selected segment of a `ds-segmented` computes its background to `--segmented-selected` and its label to `--segmented-selected-on`, unless those hooks are set; no border is drawn on the track or on a padded segment.",
+      "evidence": [
+        "tokens:--segmented-selected"
+      ]
     }
   ],
   "informational": [
