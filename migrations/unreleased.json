@@ -6,9 +6,19 @@
       "kind": "behavior",
       "old": "ds-tree",
       "new": null,
-      "surface": ["template", "style"],
-      "searchHints": ["<ds-tree", "ds-tree .row", "ds-tree > .row", ".caret"],
-      "detect": ["ds-tree > .row", "ds-tree .caret { transform"],
+      "surface": [
+        "template",
+        "style"
+      ],
+      "searchHints": [
+        "<ds-tree",
+        "ds-tree .row",
+        "ds-tree > .row",
+        "ds-tree .caret"
+      ],
+      "detect": [
+        "ds-tree > .row"
+      ],
       "action": "None, unless a tree must toggle instantly: bind `[animate]=\"false\"` on that `ds-tree`. A stylesheet rule that selects a row as a direct child of `ds-tree` selects `ds-tree .row` instead.",
       "appliesWhen": "Every `ds-tree`. The rows a parent reveals now slide open and shut and its chevron turns a quarter, on `--duration-base` and `--ease-standard`; the first render and `prefers-reduced-motion: reduce` do not animate. Each row sits in a `div.row-shell` with `role=\"none\"`, and the chevron is one `chevronRight` icon rotated by 90 degrees while expanded.",
       "pitfall": "A test that counts rows right after a collapse still finds the leaving rows for the length of the animation: wait for it, or set `[animate]=\"false\"` in the test.",
@@ -16,6 +26,21 @@
       "verify": "Expanding a parent in a `ds-tree` without `[animate]=\"false\"` grows its child rows from zero height over `--duration-base`, and a tree bound `[animate]=\"false\"` shows them at full height in the next frame."
     }
   ],
-  "informational": [],
+  "informational": [
+    {
+      "text": "Under `[data-density=\"compact\"]` and `[data-density=\"ultra-compact\"]` a `ds-tree` row takes `--tree-row-pad-y: var(--space-1)` and `--tree-row-pad-x: var(--space-2)` (was `--space-1-5` and `--space-3`) and each level indents `--tree-indent: var(--space-4)` (was `--space-5`). `ds-popover` pads with the new token `--popover-pad`, `--space-3`, and `--space-2` under `ultra-compact`; its panel takes the tier of the nearest `[data-density]` around the host. `--ds-tree-row-padding-y`, `--ds-tree-row-padding-x`, `--ds-tree-indent` and `--ds-popover-padding` still win where set. Nothing to change in your code.",
+      "verify": "On a screen under `[data-density=\"compact\"]`, a `ds-tree` row is 4px by 8px padded and a child level indents 16px; under `ultra-compact`, a `ds-popover` opened there pads 8px. Without `[data-density]` both measure as before."
+    },
+    {
+      "text": "The `ds-textarea` resize grip and its scrollbar reach the frame's right edge: the side padding sits on the text rather than on the `.control` frame, at the same widths. A rule of your own that sets padding on `ds-textarea .control` now pads around the grip as well. Nothing else to change in your code.",
+      "verify": "Drag the resize grip of a `ds-textarea`: it sits in the frame's bottom-right corner, and the text keeps its inset from both edges."
+    },
+    {
+      "text": "`ds-chat-input` takes `busyAction` (`ChatInputBusyAction`, default `'stop'`) and emits `queued` and `redirected`, and adds the optional `DsIntl.chatInput` keys `queue` and `redirect`. The busy Stop state of its main button now shows its name in a tooltip. Nothing to change in your code.",
+      "verify": "Hover the Stop button of a busy `stoppable` `ds-chat-input`: the tooltip reads its Stop label."
+    },
+    "`ds-tree` takes `toggleOn` (`TreeToggleOn`, default `'row'`, today's behaviour) and adds the optional `DsIntl.tree` keys `expand` and `collapse`. Nothing to change in your code.",
+    "`ds-empty-state` takes `appearance` (`EmptyStateAppearance`, default `'tile'`, today's look). Only under `appearance=\"plain\"` do the defaults of `--ds-empty-state-body-text-color` (`var(--text-secondary)` → `var(--text-tertiary)`), `--ds-empty-state-title-font-weight` (`var(--font-weight-bold)` → `var(--font-weight-semibold)`) and `--ds-empty-state-title-font-size` (`var(--font-size-h5)` → `var(--font-size-l)`) move; a tile keeps them, and setting the hook restores either. Nothing to change in your code."
+  ],
   "deleteList": []
 }
