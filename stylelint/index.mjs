@@ -6,8 +6,6 @@
 import { readFileSync } from 'node:fs';
 import stylelint from 'stylelint';
 import { VERSION, inRange } from './since-version.mjs';
-import knownTokens from './known-tokens.mjs';
-import useTokens from './use-tokens.mjs';
 
 const {
   createPlugin,
@@ -94,4 +92,17 @@ rule.meta = {
   fixable: true,
 };
 
-export default [createPlugin(ruleName, rule), useTokens, knownTokens];
+// An auto-update plugin before 1.20.1 lints from a copy of this folder that points only this file at
+// `stylelint`, so the token rules cannot load there; that copy still runs `no-removed-tokens`.
+const tokenRules = await Promise.all([
+  import('./use-tokens.mjs'),
+  import('./known-tokens.mjs'),
+])
+  .then((modules) => modules.map((module) => module.default))
+  .catch((error) => {
+    if (error.code === 'ERR_MODULE_NOT_FOUND' || error.code === 'ENOENT')
+      return [];
+    throw error;
+  });
+
+export default [createPlugin(ruleName, rule), ...tokenRules];
