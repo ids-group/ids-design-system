@@ -21,8 +21,8 @@
   element marked `busyActions`, such as a Redirect button, sits beside them. With the text cleared
   the button is Stop again. The default `'stop'` renders as before. New export
   `ChatInputBusyAction`.
-- **Two icons: `maximize` and `minimize`.** Four corners pointing out and in, for entering and
-  leaving full screen. They are drawn from Lucide (ISC) on the 24-unit grid and take the set's
+- **Two icons: `maximize` and `minimize`.** Two diagonal arrows pointing out and in, for entering
+  and leaving full screen. They are drawn from Lucide (ISC) on the 24-unit grid and take the set's
   stroke.
 
 ### Fixed
