@@ -18,6 +18,11 @@
   counts per category, property, file and value without changing anything. The README has the
   setup.
 
+- **Three icons: `square-dashed`, `outline-blocks` and `map-pin`.** A dashed square for selecting
+  an area, three dashed blocks for showing element outlines, and a map pin for placing a note.
+  `square-dashed` and `map-pin` are drawn from Lucide (ISC); all three sit on the 24-unit grid and
+  take the set's stroke.
+
 ### Fixed
 
 - **The `ds-textarea` resize handle sits in the corner.** It touched the bottom edge but stood 12px
