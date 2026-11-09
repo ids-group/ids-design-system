@@ -5,7 +5,8 @@ Group: Display & feedback
 
 Inputs: `variant: 'none' | 'loading' | 'error' | 'locked' = 'none'`, `icon: IconName | null = null` (defaults derive from variant — `warn` for error, `lock` for locked, `package` otherwise), `title: string = ''`, `body: string = ''`
 Content slot: `[actions]` — CTA buttons / links.
+- `appearance="plain"` drops the icon tile: a 32px icon in `--text-tertiary` (a status colour under `error` and `success`), a semibold `--font-size-l` title and the body in `--text-tertiary`. Use it for an empty section among others on a page; the default `'tile'` is for an empty page or region.
 
 <!-- inputs:ds-empty-state -->
-All inputs: `variant: 'none' | 'loading' | 'error' | 'locked' | 'success' = 'none'`, `icon: IconName | null = null`, `title: string = ''`, `titleOverflow: 'wrap' | 'clip' = 'wrap'`, `body: string = ''`
+All inputs: `variant: 'none' | 'loading' | 'error' | 'locked' | 'success' = 'none'`, `icon: IconName | null = null`, `title: string = ''`, `titleOverflow: 'wrap' | 'clip' = 'wrap'`, `body: string = ''`, `appearance: 'tile' | 'plain' = 'tile'`
 <!-- /inputs -->
