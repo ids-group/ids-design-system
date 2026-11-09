@@ -12,8 +12,5 @@ export type {
   ChatStepStatus,
   ChatStepsEnter,
 } from './chat.types';
-export type {
-  ChatInputBusyAction,
-  ChatInputLayout,
-} from './chat-input.types';
+export type { ChatInputBusyAction, ChatInputLayout } from './chat-input.types';
 export type { AttachmentKind } from './attachment.types';

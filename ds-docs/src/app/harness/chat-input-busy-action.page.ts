@@ -15,7 +15,10 @@ import { ChatInputComponent } from 'ds/chat';
       (redirected)="events.set(events() + 'redirected:' + $event + ';')"
       (stopRequested)="events.set(events() + 'stop;')"
       (submitted)="events.set(events() + 'submitted;')" />
-    <output id="events">{{ events() }}</output>
+
+    <output id="events">
+      {{ events() }}
+    </output>
   `,
 })
 export class ChatInputBusyActionHarnessPage {
