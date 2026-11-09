@@ -32,6 +32,12 @@ const NODES: TreeNode[] = [
         [(expandedIds)]="expanded[mode]"
         [(selectedIds)]="selected[mode]" />
     }
+    <ds-tree
+      style="width: 280px"
+      data-mode="static"
+      [nodes]="nodes"
+      [animate]="false"
+      [(expandedIds)]="staticExpanded" />
   `,
 })
 export class TreeToggleHarnessPage {
@@ -46,6 +52,7 @@ export class TreeToggleHarnessPage {
     caret: signal(new Set<string>()),
     doubleClick: signal(new Set<string>()),
   };
+  protected readonly staticExpanded = signal(new Set<string>());
   protected readonly selected = {
     row: signal<string[]>([]),
     caret: signal<string[]>([]),

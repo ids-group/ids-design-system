@@ -1,6 +1,7 @@
 // Clicks, double-clicks and keys through the three `toggleOn` modes of ds-tree on the docs app's
 // dev-only /harness/tree-toggle page, and checks which of them select a parent and which expand or
-// collapse it. Exits 1 on any failed check.
+// collapse it, then that the rows a toggle reveals or hides run the fold animation unless
+// `[animate]="false"` or reduced motion turns it off. Exits 1 on any failed check.
 //
 //   node tools/tree-toggle-harness.mjs <docsUrl>
 //
@@ -194,6 +195,96 @@ try {
   await press(label('doubleClick', 'beta'), { clickCount: 2, modifiers: CTRL });
   beta = await node('doubleClick', 'beta');
   check('doubleClick: Ctrl-double-click does not toggle', !beta.expanded, beta);
+  // Motion: read the animations a toggle starts rather than timing them, which a background tab
+  // would throttle.
+  const toggleAndRead = (mode, id) =>
+    page.evaluate(`async () => {
+      const tree = document.querySelector('ds-tree[data-mode="${mode}"]');
+      const parent = tree.querySelector('[data-node-id="${id}"]');
+      parent.click();
+      await new Promise((resolve) => setTimeout(resolve, 0));
+      const shells = [...tree.querySelectorAll('.row-shell')].filter(
+        (shell) => shell.querySelector('[data-node-id^="${id}-"]'),
+      );
+      const caret = parent.querySelector('.caret');
+      return {
+        expanded: parent.getAttribute('aria-expanded') === 'true',
+        shells: shells.map((shell) => ({
+          className: shell.className,
+          animations: shell.getAnimations().map((animation) => ({
+            name: animation.animationName,
+            duration: animation.effect.getTiming().duration,
+          })),
+        })),
+        caretTransform: getComputedStyle(caret).transform,
+        caretTurning: caret
+          .getAnimations()
+          .some((animation) => animation.transitionProperty === 'transform'),
+        caretTransition: getComputedStyle(caret).transitionDuration,
+      };
+    }`);
+  const folds = (state, name) =>
+    state.shells.length > 0 &&
+    state.shells.every((shell) =>
+      shell.animations.some(
+        (animation) => animation.name.endsWith(name) && animation.duration > 0,
+      ),
+    );
+  const rotated = (transform) =>
+    /^matrix\((-?0(\.0+)?|[-\d.e]+), 1,/.test(transform);
+
+  await page.evaluate(
+    `() => { document.querySelector('ds-tree[data-mode="row"]').scrollIntoView(); }`,
+  );
+  let motion = await toggleAndRead('row', 'beta');
+  check(
+    'motion: expanding folds the revealed rows open',
+    motion.expanded && folds(motion, 'ds-tree-row-expand'),
+    motion,
+  );
+  check('motion: the chevron turn is animated', motion.caretTurning, motion);
+  motion = await toggleAndRead('row', 'beta');
+  check(
+    'motion: collapsing folds the hidden rows shut',
+    !motion.expanded && folds(motion, 'ds-tree-row-collapse'),
+    motion,
+  );
+  await wait(600);
+
+  motion = await toggleAndRead('static', 'alpha');
+  check(
+    'motion: animate=false shows the rows without an animation',
+    motion.expanded &&
+      motion.shells.length === 2 &&
+      motion.shells.every((shell) => shell.animations.length === 0),
+    motion,
+  );
+  check(
+    'motion: animate=false turns the chevron a quarter at once',
+    !motion.caretTurning && rotated(motion.caretTransform),
+    motion,
+  );
+  motion = await toggleAndRead('static', 'alpha');
+  check(
+    'motion: animate=false removes the rows at once',
+    !motion.expanded && motion.shells.length === 0,
+    motion,
+  );
+
+  await page.s('Emulation.setEmulatedMedia', {
+    features: [{ name: 'prefers-reduced-motion', value: 'reduce' }],
+  });
+  motion = await toggleAndRead('row', 'beta');
+  check(
+    'motion: reduced motion shows the rows without an animation',
+    motion.expanded &&
+      motion.shells.every(
+        (shell) =>
+          !shell.animations.some((animation) => animation.duration > 0),
+      ),
+    motion,
+  );
+  await page.s('Emulation.setEmulatedMedia', { features: [] });
 } finally {
   await page.close();
 }
