@@ -164,6 +164,45 @@
   </div>
 
   <h3 class="block-title t-h4">
+    Tree and popover
+  </h3>
+
+  <p class="block-desc t-s">
+    A <code class="t-mono-inline">ds-tree</code> inside a
+    <code class="t-mono-inline">ds-popover</code>, such as a screen picker,
+    follows the tier of the screen that opens it: compact and ultra-compact
+    tighten the rows and the indent, ultra-compact also the popover padding.
+  </p>
+
+  <div class="dens-grid">
+    @for (t of treeTiers; track t.key) {
+      <div
+        class="dens-sandbox"
+        [attr.data-density]="t.key">
+        <div class="dens-sandbox-head">
+          <div class="t-overline">
+            {{ t.label }}
+          </div>
+
+          <code class="t-mono-inline dens-sandbox-attr">
+            data-density="{{ t.key }}"
+          </code>
+        </div>
+
+        <ds-popover
+          panelRole="dialog"
+          panelLabel="Pick a screen"
+          [staticPreview]="true">
+          <ds-tree
+            [nodes]="screens"
+            [expandedIds]="screensExpanded"
+            selectedId="board" />
+        </ds-popover>
+      </div>
+    }
+  </div>
+
+  <h3 class="block-title t-h4">
     What density rewrites
   </h3>
 
@@ -192,6 +231,15 @@
 
     <li>
       Segmented control button height
+    </li>
+
+    <li>
+      Tree row padding and indent - <code class="t-mono-inline">compact</code> and
+      <code class="t-mono-inline">ultra-compact</code>
+    </li>
+
+    <li>
+      Popover padding - <code class="t-mono-inline">ultra-compact</code> only
     </li>
 
     <li>

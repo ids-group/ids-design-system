@@ -136,6 +136,10 @@ ds-textarea {
   margin: 0 var(--_p) var(--_p) 0;
 }
 
+.send.queue {
+  gap: var(--space-0-5);
+}
+
 /* One fixed square, idle or busy, so nothing moves. */
 .send-button {
   --ds-button-padding-x: 0;

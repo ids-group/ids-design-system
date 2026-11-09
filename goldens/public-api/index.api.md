@@ -87,6 +87,7 @@ export { ChartTooltipOrigin } from '@ids-group-ltd/ids-design-system/components/
 export { ChartTooltipTrigger } from '@ids-group-ltd/ids-design-system/components/chart-tooltip'; // type
 export { ChartValueFormat } from '@ids-group-ltd/ids-design-system/core'; // type
 export { ChatAttachmentComponent } from '@ids-group-ltd/ids-design-system/components/chat'; // component
+export { ChatInputBusyAction } from '@ids-group-ltd/ids-design-system/components/chat'; // type
 export { ChatInputComponent } from '@ids-group-ltd/ids-design-system/components/chat'; // component
 export { ChatInputLayout } from '@ids-group-ltd/ids-design-system/components/chat'; // type
 export { ChatMessageComponent } from '@ids-group-ltd/ids-design-system/components/chat'; // component

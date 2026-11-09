@@ -4310,12 +4310,12 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
     "tokens": [
       {
         "name": "--ds-option-selected-bg-color",
-        "value": "var(--primary-subtitle)",
+        "value": "var(--surface-overlay-raised-tint)",
         "notes": "Fill of the selected row in a dropdown panel (default --primary-subtitle). Panel-level: one partial paints select, autocomplete and multi-select alike."
       },
       {
         "name": "--ds-option-selected-label-color",
-        "value": "var(--primary-strong)",
+        "value": "var(--accent-strong-overlay)",
         "notes": "Label and icon colour of the selected row (default --primary-strong)."
       },
       {
@@ -6270,7 +6270,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--ds-popover-padding",
-        "value": "var(--space-3)",
+        "value": "var(--popover-pad)",
         "notes": "Popover inner padding (defaults to --space-3)."
       },
       {
@@ -6297,6 +6297,11 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "name": "--popover-maxw",
         "value": "320px",
         "notes": "Popover max width cap (320px)."
+      },
+      {
+        "name": "--popover-pad",
+        "value": "var(--space-3)",
+        "notes": ""
       }
     ]
   },
@@ -7064,6 +7069,11 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       {
         "name": "--ds-splitter-overdrag-line-scale",
         "value": "3",
+        "notes": ""
+      },
+      {
+        "name": "--ds-splitter-fog-color",
+        "value": "color-mix(in srgb, var(--text-primary) 22%, transparent)",
         "notes": ""
       }
     ]

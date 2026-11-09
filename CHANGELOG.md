@@ -22,6 +22,27 @@
   an area, three dashed blocks for showing element outlines, and a map pin for placing a note.
   `square-dashed` and `map-pin` are drawn from Lucide (ISC); all three sit on the 24-unit grid and
   take the set's stroke.
+- **`ds-tree` and `ds-popover` follow `[data-density]`.** Under `compact` and `ultra-compact` a tree
+  row takes 4px by 8px of padding (was 6px by 12px) and each level indents 16px (was 20px), through
+  `--tree-row-pad-y`, `--tree-row-pad-x` and `--tree-indent`. A popover's padding is the new token
+  `--popover-pad`: 12px, and 8px under `ultra-compact`. The popover panel takes the tier of the
+  nearest `[data-density]` around `ds-popover`, so a tree inside it follows the screen that opens
+  it. `--ds-tree-row-padding-y`, `--ds-tree-row-padding-x`, `--ds-tree-indent` and
+  `--ds-popover-padding` still win where set; without `[data-density]` both render as before.
+- **`ds-chat-input` offers Queue and Redirect while it is busy, with `busyAction="queue"`.** Once
+  text is typed while `busy`, three buttons stand on the right, left to right: Redirect, a `send`
+  icon button that emits the new output `redirected` with the trimmed text; Stop, a `stop` icon
+  button that emits `stopRequested` (with `stoppable`); and Queue, the main button with a
+  `list-plus` icon, which emits the new output `queued` with the trimmed text, as Enter does. Their
+  accessible names, each also shown in a tooltip, are the new `DsIntl` keys `chatInput.redirect`
+  (`'Redirect now'`) and `chatInput.queue` (`'Queue'`) and the existing `chatInput.stop`; the Stop
+  state of the main button shows its name in a tooltip too. With the text cleared the main button
+  is Stop again. The default `'stop'` renders as before. New export `ChatInputBusyAction`.
+- **Two icons: `send` and `list-plus`.** A paper plane and a list with a plus, from Lucide (ISC),
+  with the set's stroke.
+- **Two icons: `maximize` and `minimize`.** Two diagonal arrows pointing out and in, for entering
+  and leaving full screen. They are drawn from Lucide (ISC) on the 24-unit grid and take the set's
+  stroke.
 
 ### Fixed
 

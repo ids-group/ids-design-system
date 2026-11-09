@@ -398,6 +398,7 @@
   --tooltip-border-color:    var(--border-overlay);
 
   --popover-maxw:            320px;
+  --popover-pad:             var(--space-3);
 
   --toast-minw:              320px;
   --toast-maxw:              480px;
@@ -529,6 +530,10 @@
   --table-cell-pad-x:  var(--space-2);
   --table-cell-pad-y:  var(--space-1);
   --table-head-pad-y:  var(--space-1);
+  --tree-row-pad-y:    var(--space-1);
+  --tree-row-pad-x:    var(--space-2);
+  --tree-indent:       var(--space-4);
+  --popover-pad:       var(--space-2);
 
   /* One rung only: a card's frame reads as lost padding before its cells do (24 to 16, cells 16 to 8). */
   --ds-surface-padding:  var(--space-4);
@@ -545,6 +550,9 @@
   --status-dot-size: 6px;
   --sidenav-w: 220px;
   --segmented-btn-h: 24px;
+  --tree-row-pad-y: var(--space-1);
+  --tree-row-pad-x: var(--space-2);
+  --tree-indent: var(--space-4);
 }
 [data-density="cozy"] {
   --hit-cozy:  40px;

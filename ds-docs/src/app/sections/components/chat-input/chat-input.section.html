@@ -248,6 +248,32 @@
   </div>
 
   <h3 class="block-title t-h4">
+    Queue while busy
+  </h3>
+
+  <p class="block-desc t-s">
+    With
+    <code class="t-mono-inline">
+      busyAction="queue"
+    </code>, text typed while the agent works shows Redirect, Stop and Queue.
+    Queue is the main button and Enter queues; clear the text and the button is
+    Stop again.
+  </p>
+
+  <ds-chat-input
+    placeholder="Describe a change…"
+    busyAction="queue"
+    busy
+    stoppable
+    [(value)]="queueText">
+    <ds-icon-button
+      actions
+      icon="paperclip"
+      size="sm"
+      ariaLabel="Attach a file" />
+  </ds-chat-input>
+
+  <h3 class="block-title t-h4">
     Your own send area
   </h3>
 

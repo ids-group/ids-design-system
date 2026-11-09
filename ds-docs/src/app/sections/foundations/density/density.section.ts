@@ -1,4 +1,7 @@
 import { Component, ViewEncapsulation } from '@angular/core';
+import { PopoverComponent } from 'ds/popover';
+import { TreeComponent } from 'ds/tree';
+import type { TreeNode } from 'ds/tree';
 import { DocsSectionComponent } from '../../../shared/docs-section.component';
 
 interface Tier {
@@ -43,11 +46,30 @@ const TIERS: readonly Tier[] = [
 @Component({
   selector: 'section-foundations-density',
   standalone: true,
-  imports: [DocsSectionComponent],
+  imports: [DocsSectionComponent, PopoverComponent, TreeComponent],
   encapsulation: ViewEncapsulation.Emulated,
   templateUrl: './density.section.html',
   styleUrl: './density.section.scss',
 })
 export class DensitySection {
   protected readonly tiers = TIERS;
+  protected readonly treeTiers = TIERS.filter((tier) => tier.key !== 'comfy');
+  protected readonly screens: TreeNode[] = [
+    {
+      id: 'workspace',
+      label: 'Workspace',
+      icon: 'folder',
+      children: [
+        { id: 'board', label: 'Board', icon: 'file' },
+        { id: 'calendar', label: 'Calendar', icon: 'file' },
+      ],
+    },
+    {
+      id: 'portal',
+      label: 'Client portal',
+      icon: 'folder',
+      children: [{ id: 'invoices', label: 'Invoices', icon: 'file' }],
+    },
+  ];
+  protected readonly screensExpanded = new Set(['workspace', 'portal']);
 }

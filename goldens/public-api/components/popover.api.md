@@ -53,7 +53,7 @@ ds-popover {
     --ds-popover-border-color: var(--border-overlay);
     --ds-popover-max-width: var(--popover-maxw);
     --ds-popover-min-width: auto;
-    --ds-popover-padding: var(--space-3);
+    --ds-popover-padding: var(--popover-pad);
     --ds-popover-radius: var(--ds-radius-panel);
     --ds-popover-shadow: var(--ds-elevation-overlay);
 }
