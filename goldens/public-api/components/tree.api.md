@@ -8,6 +8,7 @@ export class TreeComponent {
     public constructor();
     private activate;
     private readonly activeId;
+    public readonly animate = input(true, { transform: booleanAttribute });
     protected readonly effectiveActiveId = computed(…);
     public readonly expandedIds = model<Set<string>>(new Set());
     private focusNode;
@@ -22,6 +23,7 @@ export class TreeComponent {
     protected isSelected(id: string): boolean;
     protected readonly label = contentChild(…);
     protected readonly labels = computed(…);
+    protected readonly motion = computed(…);
     private moveActive;
     private moveToParent;
     protected readonly multiple = computed(…);
@@ -34,6 +36,7 @@ export class TreeComponent {
     protected onRowDoubleClick(entry: VisibleNode, event: MouseEvent): void;
     protected onRowFocus(entry: VisibleNode): void;
     private parkTrailingTabStops;
+    private readonly rendered;
     public readonly selectedId = model<string | null>(null);
     public readonly selectedIds = model<string[]>([]);
     public readonly selection = input<TreeSelection>('single');

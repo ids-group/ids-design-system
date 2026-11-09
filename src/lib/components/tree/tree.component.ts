@@ -3,6 +3,8 @@ import {
   ElementRef,
   ViewEncapsulation,
   afterEveryRender,
+  afterNextRender,
+  booleanAttribute,
   computed,
   contentChild,
   inject,
@@ -44,6 +46,7 @@ let nextId = 0;
   host: {
     role: 'tree',
     '[attr.aria-multiselectable]': "multiple() ? 'true' : null",
+    '[class.is-animated]': 'animate()',
     '(keydown)': 'onKeydown($event)',
     '(pointerleave)': 'hover(null)',
   },
@@ -67,6 +70,9 @@ export class TreeComponent {
    *  its own that toggles. `'doubleClick'`: a click selects, a double click toggles. In every mode
    *  ArrowRight expands and ArrowLeft collapses the focused row. */
   readonly toggleOn = input<TreeToggleOn>('row');
+  /** Rows slide open and shut and the chevron turns when a parent expands or collapses. Off under
+   *  `prefers-reduced-motion: reduce`. */
+  readonly animate = input(true, { transform: booleanAttribute });
   /** Fires with the node when a row is selected (click or Enter/Space), not when one is deselected. */
   readonly nodeSelected = output<TreeNode>();
   /** Fires with the node under the pointer or newly focused, and `null` when the pointer leaves the tree. */
@@ -78,7 +84,10 @@ export class TreeComponent {
 
   private readonly activeId = signal<string | null>(null);
   private hoveredId: string | null = null;
+  // The rows of the first render are not revealed by a toggle, so they appear without motion.
+  private readonly rendered = signal(false);
 
+  protected readonly motion = computed(() => this.animate() && this.rendered());
   protected readonly multiple = computed(() => this.selection() === 'multiple');
   protected readonly labels = computed(() => ({
     ...DS_INTL_DEFAULTS.tree,
@@ -110,6 +119,7 @@ export class TreeComponent {
     // Content inside a trailing template can change without a signal of the tree changing,
     // so its tab stops are re-parked after every render.
     afterEveryRender({ write: () => this.parkTrailingTabStops() });
+    afterNextRender(() => this.rendered.set(true));
   }
 
   protected isExpanded(id: string): boolean {
@@ -292,7 +302,9 @@ export class TreeComponent {
   private focusNode(id: string): void {
     this.activeId.set(id);
     this.host.nativeElement
-      .querySelector<HTMLElement>(`[data-node-id="${CSS.escape(id)}"]`)
+      .querySelector<HTMLElement>(
+        `.row-shell:not(.is-leaving) > [data-node-id="${CSS.escape(id)}"]`,
+      )
       ?.focus();
   }
 
