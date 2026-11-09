@@ -200,7 +200,7 @@
   <div class="states is-cols-3">
     @for (mode of toggleModes; track mode) {
       <div class="state-cell">
-        <div class="state-cell-stage">
+        <div class="state-cell-stage is-fill">
           <ds-tree
             [nodes]="nodes"
             [toggleOn]="mode"
@@ -245,7 +245,7 @@
       <div
         class="state-cell"
         [attr.data-motion]="animated ? 'on' : 'off'">
-        <div class="state-cell-stage">
+        <div class="state-cell-stage is-fill">
           <ds-tree
             [nodes]="nodes"
             [animate]="animated"

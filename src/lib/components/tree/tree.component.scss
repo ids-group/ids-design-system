@@ -46,7 +46,10 @@
 
 // Angular removes the row on this animation's `animationend`, which a 0s animation does not fire reliably;
 // the 1ms floor keeps reduced motion from holding the row for Angular's 4s fallback.
+// A shrink-to-fit tree is as wide as its widest row, so a leaving row stops counting at once, as with
+// `animate` off, instead of narrowing every row when it is removed.
 .row-shell.is-leaving {
+  contain: inline-size;
   pointer-events: none;
   animation: ds-tree-row-collapse max(var(--duration-base), 1ms) var(--ease-standard) both;
 

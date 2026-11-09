@@ -38,6 +38,12 @@ const NODES: TreeNode[] = [
       [nodes]="nodes"
       [animate]="false"
       [(expandedIds)]="staticExpanded" />
+    <div style="display: flex; justify-content: center; width: 480px">
+      <ds-tree
+        data-mode="fit"
+        [nodes]="fitNodes"
+        [(expandedIds)]="fitExpanded" />
+    </div>
   `,
 })
 export class TreeToggleHarnessPage {
@@ -53,6 +59,14 @@ export class TreeToggleHarnessPage {
     doubleClick: signal(new Set<string>()),
   };
   protected readonly staticExpanded = signal(new Set<string>());
+  protected readonly fitNodes: TreeNode[] = [
+    {
+      id: 'fit',
+      label: 'Fit',
+      children: [{ id: 'fit-1', label: 'A child wider than its parent' }],
+    },
+  ];
+  protected readonly fitExpanded = signal(new Set<string>());
   protected readonly selected = {
     row: signal<string[]>([]),
     caret: signal<string[]>([]),

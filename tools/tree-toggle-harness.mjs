@@ -1,7 +1,8 @@
 // Clicks, double-clicks and keys through the three `toggleOn` modes of ds-tree on the docs app's
 // dev-only /harness/tree-toggle page, and checks which of them select a parent and which expand or
 // collapse it, then that the rows a toggle reveals or hides run the fold animation unless
-// `[animate]="false"` or reduced motion turns it off. Exits 1 on any failed check.
+// `[animate]="false"` or reduced motion turns it off, and that a shrink-to-fit tree keeps its row
+// width through the fold. Exits 1 on any failed check.
 //
 //   node tools/tree-toggle-harness.mjs <docsUrl>
 //
@@ -269,6 +270,51 @@ try {
     'motion: animate=false removes the rows at once',
     !motion.expanded && motion.shells.length === 0,
     motion,
+  );
+
+  // Width: a shrink-to-fit tree steps through its fold animations frame by frame, and the parent
+  // row keeps one width from the first frame to after the rows are added or removed.
+  const widthsThroughFold = () =>
+    page.evaluate(`async () => {
+      const tree = document.querySelector('ds-tree[data-mode="fit"]');
+      const parent = tree.querySelector('[data-node-id="fit"]');
+      const width = () => Math.round(parent.getBoundingClientRect().width * 100) / 100;
+      parent.click();
+      let animations = [];
+      for (let attempt = 0; attempt < 100 && !animations.length; attempt++) {
+        await new Promise((resolve) => setTimeout(resolve, 1));
+        animations = tree
+          .getAnimations({ subtree: true })
+          .filter((animation) => /ds-tree-row-/.test(animation.animationName ?? ''));
+      }
+      animations.forEach((animation) => animation.pause());
+      const widths = [];
+      for (let time = 0; time <= 180; time += 20) {
+        animations.forEach((animation) => (animation.currentTime = time));
+        widths.push(width());
+      }
+      animations.forEach((animation) => animation.finish());
+      await new Promise((resolve) => setTimeout(resolve, 100));
+      widths.push(width());
+      return {
+        expanded: parent.getAttribute('aria-expanded') === 'true',
+        stepped: animations.length,
+        widths,
+      };
+    }`);
+  const steady = (state) =>
+    state.stepped > 0 && new Set(state.widths).size === 1;
+  let fold = await widthsThroughFold();
+  check(
+    'width: expanding keeps the row width through the fold',
+    fold.expanded && steady(fold),
+    fold,
+  );
+  fold = await widthsThroughFold();
+  check(
+    'width: collapsing keeps the row width through the fold',
+    !fold.expanded && steady(fold),
+    fold,
   );
 
   await page.s('Emulation.setEmulatedMedia', {
