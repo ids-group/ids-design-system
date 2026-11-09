@@ -1,5 +1,14 @@
 ## Unreleased
 
+### Changed
+
+- **`--border-field` is softer in the light theme.** It is now
+  `color-mix(in srgb, var(--neutral-500) 48%, var(--neutral-400))`, `#848C9F` on the default
+  neutrals, instead of `--neutral-500` (`#6B7388`): 3.22:1 against the page, 3.37:1 against a card,
+  a modal, a drawer and a popover, and 3.06:1 against `--surface-secondary`. Under
+  `data-theme="dark"` it stays `--neutral-400`, and `--border-field-hover` is unchanged in both
+  themes. To keep the darker outline, set `--border-field: var(--neutral-500)` on `:root`.
+
 ## 1.1.1 — 2026-11-08
 
 ### Added

@@ -37,6 +37,7 @@
   --surface-overlay-raised-tint:      color-mix(in srgb, var(--primary) 30%, var(--surface-overlay-raised));
   --accent-strong-overlay:            hsl(from var(--primary) h 90% 80%);
   --border-overlay:            var(--border-strong);
+  // At least 3:1 on every surface; lowest pair --surface-overlay-raised, 3.03:1 (measured 2026-11-09).
   --border-field:              var(--neutral-400);
   --border-field-hover:        var(--neutral-500);
   --text-tertiary-overlay:     var(--neutral-700);

@@ -1,0 +1,21 @@
+{
+  "version": "unreleased",
+  "items": [
+    {
+      "id": "field-border-softer-light",
+      "kind": "behavior",
+      "old": "--border-field",
+      "new": null,
+      "surface": ["style"],
+      "searchHints": ["--border-field", "--neutral-500"],
+      "action": "None, unless a screen must keep the darker light-theme field outline: set `--border-field: var(--neutral-500)` on `:root`.",
+      "appliesWhen": "The light theme only: `--border-field` moved from `--neutral-500` (`#6B7388`) to `color-mix(in srgb, var(--neutral-500) 48%, var(--neutral-400))` (`#848C9F` on the default neutrals). Every field outline and every control boundary that reads `--border-field` follows it. Under `data-theme=\"dark\"` it stays `--neutral-400`, and `--border-field-hover` is unchanged in both themes.",
+      "pitfall": "A border of your own hard-coded to `--neutral-500` to match the library fields now reads darker than the library fields beside it.",
+      "restore": ":root { --border-field: var(--neutral-500); }",
+      "verify": "In the light theme a resting `ds-input` border computes to `#848C9F` on the default neutrals, and on hover to `--border-field-hover`.",
+      "evidence": ["tokens:--border-field"]
+    }
+  ],
+  "informational": [],
+  "deleteList": []
+}
