@@ -13,9 +13,13 @@ import {
 } from '@angular/core';
 import { NgTemplateOutlet } from '@angular/common';
 import { IconComponent } from '@ids-group-ltd/ids-design-system/icons';
+import {
+  DS_INTL,
+  DS_INTL_DEFAULTS,
+} from '@ids-group-ltd/ids-design-system/core';
 import { TreeLabelDirective } from './tree-label.directive';
 import { TreeTrailingDirective } from './tree-trailing.directive';
-import type { TreeNode, TreeSelection } from './tree.types';
+import type { TreeNode, TreeSelection, TreeToggleOn } from './tree.types';
 
 interface VisibleNode {
   node: TreeNode;
@@ -46,6 +50,7 @@ let nextId = 0;
 })
 export class TreeComponent {
   private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
+  private readonly intl = inject(DS_INTL);
 
   /** Root-level nodes; nest via `children`. */
   readonly nodes = input<readonly TreeNode[]>([]);
@@ -57,6 +62,11 @@ export class TreeComponent {
   readonly selectedId = model<string | null>(null);
   /** Ids of the selected nodes, in `'multiple'` selection. */
   readonly selectedIds = model<string[]>([]);
+  /** What expands and collapses a parent. `'row'`: activating the row (click, Enter, Space) selects
+   *  it and toggles it. `'caret'`: activating the row only selects it, and the chevron is a button of
+   *  its own that toggles. `'doubleClick'`: a click selects, a double click toggles. In every mode
+   *  ArrowRight expands and ArrowLeft collapses the focused row. */
+  readonly toggleOn = input<TreeToggleOn>('row');
   /** Fires with the node when a row is selected (click or Enter/Space), not when one is deselected. */
   readonly nodeSelected = output<TreeNode>();
   /** Fires with the node under the pointer or newly focused, and `null` when the pointer leaves the tree. */
@@ -70,6 +80,10 @@ export class TreeComponent {
   private hoveredId: string | null = null;
 
   protected readonly multiple = computed(() => this.selection() === 'multiple');
+  protected readonly labels = computed(() => ({
+    ...DS_INTL_DEFAULTS.tree,
+    ...this.intl().tree,
+  }));
 
   protected readonly visibleNodes = computed<VisibleNode[]>(() => {
     const out: VisibleNode[] = [];
@@ -113,10 +127,36 @@ export class TreeComponent {
   }
 
   protected onRowClick(entry: VisibleNode, event: MouseEvent): void {
-    if (this.fromTrailing(event)) {
+    // The second click of a double click belongs to the toggle, not to a second selection.
+    if (
+      this.fromTrailing(event) ||
+      (this.toggleOn() === 'doubleClick' && event.detail > 1)
+    ) {
       return;
     }
     this.activate(entry, event.shiftKey || event.ctrlKey || event.metaKey);
+  }
+
+  protected onRowDoubleClick(entry: VisibleNode, event: MouseEvent): void {
+    if (
+      this.toggleOn() !== 'doubleClick' ||
+      this.fromTrailing(event) ||
+      event.shiftKey ||
+      event.ctrlKey ||
+      event.metaKey
+    ) {
+      return;
+    }
+    this.toggle(entry.node);
+  }
+
+  protected onCaretClick(entry: VisibleNode, event: MouseEvent): void {
+    event.stopPropagation();
+    if (entry.node.disabled) {
+      return;
+    }
+    this.focusNode(entry.node.id);
+    this.toggle(entry.node);
   }
 
   protected onRowFocus(entry: VisibleNode): void {
@@ -188,7 +228,7 @@ export class TreeComponent {
   }
 
   // A modified activation in multiple selection only adds or removes the node; every other
-  // activation selects the node alone and toggles a parent.
+  // activation selects the node alone, and toggles a parent when the row is the toggle.
   private activate(entry: VisibleNode, modified: boolean): void {
     const node = entry.node;
     if (node.disabled) {
@@ -212,7 +252,7 @@ export class TreeComponent {
       this.selectedId.set(node.id);
     }
     this.nodeSelected.emit(node);
-    if (entry.hasChildren) {
+    if (entry.hasChildren && this.toggleOn() === 'row') {
       this.toggle(node);
     }
   }

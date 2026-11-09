@@ -1,6 +1,7 @@
 @use '../../styles/focus' as focus;
 @use '../../styles/text-clip' as text-clip;
 @use '../../styles/component-base' as component-base;
+@use '../../styles/target' as target;
 @include component-base.rules;
 
 :host {
@@ -64,6 +65,24 @@
 .caret {
   flex: none;
   color: var(--_tree-caret-icon-color);
+}
+
+.caret-button {
+  display: grid;
+  flex: none;
+  place-items: center;
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+
+  &:disabled {
+    cursor: not-allowed;
+  }
+
+  @include target.min-size;
 }
 
 .caret-spacer {

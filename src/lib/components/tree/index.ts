@@ -7,4 +7,4 @@ export {
   TreeTrailingDirective,
   type TreeTrailingContext,
 } from './tree-trailing.directive';
-export type { TreeNode, TreeSelection } from './tree.types';
+export type { TreeNode, TreeSelection, TreeToggleOn } from './tree.types';

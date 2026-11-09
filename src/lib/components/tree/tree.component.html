@@ -16,9 +16,29 @@
     [class.selected]="isSelected(entry.node.id)"
     [style.--_level]="entry.level"
     (click)="onRowClick(entry, $event)"
+    (dblclick)="onRowDoubleClick(entry, $event)"
     (focus)="onRowFocus(entry)"
     (pointerenter)="hover(entry.node)">
-    @if (entry.hasChildren) {
+    @if (entry.hasChildren && toggleOn() === 'caret') {
+      <!-- The row keeps the focus and the tree its one tab stop: ArrowRight and ArrowLeft on the row are the keyboard toggle. -->
+      <button
+        type="button"
+        class="caret-button"
+        tabindex="-1"
+        [attr.aria-label]="
+          entry.expanded
+            ? labels().collapse(entry.node.label)
+            : labels().expand(entry.node.label)
+        "
+        [disabled]="entry.node.disabled"
+        (mousedown)="$event.preventDefault()"
+        (click)="onCaretClick(entry, $event)">
+        <ds-icon
+          class="caret"
+          [name]="entry.expanded ? 'chevronDown' : 'chevronRight'"
+          [size]="16" />
+      </button>
+    } @else if (entry.hasChildren) {
       <ds-icon
         class="caret"
         [name]="entry.expanded ? 'chevronDown' : 'chevronRight'"

@@ -73,6 +73,7 @@ export const DS_INTL_DEFAULTS: DsIntl & {
     readonly chatInput: Required<NonNullable<DsIntl['chatInput']>>;
     readonly attachment: Required<NonNullable<DsIntl['attachment']>>;
     readonly chat: Required<NonNullable<DsIntl['chat']>>;
+    readonly tree: Required<NonNullable<DsIntl['tree']>>;
 };
 
 export interface DsConfig {
@@ -380,6 +381,10 @@ export interface DsIntl {
         readonly stepWaiting?: string;
         readonly stepFailed?: string;
         readonly stepDetails?: (heading: string) => string;
+    };
+    readonly tree?: {
+        readonly expand?: (label: string) => string;
+        readonly collapse?: (label: string) => string;
     };
     readonly tabs: {
         readonly close: (label: string) => string;
