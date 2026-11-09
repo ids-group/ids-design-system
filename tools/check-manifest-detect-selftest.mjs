@@ -95,7 +95,6 @@ try {
     'fixtures/1.0.0/button-variant-remap.ignored.html': BADGE,
     'fixtures/1.0.0/sort-key-kept.found.ts': STORE,
     'fixtures/unreleased/draft-item.found.ts': STORE,
-    'fixtures/unreleased/draft-item.found.json': STORE,
     'fixtures/1.0.0/reserve-message-false.found.html': OPT_OUT,
     'fixtures/1.0.0/reserve-message-false.multi-line.found.html':
       '<ds-input\n  label="Name"\n  [reserveMessage]="false" />\n',
@@ -107,8 +106,8 @@ try {
   );
   expect('exits 0', good.status === 0);
   expect(
-    'runs all eight fixtures',
-    /8 locator fixture\(s\) run/.test(good.output),
+    'runs all seven fixtures',
+    /7 locator fixture\(s\) run/.test(good.output),
   );
   expect(
     'a deleteList row finds each spelling of its workaround and skips the look-alike',
@@ -121,10 +120,6 @@ try {
   expect(
     'a hint inside a multi-line tag with `>` in a binding is located',
     good.output.includes('button-variant-remap.found.html: located'),
-  );
-  expect(
-    'a .json fixture is read like any other',
-    good.output.includes('draft-item.found.json: located'),
   );
   expect(
     'a detect shape on a typescript surface is not element-scoped',
@@ -248,6 +243,44 @@ try {
     'another row on the allowed file fails',
     allowance.output.includes(
       '0.13.0#activated-route-import: find "ActivatedRoute" matches ordinary code at fixtures/_neutral/orders-page.component.ts:1',
+    ),
+  );
+  const upgradeItem = {
+    id: 'plugin-current',
+    kind: 'behavior',
+    old: null,
+    surface: ['none'],
+    searchHints: ['design-system@ids'],
+  };
+  const SETTINGS = '{ "enabledPlugins": { "design-system@ids": true } }\n';
+  const OTHER_SETTINGS = '{ "enabledPlugins": { "other@market": true } }\n';
+  const settings = run('settings', {
+    'unreleased.json': manifest('unreleased', [
+      upgradeItem,
+      { ...storeBehavior, id: 'draft-item' },
+    ]),
+    'fixtures/unreleased/plugin-current.settings.found.json': SETTINGS,
+    'fixtures/unreleased/plugin-current.settings.ignored.json': OTHER_SETTINGS,
+    'fixtures/unreleased/draft-item.found.ts': STORE,
+    'fixtures/unreleased/draft-item.settings.found.json': SETTINGS,
+    'fixtures/unreleased/draft-item.found.json': SETTINGS,
+  });
+  console.log('SETTINGS JSON only for an item on surface none');
+  expect(
+    'a surface-none item reads its settings.json fixtures',
+    settings.output.includes('plugin-current.settings.found.json: located') &&
+      settings.output.includes('plugin-current.settings.ignored.json: ignored'),
+  );
+  expect(
+    'a settings.json fixture on another surface fails',
+    settings.output.includes(
+      'draft-item.settings.found.json: a settings.json fixture belongs only to an item on surface ["none"]',
+    ),
+  );
+  expect(
+    'any other .json fixture name fails',
+    settings.output.includes(
+      'fixtures/unreleased/draft-item.found.json: a locator fixture is',
     ),
   );
 } finally {

@@ -140,8 +140,9 @@ An `.html` fixture is not compiled.
 
 **Locator fixtures.** `migrations/fixtures/<version>/<id>.found.<ext>` holds consumer code an item
 must locate, and `<id>.ignored.<ext>` a look-alike it must not count (the same attribute on another
-element), `ext` being `html`, `ts`, `scss` or `json` (a consumer's `.claude/settings.json`, for an
-item about the upgrade itself). They are searched the way the usage finder searches: a
+element), `ext` being `html`, `ts` or `scss`. The one exception is an item about the upgrade itself
+(`surface: ["none"]`): its fixtures are `<id>.settings.found.json` and `<id>.settings.ignored.json`,
+a consumer's `.claude/settings.json`. They are searched the way the usage finder searches: a
 literal grep for `old` (the attribute of an `element[attr]`), every `searchHints` entry and every
 `detect` shape, where a hit from `old` or a hint counts only inside the element `old` names, and a
 `detect` hit is scoped the same way only on a template-only item. A `.found` snippet nothing locates
