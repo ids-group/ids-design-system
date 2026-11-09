@@ -64,21 +64,6 @@
   `transform: rotate(90deg)` while expanded; a style that targets `ds-tree .row` as a direct child
   of the host, or a `transform` of your own on `.caret`, needs a look.
 
-### Fixed
-
-- **The `ds-textarea` resize handle sits in the corner.** It touched the bottom edge but stood 12px
-  in from the right edge (8px at `size="sm"`), because the side padding sat on the frame rather than
-  on the text. The padding now sits on the text, so the handle and a scrollbar reach the frame's
-  edges on both sides, as on a native textarea; the text, the placeholder and the pending or changed
-  mark keep their places. Nothing to change in your code.
-- **`--segmented-selected` and `--segmented-selected-on`**, the fill of the selected `ds-segmented`
-  segment and its label. Light: `--accent` with `--accent-on`. Dark: `--accent-strong-overlay` with
-  `--surface-default`, because `--accent` is under 3:1 against the dark track. Both are declared with
-  the theme, so a `ds-color` zone does not recolour them; set `--ds-segmented-selected-bg-color` and
-  `--ds-segmented-selected-label-color` there.
-
-### Changed
-
 - **`--border-field` is softer in the light theme.** It is now
   `color-mix(in srgb, var(--neutral-500) 48%, var(--neutral-400))`, `#848C9F` on the default
   neutrals, instead of `--neutral-500` (`#6B7388`): 3.22:1 against the page, 3.37:1 against a card,
@@ -104,6 +89,19 @@
   `--ds-segmented-segment-border`; its selected segment takes the same fill. To keep the white chip,
   set `--ds-segmented-selected-bg-color: var(--surface-default)` and
   `--ds-segmented-selected-label-color: var(--text-primary)` on `ds-segmented`.
+
+### Fixed
+
+- **The `ds-textarea` resize handle sits in the corner.** It touched the bottom edge but stood 12px
+  in from the right edge (8px at `size="sm"`), because the side padding sat on the frame rather than
+  on the text. The padding now sits on the text, so the handle and a scrollbar reach the frame's
+  edges on both sides, as on a native textarea; the text, the placeholder and the pending or changed
+  mark keep their places. Nothing to change in your code.
+- **`--segmented-selected` and `--segmented-selected-on`**, the fill of the selected `ds-segmented`
+  segment and its label. Light: `--accent` with `--accent-on`. Dark: `--accent-strong-overlay` with
+  `--surface-default`, because `--accent` is under 3:1 against the dark track. Both are declared with
+  the theme, so a `ds-color` zone does not recolour them; set `--ds-segmented-selected-bg-color` and
+  `--ds-segmented-selected-label-color` there.
 
 ## 1.1.1 — 2026-11-08
 
