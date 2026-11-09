@@ -1,5 +1,13 @@
 ## Unreleased
 
+### Fixed
+
+- **The `ds-textarea` resize handle sits in the corner.** It touched the bottom edge but stood 12px
+  in from the right edge (8px at `size="sm"`), because the side padding sat on the frame rather than
+  on the text. The padding now sits on the text, so the handle and a scrollbar reach the frame's
+  edges on both sides, as on a native textarea; the text, the placeholder and the pending or changed
+  mark keep their places. Nothing to change in your code.
+
 ## 1.1.1 — 2026-11-08
 
 ### Added
