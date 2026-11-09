@@ -64,12 +64,15 @@
   `transform: rotate(90deg)` while expanded; a style that targets `ds-tree .row` as a direct child
   of the host, or a `transform` of your own on `.caret`, needs a look.
 
-- **`--border-field` is softer in the light theme.** It is now
-  `color-mix(in srgb, var(--neutral-500) 48%, var(--neutral-400))`, `#848C9F` on the default
-  neutrals, instead of `--neutral-500` (`#6B7388`): 3.22:1 against the page, 3.37:1 against a card,
-  a modal, a drawer and a popover, and 3.06:1 against `--surface-secondary`. Under
-  `data-theme="dark"` it stays `--neutral-400`, and `--border-field-hover` is unchanged in both
-  themes. To keep the darker outline, set `--border-field: var(--neutral-500)` on `:root`.
+- **`--border-field` is at least 3:1 against every surface in both themes, muted fills included.**
+  Light: `color-mix(in srgb, var(--neutral-500) 86%, var(--neutral-400))`, `#727A8E` on the
+  default neutrals, instead of `--neutral-500` (`#6B7388`): 4.29:1 against a card, a modal, a drawer
+  and a popover, 3.62:1 against `--surface-muted`. Dark:
+  `color-mix(in srgb, var(--neutral-500) 80%, var(--neutral-400))`, `#848DA0`, instead of
+  `--neutral-400` (`#6B7388`): 5.17:1 against a card, 3.03:1 against
+  `--surface-overlay-raised-muted`. `--border-field-hover` is unchanged in both themes. To keep the
+  previous outline, set `--border-field: var(--neutral-500)` on `:root` and
+  `--border-field: var(--neutral-400)` on `:root[data-theme='dark']`.
 - **Checkbox, radio, switch, toggle button and the number stepper dividers draw their boundary in
   `--border-field`, at least 3:1 against the surfaces they sit on.** Standalone fields and controls
   share it; `--border-field-hover` is the hover outline where a control has one. Defaults that

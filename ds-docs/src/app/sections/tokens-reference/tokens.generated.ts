@@ -490,8 +490,8 @@ export const SEMANTIC_BORDER: readonly ColourRow[] = [
   },
   {
     "name": "--border-field",
-    "value": "color-mix(in srgb, var(--neutral-500) 48%, var(--neutral-400))",
-    "notes": "Resting outline of a standalone field or control: text-entry field, select, textarea, picker trigger, number stepper and its dividers, OTP cell, checkbox, radio, off switch track, toggle button. At least 3:1 against the page, a card, a modal or drawer, a popover and their secondary fills. A choice inside a track (ds-segmented) draws no border and marks the selection with --segmented-selected instead."
+    "value": "color-mix(in srgb, var(--neutral-500) 86%, var(--neutral-400))",
+    "notes": "Resting outline of a standalone field or control: text-entry field, select, textarea, picker trigger, number stepper and its dividers, OTP cell, checkbox, radio, off switch track, toggle button. At least 3:1 against the page, a card, a modal or drawer, a popover and their secondary and muted fills. A choice inside a track (ds-segmented) draws no border and marks the selection with --segmented-selected instead."
   },
   {
     "name": "--border-field-hover",
