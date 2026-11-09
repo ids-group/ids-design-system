@@ -114,7 +114,9 @@ export const ICONS = {
   wifi: '<path d="M2 9.5a15 15 0 0 1 20 0" /><path d="M5 13a10 10 0 0 1 14 0" /><path d="M8.5 16.5a5 5 0 0 1 7 0" /><path d="M12 20h.01" />',
   'wifi-off':
     '<path d="m3 3 18 18" /><path d="M12 20h.01" /><path d="M8.5 16.5a5 5 0 0 1 7 0" /><path d="M5 13a10 10 0 0 1 3.5-2.3" /><path d="M11 8.6A10 10 0 0 1 19 13" /><path d="M2 9.5a15 15 0 0 1 5.7-3.2" /><path d="M11.6 5.6A15 15 0 0 1 22 9.5" />',
-  /*! @license The six icons below, mouse-pointer to panel-right, are from Lucide (ISC).
+  'outline-blocks':
+    '<g stroke-dasharray="3 2"><rect x="3" y="4" width="18" height="7" rx="1.5" /><rect x="3" y="14" width="7.5" height="6" rx="1.5" /><rect x="13.5" y="14" width="7.5" height="6" rx="1.5" /></g>',
+  /*! @license The eight icons below, mouse-pointer to map-pin, are from Lucide (ISC).
    * Copyright (c) for portions of Lucide are held by Cole Bemis 2013-2022 as part of Feather (MIT).
    * All other copyright (c) for Lucide are held by Lucide Contributors 2022.
    * Permission to use, copy, modify, and/or distribute this software for any purpose with or without
@@ -137,6 +139,10 @@ export const ICONS = {
     '<path d="M10 2v7.527a2 2 0 0 1-.211.896L4.72 20.55a1 1 0 0 0 .9 1.45h12.76a1 1 0 0 0 .9-1.45l-5.069-10.127A2 2 0 0 1 14 9.527V2" /><path d="M8.5 2h7" /><path d="M7 16h10" />',
   'panel-right':
     '<rect x="3" y="3" width="18" height="18" rx="2" /><path d="M15 3v18" />',
+  'square-dashed':
+    '<path d="M5 3a2 2 0 0 0-2 2" /><path d="M19 3a2 2 0 0 1 2 2" /><path d="M21 19a2 2 0 0 1-2 2" /><path d="M5 21a2 2 0 0 1-2-2" /><path d="M9 3h1" /><path d="M9 21h1" /><path d="M14 3h1" /><path d="M14 21h1" /><path d="M3 9v1" /><path d="M21 9v1" /><path d="M3 14v1" /><path d="M21 14v1" />',
+  'map-pin':
+    '<path d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0" /><circle cx="12" cy="10" r="3" />',
 } as const;
 
 /** Built-in DS icon names. Consumers extend the runtime set via `provideDsIcons({...})`; the

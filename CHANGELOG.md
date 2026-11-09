@@ -7,6 +7,10 @@
   `--text-tertiary`, for an empty section among others on a page. An `error` or `success` icon
   keeps its status colour. The `--ds-empty-state-*` hooks still win where set. The default
   `'tile'` renders as before. New export `EmptyStateAppearance`.
+- **Three icons: `square-dashed`, `outline-blocks` and `map-pin`.** A dashed square for selecting
+  an area, three dashed blocks for showing element outlines, and a map pin for placing a note.
+  `square-dashed` and `map-pin` are drawn from Lucide (ISC); all three sit on the 24-unit grid and
+  take the set's stroke.
 
 ### Fixed
 
