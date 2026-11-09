@@ -1,0 +1,21 @@
+{
+  "version": "unreleased",
+  "items": [
+    {
+      "id": "tree-animate-default-on",
+      "kind": "behavior",
+      "old": "ds-tree",
+      "new": null,
+      "surface": ["template", "style"],
+      "searchHints": ["<ds-tree", "ds-tree .row", "ds-tree > .row", ".caret"],
+      "detect": ["ds-tree > .row", "ds-tree .caret { transform"],
+      "action": "None, unless a tree must toggle instantly: bind `[animate]=\"false\"` on that `ds-tree`. A stylesheet rule that selects a row as a direct child of `ds-tree` selects `ds-tree .row` instead.",
+      "appliesWhen": "Every `ds-tree`. The rows a parent reveals now slide open and shut and its chevron turns a quarter, on `--duration-base` and `--ease-standard`; the first render and `prefers-reduced-motion: reduce` do not animate. Each row sits in a `div.row-shell` with `role=\"none\"`, and the chevron is one `chevronRight` icon rotated by 90 degrees while expanded.",
+      "pitfall": "A test that counts rows right after a collapse still finds the leaving rows for the length of the animation: wait for it, or set `[animate]=\"false\"` in the test.",
+      "restore": "<ds-tree [animate]=\"false\" />",
+      "verify": "Expanding a parent in a `ds-tree` without `[animate]=\"false\"` grows its child rows from zero height over `--duration-base`, and a tree bound `[animate]=\"false\"` shows them at full height in the next frame."
+    }
+  ],
+  "informational": [],
+  "deleteList": []
+}
