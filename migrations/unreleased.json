@@ -2,6 +2,23 @@
   "version": "unreleased",
   "items": [
     {
+      "id": "auto-update-plugin-current",
+      "kind": "behavior",
+      "old": null,
+      "new": null,
+      "surface": [
+        "none"
+      ],
+      "searchHints": [
+        "design-system@ids",
+        ".ids-design-system-upgrade.json"
+      ],
+      "appliesWhen": "Only when this upgrade is run by the design-system plugin for Claude Code (`design-system@ids`, the `auto-update-package` command). An upgrade made by hand has nothing to do here.",
+      "action": "Do this before any other item of this version, before the lint step and before any edit. 1. Read the version of the plugin that is running this upgrade: \"version\" in \".claude-plugin/plugin.json\" under that plugin's own root directory. 2. Read the published version: run `claude plugin marketplace update ids`, read \"installLocation\" of the \"ids\" entry in \"plugins/known_marketplaces.json\" in the Claude config directory (\"$CLAUDE_CONFIG_DIR\", else the .claude folder in the home directory), then read \"version\" in \"<installLocation>/plugins/design-system/.claude-plugin/plugin.json\". 3. If the running version is lower than 1.21.0 or lower than the published one: stop this upgrade before it changes anything for this version, and tell the person who started it: \"The design-system plugin is <running>; <published> is out. Update it with `claude plugin update design-system@ids`, run `/reload-plugins`, then start the upgrade again.\" Offer to run `claude plugin update design-system@ids` for them. Do not apply this version on the older plugin; the run resumes after the update. 4. If the running version is 1.21.0 or later and not lower than the published one, nothing to do; go on with the next item.",
+      "verify": "The \"plugin.json\" of the plugin running the upgrade reads \"version\" 1.21.0 or later, and not lower than the published \"plugin.json\" of the \"ids\" marketplace.",
+      "restore": null
+    },
+    {
       "id": "tree-animate-default-on",
       "kind": "behavior",
       "old": "ds-tree",
@@ -39,7 +56,7 @@
         "--neutral-400"
       ],
       "action": "None, unless a screen must keep the previous field outline: set `--border-field: var(--neutral-500)` on `:root` and `--border-field: var(--neutral-400)` on `:root[data-theme='dark']`.",
-      "appliesWhen": "Both themes: `--border-field` moved from `--neutral-500` (`#6B7388`) to `color-mix(in srgb, var(--neutral-500) 86%, var(--neutral-400))` (`#727A8E` on the default neutrals) in the light theme, and from `--neutral-400` (`#6B7388`) to `color-mix(in srgb, var(--neutral-500) 80%, var(--neutral-400))` (`#848DA0`) under `data-theme=\"dark\"`. Every field outline and every control boundary that reads `--border-field` follows it. `--border-field-hover` is unchanged in both themes.",
+      "appliesWhen": "Both themes: `--border-field` moved from `--neutral-500` (`#6B7388`) to `color-mix(in srgb, var(--neutral-500) 86%, var(--neutral-400))` (`#727A8E` on the default neutrals) in the light theme, and from `--neutral-400` (`#6B7388`) to `color-mix(in srgb, var(--neutral-500) 80%, var(--neutral-400))` (`#848DA0`) under `data-theme=\"dark\"`. Every field outline and every control boundary that reads `--border-field` follows it, among them `ds-input`, `ds-otp-input`, `ds-search` and the legend checkboxes of `ds-line-chart`. `--border-field-hover` is unchanged in both themes.",
       "pitfall": "A border of your own hard-coded to `--neutral-500` in the light theme or `--neutral-400` in the dark theme to match the library fields no longer matches them: under `data-theme=\"dark\"` it reads fainter than the library fields beside it.",
       "restore": ":root { --border-field: var(--neutral-500); } :root[data-theme='dark'] { --border-field: var(--neutral-400); }",
       "verify": "On the default neutrals a resting `ds-input` border computes to `#727A8E` in the light theme and `#848DA0` under `data-theme=\"dark\"`, and on hover to `--border-field-hover`.",
@@ -64,7 +81,7 @@
         "--border-default"
       ],
       "action": "None, unless a screen must keep the faint control outline: set `--ds-checkbox-border-color: var(--border-strong)`, `--ds-radio-border-color: var(--border-strong)`, `--ds-switch-track-off-bg-color: var(--border-strong)` and `--ds-toggle-button-border-color: var(--border-default)` where you need it. A control of your own drawn to match takes `--border-field` for its outline and `--border-field-hover` for its hover outline.",
-      "appliesWhen": "Defaults that moved to `--border-field`: `--ds-checkbox-border-color` (from `--border-strong`), the unchecked box in `ds-checkbox`, in the option rows of `ds-multi-select` and `ds-autocomplete`, in `ds-table` selection, in `ds-table-columns` and in `ds-chart-legend`; `--ds-radio-border-color` (from `--border-strong`); `--ds-switch-track-off-bg-color` (from `--border-strong`), the fill of an off `ds-switch` track; `--ds-toggle-button-border-color` (from `--border-default`), which also takes `--border-field-hover` on hover. The dividers beside the `ds-number-stepper` buttons follow `--ds-number-stepper-border-color` instead of `--border-default`, and `--border-disabled` when disabled. A value set on any of these hooks still wins. Checked, selected, hover-accent, error and warning colours are unchanged.",
+      "appliesWhen": "Defaults that moved to `--border-field`: `--ds-checkbox-border-color` (from `--border-strong`), the unchecked box in `ds-checkbox`, in the option rows of `ds-multi-select` and `ds-autocomplete`, in `ds-table` selection, in `ds-table-columns-panel` and in `ds-chart-legend`; `--ds-radio-border-color` (from `--border-strong`); `--ds-switch-track-off-bg-color` (from `--border-strong`), the fill of an off `ds-switch` track; `--ds-toggle-button-border-color` (from `--border-default`), which also takes `--border-field-hover` on hover. The dividers beside the `ds-number-stepper` buttons follow `--ds-number-stepper-border-color` instead of `--border-default`, and `--border-disabled` when disabled. A value set on any of these hooks still wins. Checked, selected, hover-accent, error and warning colours are unchanged.",
       "pitfall": "A checkbox, radio or toggle of your own styled with `--border-strong` or `--border-default` to look like a library control now reads fainter than the library controls beside it.",
       "restore": ":root { --ds-checkbox-border-color: var(--border-strong); --ds-radio-border-color: var(--border-strong); --ds-switch-track-off-bg-color: var(--border-strong); --ds-toggle-button-border-color: var(--border-default); }",
       "verify": "An unchecked `ds-checkbox` box border, an unselected `ds-radio` ring, an off `ds-switch` track and a resting `ds-toggle-button` border each compute to `--border-field`, unless their hook is set.",
