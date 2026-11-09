@@ -25,6 +25,9 @@
     "./stylelint": "./stylelint/index.mjs",
     "./eslint": "./eslint/index.mjs"
   },
+  "bin": {
+    "ids-design-system-token-report": "./stylelint/report.mjs"
+  },
   "peerDependencies": {
     "@angular/cdk": "^21.2.0",
     "@angular/common": "^21.2.0",

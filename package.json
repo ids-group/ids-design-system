@@ -25,6 +25,9 @@
     "./stylelint": "./stylelint/index.mjs",
     "./eslint": "./eslint/index.mjs"
   },
+  "bin": {
+    "ids-design-system-token-report": "./stylelint/report.mjs"
+  },
   "scripts": {
     "agent-catalogue": "node tools/split-agent-catalogue.mjs",
     "build:docs": "npm run extract-docs && ng build ds-docs",

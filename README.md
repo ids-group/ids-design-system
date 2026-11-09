@@ -122,6 +122,63 @@ only: `"ids-design-system/no-removed-tokens": [true, { "from": "0.13.4", "to": "
 changed after 0.13.4, up to and including 0.14.5, and stays quiet about the rest. Either bound can stand
 alone; without `to` the unreleased version counts too.
 
+#### Raw values and unknown tokens
+
+The same plugin carries two more rules:
+
+- `ids-design-system/use-tokens` reports a raw value where a token exists, in colour, `border-radius`,
+  margin, padding, gap and inset, `font-size`, `line-height`, `font-weight`, `box-shadow`, `z-index`,
+  and transition and animation durations and easing. It names the exact token
+  (`space: raw "8px" in padding, use var(--space-2)`), or the nearest step, said as nearest. A colour
+  matches by exact value and names the role of its property: `--text-*` for `color`, `--surface-*`
+  for a background, `--border-*` for a border. A negative margin is suggested as
+  `calc(-1 * var(--space-4))`. Never reported: `0`, `auto`, `none`, `inherit`, `initial`, `unset`,
+  `currentColor`, `transparent`, `100%`, any `var()`, `calc()`, `min()`, `max()` or `clamp()` of
+  tokens, `min(var(--radius-pill), 50%)`, a ring or hairline `box-shadow` (inset, or with no blur),
+  and a `z-index` under 100 that orders siblings.
+- `ids-design-system/known-tokens` reports a `var(--name)` that neither this library nor your
+  stylesheet declares (`"--radius-s" ... did you mean "--radius-sm"?`). A read with a fallback is
+  reported too: it always renders the fallback. List the files that declare your own properties in
+  `declarationsFrom`, and properties set from elsewhere in `ignore` (`"--chart-*"`).
+
+Turn them on as warnings first, then make each category an error once it is clean:
+
+```json
+{
+  "plugins": ["@ids-group-ltd/ids-design-system/stylelint"],
+  "rules": {
+    "ids-design-system/use-tokens": [
+      true,
+      {
+        "severity": "warning",
+        "categories": { "color": "error", "radius": "error" },
+        "allow": { "line-height": ["1.5"] },
+        "ignore": ["src/brand/**"]
+      }
+    ],
+    "ids-design-system/known-tokens": [
+      true,
+      { "declarationsFrom": ["src/styles/**/*.scss"], "ignore": ["--chart-*"] }
+    ]
+  }
+}
+```
+
+`categories` takes `color`, `radius`, `space`, `font-size`, `line-height`, `font-weight`, `shadow`,
+`z-index` and `motion`, each `true`, `false`, `"warning"` or `"error"`. `allow` is a list of raw
+values, or a map of them by category or property (`"*"` for every one). `ignore` skips whole files by
+glob, relative to the working directory: a brand layer that defines the raw values itself.
+
+To see where a project stands before turning anything on, run the read-only report. It lints .scss
+and .css files and the inline `styles` of components in .ts files with both rules, then prints every
+finding with its suggestion and the counts per category, property, file and value:
+
+```bash
+npx ids-design-system-token-report "src/**/*.{scss,css,ts}" --ignore "src/brand/**" --json report.json
+```
+
+Reading .scss needs `postcss-scss`, which `stylelint-config-standard-scss` already installs.
+
 ### 4. Removed and renamed API (ESLint)
 
 The package also ships an ESLint flat-config plugin with the same purpose for `.ts` files and

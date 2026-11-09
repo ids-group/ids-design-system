@@ -1,10 +1,13 @@
-// Stylelint plugin for consumers of @ids-group-ltd/ids-design-system. The rule
+// Stylelint plugins for consumers of @ids-group-ltd/ids-design-system. The rule
 // `ids-design-system/no-removed-tokens` reports every custom property this library removed or
 // renamed, read from `deprecated-tokens.json` (generated from the published migration manifests),
-// and autofixes a rename to the current name.
+// and autofixes a rename to the current name. `use-tokens` and `known-tokens` live in their own
+// files.
 import { readFileSync } from 'node:fs';
 import stylelint from 'stylelint';
 import { VERSION, inRange } from './since-version.mjs';
+import knownTokens from './known-tokens.mjs';
+import useTokens from './use-tokens.mjs';
 
 const {
   createPlugin,
@@ -91,4 +94,4 @@ rule.meta = {
   fixable: true,
 };
 
-export default createPlugin(ruleName, rule);
+export default [createPlugin(ruleName, rule), useTokens, knownTokens];

@@ -152,6 +152,7 @@ export const GROUPS = {
     'plugin-apply',
     'plugin-lint-step',
     'token-deprecations:selftest',
+    'use-tokens:selftest',
     'api-deprecations:selftest',
     'api-deprecations',
   ],
