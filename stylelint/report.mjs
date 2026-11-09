@@ -6,8 +6,8 @@
 // Lints every matched .scss and .css file, and every inline `styles` template of a matched .ts
 // file, with `use-tokens` and `known-tokens` only, then prints the findings with their suggestions
 // and the counts per category, property, file and value. Names the project declares in the matched
-// files, or in the template beside a matched component, count as known. Nothing is written except
-// the `--json` file.
+// files, ignored ones included, or in the template beside a matched component count as known.
+// Nothing is written except the `--json` file.
 import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 import { createRequire } from 'node:module';
 import { join, relative } from 'node:path';
@@ -30,12 +30,8 @@ if (!globs.length) {
   );
   process.exit(2);
 }
-const ignore = [
-  '**/node_modules/**',
-  '**/dist/**',
-  '**/.angular/**',
-  ...flag('--ignore'),
-];
+const built = ['**/node_modules/**', '**/dist/**', '**/.angular/**'];
+const ignore = [...built, ...flag('--ignore')];
 const jsonOut = flag('--json')[0];
 const asGlob = (pattern) => pattern.replaceAll('\\', '/');
 
@@ -80,8 +76,12 @@ for (const file of files) {
   }
 }
 
-// A component sets custom properties from its template too (`[style.--x]`).
-const templates = files
+// An ignored file still declares names (a brand layer), and a component sets custom properties
+// from its template too (`[style.--x]`).
+const declaring = fastGlob
+  .sync(globs.map(asGlob), { ignore: built, absolute: true })
+  .filter((file) => /.(scss|css|ts)$/.test(file));
+const templates = declaring
   .map((file) => file.replace(/\.ts$/, '.html'))
   .filter((file) => file.endsWith('.html') && existsSync(file));
 
@@ -89,7 +89,7 @@ const config = {
   plugins: [useTokens, knownTokens],
   rules: {
     [useName]: true,
-    [knownName]: [true, { declarationsFrom: [...files, ...templates] }],
+    [knownName]: [true, { declarationsFrom: [...declaring, ...templates] }],
   },
 };
 const syntax = sources.some((source) => source.scss) ? scssSyntax() : undefined;
