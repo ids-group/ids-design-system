@@ -128,7 +128,8 @@
     },
     "`ds-tree` takes `toggleOn` (`TreeToggleOn`, default `'row'`, today's behaviour) and adds the optional `DsIntl.tree` keys `expand` and `collapse`. Nothing to change in your code.",
     "`ds-empty-state` takes `appearance` (`EmptyStateAppearance`, default `'tile'`, today's look). Only under `appearance=\"plain\"` do the defaults of `--ds-empty-state-body-text-color` (`var(--text-secondary)` → `var(--text-tertiary)`), `--ds-empty-state-title-font-weight` (`var(--font-weight-bold)` → `var(--font-weight-semibold)`) and `--ds-empty-state-title-font-size` (`var(--font-size-h5)` → `var(--font-size-l)`) move; a tile keeps them, and setting the hook restores either. Nothing to change in your code.",
-    "`ds-icon` draws seven new `IconName` values: `square-dashed`, `outline-blocks`, `map-pin`, `send`, `list-plus`, `maximize` and `minimize`. Nothing to change in your code."
+    "`ds-icon` draws seven new `IconName` values: `square-dashed`, `outline-blocks`, `map-pin`, `send`, `list-plus`, `maximize` and `minimize`. Nothing to change in your code.",
+    "`ds-banner` breaks a long unbroken word in its title and message at the banner width instead of running under the actions. Remove an `overflow-wrap` workaround on the projected text if you added one; nothing else to change."
   ],
   "deleteList": []
 }
