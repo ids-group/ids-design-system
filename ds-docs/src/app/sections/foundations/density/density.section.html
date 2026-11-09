@@ -169,7 +169,9 @@
 
   <p class="block-desc t-s">
     A <code class="t-mono-inline">ds-tree</code> inside a
-    <code class="t-mono-inline">ds-popover</code>, such as a screen picker,
+    <code class="t-mono-inline">
+      ds-popover
+    </code>, such as a screen picker,
     follows the tier of the screen that opens it: compact and ultra-compact
     tighten the rows and the indent, ultra-compact also the popover padding.
   </p>
@@ -194,9 +196,9 @@
           panelLabel="Pick a screen"
           [staticPreview]="true">
           <ds-tree
+            selectedId="board"
             [nodes]="screens"
-            [expandedIds]="screensExpanded"
-            selectedId="board" />
+            [expandedIds]="screensExpanded" />
         </ds-popover>
       </div>
     }
@@ -234,8 +236,13 @@
     </li>
 
     <li>
-      Tree row padding and indent - <code class="t-mono-inline">compact</code> and
-      <code class="t-mono-inline">ultra-compact</code>
+      Tree row padding and indent -
+      <code class="t-mono-inline">
+        compact
+      </code> and
+      <code class="t-mono-inline">
+        ultra-compact
+      </code>
     </li>
 
     <li>

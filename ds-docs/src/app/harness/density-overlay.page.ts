@@ -11,16 +11,11 @@ const params = new URLSearchParams(location.search);
   imports: [ButtonComponent, PopoverComponent, DsPopoverTrigger, TreeComponent],
   template: `
     <div [attr.data-density]="density">
-      <ds-button
-        id="trigger"
-        [dsPopoverTrigger]="pop">
+      <ds-button id="trigger" [dsPopoverTrigger]="pop">
         Pick a screen
       </ds-button>
 
-      <ds-popover
-        #pop
-        panelRole="dialog"
-        panelLabel="Pick a screen">
+      <ds-popover #pop panelRole="dialog" panelLabel="Pick a screen">
         <ds-tree [nodes]="nodes" />
       </ds-popover>
     </div>

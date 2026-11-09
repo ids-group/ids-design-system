@@ -61,6 +61,7 @@
     background-color: var(--_input-bg-color);
     border: var(--border-width-default) solid var(--_input-border);
     border-radius: var(--_input-radius);
+
     /* The inline padding sits on the textarea, so the resize grip and a scrollbar reach the frame's corner as on a native textarea. */
     padding: 0;
     height: auto;

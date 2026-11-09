@@ -32,12 +32,14 @@ const NODES: TreeNode[] = [
         [(expandedIds)]="expanded[mode]"
         [(selectedIds)]="selected[mode]" />
     }
+
     <ds-tree
       style="width: 280px"
       data-mode="static"
       [nodes]="nodes"
       [animate]="false"
       [(expandedIds)]="staticExpanded" />
+
     <div style="display: flex; justify-content: center; width: 480px">
       <ds-tree
         data-mode="fit"
