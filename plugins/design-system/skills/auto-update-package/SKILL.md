@@ -248,13 +248,20 @@ while the wave runs. Collect the whole wave before Phase B.
      `~/.claude`) and the `version` in `<installLocation>/plugins/design-system/.claude-plugin/plugin.json`.
      The marketplace is a private git repository, so this goes through the user's git credentials;
      never fetch the file by URL.
-   - Latest semver-greater than installed → AskUserQuestion: "design-system plugin <installed>
-     is outdated, <latest> is published. Update now?" with **Update now (Recommended)** and
-     **Continue on <installed>**. On update, run `claude plugin update design-system@ids`, then
-     STOP and tell the user to type `/reload-plugins` and invoke this command again: the
-     instructions loaded for this run are the old ones, and no command can reload them from here.
+   - Installed behind on major or minor (`1.21.x` against `1.22.0`) → the run does not start, in
+     any mode. Tell the user: "design-system plugin <installed> is a minor version behind
+     <latest>, and a minor version changes the upgrade steps. Update it with `claude plugin
+     update design-system@ids`, run `/reload-plugins`, then run this command again." Offer to run
+     the update for them; either way STOP with nothing edited. **Continue on <installed>** is not
+     offered here.
+   - Installed behind on patch only (`1.22.0` against `1.22.3`) → AskUserQuestion:
+     "design-system plugin <installed> is outdated, <latest> is published. Update now?" with
+     **Update now (Recommended)** and **Continue on <installed>**.
+   - On update, run `claude plugin update design-system@ids`, then STOP and tell the user to type
+     `/reload-plugins` and invoke this command again: the instructions loaded for this run are the
+     old ones, and no command can reload them from here.
    - Equal, or the marketplace update or a read fails (offline, no credentials) → say so in one
-     line and continue on the installed version; this step never blocks a run.
+     line and continue on the installed version: a version that cannot be read never blocks.
 
 1. **Confirm consumer + find targets.** Read `package.json`; find `@ids-group-ltd/ids-design-system`
    in dependencies/devDependencies. In a monorepo, locate the declaring manifests by

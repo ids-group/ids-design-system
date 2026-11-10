@@ -19,7 +19,8 @@ Then, inside a consumer repo:
 /design-system:auto-update-package dry-run          # read-only plan+find+drift report, zero edits
 ```
 
-It first checks that the plugin itself is the latest published version and offers to update it
+It first checks that the plugin itself is the latest published version: a plugin a minor version
+behind does not run until it is updated, one a patch behind offers the update and may continue
 (then `/reload-plugins` and run again). It detects the installed version, computes the chain of published versions up to the latest,
 asks once for a git strategy (feature branch vs current branch), then runs autonomously —
 committing one version at a time — and stops (leaving edits in place) on any version it cannot
