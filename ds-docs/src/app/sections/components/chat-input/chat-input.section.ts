@@ -33,6 +33,7 @@ export class ChatInputSection {
   protected readonly typed = signal('Make the header sticky on scroll');
   protected readonly chips = signal(['Header', 'Pricing card']);
   protected readonly studioText = signal('Use the brand blue for the button');
+  protected readonly queueText = signal('Use the brand blue for the button');
 
   protected readonly draft = signal('');
   protected readonly busy = signal(false);

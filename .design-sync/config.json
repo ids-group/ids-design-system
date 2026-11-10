@@ -22,6 +22,7 @@
     "ChartUnpin": "charts/chart",
     "ChatAttachment": "components/chat-message",
     "ChatStep": "components/chat-steps",
+    "ChatThread": "components/chat-message",
     "ColumnChart": "charts/column-chart",
     "Container": "components/layout-primitives",
     "DescriptionItem": "components/description-list",

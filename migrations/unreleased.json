@@ -1,0 +1,135 @@
+{
+  "version": "unreleased",
+  "items": [
+    {
+      "id": "auto-update-plugin-current",
+      "kind": "behavior",
+      "old": null,
+      "new": null,
+      "surface": [
+        "none"
+      ],
+      "searchHints": [
+        "design-system@ids",
+        ".ids-design-system-upgrade.json"
+      ],
+      "appliesWhen": "Only when this upgrade is run by the design-system plugin for Claude Code (`design-system@ids`, the `auto-update-package` command). An upgrade made by hand has nothing to do here.",
+      "action": "Do this before any other item of this version, before the lint step and before any edit. 1. Read the version of the plugin that is running this upgrade: \"version\" in \".claude-plugin/plugin.json\" under that plugin's own root directory. 2. Read the published version: run `claude plugin marketplace update ids`, read \"installLocation\" of the \"ids\" entry in \"plugins/known_marketplaces.json\" in the Claude config directory (\"$CLAUDE_CONFIG_DIR\", else the .claude folder in the home directory), then read \"version\" in \"<installLocation>/plugins/design-system/.claude-plugin/plugin.json\". 3. Compare the two as major.minor.patch. If the running major or minor is lower than the published one: stop this upgrade before it changes anything for this version, and tell the person who started it: \"The design-system plugin is <running>, a minor version behind <published>, and a minor version changes the upgrade steps. Update it with `claude plugin update design-system@ids`, run `/reload-plugins`, then start the upgrade again.\" Offer to run `claude plugin update design-system@ids` for them. Do not apply this version on the older plugin; the run resumes after the update. 4. If only the patch is lower: tell them the same update command and that <published> is out, offer to run it, and go on with the next item if they decline. 5. If the running version is not lower than the published one, nothing to do; go on with the next item.",
+      "verify": "The \"plugin.json\" of the plugin running the upgrade has the same major and minor \"version\" as the published \"plugin.json\" of the \"ids\" marketplace, or a higher one.",
+      "restore": null
+    },
+    {
+      "id": "tree-animate-default-on",
+      "kind": "behavior",
+      "old": "ds-tree",
+      "new": null,
+      "surface": [
+        "template",
+        "style"
+      ],
+      "searchHints": [
+        "<ds-tree",
+        "ds-tree .row",
+        "ds-tree > .row",
+        "ds-tree .caret"
+      ],
+      "detect": [
+        "ds-tree > .row"
+      ],
+      "action": "None, unless a tree must toggle instantly: bind `[animate]=\"false\"` on that `ds-tree`. A stylesheet rule that selects a row as a direct child of `ds-tree` selects `ds-tree .row` instead.",
+      "appliesWhen": "Every `ds-tree`. The rows a parent reveals now slide open and shut and its chevron turns a quarter, on `--duration-base` and `--ease-standard`; the first render and `prefers-reduced-motion: reduce` do not animate. Each row sits in a `div.row-shell` with `role=\"none\"`, and the chevron is one `chevronRight` icon rotated by 90 degrees while expanded.",
+      "pitfall": "A test that counts rows right after a collapse still finds the leaving rows for the length of the animation: wait for it, or set `[animate]=\"false\"` in the test.",
+      "restore": "<ds-tree [animate]=\"false\" />",
+      "verify": "Expanding a parent in a `ds-tree` without `[animate]=\"false\"` grows its child rows from zero height over `--duration-base`, and a tree bound `[animate]=\"false\"` shows them at full height in the next frame."
+    },
+    {
+      "id": "field-border-3-to-1",
+      "kind": "behavior",
+      "old": "--border-field",
+      "new": null,
+      "surface": [
+        "style"
+      ],
+      "searchHints": [
+        "--border-field",
+        "--neutral-500",
+        "--neutral-400"
+      ],
+      "action": "None, unless a screen must keep the previous field outline: set `--border-field: var(--neutral-500)` on `:root` and `--border-field: var(--neutral-400)` on `:root[data-theme='dark']`.",
+      "appliesWhen": "Both themes: `--border-field` moved from `--neutral-500` (`#6B7388`) to `color-mix(in srgb, var(--neutral-500) 86%, var(--neutral-400))` (`#727A8E` on the default neutrals) in the light theme, and from `--neutral-400` (`#6B7388`) to `color-mix(in srgb, var(--neutral-500) 80%, var(--neutral-400))` (`#848DA0`) under `data-theme=\"dark\"`. Every field outline and every control boundary that reads `--border-field` follows it, among them `ds-input`, `ds-otp-input`, `ds-search` and the legend checkboxes of `ds-line-chart`. `--border-field-hover` is unchanged in both themes.",
+      "pitfall": "A border of your own hard-coded to `--neutral-500` in the light theme or `--neutral-400` in the dark theme to match the library fields no longer matches them: under `data-theme=\"dark\"` it reads fainter than the library fields beside it.",
+      "restore": ":root { --border-field: var(--neutral-500); } :root[data-theme='dark'] { --border-field: var(--neutral-400); }",
+      "verify": "On the default neutrals a resting `ds-input` border computes to `#727A8E` in the light theme and `#848DA0` under `data-theme=\"dark\"`, and on hover to `--border-field-hover`.",
+      "evidence": [
+        "tokens:--border-field"
+      ]
+    },
+    {
+      "id": "control-boundary-border-field",
+      "kind": "behavior",
+      "old": "--ds-checkbox-border-color",
+      "new": null,
+      "surface": [
+        "style"
+      ],
+      "searchHints": [
+        "--ds-checkbox-border-color",
+        "--ds-radio-border-color",
+        "--ds-switch-track-off-bg-color",
+        "--ds-toggle-button-border-color",
+        "--border-strong",
+        "--border-default"
+      ],
+      "action": "None, unless a screen must keep the faint control outline: set `--ds-checkbox-border-color: var(--border-strong)`, `--ds-radio-border-color: var(--border-strong)`, `--ds-switch-track-off-bg-color: var(--border-strong)` and `--ds-toggle-button-border-color: var(--border-default)` where you need it. A control of your own drawn to match takes `--border-field` for its outline and `--border-field-hover` for its hover outline.",
+      "appliesWhen": "Defaults that moved to `--border-field`: `--ds-checkbox-border-color` (from `--border-strong`), the unchecked box in `ds-checkbox`, in the option rows of `ds-multi-select` and `ds-autocomplete`, in `ds-table` selection, in `ds-table-columns-panel` and in `ds-chart-legend`; `--ds-radio-border-color` (from `--border-strong`); `--ds-switch-track-off-bg-color` (from `--border-strong`), the fill of an off `ds-switch` track; `--ds-toggle-button-border-color` (from `--border-default`), which also takes `--border-field-hover` on hover. The dividers beside the `ds-number-stepper` buttons follow `--ds-number-stepper-border-color` instead of `--border-default`, and `--border-disabled` when disabled. A value set on any of these hooks still wins. Checked, selected, hover-accent, error and warning colours are unchanged.",
+      "pitfall": "A checkbox, radio or toggle of your own styled with `--border-strong` or `--border-default` to look like a library control now reads fainter than the library controls beside it.",
+      "restore": ":root { --ds-checkbox-border-color: var(--border-strong); --ds-radio-border-color: var(--border-strong); --ds-switch-track-off-bg-color: var(--border-strong); --ds-toggle-button-border-color: var(--border-default); }",
+      "verify": "An unchecked `ds-checkbox` box border, an unselected `ds-radio` ring, an off `ds-switch` track and a resting `ds-toggle-button` border each compute to `--border-field`, unless their hook is set.",
+      "evidence": [
+        "tokens:--border-field"
+      ]
+    },
+    {
+      "id": "segmented-selected-accent-fill",
+      "kind": "behavior",
+      "old": "--ds-segmented-selected-bg-color",
+      "new": null,
+      "surface": [
+        "style"
+      ],
+      "searchHints": [
+        "ds-segmented",
+        "--ds-segmented-selected-bg-color",
+        "--ds-segmented-selected-label-color",
+        "--ds-segmented-selected-shadow"
+      ],
+      "action": "None, unless a screen must keep the white selected chip: set `--ds-segmented-selected-bg-color: var(--surface-default)` and `--ds-segmented-selected-label-color: var(--text-primary)` on `ds-segmented`. A label colour of your own set through `--ds-segmented-selected-label-color` must read on the new fill, or be removed.",
+      "appliesWhen": "`ds-segmented`, both the padded track and `joined`: the selected segment fills with `--segmented-selected` (`--accent` in light, `--accent-strong-overlay` under `data-theme=\"dark\"`) and its label takes `--segmented-selected-on` (`--accent-on` in light, `--surface-default` on dark), at least 3:1 against the track. Defaults that moved: `--ds-segmented-selected-bg-color` from `--surface-default`, `--ds-segmented-selected-label-color` from `--text-primary`. The track, unselected segments, `--ds-segmented-selected-shadow` and `--ds-segmented-segment-border` are unchanged; a `joined` row keeps the borders that hook draws. A `ds-color` zone does not recolour the new fill.",
+      "pitfall": "Setting only `--ds-segmented-selected-bg-color` back to a light fill leaves the label in `--segmented-selected-on`, white in the light theme, so the selected label disappears.",
+      "restore": "ds-segmented { --ds-segmented-selected-bg-color: var(--surface-default); --ds-segmented-selected-label-color: var(--text-primary); }",
+      "verify": "The selected segment of a `ds-segmented` computes its background to `--segmented-selected` and its label to `--segmented-selected-on`, unless those hooks are set; no border is drawn on the track or on a padded segment.",
+      "evidence": [
+        "tokens:--segmented-selected"
+      ]
+    }
+  ],
+  "informational": [
+    {
+      "text": "Under `[data-density=\"compact\"]` and `[data-density=\"ultra-compact\"]` a `ds-tree` row takes `--tree-row-pad-y: var(--space-1)` and `--tree-row-pad-x: var(--space-2)` (was `--space-1-5` and `--space-3`) and each level indents `--tree-indent: var(--space-4)` (was `--space-5`). `ds-popover` pads with the new token `--popover-pad`, `--space-3`, and `--space-2` under `ultra-compact`; its panel takes the tier of the nearest `[data-density]` around the host. `--ds-tree-row-padding-y`, `--ds-tree-row-padding-x`, `--ds-tree-indent` and `--ds-popover-padding` still win where set. Nothing to change in your code.",
+      "verify": "On a screen under `[data-density=\"compact\"]`, a `ds-tree` row is 4px by 8px padded and a child level indents 16px; under `ultra-compact`, a `ds-popover` opened there pads 8px. Without `[data-density]` both measure as before."
+    },
+    {
+      "text": "The `ds-textarea` resize grip and its scrollbar reach the frame's right edge: the side padding sits on the text rather than on the `.control` frame, at the same widths. A rule of your own that sets padding on `ds-textarea .control` now pads around the grip as well. Nothing else to change in your code.",
+      "verify": "Drag the resize grip of a `ds-textarea`: it sits in the frame's bottom-right corner, and the text keeps its inset from both edges."
+    },
+    {
+      "text": "`ds-chat-input` takes `busyAction` (`ChatInputBusyAction`, default `'stop'`) and emits `queued` and `redirected`, and adds the optional `DsIntl.chatInput` keys `queue` and `redirect`. The busy Stop state of its main button now shows its name in a tooltip. Nothing to change in your code.",
+      "verify": "Hover the Stop button of a busy `stoppable` `ds-chat-input`: the tooltip reads its Stop label."
+    },
+    "`ds-tree` takes `toggleOn` (`TreeToggleOn`, default `'row'`, today's behaviour) and adds the optional `DsIntl.tree` keys `expand` and `collapse`. Nothing to change in your code.",
+    "`ds-empty-state` takes `appearance` (`EmptyStateAppearance`, default `'tile'`, today's look). Only under `appearance=\"plain\"` do the defaults of `--ds-empty-state-body-text-color` (`var(--text-secondary)` → `var(--text-tertiary)`), `--ds-empty-state-title-font-weight` (`var(--font-weight-bold)` → `var(--font-weight-semibold)`) and `--ds-empty-state-title-font-size` (`var(--font-size-h5)` → `var(--font-size-l)`) move; a tile keeps them, and setting the hook restores either. Nothing to change in your code.",
+    "`ds-icon` draws seven new `IconName` values: `square-dashed`, `outline-blocks`, `map-pin`, `send`, `list-plus`, `maximize` and `minimize`. Nothing to change in your code.",
+    "`ds-banner` breaks a long unbroken word in its title and message at the banner width instead of running under the actions. Remove an `overflow-wrap` workaround on the projected text if you added one; nothing else to change."
+  ],
+  "deleteList": []
+}

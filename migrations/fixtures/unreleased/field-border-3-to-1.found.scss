@@ -1,0 +1,9 @@
+.address-field {
+  border: 1px solid var(--neutral-500);
+}
+.address-field:hover {
+  border-color: var(--border-field-hover);
+}
+.inline-field {
+  border: 1px solid var(--border-field);
+}

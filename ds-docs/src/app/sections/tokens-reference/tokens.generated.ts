@@ -490,8 +490,8 @@ export const SEMANTIC_BORDER: readonly ColourRow[] = [
   },
   {
     "name": "--border-field",
-    "value": "var(--neutral-500)",
-    "notes": "Resting outline of a text-entry field, picker trigger, number stepper and OTP cell; at least 3:1 against the page, a card, a modal or drawer and a popover."
+    "value": "color-mix(in srgb, var(--neutral-500) 86%, var(--neutral-400))",
+    "notes": "Resting outline of a standalone field or control: text-entry field, select, textarea, picker trigger, number stepper and its dividers, OTP cell, checkbox, radio, off switch track, toggle button. At least 3:1 against the page, a card, a modal or drawer, a popover and their secondary and muted fills. A choice inside a track (ds-segmented) draws no border and marks the selection with --segmented-selected instead."
   },
   {
     "name": "--border-field-hover",
@@ -3801,8 +3801,8 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--ds-checkbox-border-color",
-        "value": "var(--border-strong)",
-        "notes": "Checkbox unchecked border colour."
+        "value": "var(--border-field)",
+        "notes": "Checkbox unchecked border colour (defaults to --border-field)."
       },
       {
         "name": "--ds-checkbox-hover-border-color",
@@ -4310,12 +4310,12 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
     "tokens": [
       {
         "name": "--ds-option-selected-bg-color",
-        "value": "var(--primary-subtitle)",
+        "value": "var(--surface-overlay-raised-tint)",
         "notes": "Fill of the selected row in a dropdown panel (default --primary-subtitle). Panel-level: one partial paints select, autocomplete and multi-select alike."
       },
       {
         "name": "--ds-option-selected-label-color",
-        "value": "var(--primary-strong)",
+        "value": "var(--accent-strong-overlay)",
         "notes": "Label and icon colour of the selected row (default --primary-strong)."
       },
       {
@@ -6270,7 +6270,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--ds-popover-padding",
-        "value": "var(--space-3)",
+        "value": "var(--popover-pad)",
         "notes": "Popover inner padding (defaults to --space-3)."
       },
       {
@@ -6297,6 +6297,11 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "name": "--popover-maxw",
         "value": "320px",
         "notes": "Popover max width cap (320px)."
+      },
+      {
+        "name": "--popover-pad",
+        "value": "var(--space-3)",
+        "notes": ""
       }
     ]
   },
@@ -6334,8 +6339,8 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--ds-radio-border-color",
-        "value": "var(--border-strong)",
-        "notes": "Radio ring colour (defaults to --border-strong)."
+        "value": "var(--border-field)",
+        "notes": "Radio ring colour (defaults to --border-field)."
       },
       {
         "name": "--ds-radio-label-color",
@@ -6475,13 +6480,13 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--ds-segmented-selected-bg-color",
-        "value": "var(--surface-default)",
-        "notes": "Fill of the selected segment, which reads as a raised chip on the track (defaults to --surface-default)."
+        "value": "var(--segmented-selected)",
+        "notes": "Fill of the selected segment, its only boundary on the track (defaults to --segmented-selected)."
       },
       {
         "name": "--ds-segmented-selected-label-color",
-        "value": "var(--text-primary)",
-        "notes": "Label colour of the selected segment (defaults to --text-primary)."
+        "value": "var(--segmented-selected-on)",
+        "notes": "Label colour of the selected segment (defaults to --segmented-selected-on)."
       },
       {
         "name": "--ds-segmented-label-color",
@@ -6547,6 +6552,16 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "name": "--segmented-pad",
         "value": "2px",
         "notes": "Segmented control geometry — track padding (2px)."
+      },
+      {
+        "name": "--segmented-selected",
+        "value": "var(--accent)",
+        "notes": "Fill of the selected ds-segmented segment, at least 3:1 against the track: --accent in light, --accent-strong-overlay on dark. The track and its segments draw no border. Declared with the theme, so a ds-color zone does not recolour it; set --ds-segmented-selected-bg-color there."
+      },
+      {
+        "name": "--segmented-selected-on",
+        "value": "var(--accent-on)",
+        "notes": "Label on --segmented-selected: --accent-on in light, --surface-default on dark."
       }
     ]
   },
@@ -7065,6 +7080,11 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "name": "--ds-splitter-overdrag-line-scale",
         "value": "3",
         "notes": ""
+      },
+      {
+        "name": "--ds-splitter-fog-color",
+        "value": "color-mix(in srgb, var(--text-primary) 22%, transparent)",
+        "notes": ""
       }
     ]
   },
@@ -7231,8 +7251,8 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--ds-switch-track-off-bg-color",
-        "value": "var(--border-strong)",
-        "notes": "Switch track fill, off state (defaults to --border-strong)."
+        "value": "var(--border-field)",
+        "notes": "Switch track fill, off state (defaults to --border-field)."
       },
       {
         "name": "--ds-switch-thumb-bg-color",
@@ -8594,8 +8614,8 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--ds-toggle-button-border-color",
-        "value": "var(--border-default)",
-        "notes": "Toggle button border colour (defaults to --border-default)."
+        "value": "var(--border-field)",
+        "notes": "Toggle button border colour (defaults to --border-field)."
       },
       {
         "name": "--ds-toggle-button-color",

@@ -1,7 +1,8 @@
-// Stylelint plugin for consumers of @ids-group-ltd/ids-design-system. The rule
+// Stylelint plugins for consumers of @ids-group-ltd/ids-design-system. The rule
 // `ids-design-system/no-removed-tokens` reports every custom property this library removed or
 // renamed, read from `deprecated-tokens.json` (generated from the published migration manifests),
-// and autofixes a rename to the current name.
+// and autofixes a rename to the current name. `use-tokens` and `known-tokens` live in their own
+// files.
 import { readFileSync } from 'node:fs';
 import stylelint from 'stylelint';
 import { VERSION, inRange } from './since-version.mjs';
@@ -91,4 +92,17 @@ rule.meta = {
   fixable: true,
 };
 
-export default createPlugin(ruleName, rule);
+// An auto-update plugin before 1.20.1 lints from a copy of this folder that points only this file at
+// `stylelint`, so the token rules cannot load there; that copy still runs `no-removed-tokens`.
+const tokenRules = await Promise.all([
+  import('./use-tokens.mjs'),
+  import('./known-tokens.mjs'),
+])
+  .then((modules) => modules.map((module) => module.default))
+  .catch((error) => {
+    if (error.code === 'ERR_MODULE_NOT_FOUND' || error.code === 'ENOENT')
+      return [];
+    throw error;
+  });
+
+export default [createPlugin(ruleName, rule), ...tokenRules];

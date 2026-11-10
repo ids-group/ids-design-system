@@ -146,6 +146,13 @@ export class PopoverComponent implements OnDestroy, DsOverlayCloseRef {
     this.ref = this.overlay.create(cfg);
     prepareOverlayEnter(this.ref, this.host.nativeElement, positionStrategy);
     forwardOverlayTokens(this.ref, this.host.nativeElement, this.panelTokens);
+    // The pane is portaled to body, out of reach of the screen's [data-density].
+    const density = this.host.nativeElement
+      .closest('[data-density]')
+      ?.getAttribute('data-density');
+    if (density) {
+      this.ref.overlayElement.setAttribute('data-density', density);
+    }
     closeOnOutsidePointer(
       this.ref,
       (target) => trigger.contains(target),

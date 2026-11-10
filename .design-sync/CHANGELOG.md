@@ -17,6 +17,13 @@ holds an entry; what the release bot commits afterwards needs none.
 
 ## Unreleased
 
+### Cards
+
+- **`ChatMessage` and `ChatThread` have cards and usage notes, and `ChatSteps` is back.** A
+  component counts as internal only when the docblock of its class says `@internal`; one on a member
+  no longer drops a public component from the bundle. `ChatMessage` publishes the notice block of
+  the chat-message chapter and `ChatThread` its steps-fold block.
+
 ## 1.1.1 — 2026-11-08
 
 ### Cards

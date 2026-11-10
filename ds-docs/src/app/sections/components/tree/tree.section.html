@@ -163,6 +163,104 @@
     </p>
   </div>
 
+  <h3 class="block-title t-h4">
+    What toggles a parent
+  </h3>
+
+  <ul class="block-desc t-s">
+    <li>
+      <code class="t-mono-inline">
+        toggleOn="row"
+      </code>, the default: a click,
+      Enter or Space on a parent selects it and expands or collapses it.
+    </li>
+
+    <li>
+      <code class="t-mono-inline">
+        toggleOn="caret"
+      </code>: the row only
+      selects; the chevron is a button of its own, named "Expand" or "Collapse"
+      with the row's label, that toggles. Use it where selecting a parent opens
+      it somewhere else, such as the layers of a canvas.
+    </li>
+
+    <li>
+      <code class="t-mono-inline">
+        toggleOn="doubleClick"
+      </code>: a click
+      selects, a double click toggles.
+    </li>
+
+    <li>
+      In every mode ArrowRight expands and ArrowLeft collapses the focused row,
+      and Shift- or Ctrl-click in multiple selection only adds or removes it.
+    </li>
+  </ul>
+
+  <div class="states is-cols-3">
+    @for (mode of toggleModes; track mode) {
+      <div class="state-cell">
+        <div class="state-cell-stage is-fill">
+          <ds-tree
+            [nodes]="nodes"
+            [toggleOn]="mode"
+            [expandedIds]="toggleExpanded[mode]()"
+            [selectedId]="toggleSelected[mode]()"
+            (expandedIdsChange)="toggleExpanded[mode].set($event)"
+            (selectedIdChange)="toggleSelected[mode].set($event)" />
+        </div>
+
+        <div class="state-cell-label">
+          {{ mode }} · selected: {{ toggleSelected[mode]() ?? 'none' }}
+        </div>
+      </div>
+    }
+  </div>
+
+  <h3 class="block-title t-h4">
+    Motion
+  </h3>
+
+  <p class="block-desc t-s">
+    Revealed rows slide open and shut and the chevron turns with them, on
+    <code class="t-mono-inline">
+      --duration-base
+    </code> and
+    <code class="t-mono-inline">
+      --ease-standard
+    </code>, the timing of
+    <code class="t-mono-inline">
+      ds-accordion
+    </code>. The first render does not
+    animate, and nothing moves under
+    <code class="t-mono-inline">
+      prefers-reduced-motion: reduce
+    </code>. Set
+    <code class="t-mono-inline">
+      [animate]="false"
+    </code> for an instant
+    toggle.
+  </p>
+
+  <div class="states is-cols-2">
+    @for (animated of [true, false]; track animated) {
+      <div
+        class="state-cell"
+        [attr.data-motion]="animated ? 'on' : 'off'">
+        <div class="state-cell-stage is-fill">
+          <ds-tree
+            [nodes]="nodes"
+            [animate]="animated"
+            [(expandedIds)]="motionExpanded[animated ? 'on' : 'off']" />
+        </div>
+
+        <div class="state-cell-label">
+          animate: {{ animated }}
+        </div>
+      </div>
+    }
+  </div>
+
   <h3
     data-claude-design
     class="block-title t-h4">

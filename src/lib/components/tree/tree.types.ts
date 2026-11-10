@@ -9,3 +9,5 @@ export interface TreeNode {
 }
 
 export type TreeSelection = 'single' | 'multiple';
+
+export type TreeToggleOn = 'row' | 'caret' | 'doubleClick';

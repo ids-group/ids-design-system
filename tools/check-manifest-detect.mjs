@@ -46,6 +46,10 @@ const NEUTRAL = '_neutral';
 const AUDIT = process.argv.includes('--audit');
 const FIXTURE_NAME =
   /^([a-z0-9-]+)(?:\.[a-z0-9-]+)?\.(found|ignored)\.(html|ts|scss)$/;
+// The one JSON a consumer holds for an item about the upgrade itself (`surface: ["none"]`): its
+// `.claude/settings.json`, which names the plugin that runs the upgrade.
+const SETTINGS_FIXTURE_NAME =
+  /^([a-z0-9-]+)\.settings\.(found|ignored)\.(json)$/;
 const MANIFEST_NAME = /^(\d+\.\d+\.\d+(?:-[0-9A-Za-z.]+)?|unreleased)\.json$/;
 const ELEMENT_OF_OLD = /^(ds-[a-z0-9-]+)(?:\[([^\]]+)\]$|[\s.])/;
 const NEUTRAL_ALLOWED = new Set([
@@ -172,10 +176,10 @@ if (existsSync(FIXTURES)) {
     for (const file of readdirSync(join(FIXTURES, version))) {
       if (!/\.(found|ignored)\./.test(file)) continue;
       const name = `fixtures/${version}/${file}`;
-      const parts = FIXTURE_NAME.exec(file);
+      const parts = FIXTURE_NAME.exec(file) ?? SETTINGS_FIXTURE_NAME.exec(file);
       if (!parts) {
         problems.push(
-          `${name}: a locator fixture is <id>.found.<ext> or <id>.ignored.<ext>, ext html, ts or scss`,
+          `${name}: a locator fixture is <id>.found.<ext> or <id>.ignored.<ext>, ext html, ts or scss (or <id>.settings.found.json for an item on surface none)`,
         );
         continue;
       }
@@ -185,6 +189,15 @@ if (existsSync(FIXTURES)) {
       if (!item && !row) {
         problems.push(
           `${name}: migrations/${version}.json has no item or deleteList row "${id}"`,
+        );
+        continue;
+      }
+      if (
+        extension === 'json' &&
+        JSON.stringify(item?.surface ?? null) !== JSON.stringify(['none'])
+      ) {
+        problems.push(
+          `${name}: a settings.json fixture belongs only to an item on surface ["none"]`,
         );
         continue;
       }

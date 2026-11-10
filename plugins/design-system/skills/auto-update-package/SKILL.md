@@ -231,13 +231,37 @@ manifest:<V>#<itemId>` (or `tool:check-manifest-truth` when the tool, not the ma
 
 ## Phase A — Run setup (do once)
 
-Steps 1-6 are quick local reads and run in order until the chain is known. Everything after that
+Steps 0-6 are quick local reads and run in order until the chain is known. Everything after that
 is ONE parallel wave: start the clone (step 7), the peers fetch (step 6) and the baseline builds
 (step 9) together as background commands; the moment the clone lands, extract every tree and the
 lint plugin copy (step 11), start the manifest-truth check, dispatch a planner for every chain
 version without a manifest (step 10) and run the whole-chain pre-pass (step 12), all at once; the
 planners of the versions the pre-pass flags go out the moment it lands. Ask step 8's question
 while the wave runs. Collect the whole wave before Phase B.
+
+0. **Plugin version, before anything else.** A run on an outdated plugin applies the instructions
+   of an older release, so check it first, in every mode, dry-run included:
+   - Installed: `version` in `${CLAUDE_PLUGIN_ROOT}/.claude-plugin/plugin.json` (Read tool; the
+     variable is substituted in this text, not exported to Bash).
+   - Latest: run `claude plugin marketplace update ids`, then read `installLocation` of `ids` from
+     `plugins/known_marketplaces.json` in the Claude config directory (`$CLAUDE_CONFIG_DIR`, else
+     `~/.claude`) and the `version` in `<installLocation>/plugins/design-system/.claude-plugin/plugin.json`.
+     The marketplace is a private git repository, so this goes through the user's git credentials;
+     never fetch the file by URL.
+   - Installed behind on major or minor (`1.21.x` against `1.22.0`) → the run does not start, in
+     any mode. Tell the user: "design-system plugin <installed> is a minor version behind
+     <latest>, and a minor version changes the upgrade steps. Update it with `claude plugin
+     update design-system@ids`, run `/reload-plugins`, then run this command again." Offer to run
+     the update for them; either way STOP with nothing edited. **Continue on <installed>** is not
+     offered here.
+   - Installed behind on patch only (`1.22.0` against `1.22.3`) → AskUserQuestion:
+     "design-system plugin <installed> is outdated, <latest> is published. Update now?" with
+     **Update now (Recommended)** and **Continue on <installed>**.
+   - On update, run `claude plugin update design-system@ids`, then STOP and tell the user to type
+     `/reload-plugins` and invoke this command again: the instructions loaded for this run are the
+     old ones, and no command can reload them from here.
+   - Equal, or the marketplace update or a read fails (offline, no credentials) → say so in one
+     line and continue on the installed version: a version that cannot be read never blocks.
 
 1. **Confirm consumer + find targets.** Read `package.json`; find `@ids-group-ltd/ids-design-system`
    in dependencies/devDependencies. In a monorepo, locate the declaring manifests by
@@ -428,6 +452,7 @@ while the wave runs. Collect the whole wave before Phase B.
     It never runs with `--fix`: the step-2 script is the one writer of mechanical renames, and an
     autofix would rewrite exactly the occurrences that script deliberately leaves (a type imported
     from a secondary entry point, whose new name may live in another one).
+
 12. **Whole-chain pre-pass (per target, before any per-item agent).** Most items of a long chain
     find nothing in one consumer; this pass proves which, once, so per-item planners, finders and
     re-checks go only where there is something. The items are the clone's manifests (a version
@@ -766,9 +791,13 @@ spanning all targets. (Single-target repos: the plain per-target loop below is f
    consumer's case, keep when unsure. Its result is keyed `item:<id>` and is recorded and reported
    with the rows.
 9. **Green → commit.** Green includes a clean lint re-check (step 7) on the final tree, where the
-   lint step ran. Stage EXACTLY the touched-files union (step 3) plus the target's
-   `package.json` plus the lockfile, by explicit pathspec (never `git add -A`, never a bare
-   directory). Commit `chore(deps): update @ids-group-ltd/ids-design-system to vV`, migration
+   lint step ran. Write `.ids-design-system-upgrade.json` beside the target's `package.json`,
+   replacing any earlier one: `{ "version": "<V>", "from": "<the version before V>",
+"plugin": "<installed plugin.json version>", "by": "<git config user.name>",
+"date": "<YYYY-MM-DD>" }`. It is how the design-system team finds who upgrades which project with
+   which plugin, so it is never skipped. Stage EXACTLY the touched-files union (step 3) plus the
+   target's `package.json`, the lockfile and that file, by explicit pathspec (never `git add -A`,
+   never a bare directory). Commit `chore(deps): update @ids-group-ltd/ids-design-system to vV`, migration
    summary in the body (`-m` subject, `-m` body). When the consumer's own rules require one change
    per commit, split the version instead: the bump (`package.json` and the lockfile) first, then
    one commit per migration, each staged by pathspec. Only the version's last commit has to be

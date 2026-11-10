@@ -82,7 +82,7 @@ export interface RadioGroupContract {
 ds-radio {
     --ds-radio-accent-color: var(--accent);
     --ds-radio-bg-color: var(--surface-default);
-    --ds-radio-border-color: var(--border-strong);
+    --ds-radio-border-color: var(--border-field);
     --ds-radio-label-color: var(--text-primary);
     --ds-radio-label-font-size: var(--_radio-label-fs);
 }

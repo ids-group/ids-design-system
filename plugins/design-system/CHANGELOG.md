@@ -4,6 +4,43 @@ Versioning: **patch** = instruction/prompt fixes; **minor** = new capability (pi
 source, agent); **major** = a change to the workflow's behavior contract. Bump `plugin.json` +
 `marketplace.json` together on every published change.
 
+## 1.22.0 - 2026-11-10
+
+### Changed
+
+- **A plugin a minor version behind the published one does not run.** The check before a run stops
+  with the update command when major or minor is lower, in every mode, dry-run included. A plugin
+  behind on patch only still offers the update and may continue on the installed version.
+
+## 1.21.0 - 2026-11-09
+
+### Added
+
+- **Each version's commit records the upgrade in `.ids-design-system-upgrade.json`.** Beside the
+  target's `package.json`: the version, the one before it, the plugin version, `git config
+  user.name` and the date, replaced on every version. The design-system team reads it across
+  repositories to find who upgrades which project with which plugin.
+
+## 1.20.1 - 2026-11-09
+
+### Fixed
+
+- **The lint step loads a stylelint plugin whose rules sit in several modules.** It pointed only
+  the plugin's `index.mjs` at the target's `stylelint`, so a release whose plugin adds rule modules
+  (`known-tokens`, `use-tokens`) failed the step with `Cannot find package 'stylelint'`; every
+  module of the copy now resolves `stylelint`, and the token tables read the library from the
+  release itself.
+
+## 1.20.0 - 2026-11-08
+
+### Added
+
+- **A run starts by checking the plugin's own version.** Phase A step 0 refreshes the `ids`
+  marketplace and compares the installed `plugin.json` version with the published one; when a
+  newer one exists it offers to update now, runs `claude plugin update design-system@ids` and stops
+  so the run restarts after `/reload-plugins`. Offline or without credentials it says so and
+  continues on the installed version.
+
 ## 1.19.4 - 2026-11-03
 
 ### Fixed

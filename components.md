@@ -243,15 +243,15 @@ All inputs: `hint: string = ''`, `error: string = ''`, `warning: string = ''`, `
 
 #### `<ds-chat-input>` — `ChatInputComponent`
 Message box for a chat or an instruction: chips above an auto-growing text area, a bottom bar with actions on the left and the send button on the right. Use it instead of a `ds-textarea` beside icon buttons, or a `ds-search` standing in for a message box.
-Slots: `[attachments]` on the page above the frame (the app's own card for a picked element and its snapshot; hidden while empty), `[chips]` above the text inside the frame (project `ds-tag`s for attachments and picked elements; hidden while empty), `[actions]` on the left of the bar (an attach `ds-icon-button`), `[send]` replaces the default send button (render your own states, e.g. Queue / Stop while `busy`; call `submit()` or read `canSubmit`).
+Slots: `[attachments]` on the page above the frame (the app's own card for a picked element and its snapshot; hidden while empty), `[chips]` above the text inside the frame (project `ds-tag`s for attachments and picked elements; hidden while empty), `[actions]` on the left of the bar (an attach `ds-icon-button`), `[send]` replaces the default send button (call `submit()` or read `canSubmit`).
 Keyboard: Enter emits `(submitted): string` with the trimmed text; Shift+Enter breaks the line; an Enter that commits an IME composition never submits; blank text, `busy` and `disabled` never submit. Enter on blank text inserts nothing.
-Send button: a 32px `ds-button` with an arrow, named by `DS_INTL.chatInput.send`, disabled while the text is blank. `busy` puts it in `loading` (spinner, `aria-busy`, press refused, focus kept). `layout: ChatInputLayout = 'status-bar'` places the `busyLabel` step: `'status-bar'` beside the fixed square button, `'status-above'` on a reserved line above the box, `'split'` attach outside left and send outside right with the step above, `'send-outside'` a round 40px send outside right, `'toolbar'` attach, step and send in a row under the box.
+Send button: a 32px `ds-button` with an arrow, named by `DS_INTL.chatInput.send`, disabled while the text is blank. `busy` puts it in `loading` (spinner, `aria-busy`, press refused, focus kept); with `stoppable` it is Stop instead (a square in a turning ring, `(stopRequested)`, `DS_INTL.chatInput.stop`). `busyAction: ChatInputBusyAction = 'stop'`; `'queue'`, once text is typed while `busy`, shows three buttons, left to right: Redirect (a `send` icon button, `(redirected): string`, `DS_INTL.chatInput.redirect`), Stop (a `stop` icon button, with `stoppable`) and Queue as the main button (`list-plus`, `(queued): string`, `DS_INTL.chatInput.queue`); Enter queues, and each busy button names its action in a tooltip; with the text cleared it is Stop again. `layout: ChatInputLayout = 'status-bar'` places the `busyLabel` step: `'status-bar'` beside the fixed square button, `'status-above'` on a reserved line above the box, `'split'` attach outside left and send outside right with the step above, `'send-outside'` a round 40px send outside right, `'toolbar'` attach, step and send in a row under the box.
 Output: `(filesPasted): File[]` — the image files of a paste; the paste inserts no text when it carries images. The value is NOT cleared on submit: set `value` to `''` once the message is accepted.
 Methods: `submit()`, `focus(options?)`; `canSubmit` signal. Text area name: `ariaLabel`, else `DS_INTL.chatInput.label`.
 Tokens: `--ds-chat-input-bg-color`, `--ds-chat-input-radius`, `--ds-chat-input-padding`; border, hover and focus follow the `--ds-field-*` set.
 
 <!-- inputs:ds-chat-input -->
-All inputs: `value: string = ''`, `placeholder: string = ''`, `ariaLabel: string | null = null`, `minRows: number = 1`, `maxRows: number = 8`, `disabled: boolean = false`, `busy: boolean = false`, `stoppable: boolean = false`, `busyLabel: string = ''`, `layout: ChatInputLayout = 'status-bar'`
+All inputs: `value: string = ''`, `placeholder: string = ''`, `ariaLabel: string | null = null`, `minRows: number = 1`, `maxRows: number = 8`, `disabled: boolean = false`, `busy: boolean = false`, `stoppable: boolean = false`, `busyAction: 'stop' | 'queue' = 'stop'`, `busyLabel: string = ''`, `layout: ChatInputLayout = 'status-bar'`
 <!-- /inputs -->
 
 #### `<ds-number-stepper>` — `NumberStepperComponent`
@@ -532,9 +532,10 @@ All inputs: `label: required string`, `value: string | number | null = ''`, `del
 #### `<ds-empty-state>` — `EmptyStateComponent`
 Inputs: `variant: 'none' | 'loading' | 'error' | 'locked' = 'none'`, `icon: IconName | null = null` (defaults derive from variant — `warn` for error, `lock` for locked, `package` otherwise), `title: string = ''`, `body: string = ''`
 Content slot: `[actions]` — CTA buttons / links.
+- `appearance="plain"` drops the icon tile: a 32px icon in `--text-tertiary` (a status colour under `error` and `success`), a semibold `--font-size-l` title and the body in `--text-tertiary`. Use it for an empty section among others on a page; the default `'tile'` is for an empty page or region.
 
 <!-- inputs:ds-empty-state -->
-All inputs: `variant: 'none' | 'loading' | 'error' | 'locked' | 'success' = 'none'`, `icon: IconName | null = null`, `title: string = ''`, `titleOverflow: 'wrap' | 'clip' = 'wrap'`, `body: string = ''`
+All inputs: `variant: 'none' | 'loading' | 'error' | 'locked' | 'success' = 'none'`, `icon: IconName | null = null`, `title: string = ''`, `titleOverflow: 'wrap' | 'clip' = 'wrap'`, `body: string = ''`, `appearance: 'tile' | 'plain' = 'tile'`
 <!-- /inputs -->
 
 #### `<ds-banner>` — `BannerComponent`
@@ -664,9 +665,11 @@ All inputs: `maxVisible: number`, `showQueueCount: boolean = true`
 #### `<ds-tree>` — `TreeComponent`
 
 Nested rows with one tab stop and arrow-key navigation. `(nodeSelected)` emits the node selected; `(nodeHover)` emits the node under the pointer or newly focused, `null` when the pointer leaves the tree. `<ng-template dsTreeTrailing let-node>` draws at the end of every row (a badge, a count, a small icon button); a click inside it neither selects nor toggles the row, and its controls are tab stops on the focused row only. `<ng-template dsTreeLabel let-node>` replaces the row's label (context `node`, `level`, `selected`, `disabled`): the row grows to its height and it takes the width up to the trailing content, so its lines can cut with an ellipsis; its text is the row's accessible name, so a template that draws no text needs a visually hidden name. `selection="multiple"` binds `[(selectedIds)]`: Shift-click, Ctrl-click, Shift+Space or Ctrl+Space adds or removes a row, a plain click or Enter selects it alone, and the host carries `aria-multiselectable`.
+`toggleOn` says what expands and collapses a parent: `'row'` (default), where a click, Enter or Space selects the row and toggles it; `'caret'`, where the row only selects and the chevron is a button of its own that toggles (named by the `DsIntl` keys `tree.expand` / `tree.collapse`, `` `Expand ${label}` `` / `` `Collapse ${label}` ``, and outside the tab order); `'doubleClick'`, where a click selects and a double click toggles. ArrowRight and ArrowLeft expand and collapse in every mode, and a modified click in multiple selection only adds or removes the row.
+Expanding and collapsing animate: the revealed rows slide open and shut and the chevron turns, on `--duration-base` / `--ease-standard`; the first render does not animate, nothing moves under `prefers-reduced-motion: reduce`, and `[animate]="false"` toggles instantly.
 
 <!-- inputs:ds-tree -->
-All inputs: `nodes: readonly TreeNode[] = []`, `expandedIds: Set<string>`, `selection: 'single' | 'multiple' = 'single'`, `selectedId: string | null = null`, `selectedIds: string[] = []`
+All inputs: `nodes: readonly TreeNode[] = []`, `expandedIds: Set<string>`, `selection: 'single' | 'multiple' = 'single'`, `selectedId: string | null = null`, `selectedIds: string[] = []`, `toggleOn: 'row' | 'caret' | 'doubleClick' = 'row'`, `animate: boolean = true`
 <!-- /inputs -->
 
 #### `<ds-description-list>` — `DescriptionListComponent`
@@ -829,7 +832,7 @@ Look: at rest a three-dot grip in the gap, no line; hover and drag swap it for a
 Tokens: `--ds-splitter-gap`, `--ds-splitter-line-color`, `--ds-splitter-drag-color`, `--ds-splitter-grip-color`, `--ds-splitter-overdrag-line-scale` (a number: how many times the line widens at the full pull).
 
 <!-- inputs:ds-splitter -->
-All inputs: `orientation: 'horizontal' | 'vertical' = 'horizontal'`, `pane: 'start' | 'end' = 'start'`, `size: number | null = null`, `defaultSize: number = 320`, `min: number = 160`, `max: number = 640`, `persistKey: string = ''`, `ariaLabel: string | null = null`, `overdrag: 'elastic' | 'none' = 'elastic'`
+All inputs: `orientation: 'horizontal' | 'vertical' = 'horizontal'`, `pane: 'start' | 'end' = 'start'`, `size: number | null = null`, `defaultSize: number = 320`, `min: number = 160`, `max: number = 640`, `persistKey: string = ''`, `ariaLabel: string | null = null`, `overdrag: 'elastic' | 'none' = 'elastic'`, `dragFog: boolean = false`
 <!-- /inputs -->
 
 #### `<ds-sidenav-footer>` — `SidenavFooterComponent`

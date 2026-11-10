@@ -3058,6 +3058,18 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "While `busy`, the default send button becomes Stop: a square inside a turning ring that emits `stopRequested`."
       },
       {
+        "name": "busyAction",
+        "kind": "input",
+        "type": "ChatInputBusyAction",
+        "union": [
+          "stop",
+          "queue"
+        ],
+        "default": "'stop'",
+        "required": false,
+        "description": "What the default buttons offer while `busy` once text is typed. `'stop'`: the send button stays Stop (or the spinner). `'queue'`: Redirect, Stop (with `stoppable`) and Queue, left to right; Queue is the main button and Enter queues. With no text it is Stop again."
+      },
+      {
         "name": "busyLabel",
         "kind": "input",
         "type": "string",
@@ -3100,6 +3112,24 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": null,
         "required": false,
         "description": "The Stop button was pressed; fires only while `busy`, `stoppable` and not `disabled`."
+      },
+      {
+        "name": "queued",
+        "kind": "output",
+        "type": "string",
+        "union": null,
+        "default": null,
+        "required": false,
+        "description": "The trimmed text, on Enter or the Queue button; fires only while the Queue button shows."
+      },
+      {
+        "name": "redirected",
+        "kind": "output",
+        "type": "string",
+        "union": null,
+        "default": null,
+        "required": false,
+        "description": "The trimmed text, on the Redirect button; fires only while the Queue button shows."
       },
       {
         "name": "filesPasted",
@@ -4871,6 +4901,18 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "''",
         "required": false,
         "description": "Optional supporting text below the title."
+      },
+      {
+        "name": "appearance",
+        "kind": "input",
+        "type": "EmptyStateAppearance",
+        "union": [
+          "tile",
+          "plain"
+        ],
+        "default": "'tile'",
+        "required": false,
+        "description": "`'tile'` draws the icon on a tinted tile under a bold title; `'plain'` draws a 32px icon with no tile, a semibold `--font-size-l` title and the body in `--text-tertiary`, for an empty section inside a page rather than an empty page."
       }
     ],
     "outputs": []
@@ -13462,6 +13504,28 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "[]",
         "required": false,
         "description": "Ids of the selected nodes, in `'multiple'` selection."
+      },
+      {
+        "name": "toggleOn",
+        "kind": "input",
+        "type": "TreeToggleOn",
+        "union": [
+          "row",
+          "caret",
+          "doubleClick"
+        ],
+        "default": "'row'",
+        "required": false,
+        "description": "What expands and collapses a parent. `'row'`: activating the row (click, Enter, Space) selects it and toggles it. `'caret'`: activating the row only selects it, and the chevron is a button of its own that toggles. `'doubleClick'`: a click selects, a double click toggles. In every mode ArrowRight expands and ArrowLeft collapses the focused row."
+      },
+      {
+        "name": "animate",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "true",
+        "required": false,
+        "description": "Rows slide open and shut and the chevron turns when a parent expands or collapses. Off under `prefers-reduced-motion: reduce`."
       }
     ],
     "outputs": [

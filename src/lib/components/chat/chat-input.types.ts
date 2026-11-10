@@ -4,3 +4,5 @@ export type ChatInputLayout =
   | 'split'
   | 'send-outside'
   | 'toolbar';
+
+export type ChatInputBusyAction = 'stop' | 'queue';

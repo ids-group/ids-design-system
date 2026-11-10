@@ -54,6 +54,20 @@ export const routes: Routes = [
             ),
         },
         {
+          path: 'harness/chat-input-busy-action',
+          loadComponent: () =>
+            import('./harness/chat-input-busy-action.page').then(
+              (m) => m.ChatInputBusyActionHarnessPage,
+            ),
+        },
+        {
+          path: 'harness/density-overlay',
+          loadComponent: () =>
+            import('./harness/density-overlay.page').then(
+              (m) => m.DensityOverlayHarnessPage,
+            ),
+        },
+        {
           path: 'harness/splitter-iframe',
           loadComponent: () =>
             import('./harness/splitter-iframe.page').then(
@@ -65,6 +79,13 @@ export const routes: Routes = [
           loadComponent: () =>
             import('./harness/splitter-fog.page').then(
               (m) => m.SplitterFogHarnessPage,
+            ),
+        },
+        {
+          path: 'harness/tree-toggle',
+          loadComponent: () =>
+            import('./harness/tree-toggle.page').then(
+              (m) => m.TreeToggleHarnessPage,
             ),
         },
       ]

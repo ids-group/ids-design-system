@@ -17,3 +17,9 @@
   color: var(--text-tertiary);
   font-size: var(--font-size-xs);
 }
+
+// The stage centres a shrink-to-fit child, which would size the tree to its widest visible row.
+.state-cell-stage.is-fill > ds-tree {
+  flex: 1;
+  min-width: 0;
+}

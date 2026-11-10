@@ -8,6 +8,7 @@ export class TreeComponent {
     public constructor();
     private activate;
     private readonly activeId;
+    public readonly animate = input(true, { transform: booleanAttribute });
     protected readonly effectiveActiveId = computed(…);
     public readonly expandedIds = model<Set<string>>(new Set());
     private focusNode;
@@ -16,24 +17,31 @@ export class TreeComponent {
     protected hover(node: TreeNode | null): void;
     private hoveredId;
     protected readonly idPrefix = `ds-tree-${++nextId}`;
+    private readonly intl;
     protected isActive(id: string): boolean;
     protected isExpanded(id: string): boolean;
     protected isSelected(id: string): boolean;
     protected readonly label = contentChild(…);
+    protected readonly labels = computed(…);
+    protected readonly motion = computed(…);
     private moveActive;
     private moveToParent;
     protected readonly multiple = computed(…);
     public readonly nodeHover = output<TreeNode | null>();
     public readonly nodeSelected = output<TreeNode>();
     public readonly nodes = input<readonly TreeNode[]>([]);
+    protected onCaretClick(entry: VisibleNode, event: MouseEvent): void;
     protected onKeydown(event: KeyboardEvent): void;
     protected onRowClick(entry: VisibleNode, event: MouseEvent): void;
+    protected onRowDoubleClick(entry: VisibleNode, event: MouseEvent): void;
     protected onRowFocus(entry: VisibleNode): void;
     private parkTrailingTabStops;
+    private readonly rendered;
     public readonly selectedId = model<string | null>(null);
     public readonly selectedIds = model<string[]>([]);
     public readonly selection = input<TreeSelection>('single');
     private toggle;
+    public readonly toggleOn = input<TreeToggleOn>('row');
     protected readonly trailing = contentChild(…);
     protected readonly visibleNodes = computed<VisibleNode[]>(…);
 }
@@ -61,6 +69,8 @@ export interface TreeNode {
 }
 
 export type TreeSelection = 'single' | 'multiple';
+
+export type TreeToggleOn = 'row' | 'caret' | 'doubleClick';
 
 export interface TreeTrailingContext {
     readonly $implicit: TreeNode;

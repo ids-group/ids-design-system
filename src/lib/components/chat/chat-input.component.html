@@ -46,17 +46,38 @@
       </span>
     }
 
-    <div class="send">
+    <div
+      class="send"
+      [class.queue]="queueShown()">
+      @if (queueShown()) {
+        <ds-icon-button
+          icon="send"
+          size="sm"
+          [ariaLabel]="redirectLabel()"
+          [dsTooltip]="redirectLabel()"
+          (pressed)="redirect()" />
+
+        @if (stoppable()) {
+          <ds-icon-button
+            icon="stop"
+            size="sm"
+            [ariaLabel]="stopLabel()"
+            [dsTooltip]="stopLabel()"
+            (pressed)="stopRequested.emit()" />
+        }
+      }
+
       <ng-content select="[send]">
         <ds-button
           size="sm"
           class="send-button"
           loadingMode="icon"
           [class.stop]="stopShown()"
-          [icon]="stopShown() ? 'stop' : 'arrowUp'"
-          [ariaLabel]="stopShown() ? stopLabel() : sendLabel()"
+          [icon]="mainIcon()"
+          [ariaLabel]="mainLabel()"
+          [dsTooltip]="stopShown() || queueShown() ? mainLabel() : ''"
           [disabled]="disabled()"
-          [loading]="busy() && !stopShown()"
+          [loading]="busy() && !stopShown() && !queueShown()"
           (pressed)="onSendPressed()" />
       </ng-content>
     </div>

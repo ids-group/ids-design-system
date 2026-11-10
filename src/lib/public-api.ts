@@ -138,6 +138,7 @@ export {
 } from '@ids-group-ltd/ids-design-system/components/chat';
 export type {
   AttachmentKind,
+  ChatInputBusyAction,
   ChatInputLayout,
   ChatMessageRole,
   ChatMessageStatus,
@@ -180,6 +181,7 @@ export type {
 } from '@ids-group-ltd/ids-design-system/components/dropzone';
 export { EmptyStateComponent } from '@ids-group-ltd/ids-design-system/components/empty-state';
 export type {
+  EmptyStateAppearance,
   EmptyStateTitleOverflow,
   EmptyStateVariant,
 } from '@ids-group-ltd/ids-design-system/components/empty-state';
@@ -450,6 +452,7 @@ export type {
   TreeLabelContext,
   TreeNode,
   TreeSelection,
+  TreeToggleOn,
   TreeTrailingContext,
 } from '@ids-group-ltd/ids-design-system/components/tree';
 export { W3wComponent } from '@ids-group-ltd/ids-design-system/components/w3w';

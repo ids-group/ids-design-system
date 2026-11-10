@@ -87,6 +87,7 @@ export { ChartTooltipOrigin } from '@ids-group-ltd/ids-design-system/components/
 export { ChartTooltipTrigger } from '@ids-group-ltd/ids-design-system/components/chart-tooltip'; // type
 export { ChartValueFormat } from '@ids-group-ltd/ids-design-system/core'; // type
 export { ChatAttachmentComponent } from '@ids-group-ltd/ids-design-system/components/chat'; // component
+export { ChatInputBusyAction } from '@ids-group-ltd/ids-design-system/components/chat'; // type
 export { ChatInputComponent } from '@ids-group-ltd/ids-design-system/components/chat'; // component
 export { ChatInputLayout } from '@ids-group-ltd/ids-design-system/components/chat'; // type
 export { ChatMessageComponent } from '@ids-group-ltd/ids-design-system/components/chat'; // component
@@ -174,6 +175,7 @@ export { DsToastPosition } from '@ids-group-ltd/ids-design-system/core'; // inte
 export { DsToastVerticalPosition } from '@ids-group-ltd/ids-design-system/core'; // type
 export { DsTooltipConfig } from '@ids-group-ltd/ids-design-system/components/tooltip'; // interface
 export { DsTriggerDisplay } from '@ids-group-ltd/ids-design-system/core'; // type
+export { EmptyStateAppearance } from '@ids-group-ltd/ids-design-system/components/empty-state'; // type
 export { EmptyStateComponent } from '@ids-group-ltd/ids-design-system/components/empty-state'; // component
 export { EmptyStateTitleOverflow } from '@ids-group-ltd/ids-design-system/components/empty-state'; // type
 export { EmptyStateVariant } from '@ids-group-ltd/ids-design-system/components/empty-state'; // type
@@ -348,6 +350,7 @@ export { TreeLabelContext } from '@ids-group-ltd/ids-design-system/components/tr
 export { TreeLabelDirective } from '@ids-group-ltd/ids-design-system/components/tree'; // directive
 export { TreeNode } from '@ids-group-ltd/ids-design-system/components/tree'; // interface
 export { TreeSelection } from '@ids-group-ltd/ids-design-system/components/tree'; // type
+export { TreeToggleOn } from '@ids-group-ltd/ids-design-system/components/tree'; // type
 export { TreeTrailingContext } from '@ids-group-ltd/ids-design-system/components/tree'; // interface
 export { TreeTrailingDirective } from '@ids-group-ltd/ids-design-system/components/tree'; // directive
 export { W3wComponent } from '@ids-group-ltd/ids-design-system/components/w3w'; // component
@@ -412,7 +415,7 @@ styles/_chart-motion.scss {
 
 styles/_check-box.scss {
     --ds-checkbox-bg-color: var(--surface-default);
-    --ds-checkbox-border-color: var(--border-strong);
+    --ds-checkbox-border-color: var(--border-field);
     --ds-checkbox-hover-border-color: var(--accent);
     --ds-checkbox-radius: var(--ds-radius-inner);
     --ds-checkbox-selected-bg-color: var(--accent);

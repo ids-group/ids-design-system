@@ -10,5 +10,5 @@ Look: at rest a three-dot grip in the gap, no line; hover and drag swap it for a
 Tokens: `--ds-splitter-gap`, `--ds-splitter-line-color`, `--ds-splitter-drag-color`, `--ds-splitter-grip-color`, `--ds-splitter-overdrag-line-scale` (a number: how many times the line widens at the full pull).
 
 <!-- inputs:ds-splitter -->
-All inputs: `orientation: 'horizontal' | 'vertical' = 'horizontal'`, `pane: 'start' | 'end' = 'start'`, `size: number | null = null`, `defaultSize: number = 320`, `min: number = 160`, `max: number = 640`, `persistKey: string = ''`, `ariaLabel: string | null = null`, `overdrag: 'elastic' | 'none' = 'elastic'`
+All inputs: `orientation: 'horizontal' | 'vertical' = 'horizontal'`, `pane: 'start' | 'end' = 'start'`, `size: number | null = null`, `defaultSize: number = 320`, `min: number = 160`, `max: number = 640`, `persistKey: string = ''`, `ariaLabel: string | null = null`, `overdrag: 'elastic' | 'none' = 'elastic'`, `dragFog: boolean = false`
 <!-- /inputs -->

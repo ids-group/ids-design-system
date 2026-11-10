@@ -1,5 +1,117 @@
 ## Unreleased
 
+### Added
+
+- **`ds-empty-state` draws a quiet look with `appearance="plain"`.** The icon sits alone at 32px in
+  `--text-tertiary`, with no tile, the title is semibold at `--font-size-l` and the body is in
+  `--text-tertiary`, for an empty section among others on a page. An `error` or `success` icon
+  keeps its status colour. The `--ds-empty-state-*` hooks still win where set. The default
+  `'tile'` renders as before. New export `EmptyStateAppearance`.
+- **The stylelint plugin reports raw values where a token exists, and tokens nothing declares.**
+  `ids-design-system/use-tokens` covers colour, radius, spacing, type size, line height and weight,
+  `box-shadow`, `z-index` and motion, and names the exact token (`use var(--space-2)`) or the nearest
+  step, said as nearest; a colour names the role of its property (`--text-*`, `--icon-*`,
+  `--surface-*`, `--border-*`). `ids-design-system/known-tokens` reports a `var(--name)` that is not a
+  library token and is declared neither in the linted file itself nor in a file named by its
+  `declarationsFrom` option (stylesheets, a template's `[style.--x]`, a `setProperty` in TypeScript),
+  such as `--radius-s` for `--radius-sm`; a `var(--x, fallback)` is reported even so. Both are off
+  until you add them; `categories` sets each category to `true`, `false`, `"warning"` or `"error"`, `allow`
+  exempts raw values, and `ignore` takes file globs for `use-tokens` but token-name patterns
+  (`--chart-*`) for `known-tokens`. `npx ids-design-system-token-report "<glob>"` prints the findings
+  and the counts per category, property, file and value without changing anything. The README has the
+  setup.
+- **Three icons: `square-dashed`, `outline-blocks` and `map-pin`.** A dashed square for selecting
+  an area, three dashed blocks for showing element outlines, and a map pin for placing a note.
+  `square-dashed` and `map-pin` are drawn from Lucide (ISC); all three sit on the 24-unit grid and
+  take the set's stroke.
+- **`ds-chat-input` offers Queue and Redirect while it is busy, with `busyAction="queue"`.** Once
+  text is typed while `busy`, three buttons stand on the right, left to right: Redirect, a `send`
+  icon button that emits the new output `redirected` with the trimmed text; Stop, a `stop` icon
+  button that emits `stopRequested` (with `stoppable`); and Queue, the main button with a
+  `list-plus` icon, which emits the new output `queued` with the trimmed text, as Enter does. Their
+  accessible names, each also shown in a tooltip, are the new `DsIntl` keys `chatInput.redirect`
+  (`'Redirect now'`) and `chatInput.queue` (`'Queue'`) and the existing `chatInput.stop`; the Stop
+  state of the main button shows its name in a tooltip too. With the text cleared the main button
+  is Stop again. New export `ChatInputBusyAction`.
+- **Two icons: `send` and `list-plus`.** A paper plane and a list with a plus, from Lucide (ISC),
+  with the set's stroke.
+- **Two icons: `maximize` and `minimize`.** Two diagonal arrows pointing out and in, for entering
+  and leaving full screen. They are drawn from Lucide (ISC) on the 24-unit grid and take the set's
+  stroke.
+- **`ds-tree` takes `toggleOn`, what expands and collapses a parent.** `'row'`, the default, keeps
+  today's behaviour: a click, Enter or Space selects the row and toggles it. With `'caret'` the
+  row only selects, and the chevron is a button of its own that toggles; it sits outside the tab
+  order, so the tree keeps one tab stop, and is named by the new `DsIntl` keys `tree.expand` and
+  `tree.collapse` (`` `Expand ${label}` `` and `` `Collapse ${label}` ``). With `'doubleClick'` a
+  click selects and a double click toggles. ArrowRight expands and ArrowLeft collapses the focused
+  row in every mode, and Shift- or Ctrl-click in multiple selection only adds or removes the row.
+  New export `TreeToggleOn`.
+- **`--segmented-selected` and `--segmented-selected-on`**, the fill of the selected `ds-segmented`
+  segment and its label. Light: `--accent` with `--accent-on`. Dark: `--accent-strong-overlay` with
+  `--surface-default`, because `--accent` is under 3:1 against the dark track. Both are declared with
+  the theme, so a `ds-color` zone does not recolour them; set `--ds-segmented-selected-bg-color` and
+  `--ds-segmented-selected-label-color` there.
+
+### Changed
+
+- **`ds-tree` and `ds-popover` follow `[data-density]`.** Under `compact` and `ultra-compact` a tree
+  row takes 4px by 8px of padding (was 6px by 12px) and each level indents 16px (was 20px), through
+  `--tree-row-pad-y`, `--tree-row-pad-x` and `--tree-indent`. A popover's padding is the new token
+  `--popover-pad`: 12px, and 8px under `ultra-compact`. The popover panel takes the tier of the
+  nearest `[data-density]` around `ds-popover`, so a tree inside it follows the screen that opens
+  it. `--ds-tree-row-padding-y`, `--ds-tree-row-padding-x`, `--ds-tree-indent` and
+  `--ds-popover-padding` still win where set; without `[data-density]` both render as before.
+- **`ds-tree` animates expanding and collapsing, with `animate`.** On by default: the rows a parent
+  reveals slide open and shut, and its chevron turns a quarter, on `--duration-base` and
+  `--ease-standard`. The first render does not animate, and nothing moves under
+  `prefers-reduced-motion: reduce`. `[animate]="false"` restores the instant toggle. Each row now
+  sits in a `div.row-shell` (`role="none"`), and the chevron is one `chevronRight` turned by
+  `transform: rotate(90deg)` while expanded; a style that targets `ds-tree .row` as a direct child
+  of the host, or a `transform` of your own on `.caret`, needs a look.
+
+- **`--border-field` is at least 3:1 against every surface in both themes, muted fills included.**
+  Light: `color-mix(in srgb, var(--neutral-500) 86%, var(--neutral-400))`, `#727A8E` on the
+  default neutrals, instead of `--neutral-500` (`#6B7388`): 4.29:1 against a card, a modal, a drawer
+  and a popover, 3.62:1 against `--surface-muted`. Dark:
+  `color-mix(in srgb, var(--neutral-500) 80%, var(--neutral-400))`, `#848DA0`, instead of
+  `--neutral-400` (`#6B7388`): 5.17:1 against a card, 3.03:1 against
+  `--surface-overlay-raised-muted`. `--border-field-hover` is unchanged in both themes. To keep the
+  previous outline, set `--border-field: var(--neutral-500)` on `:root` and
+  `--border-field: var(--neutral-400)` on `:root[data-theme='dark']`.
+- **Checkbox, radio, switch, toggle button and the number stepper dividers draw their boundary in
+  `--border-field`, at least 3:1 against the surfaces they sit on.** Standalone fields and controls
+  share it; `--border-field-hover` is the hover outline where a control has one. Defaults that
+  moved: `--ds-checkbox-border-color` and `--ds-radio-border-color` from `--border-strong` (1.66:1),
+  `--ds-switch-track-off-bg-color` from `--border-strong`, and `--ds-toggle-button-border-color`
+  from `--border-default` (1.31:1); a hovered `ds-toggle-button` takes `--border-field-hover`. The
+  unchecked boxes in `ds-multi-select` and `ds-autocomplete` options, `ds-table` selection,
+  `ds-table-columns-panel` and `ds-chart-legend` follow. The dividers beside the `ds-number-stepper`
+  buttons take `--ds-number-stepper-border-color` instead of `--border-default`, and
+  `--border-disabled` when disabled. A
+  value set on any of these hooks still wins. To keep the faint look on a screen, set the hook back,
+  for example `--ds-checkbox-border-color: var(--border-strong)`.
+- **The selected `ds-segmented` segment is a solid accent fill, at least 3:1 against the track.**
+  `--ds-segmented-selected-bg-color` now defaults to `--segmented-selected` instead of
+  `--surface-default`, and `--ds-segmented-selected-label-color` to `--segmented-selected-on`
+  instead of `--text-primary`: light 4.98:1 against the track, dark 7.45:1. The track and its
+  segments draw no border. A `joined` row has no track and keeps the borders it draws through
+  `--ds-segmented-segment-border`; its selected segment takes the same fill. To keep the white chip,
+  set `--ds-segmented-selected-bg-color: var(--surface-default)` and
+  `--ds-segmented-selected-label-color: var(--text-primary)` on `ds-segmented`.
+
+### Fixed
+
+- **`ds-banner` wraps a long unbroken word.** A file path or a URL with no spaces ran past the
+  banner's edge and under its action buttons; the title and the message now break inside such a word
+  at the banner's width, and the actions and the dismiss button keep their places. A compact
+  banner's title stays one line with an ellipsis. Remove an `overflow-wrap` workaround on the
+  projected text if you added one; nothing else to change.
+- **The `ds-textarea` resize handle sits in the corner.** It touched the bottom edge but stood 12px
+  in from the right edge (8px at `size="sm"`), because the side padding sat on the frame rather than
+  on the text. The padding now sits on the text, so the handle and a scrollbar reach the frame's
+  edges on both sides, as on a native textarea; the text, the placeholder and the pending or changed
+  mark keep their places. Nothing to change in your code.
+
 ## 1.1.1 — 2026-11-08
 
 ### Added

@@ -33,6 +33,8 @@
 }
 
 .field {
+  --_textarea-pad-x: var(--_input-padding-x);
+
   display: flex;
   flex-direction: column;
   gap: var(--field-label-gap);
@@ -59,7 +61,9 @@
     background-color: var(--_input-bg-color);
     border: var(--border-width-default) solid var(--_input-border);
     border-radius: var(--_input-radius);
-    padding: 0 var(--_input-padding-x);
+
+    /* The inline padding sits on the textarea, so the resize grip and a scrollbar reach the frame's corner as on a native textarea. */
+    padding: 0;
     height: auto;
     transition:
       border-color var(--duration-fast) var(--ease-standard),
@@ -78,11 +82,14 @@
       font: var(--_textarea-font);
       color: var(--_input-text-color);
       min-height: var(--field-textarea-rows-min, 60px);
-      padding: var(--_input-padding-y) 0;
 
       &::placeholder {
         color: var(--_input-placeholder);
       }
+    }
+
+    ds-field-status {
+      margin-inline-end: var(--_textarea-pad-x);
     }
 
     &:hover {
@@ -113,12 +120,12 @@
     textarea { cursor: default; }
   }
 
-  /* Only padding scales; the inner textarea's vertical pad is set by the pins at the end of this file, which out-rank anything here. */
-  &.sm .control {
-    padding: 0 var(--space-2);
+  /* Only padding scales; the vertical pad is set by the pins at the end of this file, which out-rank anything here. */
+  &.sm {
+    --_textarea-pad-x: var(--space-2);
   }
-  &.lg .control {
-    padding: 0 var(--space-3);
+  &.lg {
+    --_textarea-pad-x: var(--space-3);
   }
 
   &.autosize .control {
@@ -148,7 +155,6 @@
     position: absolute;
     inset: 0;
     box-sizing: border-box;
-    padding-inline: inherit;
     font: var(--_textarea-font);
     color: var(--_input-placeholder);
     pointer-events: none;
@@ -207,7 +213,6 @@
     position: absolute;
     inset: 0;
     box-sizing: border-box;
-    padding-inline: inherit;
 
     // glyph-clip-guard: mirrors the textarea, which clips its own text at this same edge
     overflow: hidden;
@@ -244,10 +249,11 @@
   }
 }
 
-/* Vertical padding lives on the textarea, not the box: `.sm`/`.lg` zero the control's padding-block through the shorthand.
+/* The mirror and the placeholder line overlay the textarea, so they take its padding to place each glyph where the textarea does.
    One rule per size, because a single pin out-ranks the size variants and flattens all three to md. */
 .field .control :is(textarea, .overflow-mirror, .placeholder-line) {
   padding-block: var(--_input-padding-y);
+  padding-inline: var(--_textarea-pad-x);
 }
 
 .field.sm .control :is(textarea, .overflow-mirror, .placeholder-line) {
