@@ -4,6 +4,14 @@ Versioning: **patch** = instruction/prompt fixes; **minor** = new capability (pi
 source, agent); **major** = a change to the workflow's behavior contract. Bump `plugin.json` +
 `marketplace.json` together on every published change.
 
+## 1.22.0 - 2026-11-10
+
+### Changed
+
+- **A plugin a minor version behind the published one does not run.** The check before a run stops
+  with the update command when major or minor is lower, in every mode, dry-run included. A plugin
+  behind on patch only still offers the update and may continue on the installed version.
+
 ## 1.21.0 - 2026-11-09
 
 ### Added
