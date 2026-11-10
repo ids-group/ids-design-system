@@ -10,7 +10,7 @@ export interface SplitButtonProps {
   /** Visual style - primary (solid) or outline. */
   variant?: ('primary' | 'outline');
   /** Icon before the label on the main button. */
-  icon?: 'search' | 'plus' | 'minus' | 'check' | 'x' | 'chevronDown' | 'chevronRight' | 'slash' | 'chevronLeft' | 'chevronUp' | 'menu' | 'arrowRight' | 'arrowUp' | 'arrowDown' | 'info' | (string & {}) /* +69 more */ | null;
+  icon?: 'search' | 'plus' | 'minus' | 'check' | 'x' | 'chevronDown' | 'chevronRight' | 'slash' | 'chevronLeft' | 'chevronUp' | 'menu' | 'arrowRight' | 'arrowUp' | 'arrowDown' | 'info' | (string & {}) /* +76 more */ | null;
   /** Disables the main button and the dropdown trigger. */
   disabled?: boolean;
   /** Items listed in the dropdown menu. Empty disables the chevron. */

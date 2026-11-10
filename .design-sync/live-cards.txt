@@ -9,6 +9,8 @@ components/data-display/Table/Table - Pagination - sticky column.html
 components/data-display/Table/Table - Row actions - kebab menu.html
 components/data-display/Tree/Tree - Interactive tree.html
 components/data-display/Tree/Tree - Single node states.html
+components/data-display/Tree/Tree - Trailing content, hover and multiple selection.html
+components/data-display/Tree/Tree - Two-line label.html
 components/feedback-status/LoadingOverlay/Loading Overlay - Interactive demo.html
 components/feedback-status/Toast/Toast - States showcase (static specimens).html
 components/feedback-status/ToastRegion/Toast Region - Toast stack.html

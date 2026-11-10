@@ -2,7 +2,7 @@ import * as React from 'react';
 
 /**
  * Drawer — the real DrawerComponent, run by Angular behind `<ds-drawer>`.
- * Edge-anchored slide-in panel for inline edit flows — port of `ds-drawer`. Renders INLINE (no portal): `.drawer-root` is `position: fixed; inset: 0` (scrim + panel absolutely positioned inside it), so it covers the viewport unless an ancestor forms a containing block (`transform`, `filter` or `contain`) — wrap contained specimens in one sized like a mini viewport. Unlike Modal there is no `staticPreview` branch.
+ * Edge-anchored slide-in panel for inline edit flows — port of `ds-drawer`. Renders INLINE (no portal): `.drawer-root` is `position: fixed; inset: 0` (scrim + panel absolutely positioned inside it), so it covers the viewport unless an ancestor forms a containing block (`transform`, `filter` or `contain`) — wrap contained specimens in one sized like a mini viewport, or set `staticPreview` to render the bare panel in normal flow with no scrim.
  */
 export interface DrawerProps {
   /** Open state, two-way bound. */

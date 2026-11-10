@@ -1,7 +1,7 @@
 import * as React from 'react';
 
 /**
- * Textarea — the real TextareaComponent, run by Angular behind `<ds-textarea>`.
+ * Textarea — the real TextareaComponent, run by Angular behind `<ds-x-textarea>`.
  * Multi-line text field with the same anatomy as Input: `label` above, `hint` below, `invalid` for error styling (error text goes in `hint`). Sizes `sm`/`md`/`lg` change padding/typography; height comes from `rows` (default 3). Value: `value` + `onValueChange` (controlled) or just an initial `value`.
  */
 export interface TextareaProps {
@@ -14,7 +14,7 @@ export interface TextareaProps {
   /** Reserve the message-row height even when empty, so a hint/error does not shift the layout. Unset falls back to `DS_CONFIG.field.reserveMessage` for a field, not for a button. */
   reserveMessage?: boolean | null;
   /** Glyph on the message line, overriding what the state resolves to. Unset follows `DS_CONFIG.field.stateIcons`; `false` removes the glyph here alone. */
-  messageIcon?: 'search' | 'plus' | 'minus' | 'check' | 'x' | 'chevronDown' | 'chevronRight' | 'slash' | 'chevronLeft' | 'chevronUp' | 'menu' | 'arrowRight' | 'arrowUp' | 'arrowDown' | 'info' | (string & {}) /* +69 more */ | null;
+  messageIcon?: 'search' | 'plus' | 'minus' | 'check' | 'x' | 'chevronDown' | 'chevronRight' | 'slash' | 'chevronLeft' | 'chevronUp' | 'menu' | 'arrowRight' | 'arrowUp' | 'arrowDown' | 'info' | (string & {}) /* +76 more */ | null;
   /** Validation errors, shown once the user has interacted. Bound by signal forms; reactive and template-driven forms are read through `NgControl`. */
   errors?: unknown;
   /** Paints the error state and sets `aria-invalid` WITHOUT a message; use `error` to show text. */

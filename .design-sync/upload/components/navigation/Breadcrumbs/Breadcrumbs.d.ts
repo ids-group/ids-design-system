@@ -8,7 +8,7 @@ export interface BreadcrumbsProps {
   /** Omitted, the component reads `BreadcrumbsService.items`; an explicit array opts out. */
   items?: unknown;
   /** Icon between crumbs; falls back to `DS_CONFIG.breadcrumbs.separator`, then `chevronRight`. */
-  separator?: 'search' | 'plus' | 'minus' | 'check' | 'x' | 'chevronDown' | 'chevronRight' | 'slash' | 'chevronLeft' | 'chevronUp' | 'menu' | 'arrowRight' | 'arrowUp' | 'arrowDown' | 'info' | (string & {}) /* +69 more */ | null;
+  separator?: 'search' | 'plus' | 'minus' | 'check' | 'x' | 'chevronDown' | 'chevronRight' | 'slash' | 'chevronLeft' | 'chevronUp' | 'menu' | 'arrowRight' | 'arrowUp' | 'arrowDown' | 'info' | (string & {}) /* +76 more */ | null;
   /** Whether crumbs render as links; falls back to `DS_CONFIG.breadcrumbs.clickable`, then `true`. */
   clickable?: boolean | null;
   /** Caps how many crumbs render, collapsing the middle; the first and the LAST always survive. Uncapped, a long trail is clipped from the END, which is the current page. */

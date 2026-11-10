@@ -22,7 +22,7 @@ export interface AvatarProps {
   /** Presence dot in the bottom-right corner. */
   status?: ('online' | 'offline' | 'away' | 'busy') | null;
   /** Icon rendered when there is no imageUrl and no initials. */
-  fallbackIcon?: 'search' | 'plus' | 'minus' | 'check' | 'x' | 'chevronDown' | 'chevronRight' | 'slash' | 'chevronLeft' | 'chevronUp' | 'menu' | 'arrowRight' | 'arrowUp' | 'arrowDown' | 'info' | (string & {}) /* +69 more */ | null;
+  fallbackIcon?: 'search' | 'plus' | 'minus' | 'check' | 'x' | 'chevronDown' | 'chevronRight' | 'slash' | 'chevronLeft' | 'chevronUp' | 'menu' | 'arrowRight' | 'arrowUp' | 'arrowDown' | 'info' | (string & {}) /* +76 more */ | null;
   /** Seed for the deterministic tint when no `tint` is set. Defaults to `name`; set it when identity is an id or an email rather than the display name. */
   seed?: string | null;
   /** Hue arcs `[start, end]` (0-360 degrees) the seeded tint avoids, e.g. `[[310, 360], [0, 20]]`. Only applies when `seed` drives the tint. */

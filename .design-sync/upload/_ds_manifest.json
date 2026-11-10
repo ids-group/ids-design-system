@@ -18,6 +18,10 @@
       "sourcePath": "components/navigation/AppLayout/AppLayout.jsx"
     },
     {
+      "name": "Attachment",
+      "sourcePath": "components/chat/Attachment/Attachment.jsx"
+    },
+    {
       "name": "AuthLayout",
       "sourcePath": "components/navigation/AuthLayout/AuthLayout.jsx"
     },
@@ -76,6 +80,30 @@
     {
       "name": "ChartDataTable",
       "sourcePath": "components/charts/ChartDataTable/ChartDataTable.jsx"
+    },
+    {
+      "name": "ChatAttachment",
+      "sourcePath": "components/chat/ChatAttachment/ChatAttachment.jsx"
+    },
+    {
+      "name": "ChatInput",
+      "sourcePath": "components/chat/ChatInput/ChatInput.jsx"
+    },
+    {
+      "name": "ChatMessage",
+      "sourcePath": "components/chat/ChatMessage/ChatMessage.jsx"
+    },
+    {
+      "name": "ChatStep",
+      "sourcePath": "components/chat/ChatStep/ChatStep.jsx"
+    },
+    {
+      "name": "ChatSteps",
+      "sourcePath": "components/chat/ChatSteps/ChatSteps.jsx"
+    },
+    {
+      "name": "ChatThread",
+      "sourcePath": "components/chat/ChatThread/ChatThread.jsx"
     },
     {
       "name": "Checkbox",
@@ -152,6 +180,10 @@
     {
       "name": "Inline",
       "sourcePath": "components/foundations/Inline/Inline.jsx"
+    },
+    {
+      "name": "InlineEdit",
+      "sourcePath": "components/forms-inputs/InlineEdit/InlineEdit.jsx"
     },
     {
       "name": "Input",
@@ -288,6 +320,10 @@
     {
       "name": "SplitButton",
       "sourcePath": "components/actions/SplitButton/SplitButton.jsx"
+    },
+    {
+      "name": "Splitter",
+      "sourcePath": "components/navigation/Splitter/Splitter.jsx"
     },
     {
       "name": "Stack",
@@ -477,7 +513,7 @@
     {
       "path": "components/actions/Segmented/Segmented - Segmented control.html",
       "group": "actions",
-      "viewport": "1200x639",
+      "viewport": "1200x700",
       "name": "Segmented & button group - segmented control",
       "subtitle": "Options take optional icon and disabled."
     },
@@ -610,6 +646,19 @@
       "viewport": "1200x402",
       "name": "Field group - sizes, error and full width",
       "subtitle": "size matches the field scale, so a group lines up with a plain field."
+    },
+    {
+      "path": "components/forms-inputs/InlineEdit/Inline Edit - In a header.html",
+      "group": "forms-inputs",
+      "viewport": "1200x376",
+      "name": "Inline edit - in a header",
+      "subtitle": "Put it inside the heading: it inherits the heading's font."
+    },
+    {
+      "path": "components/forms-inputs/InlineEdit/Inline Edit - States.html",
+      "group": "forms-inputs",
+      "viewport": "1200x436",
+      "name": "Inline edit - states"
     },
     {
       "path": "components/forms-inputs/Input/Input - States showcase.html",
@@ -938,6 +987,12 @@
       "name": "Sidenav Item - item states showcase"
     },
     {
+      "path": "components/navigation/Splitter/Splitter - States.html",
+      "group": "navigation",
+      "viewport": "1200x700",
+      "name": "Splitter - states"
+    },
+    {
       "path": "components/navigation/Stepper/Stepper - Default.html",
       "group": "navigation",
       "viewport": "1200x320",
@@ -1262,16 +1317,37 @@
     {
       "path": "components/data-display/Timeline/Timeline - Activity feed.html",
       "group": "data-display",
-      "viewport": "1200x552",
+      "viewport": "1200x584",
       "name": "Timeline - activity feed",
       "subtitle": "Each step takes heading, time, optional icon and a semantic-colour tone."
     },
     {
       "path": "components/data-display/TimelineItem/Timeline Item - Tone variants.html",
       "group": "data-display",
-      "viewport": "1200x467",
+      "viewport": "1200x484",
       "name": "Timeline Item - tone variants",
       "subtitle": "Tones: primary · success · warning · error · muted · default."
+    },
+    {
+      "path": "components/data-display/TimelineItem/Timeline Item - Step status.html",
+      "group": "data-display",
+      "viewport": "1200x541",
+      "name": "Timeline Item - step status",
+      "subtitle": "status draws the marker of a step in a process: done, running, pending or error."
+    },
+    {
+      "path": "components/data-display/TimelineItem/Timeline Item - Trailing action.html",
+      "group": "data-display",
+      "viewport": "1200x423",
+      "name": "Timeline Item - trailing action",
+      "subtitle": "An element marked trailing sits at the end of the heading row: Undo, Stop, Retry."
+    },
+    {
+      "path": "components/data-display/TimelineItem/Timeline Item - Details.html",
+      "group": "data-display",
+      "viewport": "1200x547",
+      "name": "Timeline Item - details",
+      "subtitle": "An element marked details is hidden behind a chevron button at the end of the heading row, closed by default."
     },
     {
       "path": "components/data-display/Tree/Tree - Interactive tree.html",
@@ -1281,10 +1357,89 @@
       "subtitle": "Selected: ()"
     },
     {
+      "path": "components/data-display/Tree/Tree - Trailing content, hover and multiple selection.html",
+      "group": "data-display",
+      "viewport": "1200x668",
+      "name": "Tree view - trailing content, hover and multiple selection",
+      "subtitle": "nodeHover: · selectedIds: [] · last hidden:"
+    },
+    {
+      "path": "components/data-display/Tree/Tree - Two-line label.html",
+      "group": "data-display",
+      "viewport": "1200x641",
+      "name": "Tree view - two-line label"
+    },
+    {
       "path": "components/data-display/Tree/Tree - Single node states.html",
       "group": "data-display",
       "viewport": "1200x328",
       "name": "Tree view - single node states"
+    },
+    {
+      "path": "components/chat/Attachment/Attachment - Kinds.html",
+      "group": "chat",
+      "viewport": "1200x493",
+      "name": "Attachment - kinds"
+    },
+    {
+      "path": "components/chat/Attachment/Attachment - In the message input.html",
+      "group": "chat",
+      "viewport": "1200x313",
+      "name": "Attachment - in the message input"
+    },
+    {
+      "path": "components/chat/ChatAttachment/Chat Attachment - States.html",
+      "group": "chat",
+      "viewport": "1200x700",
+      "name": "Chat Attachment - states"
+    },
+    {
+      "path": "components/chat/ChatMessage/Chat Message - A notice from the app.html",
+      "group": "chat",
+      "viewport": "1200x700",
+      "name": "Chat - a notice from the app",
+      "subtitle": "role='system' is a line from the app rather than either speaker, centred, and it splits a run of replies."
+    },
+    {
+      "path": "components/chat/ChatThread/Chat Thread - Steps fold into the reply.html",
+      "group": "chat",
+      "viewport": "1200x700",
+      "name": "Chat Thread - steps fold into the reply",
+      "subtitle": "When the reader sends the next message, the steps of the reply before it fold into a chip at the top of that reply; the chip opens them again."
+    },
+    {
+      "path": "components/chat/ChatInput/Chat Input - States.html",
+      "group": "chat",
+      "viewport": "1200x700",
+      "name": "Chat input - states"
+    },
+    {
+      "path": "components/chat/ChatInput/Chat Input - Layout.html",
+      "group": "chat",
+      "viewport": "1200x700",
+      "name": "Chat input - layout",
+      "subtitle": "layout decides where the buttons and the busy step sit."
+    },
+    {
+      "path": "components/chat/ChatStep/Chat Step - Step status.html",
+      "group": "chat",
+      "viewport": "1200x540",
+      "name": "Chat Step - step status",
+      "subtitle": "status draws the marker: done, running, pending (a dashed ring and muted text, for a step planned but not reached), waiting or error."
+    },
+    {
+      "path": "components/chat/ChatStep/Chat Step - Waiting for the reader.html",
+      "group": "chat",
+      "viewport": "1200x431",
+      "name": "Chat Step - waiting for the reader",
+      "subtitle": "waiting is a step that needs the reader's answer before it goes on: a grey filled marker with a pause glyph, spoken as 'Waiting for your approval'."
+    },
+    {
+      "path": "components/chat/ChatSteps/Chat Steps - Steps arriving.html",
+      "group": "chat",
+      "viewport": "1200x434",
+      "name": "Chat Steps - steps arriving",
+      "subtitle": "Every step is planned up front and turns running, then done."
     },
     {
       "path": "components/feedback-status/Alert/Alert - Variants.html",
@@ -3013,6 +3168,54 @@
       "definedIn": "_ds_bundle.css"
     },
     {
+      "name": "--surface-overlay-secondary",
+      "value": "var(--surface-secondary)",
+      "kind": "color",
+      "definedIn": "_ds_bundle.css"
+    },
+    {
+      "name": "--surface-overlay-muted",
+      "value": "var(--surface-muted)",
+      "kind": "color",
+      "definedIn": "_ds_bundle.css"
+    },
+    {
+      "name": "--surface-overlay-raised",
+      "value": "var(--surface-overlay)",
+      "kind": "color",
+      "definedIn": "_ds_bundle.css"
+    },
+    {
+      "name": "--surface-overlay-raised-secondary",
+      "value": "var(--surface-secondary)",
+      "kind": "color",
+      "definedIn": "_ds_bundle.css"
+    },
+    {
+      "name": "--surface-overlay-raised-muted",
+      "value": "var(--surface-muted)",
+      "kind": "color",
+      "definedIn": "_ds_bundle.css"
+    },
+    {
+      "name": "--surface-overlay-tint",
+      "value": "var(--surface-tint)",
+      "kind": "color",
+      "definedIn": "_ds_bundle.css"
+    },
+    {
+      "name": "--surface-overlay-raised-tint",
+      "value": "var(--surface-tint)",
+      "kind": "color",
+      "definedIn": "_ds_bundle.css"
+    },
+    {
+      "name": "--accent-strong-overlay",
+      "value": "var(--accent-strong)",
+      "kind": "color",
+      "definedIn": "_ds_bundle.css"
+    },
+    {
       "name": "--surface-scrim",
       "value": "hsl(var(--shadow-tint-h) var(--shadow-tint-s) var(--shadow-tint-l) / 55%)",
       "kind": "color",
@@ -3033,6 +3236,36 @@
     {
       "name": "--border-strong",
       "value": "var(--neutral-300)",
+      "kind": "color",
+      "definedIn": "_ds_bundle.css"
+    },
+    {
+      "name": "--border-field",
+      "value": "color-mix(in srgb, var(--neutral-500) 86%, var(--neutral-400))",
+      "kind": "color",
+      "definedIn": "_ds_bundle.css"
+    },
+    {
+      "name": "--border-field-hover",
+      "value": "var(--neutral-600)",
+      "kind": "color",
+      "definedIn": "_ds_bundle.css"
+    },
+    {
+      "name": "--segmented-selected",
+      "value": "var(--accent)",
+      "kind": "color",
+      "definedIn": "_ds_bundle.css"
+    },
+    {
+      "name": "--segmented-selected-on",
+      "value": "var(--accent-on)",
+      "kind": "color",
+      "definedIn": "_ds_bundle.css"
+    },
+    {
+      "name": "--border-overlay",
+      "value": "var(--border-default)",
       "kind": "color",
       "definedIn": "_ds_bundle.css"
     },
@@ -3075,6 +3308,12 @@
     {
       "name": "--text-tertiary",
       "value": "var(--neutral-500)",
+      "kind": "color",
+      "definedIn": "_ds_bundle.css"
+    },
+    {
+      "name": "--text-tertiary-overlay",
+      "value": "var(--text-tertiary)",
       "kind": "color",
       "definedIn": "_ds_bundle.css"
     },
@@ -4012,7 +4251,7 @@
     },
     {
       "name": "--shadow-tint-l",
-      "value": "95%",
+      "value": "3%",
       "kind": "shadow",
       "definedIn": "_ds_bundle.css",
       "scope": ":root[data-theme=dark]"
@@ -4081,6 +4320,62 @@
       "scope": ":root[data-theme=dark]"
     },
     {
+      "name": "--surface-overlay-secondary",
+      "value": "var(--surface-secondary)",
+      "kind": "color",
+      "definedIn": "_ds_bundle.css",
+      "scope": ":root[data-theme=dark]"
+    },
+    {
+      "name": "--surface-overlay-muted",
+      "value": "var(--surface-muted)",
+      "kind": "color",
+      "definedIn": "_ds_bundle.css",
+      "scope": ":root[data-theme=dark]"
+    },
+    {
+      "name": "--surface-overlay-raised",
+      "value": "var(--surface-overlay)",
+      "kind": "color",
+      "definedIn": "_ds_bundle.css",
+      "scope": ":root[data-theme=dark]"
+    },
+    {
+      "name": "--surface-overlay-raised-secondary",
+      "value": "var(--surface-secondary)",
+      "kind": "color",
+      "definedIn": "_ds_bundle.css",
+      "scope": ":root[data-theme=dark]"
+    },
+    {
+      "name": "--surface-overlay-raised-muted",
+      "value": "var(--surface-muted)",
+      "kind": "color",
+      "definedIn": "_ds_bundle.css",
+      "scope": ":root[data-theme=dark]"
+    },
+    {
+      "name": "--surface-overlay-tint",
+      "value": "var(--surface-tint)",
+      "kind": "color",
+      "definedIn": "_ds_bundle.css",
+      "scope": ":root[data-theme=dark]"
+    },
+    {
+      "name": "--surface-overlay-raised-tint",
+      "value": "var(--surface-tint)",
+      "kind": "color",
+      "definedIn": "_ds_bundle.css",
+      "scope": ":root[data-theme=dark]"
+    },
+    {
+      "name": "--accent-strong-overlay",
+      "value": "var(--accent-strong)",
+      "kind": "color",
+      "definedIn": "_ds_bundle.css",
+      "scope": ":root[data-theme=dark]"
+    },
+    {
       "name": "--surface-scrim",
       "value": "hsl(var(--shadow-tint-h) var(--shadow-tint-s) var(--shadow-tint-l) / 55%)",
       "kind": "color",
@@ -4104,6 +4399,41 @@
     {
       "name": "--border-strong",
       "value": "var(--neutral-300)",
+      "kind": "color",
+      "definedIn": "_ds_bundle.css",
+      "scope": ":root[data-theme=dark]"
+    },
+    {
+      "name": "--border-field",
+      "value": "color-mix(in srgb, var(--neutral-500) 86%, var(--neutral-400))",
+      "kind": "color",
+      "definedIn": "_ds_bundle.css",
+      "scope": ":root[data-theme=dark]"
+    },
+    {
+      "name": "--border-field-hover",
+      "value": "var(--neutral-600)",
+      "kind": "color",
+      "definedIn": "_ds_bundle.css",
+      "scope": ":root[data-theme=dark]"
+    },
+    {
+      "name": "--segmented-selected",
+      "value": "var(--accent)",
+      "kind": "color",
+      "definedIn": "_ds_bundle.css",
+      "scope": ":root[data-theme=dark]"
+    },
+    {
+      "name": "--segmented-selected-on",
+      "value": "var(--accent-on)",
+      "kind": "color",
+      "definedIn": "_ds_bundle.css",
+      "scope": ":root[data-theme=dark]"
+    },
+    {
+      "name": "--border-overlay",
+      "value": "var(--border-default)",
       "kind": "color",
       "definedIn": "_ds_bundle.css",
       "scope": ":root[data-theme=dark]"
@@ -4153,6 +4483,13 @@
     {
       "name": "--text-tertiary",
       "value": "var(--neutral-500)",
+      "kind": "color",
+      "definedIn": "_ds_bundle.css",
+      "scope": ":root[data-theme=dark]"
+    },
+    {
+      "name": "--text-tertiary-overlay",
+      "value": "var(--text-tertiary)",
       "kind": "color",
       "definedIn": "_ds_bundle.css",
       "scope": ":root[data-theme=dark]"
@@ -5131,6 +5468,111 @@
       "scope": ":root[data-theme=dark]"
     },
     {
+      "name": "--surface-overlay",
+      "value": "var(--neutral-100)",
+      "kind": "color",
+      "definedIn": "_ds_bundle.css",
+      "scope": ":root[data-theme=dark]"
+    },
+    {
+      "name": "--surface-overlay-secondary",
+      "value": "var(--neutral-150)",
+      "kind": "color",
+      "definedIn": "_ds_bundle.css",
+      "scope": ":root[data-theme=dark]"
+    },
+    {
+      "name": "--surface-overlay-muted",
+      "value": "var(--neutral-200)",
+      "kind": "color",
+      "definedIn": "_ds_bundle.css",
+      "scope": ":root[data-theme=dark]"
+    },
+    {
+      "name": "--surface-overlay-raised",
+      "value": "var(--neutral-150)",
+      "kind": "color",
+      "definedIn": "_ds_bundle.css",
+      "scope": ":root[data-theme=dark]"
+    },
+    {
+      "name": "--surface-overlay-raised-secondary",
+      "value": "var(--neutral-200)",
+      "kind": "color",
+      "definedIn": "_ds_bundle.css",
+      "scope": ":root[data-theme=dark]"
+    },
+    {
+      "name": "--surface-overlay-raised-muted",
+      "value": "var(--neutral-300)",
+      "kind": "color",
+      "definedIn": "_ds_bundle.css",
+      "scope": ":root[data-theme=dark]"
+    },
+    {
+      "name": "--surface-overlay-tint",
+      "value": "color-mix(in srgb, var(--primary) 30%, var(--surface-overlay))",
+      "kind": "color",
+      "definedIn": "_ds_bundle.css",
+      "scope": ":root[data-theme=dark]"
+    },
+    {
+      "name": "--surface-overlay-raised-tint",
+      "value": "color-mix(in srgb, var(--primary) 30%, var(--surface-overlay-raised))",
+      "kind": "color",
+      "definedIn": "_ds_bundle.css",
+      "scope": ":root[data-theme=dark]"
+    },
+    {
+      "name": "--accent-strong-overlay",
+      "value": "hsl(from var(--primary) h 90% 80%)",
+      "kind": "color",
+      "definedIn": "_ds_bundle.css",
+      "scope": ":root[data-theme=dark]"
+    },
+    {
+      "name": "--border-overlay",
+      "value": "var(--border-strong)",
+      "kind": "color",
+      "definedIn": "_ds_bundle.css",
+      "scope": ":root[data-theme=dark]"
+    },
+    {
+      "name": "--border-field",
+      "value": "color-mix(in srgb, var(--neutral-500) 80%, var(--neutral-400))",
+      "kind": "color",
+      "definedIn": "_ds_bundle.css",
+      "scope": ":root[data-theme=dark]"
+    },
+    {
+      "name": "--border-field-hover",
+      "value": "var(--neutral-500)",
+      "kind": "color",
+      "definedIn": "_ds_bundle.css",
+      "scope": ":root[data-theme=dark]"
+    },
+    {
+      "name": "--segmented-selected",
+      "value": "var(--accent-strong-overlay)",
+      "kind": "color",
+      "definedIn": "_ds_bundle.css",
+      "scope": ":root[data-theme=dark]"
+    },
+    {
+      "name": "--segmented-selected-on",
+      "value": "var(--surface-default)",
+      "kind": "color",
+      "definedIn": "_ds_bundle.css",
+      "scope": ":root[data-theme=dark]"
+    },
+    {
+      "name": "--text-tertiary-overlay",
+      "value": "var(--neutral-700)",
+      "kind": "color",
+      "definedIn": "_ds_bundle.css",
+      "scope": ":root[data-theme=dark]"
+    },
+    {
       "name": "--surface-tint",
       "value": "hsl(from var(--primary) h 45% 16%)",
       "kind": "color",
@@ -5383,6 +5825,34 @@
       "scope": ":root[data-theme=dark]"
     },
     {
+      "name": "--shadow-1",
+      "value": "0 0 0 1px hsl(var(--shadow-tint-h) var(--shadow-tint-s) 95% / 8%), 0 1px 2px hsl(var(--shadow-tint-h) var(--shadow-tint-s) var(--shadow-tint-l) / 30%), 0 1px 3px hsl(var(--shadow-tint-h) var(--shadow-tint-s) var(--shadow-tint-l) / 40%)",
+      "kind": "shadow",
+      "definedIn": "_ds_bundle.css",
+      "scope": ":root[data-theme=dark]"
+    },
+    {
+      "name": "--shadow-2",
+      "value": "0 4px 8px hsl(var(--shadow-tint-h) var(--shadow-tint-s) var(--shadow-tint-l) / 30%), 0 4px 16px hsl(var(--shadow-tint-h) var(--shadow-tint-s) var(--shadow-tint-l) / 45%)",
+      "kind": "shadow",
+      "definedIn": "_ds_bundle.css",
+      "scope": ":root[data-theme=dark]"
+    },
+    {
+      "name": "--shadow-3",
+      "value": "0 8px 16px hsl(var(--shadow-tint-h) var(--shadow-tint-s) var(--shadow-tint-l) / 40%), 0 16px 32px hsl(var(--shadow-tint-h) var(--shadow-tint-s) var(--shadow-tint-l) / 50%)",
+      "kind": "shadow",
+      "definedIn": "_ds_bundle.css",
+      "scope": ":root[data-theme=dark]"
+    },
+    {
+      "name": "--shadow-4",
+      "value": "0 0 0 1px hsl(var(--shadow-tint-h) var(--shadow-tint-s) 95% / 8%), 0 16px 32px hsl(var(--shadow-tint-h) var(--shadow-tint-s) var(--shadow-tint-l) / 50%), 0 24px 48px hsl(var(--shadow-tint-h) var(--shadow-tint-s) var(--shadow-tint-l) / 60%)",
+      "kind": "shadow",
+      "definedIn": "_ds_bundle.css",
+      "scope": ":root[data-theme=dark]"
+    },
+    {
       "name": "--focus-field-alpha",
       "value": ".35",
       "kind": "other",
@@ -5392,13 +5862,6 @@
     {
       "name": "--chart-hover-bg-color",
       "value": "hsl(0deg 0% 100% / 6%)",
-      "kind": "color",
-      "definedIn": "_ds_bundle.css",
-      "scope": ":root[data-theme=dark]"
-    },
-    {
-      "name": "--tooltip-border-color",
-      "value": "var(--border-strong)",
       "kind": "color",
       "definedIn": "_ds_bundle.css",
       "scope": ":root[data-theme=dark]"
@@ -7392,7 +7855,7 @@
     },
     {
       "name": "--tooltip-bg-color",
-      "value": "var(--surface-overlay)",
+      "value": "var(--surface-overlay-raised)",
       "kind": "color",
       "definedIn": "_ds_bundle.css"
     },
@@ -7404,13 +7867,19 @@
     },
     {
       "name": "--tooltip-border-color",
-      "value": "var(--border-default)",
+      "value": "var(--border-overlay)",
       "kind": "color",
       "definedIn": "_ds_bundle.css"
     },
     {
       "name": "--popover-maxw",
       "value": "320px",
+      "kind": "spacing",
+      "definedIn": "_ds_bundle.css"
+    },
+    {
+      "name": "--popover-pad",
+      "value": "var(--space-3)",
       "kind": "spacing",
       "definedIn": "_ds_bundle.css"
     },
@@ -7639,6 +8108,18 @@
     {
       "name": "--timeline-gap",
       "value": "var(--space-5)",
+      "kind": "spacing",
+      "definedIn": "_ds_bundle.css"
+    },
+    {
+      "name": "--chat-step-node-size",
+      "value": "var(--spinner-md)",
+      "kind": "spacing",
+      "definedIn": "_ds_bundle.css"
+    },
+    {
+      "name": "--chat-step-gap",
+      "value": "var(--space-1)",
       "kind": "spacing",
       "definedIn": "_ds_bundle.css"
     },
@@ -7954,6 +8435,34 @@
       "scope": "[data-density=ultra-compact]"
     },
     {
+      "name": "--tree-row-pad-y",
+      "value": "var(--space-1)",
+      "kind": "spacing",
+      "definedIn": "_ds_bundle.css",
+      "scope": "[data-density=ultra-compact]"
+    },
+    {
+      "name": "--tree-row-pad-x",
+      "value": "var(--space-2)",
+      "kind": "spacing",
+      "definedIn": "_ds_bundle.css",
+      "scope": "[data-density=ultra-compact]"
+    },
+    {
+      "name": "--tree-indent",
+      "value": "var(--space-4)",
+      "kind": "spacing",
+      "definedIn": "_ds_bundle.css",
+      "scope": "[data-density=ultra-compact]"
+    },
+    {
+      "name": "--popover-pad",
+      "value": "var(--space-2)",
+      "kind": "spacing",
+      "definedIn": "_ds_bundle.css",
+      "scope": "[data-density=ultra-compact]"
+    },
+    {
       "name": "--ds-surface-padding",
       "value": "var(--space-4)",
       "kind": "spacing",
@@ -8033,6 +8542,27 @@
     {
       "name": "--segmented-btn-h",
       "value": "24px",
+      "kind": "spacing",
+      "definedIn": "_ds_bundle.css",
+      "scope": "[data-density=compact]"
+    },
+    {
+      "name": "--tree-row-pad-y",
+      "value": "var(--space-1)",
+      "kind": "spacing",
+      "definedIn": "_ds_bundle.css",
+      "scope": "[data-density=compact]"
+    },
+    {
+      "name": "--tree-row-pad-x",
+      "value": "var(--space-2)",
+      "kind": "spacing",
+      "definedIn": "_ds_bundle.css",
+      "scope": "[data-density=compact]"
+    },
+    {
+      "name": "--tree-indent",
+      "value": "var(--space-4)",
       "kind": "spacing",
       "definedIn": "_ds_bundle.css",
       "scope": "[data-density=compact]"
@@ -9445,14 +9975,14 @@
     },
     {
       "name": "--_option-selected-bg-color",
-      "value": "var(--ds-option-selected-bg-color, var(--primary-subtitle))",
+      "value": "var(--ds-option-selected-bg-color, var(--surface-overlay-raised-tint))",
       "kind": "color",
       "definedIn": "_ds_bundle.css",
       "scope": ".ds-dropdown-panel"
     },
     {
       "name": "--_option-selected-label-color",
-      "value": "var(--ds-option-selected-label-color, var(--primary-strong))",
+      "value": "var(--ds-option-selected-label-color, var(--accent-strong-overlay))",
       "kind": "color",
       "definedIn": "_ds_bundle.css",
       "scope": ".ds-dropdown-panel"
@@ -9550,7 +10080,7 @@
     },
     {
       "name": "--_dropdown-empty-color",
-      "value": "var(--ds-dropdown-empty-color, var(--text-tertiary))",
+      "value": "var(--ds-dropdown-empty-color, var(--text-tertiary-overlay))",
       "kind": "color",
       "definedIn": "_ds_bundle.css",
       "scope": ".ds-dropdown-panel"
@@ -9564,14 +10094,49 @@
     },
     {
       "name": "--_dropdown-panel-bg-color",
-      "value": "var(--ds-dropdown-panel-bg-color, var(--surface-overlay))",
+      "value": "var(--ds-dropdown-panel-bg-color, var(--surface-overlay-raised))",
       "kind": "color",
       "definedIn": "_ds_bundle.css",
       "scope": ".ds-dropdown-panel"
     },
     {
       "name": "--_dropdown-panel-border-color",
-      "value": "var(--ds-dropdown-panel-border-color, var(--border-default))",
+      "value": "var(--ds-dropdown-panel-border-color, var(--border-overlay))",
+      "kind": "color",
+      "definedIn": "_ds_bundle.css",
+      "scope": ".ds-dropdown-panel"
+    },
+    {
+      "name": "--surface-secondary",
+      "value": "var(--surface-overlay-raised-secondary)",
+      "kind": "color",
+      "definedIn": "_ds_bundle.css",
+      "scope": ".ds-dropdown-panel"
+    },
+    {
+      "name": "--surface-muted",
+      "value": "var(--surface-overlay-raised-muted)",
+      "kind": "color",
+      "definedIn": "_ds_bundle.css",
+      "scope": ".ds-dropdown-panel"
+    },
+    {
+      "name": "--surface-tint",
+      "value": "var(--surface-overlay-raised-tint)",
+      "kind": "color",
+      "definedIn": "_ds_bundle.css",
+      "scope": ".ds-dropdown-panel"
+    },
+    {
+      "name": "--accent-surface-tint",
+      "value": "var(--surface-overlay-raised-tint)",
+      "kind": "color",
+      "definedIn": "_ds_bundle.css",
+      "scope": ".ds-dropdown-panel"
+    },
+    {
+      "name": "--accent-strong",
+      "value": "var(--accent-strong-overlay)",
       "kind": "color",
       "definedIn": "_ds_bundle.css",
       "scope": ".ds-dropdown-panel"

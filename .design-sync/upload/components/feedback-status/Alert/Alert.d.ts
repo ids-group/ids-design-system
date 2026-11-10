@@ -12,7 +12,9 @@ export interface AlertProps {
   /** Show a close button that emits `closed`. */
   dismissible?: boolean;
   /** Override the variant's default icon. */
-  icon?: 'search' | 'plus' | 'minus' | 'check' | 'x' | 'chevronDown' | 'chevronRight' | 'slash' | 'chevronLeft' | 'chevronUp' | 'menu' | 'arrowRight' | 'arrowUp' | 'arrowDown' | 'info' | (string & {}) /* +69 more */ | null;
+  icon?: 'search' | 'plus' | 'minus' | 'check' | 'x' | 'chevronDown' | 'chevronRight' | 'slash' | 'chevronLeft' | 'chevronUp' | 'menu' | 'arrowRight' | 'arrowUp' | 'arrowDown' | 'info' | (string & {}) /* +76 more */ | null;
+  /** Fills the container instead of hugging its content. */
+  fullWidth?: boolean;
   /** Fires when the user dismisses the alert. */
   onClosed?: (value: void) => void;
   /** Announce this alert to a screen reader when it appears. Unset follows `DS_CONFIG.alert.announce`, then `false`. */
