@@ -17,6 +17,8 @@ holds an entry; what the release bot commits afterwards needs none.
 
 ## Unreleased
 
+## 1.1.2 — 2026-11-10
+
 ### Cards
 
 - **`ChatMessage` and `ChatThread` have cards and usage notes, and `ChatSteps` is back.** A

@@ -1,5 +1,7 @@
 ## Unreleased
 
+## 1.1.2 — 2026-11-10
+
 ### Added
 
 - **`ds-empty-state` draws a quiet look with `appearance="plain"`.** The icon sits alone at 32px in
