@@ -8,13 +8,15 @@ export interface EmptyStateProps {
   /** Drives the default icon; `'loading'` shows a loading overlay. */
   variant?: ('none' | 'loading' | 'error' | 'locked' | 'success');
   /** Override the variant's default icon. */
-  icon?: 'search' | 'plus' | 'minus' | 'check' | 'x' | 'chevronDown' | 'chevronRight' | 'slash' | 'chevronLeft' | 'chevronUp' | 'menu' | 'arrowRight' | 'arrowUp' | 'arrowDown' | 'info' | (string & {}) /* +69 more */ | null;
+  icon?: 'search' | 'plus' | 'minus' | 'check' | 'x' | 'chevronDown' | 'chevronRight' | 'slash' | 'chevronLeft' | 'chevronUp' | 'menu' | 'arrowRight' | 'arrowUp' | 'arrowDown' | 'info' | (string & {}) /* +76 more */ | null;
   /** Optional heading below the icon. */
   title?: string;
   /** `'wrap'` breaks a long title over lines; `'clip'` keeps one line, ends it with an ellipsis and shows the full title in a tooltip. */
   titleOverflow?: ('wrap' | 'clip');
   /** Optional supporting text below the title. */
   body?: string;
+  /** `'tile'` draws the icon on a tinted tile under a bold title; `'plain'` draws a 32px icon with no tile, a semibold `--font-size-l` title and the body in `--text-tertiary`, for an empty section inside a page rather than an empty page. */
+  appearance?: ('tile' | 'plain');
   /** Content for the `[actions]` slot. */
   actions?: React.ReactNode;
   /** Element content. */

@@ -6,6 +6,7 @@ Centred authentication shell — brand above a card, support links below. One `<
 - `brand` renders a text wordmark; `logoLetter` draws a single-letter mark beside it. Project into `brand` instead when the brand is a logo element, and into `dsBrandName` for custom wordmark markup.
 - `tagline` is the line under the brand — one short sentence, not a paragraph.
 - `dsAuthSupport` slot holds the links under the card (help, terms, a locale switch).
+- Slots: `brandContent` = `[brand]`, first in the masthead brand row, before the letter mark and wordmark (a logo element); `brandName` = `[dsBrandName]`, inside the wordmark span, replacing the `brand` text when present; `authSupport` = `[dsAuthSupport]`, the footer under the card.
 - `landmark`: `'main'` (default) wraps the content in `<main>`; `'none'` when the host page already owns the landmark.
 
 ```tsx

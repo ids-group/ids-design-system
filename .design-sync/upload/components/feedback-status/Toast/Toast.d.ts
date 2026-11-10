@@ -14,11 +14,15 @@ export interface ToastProps {
   /** Show a close button that emits `closed`. */
   dismissible?: boolean;
   /** Override the variant's default icon. */
-  icon?: 'search' | 'plus' | 'minus' | 'check' | 'x' | 'chevronDown' | 'chevronRight' | 'slash' | 'chevronLeft' | 'chevronUp' | 'menu' | 'arrowRight' | 'arrowUp' | 'arrowDown' | 'info' | (string & {}) /* +69 more */ | null;
+  icon?: 'search' | 'plus' | 'minus' | 'check' | 'x' | 'chevronDown' | 'chevronRight' | 'slash' | 'chevronLeft' | 'chevronUp' | 'menu' | 'arrowRight' | 'arrowUp' | 'arrowDown' | 'info' | (string & {}) /* +76 more */ | null;
   /** Optional action button rendered before the dismiss control. */
   action?: unknown;
+  /** Every call folded into this toast; two or more draw a `×N` stack that lists them. */
+  occurrences?: unknown;
   /** Fires when the toast is dismissed or its action is invoked. */
   onClosed?: (value: void) => void;
+  /** Fires with an occurrence's `id` when its own close button in the list is pressed. */
+  onOccurrenceClosed?: (value: number) => void;
   /** Content for the `[actions]` slot. */
   actions?: React.ReactNode;
   /** Element content. */

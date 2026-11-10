@@ -1,9 +1,9 @@
 # Timeline
 
-Vertical event list (`ds-timeline`) — a compound container (`role="list"`) whose only expected children are `TimelineItem` elements. It has no props of its own; the marker column, connecting spine and spacing are all drawn by the items (the spine auto-hides on the last item via `:host(:last-child)` CSS).
+Vertical event list (`ds-timeline`) — a compound container (`role="list"`) whose expected children are `TimelineItem` elements. It has no props of its own; the marker column, connecting line and spacing are drawn by the items, and only the last item of the timeline draws no line below its marker.
 
 - Order children in whatever chronology the page needs (newest-first for activity feeds, oldest-first for shipment histories).
-- Don't wrap items in intermediate elements — the last-child CSS that ends the spine relies on `TimelineItem`s being direct children.
+- Items may sit inside wrapper elements of their own; the timeline finds them at any depth.
 
 ```tsx
 <Timeline>

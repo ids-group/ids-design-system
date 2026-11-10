@@ -12,7 +12,7 @@ export interface BannerProps {
   /** Show a close button that emits `closed`. */
   dismissible?: boolean;
   /** Override the variant's default icon. */
-  icon?: 'search' | 'plus' | 'minus' | 'check' | 'x' | 'chevronDown' | 'chevronRight' | 'slash' | 'chevronLeft' | 'chevronUp' | 'menu' | 'arrowRight' | 'arrowUp' | 'arrowDown' | 'info' | (string & {}) /* +69 more */ | null;
+  icon?: 'search' | 'plus' | 'minus' | 'check' | 'x' | 'chevronDown' | 'chevronRight' | 'slash' | 'chevronLeft' | 'chevronUp' | 'menu' | 'arrowRight' | 'arrowUp' | 'arrowDown' | 'info' | (string & {}) /* +76 more */ | null;
   /** Tighter padding, centred items, single-line title. */
   compact?: boolean;
   /** `'stacked'` wraps actions onto their own line; `'row'` keeps them inline. */

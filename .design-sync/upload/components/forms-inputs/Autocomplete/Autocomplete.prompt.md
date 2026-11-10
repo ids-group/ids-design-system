@@ -8,6 +8,7 @@ Combobox that filters options as you type. Single-select shows the picked label 
 - `allowCreate` appends a "Create «text»" row when the text matches no option label — picking it fires `onCreate(text)` and clears the query.
 - `loading`: with no options, the list shows three placeholder rows; with options, the rows stay under a `ds-loading-overlay` until it clears.
 - `invalid` + `hint` for validation text; Backspace in an empty input removes the last tag in `multiple` mode.
+- Slots: `prefix` = `[dsAutocompletePrefix]`, the leading addon at the start of the trigger (the trigger shows no option icon of its own); `suffix` = `[dsAutocompleteSuffix]`, the addon after the input, before the clear button and chevron.
 
 ```tsx
 <Autocomplete

@@ -12,7 +12,7 @@ export interface InfoHintProps {
   /** Accessible name of the icon button, such as "About conversion rate". */
   ariaLabel?: string;
   /** Any DS icon; `'help'` draws a question mark in a circle, `'info'` an "i". */
-  icon?: 'search' | 'plus' | 'minus' | 'check' | 'x' | 'chevronDown' | 'chevronRight' | 'slash' | 'chevronLeft' | 'chevronUp' | 'menu' | 'arrowRight' | 'arrowUp' | 'arrowDown' | 'info' | (string & {}) /* +69 more */;
+  icon?: 'search' | 'plus' | 'minus' | 'check' | 'x' | 'chevronDown' | 'chevronRight' | 'slash' | 'chevronLeft' | 'chevronUp' | 'menu' | 'arrowRight' | 'arrowUp' | 'arrowDown' | 'info' | (string & {}) /* +76 more */;
   /** Element content. */
   children?: React.ReactNode;
   className?: string;

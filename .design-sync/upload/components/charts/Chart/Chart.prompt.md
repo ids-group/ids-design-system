@@ -19,6 +19,7 @@ The container `ColumnChart` is built inside - port of `ds-chart`. It owns the pl
 - `secondaryAxisMode` (default `'aligned'`): `'aligned'` | `'exact'` | `'dual-grid'` | `'split'` - how a second value axis relates to the first, once a mark has reported against it. Every name says what is done to the gridlines. The same four words `LineChart` takes as `yAxisMode`.
 - `axisColor` / `secondaryAxisColor`: paint each axis's tick labels in the colour of the marks measured against it. Nothing else on a two-scale plot says which of two marks is read against which numbers, and only the author knows, because several marks can share one axis.
 - `curve` on `dsLineSeries`: `'linear'` (default) | `'step'` | `'smooth'`. The same three words `LineChart` takes, and `'smooth'` is the same monotone cubic, so a composed plot and a preset draw one series the same way.
+- Slots: `seriesAnnotation` = `[dsSeriesAnnotation]`, projected with `dsReferenceLabel` over the marks and category labels; it pins a printed label to a reading. Inert here like `referenceLabel`, since its Angular selector is `g[dsSeriesAnnotation]`.
 
 **The three slots are layers, not an ordering preference.** `dsReferenceLine` paints under the marks whatever order it was written in, the default slot takes the marks, and `dsReferenceLabel` paints over them: an annotation's stroke is furniture and belongs below the readings, its name has to survive a column drawn through it. Inside the default slot the marks paint in the order they are written.
 

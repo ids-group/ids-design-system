@@ -18,7 +18,7 @@ export interface ModalCardProps {
   /** Draws the rules under the header and over the actions; off also tightens the vertical padding. Unset falls back to `DS_CONFIG.modal.dividers`, then `true`. */
   dividers?: boolean | null;
   /** Icon badge shown next to the title. Overrides the icon `status` would pick. */
-  icon?: 'search' | 'plus' | 'minus' | 'check' | 'x' | 'chevronDown' | 'chevronRight' | 'slash' | 'chevronLeft' | 'chevronUp' | 'menu' | 'arrowRight' | 'arrowUp' | 'arrowDown' | 'info' | (string & {}) /* +69 more */ | null;
+  icon?: 'search' | 'plus' | 'minus' | 'check' | 'x' | 'chevronDown' | 'chevronRight' | 'slash' | 'chevronLeft' | 'chevronUp' | 'menu' | 'arrowRight' | 'arrowUp' | 'arrowDown' | 'info' | (string & {}) /* +76 more */ | null;
   /** ARIA role. Unset, an error or warning becomes `alertdialog`; anything else stays `dialog`. */
   dialogRole?: 'dialog' | 'alertdialog' | null;
   /** Fires when the header close button is clicked. */

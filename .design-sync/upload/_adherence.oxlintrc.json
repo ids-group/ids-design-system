@@ -61,6 +61,7 @@
               "components/*/AccordionItem/**",
               "components/*/Alert/**",
               "components/*/AppLayout/**",
+              "components/*/Attachment/**",
               "components/*/AuthLayout/**",
               "components/*/Autocomplete/**",
               "components/*/Avatar/**",
@@ -77,6 +78,12 @@
               "components/*/Chart/**",
               "components/*/ChartDataTable/**",
               "components/*/ChartTooltipPanel/**",
+              "components/*/ChatAttachment/**",
+              "components/*/ChatInput/**",
+              "components/*/ChatMessage/**",
+              "components/*/ChatStep/**",
+              "components/*/ChatSteps/**",
+              "components/*/ChatThread/**",
               "components/*/Checkbox/**",
               "components/*/ColorPicker/**",
               "components/*/ColumnChart/**",
@@ -96,6 +103,7 @@
               "components/*/IconButton/**",
               "components/*/InfoHint/**",
               "components/*/Inline/**",
+              "components/*/InlineEdit/**",
               "components/*/Input/**",
               "components/*/LineChart/**",
               "components/*/List/**",
@@ -131,6 +139,7 @@
               "components/*/Sparkline/**",
               "components/*/Spinner/**",
               "components/*/SplitButton/**",
+              "components/*/Splitter/**",
               "components/*/Stack/**",
               "components/*/Stat/**",
               "components/*/StatusDot/**",
@@ -182,12 +191,16 @@
         "message": "<AccordionItem> doesn't accept that prop. Declared props: title, expanded, disabled, onExpandedChange, badge, children."
       },
       {
-        "selector": "JSXOpeningElement[name.name='Alert'] > JSXAttribute > JSXIdentifier[name!=/^(?:variant|title|dismissible|icon|onClosed|announce|actions|children|key|ref|className|style)$/]",
-        "message": "<Alert> doesn't accept that prop. Declared props: variant, title, dismissible, icon, onClosed, announce, actions, children."
+        "selector": "JSXOpeningElement[name.name='Alert'] > JSXAttribute > JSXIdentifier[name!=/^(?:variant|title|dismissible|icon|fullWidth|onClosed|announce|actions|children|key|ref|className|style)$/]",
+        "message": "<Alert> doesn't accept that prop. Declared props: variant, title, dismissible, icon, fullWidth, onClosed, announce, actions, children."
       },
       {
         "selector": "JSXOpeningElement[name.name='AppLayout'] > JSXAttribute > JSXIdentifier[name!=/^(?:topbarSpan|railOpen|railLabel|restoreScroll|restoreScrollTimeout|scrollReset|onRailOpenChange|sidenav|topbar|children|key|ref|className|style)$/]",
         "message": "<AppLayout> doesn't accept that prop. Declared props: topbarSpan, railOpen, railLabel, restoreScroll, restoreScrollTimeout, scrollReset, onRailOpenChange, sidenav, topbar, children."
+      },
+      {
+        "selector": "JSXOpeningElement[name.name='Attachment'] > JSXAttribute > JSXIdentifier[name!=/^(?:name|meta|kind|previewUrl|removable|onRemoved|children|key|ref|className|style)$/]",
+        "message": "<Attachment> doesn't accept that prop. Declared props: name, meta, kind, previewUrl, removable, onRemoved, children."
       },
       {
         "selector": "JSXOpeningElement[name.name='AuthLayout'] > JSXAttribute > JSXIdentifier[name!=/^(?:brand|logoLetter|tagline|cardElevation|cardPadding|landmark|brandContent|brandName|authSupport|children|key|ref|className|style)$/]",
@@ -254,6 +267,30 @@
         "message": "<ChartTooltipPanel> doesn't accept that prop. Declared props: context, template, swatches, children."
       },
       {
+        "selector": "JSXOpeningElement[name.name='ChatAttachment'] > JSXAttribute > JSXIdentifier[name!=/^(?:label|source|icon|expanded|onExpandedChange|children|key|ref|className|style)$/]",
+        "message": "<ChatAttachment> doesn't accept that prop. Declared props: label, source, icon, expanded, onExpandedChange, children."
+      },
+      {
+        "selector": "JSXOpeningElement[name.name='ChatInput'] > JSXAttribute > JSXIdentifier[name!=/^(?:value|placeholder|ariaLabel|minRows|maxRows|disabled|busy|stoppable|busyAction|busyLabel|layout|onSubmitted|onStopRequested|onQueued|onRedirected|onFilesPasted|onValueChange|attachments|chips|actions|send|children|key|ref|className|style)$/]",
+        "message": "<ChatInput> doesn't accept that prop. Declared props: value, placeholder, ariaLabel, minRows, maxRows, disabled, busy, stoppable, busyAction, busyLabel, layout, onSubmitted, onStopRequested, onQueued, onRedirected, onFilesPasted, onValueChange, attachments, chips, actions, send, children."
+      },
+      {
+        "selector": "JSXOpeningElement[name.name='ChatMessage'] > JSXAttribute > JSXIdentifier[name!=/^(?:role|tone|title|icon|author|time|sentAt|streaming|status|stepsFolded|onRetry|onStepsFoldedChange|steps|attachments|actions|children|key|ref|className|style)$/]",
+        "message": "<ChatMessage> doesn't accept that prop. Declared props: role, tone, title, icon, author, time, sentAt, streaming, status, stepsFolded, onRetry, onStepsFoldedChange, steps, attachments, actions, children."
+      },
+      {
+        "selector": "JSXOpeningElement[name.name='ChatStep'] > JSXAttribute > JSXIdentifier[name!=/^(?:heading|time|status|expanded|onExpandedChange|trailing|details|children|key|ref|className|style)$/]",
+        "message": "<ChatStep> doesn't accept that prop. Declared props: heading, time, status, expanded, onExpandedChange, trailing, details, children."
+      },
+      {
+        "selector": "JSXOpeningElement[name.name='ChatSteps'] > JSXAttribute > JSXIdentifier[name!=/^(?:enter|minRunningMs|revealStaggerMs|children|key|ref|className|style)$/]",
+        "message": "<ChatSteps> doesn't accept that prop. Declared props: enter, minRunningMs, revealStaggerMs, children."
+      },
+      {
+        "selector": "JSXOpeningElement[name.name='ChatThread'] > JSXAttribute > JSXIdentifier[name!=/^(?:working|workingLabel|ariaLabel|foldStepsOnSend|timeBreakMinutes|hasOlder|loadingOlder|onLoadOlder|children|key|ref|className|style)$/]",
+        "message": "<ChatThread> doesn't accept that prop. Declared props: working, workingLabel, ariaLabel, foldStepsOnSend, timeBreakMinutes, hasOlder, loadingOlder, onLoadOlder, children."
+      },
+      {
         "selector": "JSXOpeningElement[name.name='Checkbox'] > JSXAttribute > JSXIdentifier[name!=/^(?:hint|error|warning|reserveMessage|messageIcon|errors|invalid|touched|pending|dirty|showDirty|hidden|checked|indeterminate|disabled|name|inputId|size|required|label|ariaLabel|onCheckedChange|children|key|ref|className|style)$/]",
         "message": "<Checkbox> doesn't accept that prop. Declared props: hint, error, warning, reserveMessage, messageIcon, errors, invalid, touched, pending, dirty, showDirty, hidden, checked, indeterminate, disabled, name, inputId, size, required, label, ariaLabel, onCheckedChange, children."
       },
@@ -294,8 +331,8 @@
         "message": "<Dropzone> doesn't accept that prop. Declared props: accept, multiple, files, disabled, onFilesAdded, onFileRemoved, onFilesChange, hint, children."
       },
       {
-        "selector": "JSXOpeningElement[name.name='EmptyState'] > JSXAttribute > JSXIdentifier[name!=/^(?:variant|icon|title|titleOverflow|body|actions|children|key|ref|className|style)$/]",
-        "message": "<EmptyState> doesn't accept that prop. Declared props: variant, icon, title, titleOverflow, body, actions, children."
+        "selector": "JSXOpeningElement[name.name='EmptyState'] > JSXAttribute > JSXIdentifier[name!=/^(?:variant|icon|title|titleOverflow|body|appearance|actions|children|key|ref|className|style)$/]",
+        "message": "<EmptyState> doesn't accept that prop. Declared props: variant, icon, title, titleOverflow, body, appearance, actions, children."
       },
       {
         "selector": "JSXOpeningElement[name.name='FieldGroup'] > JSXAttribute > JSXIdentifier[name!=/^(?:hint|error|warning|reserveMessage|messageIcon|size|invalid|disabled|fullWidth|children|key|ref|className|style)$/]",
@@ -328,6 +365,10 @@
       {
         "selector": "JSXOpeningElement[name.name='Inline'] > JSXAttribute > JSXIdentifier[name!=/^(?:gap|align|justify|wrap|children|key|ref|className|style)$/]",
         "message": "<Inline> doesn't accept that prop. Declared props: gap, align, justify, wrap, children."
+      },
+      {
+        "selector": "JSXOpeningElement[name.name='InlineEdit'] > JSXAttribute > JSXIdentifier[name!=/^(?:value|placeholder|maxLength|disabled|ariaLabel|onSaved|onValueChange|children|key|ref|className|style)$/]",
+        "message": "<InlineEdit> doesn't accept that prop. Declared props: value, placeholder, maxLength, disabled, ariaLabel, onSaved, onValueChange, children."
       },
       {
         "selector": "JSXOpeningElement[name.name='Input'] > JSXAttribute > JSXIdentifier[name!=/^(?:hint|error|warning|reserveMessage|messageIcon|errors|invalid|touched|pending|dirty|showDirty|hidden|value|type|size|label|placeholder|disabled|readOnly|readonlyBinding|success|loading|required|optional|name|min|max|step|autocomplete|autofocus|ariaLabel|ariaDescribedBy|maxLength|minLength|pattern|enterKeyHint|inputMode|onBlurred|clearable|passwordToggle|passwordVisible|onValueChange|onPasswordVisibleChange|prefix|suffix|children|key|ref|className|style)$/]",
@@ -470,6 +511,10 @@
         "message": "<SplitButton> doesn't accept that prop. Declared props: label, variant, icon, disabled, menuItems, menuLabel, onPressed, onItemSelected, children."
       },
       {
+        "selector": "JSXOpeningElement[name.name='Splitter'] > JSXAttribute > JSXIdentifier[name!=/^(?:orientation|pane|size|defaultSize|min|max|persistKey|ariaLabel|overdrag|dragFog|onSizeChange|start|end|children|key|ref|className|style)$/]",
+        "message": "<Splitter> doesn't accept that prop. Declared props: orientation, pane, size, defaultSize, min, max, persistKey, ariaLabel, overdrag, dragFog, onSizeChange, start, end, children."
+      },
+      {
         "selector": "JSXOpeningElement[name.name='Stack'] > JSXAttribute > JSXIdentifier[name!=/^(?:gap|align|children|key|ref|className|style)$/]",
         "message": "<Stack> doesn't accept that prop. Declared props: gap, align, children."
       },
@@ -518,16 +563,16 @@
         "message": "<Timeline> doesn't accept that prop. Declared props: children."
       },
       {
-        "selector": "JSXOpeningElement[name.name='TimelineItem'] > JSXAttribute > JSXIdentifier[name!=/^(?:heading|time|icon|tone|children|key|ref|className|style)$/]",
-        "message": "<TimelineItem> doesn't accept that prop. Declared props: heading, time, icon, tone, children."
+        "selector": "JSXOpeningElement[name.name='TimelineItem'] > JSXAttribute > JSXIdentifier[name!=/^(?:heading|time|icon|tone|status|expanded|onExpandedChange|trailing|details|children|key|ref|className|style)$/]",
+        "message": "<TimelineItem> doesn't accept that prop. Declared props: heading, time, icon, tone, status, expanded, onExpandedChange, trailing, details, children."
       },
       {
         "selector": "JSXOpeningElement[name.name='TimePicker'] > JSXAttribute > JSXIdentifier[name!=/^(?:hint|error|warning|reserveMessage|messageIcon|errors|invalid|touched|pending|dirty|showDirty|hidden|value|mode|minuteStep|minTime|maxTime|disabledTime|size|fullWidth|label|required|optional|panelClass|disabled|success|placeholder|clearable|ariaLabel|format|loop|staticPreview|onValueChange|children|key|ref|className|style)$/]",
         "message": "<TimePicker> doesn't accept that prop. Declared props: hint, error, warning, reserveMessage, messageIcon, errors, invalid, touched, pending, dirty, showDirty, hidden, value, mode, minuteStep, minTime, maxTime, disabledTime, size, fullWidth, label, required, optional, panelClass, disabled, success, placeholder, clearable, ariaLabel, format, loop, staticPreview, onValueChange, children."
       },
       {
-        "selector": "JSXOpeningElement[name.name='Toast'] > JSXAttribute > JSXIdentifier[name!=/^(?:variant|title|body|dismissible|icon|action|onClosed|actions|children|key|ref|className|style)$/]",
-        "message": "<Toast> doesn't accept that prop. Declared props: variant, title, body, dismissible, icon, action, onClosed, actions, children."
+        "selector": "JSXOpeningElement[name.name='Toast'] > JSXAttribute > JSXIdentifier[name!=/^(?:variant|title|body|dismissible|icon|action|occurrences|onClosed|onOccurrenceClosed|actions|children|key|ref|className|style)$/]",
+        "message": "<Toast> doesn't accept that prop. Declared props: variant, title, body, dismissible, icon, action, occurrences, onClosed, onOccurrenceClosed, actions, children."
       },
       {
         "selector": "JSXOpeningElement[name.name='ToastRegion'] > JSXAttribute > JSXIdentifier[name!=/^(?:maxVisible|showQueueCount|children|key|ref|className|style)$/]",
@@ -546,8 +591,8 @@
         "message": "<Topbar> doesn't accept that prop. Declared props: title, breadcrumbs, search, actions, children."
       },
       {
-        "selector": "JSXOpeningElement[name.name='Tree'] > JSXAttribute > JSXIdentifier[name!=/^(?:nodes|expandedIds|selectedId|onNodeSelected|onExpandedIdsChange|onSelectedIdChange|children|key|ref|className|style)$/]",
-        "message": "<Tree> doesn't accept that prop. Declared props: nodes, expandedIds, selectedId, onNodeSelected, onExpandedIdsChange, onSelectedIdChange, children."
+        "selector": "JSXOpeningElement[name.name='Tree'] > JSXAttribute > JSXIdentifier[name!=/^(?:nodes|expandedIds|selection|selectedId|selectedIds|toggleOn|animate|onNodeSelected|onNodeHover|onExpandedIdsChange|onSelectedIdChange|onSelectedIdsChange|children|key|ref|className|style)$/]",
+        "message": "<Tree> doesn't accept that prop. Declared props: nodes, expandedIds, selection, selectedId, selectedIds, toggleOn, animate, onNodeSelected, onNodeHover, onExpandedIdsChange, onSelectedIdChange, onSelectedIdsChange, children."
       },
       {
         "selector": "JSXOpeningElement[name.name='W3w'] > JSXAttribute > JSXIdentifier[name!=/^(?:prefix|address|copyable|onCopied|children|key|ref|className|style)$/]",
@@ -581,6 +626,9 @@
         "replaces": []
       },
       "AppLayout": {
+        "replaces": []
+      },
+      "Attachment": {
         "replaces": []
       },
       "AuthLayout": {
@@ -631,6 +679,24 @@
         "replaces": []
       },
       "ChartTooltipPanel": {
+        "replaces": []
+      },
+      "ChatAttachment": {
+        "replaces": []
+      },
+      "ChatInput": {
+        "replaces": []
+      },
+      "ChatMessage": {
+        "replaces": []
+      },
+      "ChatStep": {
+        "replaces": []
+      },
+      "ChatSteps": {
+        "replaces": []
+      },
+      "ChatThread": {
         "replaces": []
       },
       "Checkbox": {
@@ -690,6 +756,9 @@
         "replaces": []
       },
       "Inline": {
+        "replaces": []
+      },
+      "InlineEdit": {
         "replaces": []
       },
       "Input": {
@@ -807,6 +876,9 @@
         "replaces": []
       },
       "SplitButton": {
+        "replaces": []
+      },
+      "Splitter": {
         "replaces": []
       },
       "Stack": {
@@ -954,6 +1026,7 @@
       "--accent-on",
       "--accent-pressed",
       "--accent-strong",
+      "--accent-strong-overlay",
       "--accent-subtitle",
       "--accent-surface-tint",
       "--auth-card-w",
@@ -988,7 +1061,10 @@
       "--border-default",
       "--border-disabled",
       "--border-divider",
+      "--border-field",
+      "--border-field-hover",
       "--border-inverted",
+      "--border-overlay",
       "--border-strong",
       "--border-subtitle",
       "--border-width-default",
@@ -1101,6 +1177,8 @@
       "--chart-tooltip-bg-color",
       "--chart-tooltip-border-color",
       "--chart-tooltip-text-color",
+      "--chat-step-gap",
+      "--chat-step-node-size",
       "--check-bw",
       "--check-glyph-lg",
       "--check-glyph-sm",
@@ -1624,6 +1702,7 @@
       "--picker-offset",
       "--popover-maxh",
       "--popover-maxw",
+      "--popover-pad",
       "--primary",
       "--primary-h",
       "--primary-hover",
@@ -1680,6 +1759,8 @@
       "--segmented-btn-h",
       "--segmented-pad",
       "--segmented-r-inner",
+      "--segmented-selected",
+      "--segmented-selected-on",
       "--select-bg-color",
       "--settings-nav-w",
       "--settings-row-label-gap",
@@ -1770,6 +1851,13 @@
       "--surface-inverted-hover",
       "--surface-muted",
       "--surface-overlay",
+      "--surface-overlay-muted",
+      "--surface-overlay-raised",
+      "--surface-overlay-raised-muted",
+      "--surface-overlay-raised-secondary",
+      "--surface-overlay-raised-tint",
+      "--surface-overlay-secondary",
+      "--surface-overlay-tint",
       "--surface-scrim",
       "--surface-secondary",
       "--surface-tint",
@@ -1819,6 +1907,7 @@
       "--text-primary",
       "--text-secondary",
       "--text-tertiary",
+      "--text-tertiary-overlay",
       "--timeline-gap",
       "--timeline-node-size",
       "--timeline-spine-w",
@@ -1992,10 +2081,23 @@
       "--surface-tint": "color",
       "--surface-disabled": "other",
       "--surface-muted": "other",
+      "--surface-overlay-secondary": "other",
+      "--surface-overlay-muted": "other",
+      "--surface-overlay-raised": "other",
+      "--surface-overlay-raised-secondary": "other",
+      "--surface-overlay-raised-muted": "other",
+      "--surface-overlay-tint": "color",
+      "--surface-overlay-raised-tint": "color",
+      "--accent-strong-overlay": "color",
       "--surface-scrim": "color",
       "--btn-split-divider": "color",
       "--border-default": "other",
       "--border-strong": "other",
+      "--border-field": "color",
+      "--border-field-hover": "other",
+      "--segmented-selected": "other",
+      "--segmented-selected-on": "other",
+      "--border-overlay": "other",
       "--border-subtitle": "other",
       "--border-divider": "other",
       "--border-inverted": "other",
@@ -2003,6 +2105,7 @@
       "--text-primary": "other",
       "--text-secondary": "other",
       "--text-tertiary": "other",
+      "--text-tertiary-overlay": "other",
       "--text-muted": "other",
       "--text-disabled": "other",
       "--text-inverted": "other",
@@ -2128,8 +2231,11 @@
       "--accent-focus-ring": "other",
       "--accent-focus-field": "other",
       "--accent-surface-tint": "other",
+      "--shadow-1": "other",
+      "--shadow-2": "other",
+      "--shadow-3": "other",
+      "--shadow-4": "other",
       "--chart-hover-bg-color": "color",
-      "--tooltip-border-color": "other",
       "--chart-categorical-8": "color",
       "--chart-series-default": "color",
       "--chart-ramp-1": "color",
@@ -2200,10 +2306,6 @@
       "--focus-ring-width": "length",
       "--focus-ring-offset": "length",
       "--focus-ring-radius": "other",
-      "--shadow-1": "other",
-      "--shadow-2": "other",
-      "--shadow-3": "other",
-      "--shadow-4": "other",
       "--ds-elevation-raised": "other",
       "--ds-elevation-overlay": "other",
       "--ds-elevation-floating": "other",
@@ -2458,7 +2560,9 @@
       "--tooltip-arrow": "other",
       "--tooltip-bg-color": "other",
       "--tooltip-text-color": "other",
+      "--tooltip-border-color": "other",
       "--popover-maxw": "length",
+      "--popover-pad": "other",
       "--toast-minw": "length",
       "--toast-maxw": "length",
       "--toast-bar-w": "length",
@@ -2497,6 +2601,8 @@
       "--timeline-node-size": "other",
       "--timeline-spine-w": "other",
       "--timeline-gap": "other",
+      "--chat-step-node-size": "other",
+      "--chat-step-gap": "other",
       "--tree-indent": "other",
       "--tree-row-pad-y": "other",
       "--tree-row-pad-x": "other",

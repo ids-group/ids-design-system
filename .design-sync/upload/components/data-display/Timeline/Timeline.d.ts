@@ -2,7 +2,7 @@ import * as React from 'react';
 
 /**
  * Timeline — the real TimelineComponent, run by Angular behind `<ds-timeline>`.
- * Vertical event list (`ds-timeline`) — a compound container (`role="list"`) whose only expected children are `TimelineItem` elements. It has no props of its own; the marker column, connecting spine and spacing are all drawn by the items (the spine auto-hides on the last item via `:host(:last-child)` CSS).
+ * Vertical event list (`ds-timeline`) — a compound container (`role="list"`) whose expected children are `TimelineItem` elements. It has no props of its own; the marker column, connecting line and spacing are drawn by the items, and only the last item of the timeline draws no line below its marker.
  */
 export interface TimelineProps {
   /** Element content. */

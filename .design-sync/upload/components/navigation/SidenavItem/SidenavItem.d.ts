@@ -6,7 +6,7 @@ import * as React from 'react';
  */
 export interface SidenavItemProps {
   /** Icon shown before the label; omit to project a custom icon via the `[icon]` slot instead. */
-  icon?: 'search' | 'plus' | 'minus' | 'check' | 'x' | 'chevronDown' | 'chevronRight' | 'slash' | 'chevronLeft' | 'chevronUp' | 'menu' | 'arrowRight' | 'arrowUp' | 'arrowDown' | 'info' | (string & {}) /* +69 more */ | null;
+  icon?: 'search' | 'plus' | 'minus' | 'check' | 'x' | 'chevronDown' | 'chevronRight' | 'slash' | 'chevronLeft' | 'chevronUp' | 'menu' | 'arrowRight' | 'arrowUp' | 'arrowDown' | 'info' | (string & {}) /* +76 more */ | null;
   /** Visible link text; also used as the tooltip/aria-label when the rail is collapsed. */
   label?: string;
   /** Plain `href` target, used when `routerLink` is not set. */

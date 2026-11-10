@@ -1,12 +1,12 @@
 import * as React from 'react';
 
 /**
- * IconButton — the real IconButtonComponent, run by Angular behind `<ds-icon-button>`.
+ * IconButton — the real IconButtonComponent, run by Angular behind `<ds-x-icon-button>`.
  * Icon-only action button with its own Material-3-style fill taxonomy: `variant` (standard | filled | tonal | outlined, default standard = chromeless) crossed with the same `color` hue family as Button (primary | secondary | tertiary | neutral | error | success | warning). Use for toolbars, table-row actions, close/back/overflow affordances; use Button for labelled actions.
  */
 export interface IconButtonProps {
   /** Icon to render - the button's only visible content. */
-  icon?: 'search' | 'plus' | 'minus' | 'check' | 'x' | 'chevronDown' | 'chevronRight' | 'slash' | 'chevronLeft' | 'chevronUp' | 'menu' | 'arrowRight' | 'arrowUp' | 'arrowDown' | 'info' | (string & {}) /* +69 more */;
+  icon?: 'search' | 'plus' | 'minus' | 'check' | 'x' | 'chevronDown' | 'chevronRight' | 'slash' | 'chevronLeft' | 'chevronUp' | 'menu' | 'arrowRight' | 'arrowUp' | 'arrowDown' | 'info' | (string & {}) /* +76 more */;
   /** Accessible name; required since the button has no visible text. */
   ariaLabel?: string;
   /** `aria-describedby`: the id of text the app already renders beside the button, such as why the action is refused. */

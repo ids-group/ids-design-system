@@ -6,7 +6,7 @@ import * as React from 'react';
  */
 export interface MenuItemProps {
   /** Leading icon shown before the projected label. */
-  icon?: 'search' | 'plus' | 'minus' | 'check' | 'x' | 'chevronDown' | 'chevronRight' | 'slash' | 'chevronLeft' | 'chevronUp' | 'menu' | 'arrowRight' | 'arrowUp' | 'arrowDown' | 'info' | (string & {}) /* +69 more */ | null;
+  icon?: 'search' | 'plus' | 'minus' | 'check' | 'x' | 'chevronDown' | 'chevronRight' | 'slash' | 'chevronLeft' | 'chevronUp' | 'menu' | 'arrowRight' | 'arrowUp' | 'arrowDown' | 'info' | (string & {}) /* +76 more */ | null;
   /** Blocks activation and styles the item as inactive. It stays focusable (`aria-disabled`) and in the roving order, so a `[dsTooltip]` can explain why. */
   disabled?: boolean;
   /** Renders the item in an error/destructive style. */
